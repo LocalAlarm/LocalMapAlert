@@ -3,9 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8"/>
     <title>흰 올빼미 지도</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
@@ -28,16 +30,17 @@
             position: relative;
             z-index: 0; 
         }
-        .overlay-button {
-            position: absolute;
-            top: 1000px; 
-            left: 10px; 
-            z-index: 1000;
-            background-color: white;
-            padding: 5px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        }
+         .overlay-button {
+		    position: absolute;
+		    bottom: 10px; 
+		    left: 10px; 
+		    z-index: 1000;
+		    background-color: white;
+		    padding: 5px;
+		    border-radius: 5px;
+		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+		}
+
         #inputForm {
             display: none; /* 폼을 처음에 숨김 */
             position: absolute;
@@ -103,7 +106,7 @@
         var container = document.getElementById('map');
         var options = {
             center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
-            level: 2
+            level: 3
         };
         var map = new kakao.maps.Map(container, options);
         
@@ -154,7 +157,7 @@
 
             // 마커에 표시할 인포윈도우를 생성
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div>' + content + '</div>' 
+                content: '<div>' + content + '</div>' // 표시내용
             });
 
             // 마커에 mouseover 이벤트 등록
