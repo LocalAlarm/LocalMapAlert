@@ -1,4 +1,4 @@
-package com.spring.dongnae.vo;
+package com.spring.dongnae.user.vo;
 
 public class UserVO {
 	private String id;

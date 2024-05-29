@@ -1,4 +1,4 @@
-package com.spring.dongnae.controller;
+package com.spring.dongnae.user.controller;
 
 import javax.servlet.http.HttpSession;
 
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.spring.dongnae.service.UserService;
-import com.spring.dongnae.vo.UserVO;
+import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.UserVO;
 
 
 @Controller

@@ -1,11 +1,11 @@
-package com.spring.dongnae.service.impl;
+package com.spring.dongnae.service.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.dongnae.dao.UserDAO;
-import com.spring.dongnae.service.UserService;
-import com.spring.dongnae.vo.UserVO;
+import com.spring.dongnae.user.dao.UserDAO;
+import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.UserVO;
 
 
 @Service(value = "userService")
