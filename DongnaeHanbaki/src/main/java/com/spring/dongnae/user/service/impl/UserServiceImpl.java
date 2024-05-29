@@ -1,4 +1,4 @@
-package com.spring.dongnae.service.user.impl;
+package com.spring.dongnae.user.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
