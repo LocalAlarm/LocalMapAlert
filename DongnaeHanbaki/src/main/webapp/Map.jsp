@@ -30,17 +30,16 @@
             position: relative;
             z-index: 0; 
         }
-         .overlay-button {
-		    position: absolute;
-		    bottom: 10px; 
-		    left: 10px; 
-		    z-index: 1000;
-		    background-color: white;
-		    padding: 5px;
-		    border-radius: 5px;
-		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-		}
-
+        .overlay-button {
+            position: absolute;
+            bottom: 10px; 
+            left: 10px; 
+            z-index: 1000;
+            background-color: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
         #inputForm {
             display: none; /* 폼을 처음에 숨김 */
             position: absolute;
@@ -52,6 +51,30 @@
             padding: 20px;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       #popup {
+            display: none; /* 팝업을 처음에 숨김 */
+            position: absolute;
+            top: 10%;
+            left: 65%;
+            transform: translate(-50%, -50%);
+            z-index: 3000;
+            background-color: white;
+            padding: 20px;
+            width: 300px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        #popupClose {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background: #f00;
+            color: #fff;
+            border: none;
+            padding: 5px;
         }
     </style>
 </head>
@@ -100,6 +123,12 @@
         </form>
     </div>
 
+    <!-- 팝업 창 -->
+    <div id="popup">
+        <button id="popupClose" onclick="closePopup()">닫기</button>
+        <div id="popupContent"></div>
+    </div>
+
     <!-- Kakao 지도 API 스크립트 -->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d15ec03b27e51b25ee4bac136a965d54"></script>
     <script>
@@ -116,9 +145,8 @@
         // 마커 추가를 위한 임시 위치 저장
         var tempLatLng;
 
-        // 클릭 이벤트 발생 시 마커 추가(마우스 오른쪽으로 했음 -카카오 api에서는 rightclick 이거임)
+        // 클릭 이벤트 발생 시 마커 추가
         kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-        	// 클릭한 위도, 경도 정보를 가져옴
             tempLatLng = mouseEvent.latLng;
             var lat = tempLatLng.getLat();
             var lng = tempLatLng.getLng();
@@ -138,7 +166,7 @@
             var lat = document.getElementById('markerLat').value;
             var lng = document.getElementById('markerLng').value;
 
-            addMarker(new kakao.maps.LatLng(lat, lng), markerType + ": " + markerContent, markerDetails);
+            addMarker(new kakao.maps.LatLng(lat, lng), markerType + ": " + markerContent, "자세한 내용 :" +markerDetails);
             document.getElementById('inputForm').style.display = 'none';
         });
 
@@ -170,10 +198,9 @@
                 infowindow.close();
             });
 
-            // 마커에 click 이벤트 등록
+            // 마커에 click 이벤트 등록 - 팝업 창으로 정보 표시
             kakao.maps.event.addListener(marker, 'click', function() {
-                // 자세한 내용을 alert로 표시
-                alert(content + '\n' + detailedContent);
+                openPopup(content, detailedContent);
             });
         }
 
@@ -192,6 +219,17 @@
         // 마커 감추기
         function hideMarkers() {
             setMarkers(null);    
+        }
+
+        // 팝업 창 열기
+        function openPopup(content, detailedContent) {
+            document.getElementById('popupContent').innerText = content + '\n' + detailedContent;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        // 팝업 창 닫기
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
         }
     </script>
 </body>
