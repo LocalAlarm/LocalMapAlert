@@ -21,6 +21,7 @@ import com.spring.dongnae.user.vo.UserVO;
 
 @Controller
 public class UserController {
+	
     @Autowired
     private UserService userService;
 
@@ -113,4 +114,12 @@ public class UserController {
     	System.out.println(">>카카오 로그인 성공");
         return "user/main";
     }
+  
+  // 회원가입 페이지로 이동 - 건희
+	@RequestMapping("/join")
+	   public String join() {
+	       System.out.println(">> 회원가입 화면 이동 - join()");
+	       return "user/join";
+	   }
+  
 }
