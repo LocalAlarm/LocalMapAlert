@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -187,7 +189,7 @@
 
             // 마커 이미지 설정
             if (markerType === '사건 사고') {
-                imageSrc = 'https://search.pstatic.net/sunny/?src=https%3A%2F%2Fus.123rf.com%2F450wm%2Fsukanda26%2Fsukanda261703%2Fsukanda26170300093%2F73054499-%25EC%2582%25AC%25EC%259D%25B4%25EB%25A0%258C-%25EB%25B2%25A1%25ED%2584%25B0-%25EC%2595%2584%25EC%259D%25B4%25EC%25BD%2598.jpg%3Fver%3D6&type=sc960_832';
+                imageSrc = '<c:url value="/resources/image/ohno.png"/>'; 
                 imageSize = new kakao.maps.Size(60, 60);
                 imageOption = {offset: new kakao.maps.Point(27, 69)};
                 markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
