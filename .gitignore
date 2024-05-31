@@ -121,6 +121,10 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+# JDT-specific (Eclipse Java Development Tools)
+	.classpath
+	pom.properties
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
