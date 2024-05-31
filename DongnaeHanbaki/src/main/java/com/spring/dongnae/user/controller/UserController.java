@@ -62,6 +62,13 @@ public class UserController {
 		
 		return "user/login";
 	}
+	
+	// 회원가입 페이지로 이동 - 건희
+	@RequestMapping("/join")
+	   public String join() {
+	       System.out.println(">> 회원가입 화면 이동 - join()");
+	       return "user/join";
+	   }
 
 	
 }
