@@ -46,6 +46,10 @@ th {
 </style>
 </head>
 <body>
+
+\${user } : ${user }<br>
+\${userVO } : ${userVO }
+
 	<div id="container">
 		<h1>로그인 [login.jsp]</h1>
 		<form action="login" method="post">
@@ -61,7 +65,9 @@ th {
 				</tr>
 				<tr>
 					<td colspan="2" class="center"><input type="submit"
-						value="로그인"></td>
+						value="로그인">
+          <input type="button" value="회원가입" onclick="location.href='join'">
+            </td>
 				</tr>
 			</table>
 		</form>
