@@ -1,21 +1,22 @@
 package com.spring.dongnae.user.vo;
 
 public class UserVO {
-	private String id;
+	private String email;
 	private String password;
-	private String name;
-	private String role;
-
+	private String address;
+	private String nickname;
+	private String image;
+	private int kakaoCheck;
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
 
-	public String getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -26,26 +27,48 @@ public class UserVO {
 		this.password = password;
 	}
 
-	public String getName() {
-		return name;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public String getRole() {
-		return role;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
+	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public int getKakaoCheck() {
+		return kakaoCheck;
+	}
+
+	public void setKakaoCheck(int kakaoCheck) {
+		this.kakaoCheck = kakaoCheck;
 	}
 
 	@Override
 	public String toString() {
-		return "UserVO [id=" + id + ", password=" + password + ", name=" + name + ", role=" + role + "]";
+		return "UserVO [email=" + email + ", password=" + password + ", address=" + address + ", nickname=" + nickname
+				+ ", image=" + image + ", kakaoCheck=" + kakaoCheck + "]";
 	}
+
+	
+
 	
 	
 }
