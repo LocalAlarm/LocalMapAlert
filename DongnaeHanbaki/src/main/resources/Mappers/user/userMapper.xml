@@ -2,16 +2,26 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.spring.dongnae.dao.UserDAO">
+<mapper namespace="com.spring.dongnae.user.dao.UserDAO">
 	
 	<select id="getUser" parameterType="userVO" resultType="userVO">
 		SELECT * 
 		FROM USERS 
-		WHERE ID = #{id} AND PASSWORD = #{password}
+		WHERE EMAIL = #{email} 
+		<if test="kakaoCheck == 0">
+			AND PASSWORD = #{password}
+		</if>
 	</select>
 	
+	<insert id="insertUser" parameterType="userVO">
+		INSERT INTO USERS
+		VALUES (#{email}, #{password}, #{address}, #{nickname}, #{image}, #{kakaoCheck})
+	</insert>
 	
-	
+	<insert id="insertKakaoUser" parameterType="userVO">
+		INSERT INTO USERS (EMAIL, NICKNAME, IMAGE, KAKAOCHECK)
+		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
+	</insert>
 	
 </mapper>
 
