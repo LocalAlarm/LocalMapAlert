@@ -3,10 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <meta charset="utf-8"/>
     <title>흰 올빼미 지도</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+    crossorigin="anonymous">
     
     <style>
         body {
@@ -79,7 +80,8 @@
     </style>
 </head>
 <body>
-    <!-- 사이드바  https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
     <div id="sidebar">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
@@ -88,6 +90,7 @@
             <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
         </div>
     </div>
+
 
     <!-- 지도 -->
     <div id="map"></div>
@@ -98,12 +101,13 @@
         <button onclick="showMarkers()" class="btn btn-secondary btn-sm">마커 보이기</button>
     </div>
 
-    <!-- 사용자 입력 폼 -->
+     <!-- 사용자 입력 폼 -->
     <div id="inputForm">
         <form id="markerForm">
             <div class="form-group">
                 <label for="markerType">마커 종류</label>
-                <select class="form-control" id="markerType" required>
+                <select class="form-select" id="markerType" required>
+                   <option selected>이벤트 선택하기</option>
                     <option value="사건 사고">사건 사고</option>
                     <option value="이벤트">이벤트</option>
                 </select>
@@ -123,6 +127,7 @@
         </form>
     </div>
 
+
     <!-- 팝업 창 -->
     <div id="popup">
         <button id="popupClose" onclick="closePopup()">닫기</button>
@@ -135,7 +140,7 @@
         var container = document.getElementById('map');
         var options = {
             center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
-            level: 3
+            level: 2
         };
         var map = new kakao.maps.Map(container, options);
         
@@ -166,7 +171,7 @@
             var lat = document.getElementById('markerLat').value;
             var lng = document.getElementById('markerLng').value;
 
-            addMarker(new kakao.maps.LatLng(lat, lng), markerType + ": " + markerContent, "자세한 내용 :" +markerDetails);
+            addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerType + ":" + markerContent, "자세한 내용: " + markerDetails);
             document.getElementById('inputForm').style.display = 'none';
         });
 
@@ -176,10 +181,22 @@
         }
 
         // 마커 생성 및 지도에 표시하는 함수
-        function addMarker(position, content, detailedContent) {
+        function addMarker(position, markerType, content, detailedContent) {
+            var markerImage = null;
+            var imageSrc, imageSize, imageOption;
+
+            // 마커 이미지 설정
+            if (markerType === '사건 사고') {
+                imageSrc = 'https://search.pstatic.net/sunny/?src=https%3A%2F%2Fus.123rf.com%2F450wm%2Fsukanda26%2Fsukanda261703%2Fsukanda26170300093%2F73054499-%25EC%2582%25AC%25EC%259D%25B4%25EB%25A0%258C-%25EB%25B2%25A1%25ED%2584%25B0-%25EC%2595%2584%25EC%259D%25B4%25EC%25BD%2598.jpg%3Fver%3D6&type=sc960_832';
+                imageSize = new kakao.maps.Size(60, 60);
+                imageOption = {offset: new kakao.maps.Point(27, 69)};
+                markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+            }
+
             var marker = new kakao.maps.Marker({
                 position: position,
-                map: map
+                map: map,
+                image: markerImage
             });
             markers.push(marker); // 배열에 마커 추가
 
