@@ -47,7 +47,7 @@
             display: none; /* 폼을 처음에 숨김 */
             position: absolute;
             top: 50%;
-            left: 50%;
+            left: 60%;
             transform: translate(-50%, -50%);
             z-index: 2000;
             background-color: white;
@@ -58,8 +58,8 @@
        #popup {
             display: none; /* 팝업을 처음에 숨김 */
             position: absolute;
-            top: 10%;
-            left: 65%;
+            top: 50%;
+            left: 60%;
             transform: translate(-50%, -50%);
             z-index: 3000;
             background-color: white;
@@ -70,15 +70,19 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
         #popupClose {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background: #f00;
-            color: #fff;
-            border: none;
-            padding: 5px;
+           position: absolute;
+		   bottom: 5px;
+		   right: 5px;
+		   cursor: pointer;
+           background: #f00;
+           color: #fff;
+           border: none;
+           padding: 5px;
         }
+        #popupContent {
+		    color: #333; /* 텍스트 색상 */
+		    line-height: 1.5; /* 텍스트 줄 간격 */
+		}
     </style>
 </head>
 <body>
@@ -105,29 +109,31 @@
 
      <!-- 사용자 입력 폼 -->
     <div id="inputForm">
-        <form id="markerForm">
-            <div class="form-group">
-                <label for="markerType">마커 종류</label>
-                <select class="form-select" id="markerType" required>
-                   <option selected>이벤트 선택하기</option>
-                    <option value="사건 사고">사건 사고</option>
-                    <option value="이벤트">이벤트</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="markerContent">내용</label>
-                <input type="text" class="form-control" id="markerContent" required>
-            </div>
-            <div class="form-group">
-                <label for="markerDetails">자세한 내용</label>
-                <textarea class="form-control" id="markerDetails" rows="3" required></textarea>
-            </div>
-            <input type="hidden" id="markerLat">
-            <input type="hidden" id="markerLng">
-            <button type="submit" class="btn btn-primary">추가</button>
-            <button type="button" class="btn btn-secondary" onclick="closeForm()">취소</button>
-        </form>
-    </div>
+    	<form id="markerForm">
+	        <div class="form-group">
+	            <label for="markerType">마커 종류</label>
+	            <select class="form-select" id="markerType" required>
+	                <option value="" selected disabled hidden>마커 종류를 선택해주세요</option>
+	                <option value="사건 사고">사건 사고</option>
+	                <option value="이벤트">이벤트</option>
+	            </select>
+	        </div>
+	        <div class="form-group">
+	            <label for="markerContent">내용</label>
+	            <input type="text" class="form-control" id="markerContent" required>
+	        </div>
+	        <div class="form-group">
+	            <label for="markerDetails">자세한 내용</label>
+	            <textarea class="form-control" id="markerDetails" rows="3" required></textarea>
+	        </div>
+	        <input type="hidden" id="markerLat">
+	        <input type="hidden" id="markerLng">
+	        <button type="submit" class="btn btn-primary">추가</button>
+	        <button type="button" class="btn btn-secondary" onclick="closeForm()">취소</button>
+	    </form>
+	</div>
+
+
 
 
     <!-- 팝업 창 -->
@@ -148,20 +154,42 @@
         
         // 마커를 저장하는 배열
         var markers = [];
+        var circles = null; 
+
 
         // 마커 추가를 위한 임시 위치 저장
         var tempLatLng;
 
         // 클릭 이벤트 발생 시 마커 추가
         kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
+        	resetcircle();
             tempLatLng = mouseEvent.latLng;
             var lat = tempLatLng.getLat();
             var lng = tempLatLng.getLng();
-            console.log('위도:', lat, '경도:', lng); // 콘솔에 좌표 출력
+            console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
+            
+         	// 지도의 중심을 클릭된 위치로 이동
+         	map.setLevel(2);
+            map.setCenter(tempLatLng);
             
             document.getElementById('markerLat').value = lat;
             document.getElementById('markerLng').value = lng;
             document.getElementById('inputForm').style.display = 'block';
+            
+         // 구멍 뚫린 빨간색 원 생성
+            circles = new kakao.maps.Circle({
+                center: tempLatLng, 
+                radius: 20, // 반지름 (미터 단위)
+                strokeWeight: 5, // 선의 두께
+                strokeColor: '#FF0000', // 선의 색깔
+                strokeOpacity: 1, // 선의 불투명도
+                strokeStyle: 'solid', // 선의 스타일
+                fillColor: 'rgba(255,0,0,0)', // 채우기 색깔 (투명)
+                fillOpacity: 0.7 // 채우기 불투명도
+            });
+
+            // 지도에 원을 표시
+            circles.setMap(map);
         });
 
         // 폼 제출 시 마커 추가
@@ -173,14 +201,26 @@
             var lat = document.getElementById('markerLat').value;
             var lng = document.getElementById('markerLng').value;
 
-            addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerType + ":" + markerContent, "자세한 내용: " + markerDetails);
+            addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerType + " : " + markerContent, "자세한 내용 : " + markerDetails);
             document.getElementById('inputForm').style.display = 'none';
+            resetcircle();
+            resetForm(); 
         });
 
         // 폼 취소 시 폼 닫기
         function closeForm() {
             document.getElementById('inputForm').style.display = 'none';
+            resetcircle(); // 원 제거
+            resetForm();
         }
+
+	    // 원들 제거 함수
+	    function removeCircles() {
+	        for (var i = 0; i < circles.length; i++) {
+	                circles[i].setMap(null);
+	            }
+	        circles = [];
+	    }
 
         // 마커 생성 및 지도에 표시하는 함수
         function addMarker(position, markerType, content, detailedContent) {
@@ -204,7 +244,7 @@
 
             // 마커에 표시할 인포윈도우를 생성
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div>' + content + '</div>' // 표시내용
+                content : '<div>' + content + '</div>' // 표시내용
             });
 
             // 마커에 mouseover 이벤트 등록
@@ -219,6 +259,9 @@
 
             // 마커에 click 이벤트 등록 - 팝업 창으로 정보 표시
             kakao.maps.event.addListener(marker, 'click', function() {
+            	// 지도의 중심을 클릭된 위치로 이동하고 지도 레벨1로 바꾸기
+                map.setCenter(marker.getPosition());
+                map.setLevel(1);
                 openPopup(content, detailedContent);
             });
         }
@@ -250,6 +293,18 @@
         function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
+     	// 폼 제출 시 초기화 함수
+        function resetForm() {
+            document.getElementById("markerForm").reset(); // 폼 초기화
+            document.getElementById("markerType").selectedIndex = 0; // 마커 종류를 선택해주세요로 초기화
+        }
+     	
+     	function resetcircle() {
+     		 // 이전에 생성된 원 제거
+            if (circles !== null) {
+                circles.setMap(null);
+            }
+     	}
     </script>
 </body>
 </html>
