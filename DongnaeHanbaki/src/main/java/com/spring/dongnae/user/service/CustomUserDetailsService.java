@@ -20,9 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService{
 	@Autowired
 	private UserDAO userDAO;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		UserVO userVO = userDAO.getIdUser(userId);
@@ -33,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService{
 		CustomUserDetails cud = new CustomUserDetails();
 		cud.setUsername(userVO.getEmail());
 		cud.setPassword(userVO.getPassword());
-//		cud.setPassword(passwordEncoder.encode(userVO.getPassword()));
 //		List<>
 		
 		//역할
