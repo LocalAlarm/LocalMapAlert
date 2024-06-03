@@ -52,11 +52,11 @@ th {
 
 	<div id="container">
 		<h1>로그인 [login.jsp]</h1>
-		<form action="login" method="post">
+		<form id="loginForm" action="login-proc" method="post">
 			<table>
 				<tr>
 					<th>아이디</th>
-					<td><input type="text" name="email" value="${user.email }"></td>
+					<td><input type="text" id="email" name="username" value="${user.email }"></td>
 				</tr>
 				<tr>
 					<th>패스워드</th>
@@ -70,6 +70,7 @@ th {
             </td>
 				</tr>
 			</table>
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		</form>
 		<div class="kakao-btn" onclick="loginWithKakao()">
 			<img
@@ -84,6 +85,8 @@ th {
 <!-- 			style="visibility: hidden">사용자 정보 가져오기</button> -->
 
 	</div>
+
+
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
   integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
