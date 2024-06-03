@@ -15,7 +15,7 @@
 	
 	<insert id="insertUser" parameterType="userVO">
 		INSERT INTO USERS
-		VALUES (#{email}, #{password}, #{address}, #{nickname}, #{image}, #{kakaoCheck})
+		VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck})
 	</insert>
 	
 	<insert id="insertKakaoUser" parameterType="userVO">
@@ -23,8 +23,14 @@
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
 	
+<<<<<<< HEAD
 	<select id="getIdUser" parameterType="userVO" resultType="userVO">
 		SELECT * 
+=======
+	<!-- 이메일 중복체크 - 건희 -->
+	<select id="doubleCheckEmail" parameterType="String" resultType="String">
+		SELECT EMAIL
+>>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 		FROM USERS 
 		WHERE EMAIL = #{email} 
 	</select>

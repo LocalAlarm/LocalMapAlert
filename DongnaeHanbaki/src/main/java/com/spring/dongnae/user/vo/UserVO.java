@@ -10,18 +10,24 @@ import lombok.Setter;
 public class UserVO {
 	private String email;
 	private String password;
-	private String address;
 	private String nickname;
+	private String address;
+	private String detailAddress;
+	private String recoverEmail;
 	private String image;
 	private int kakaoCheck;
+<<<<<<< HEAD
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
+=======
+	// 상세주소, 복구이메일 추가 - 건희
+>>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 	
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
-
+	
 	public String getEmail() {
 		return email;
 	}
@@ -54,7 +60,10 @@ public class UserVO {
 		this.nickname = nickname;
 	}
 	
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 	public String getImage() {
 		return image;
 	}
@@ -71,18 +80,33 @@ public class UserVO {
 		this.kakaoCheck = kakaoCheck;
 	}
 	
+<<<<<<< HEAD
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
 //        return authorities;
 //    }
+=======
+	public String getRecoverEmail() {
+		return recoverEmail;
+	}
+
+	public void setRecoverEmail(String recoverEmail) {
+		this.recoverEmail = recoverEmail;
+	}
+
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
+	}
+>>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 
 	@Override
 	public String toString() {
-		return "UserVO [email=" + email + ", password=" + password + ", address=" + address + ", nickname=" + nickname
-				+ ", image=" + image + ", kakaoCheck=" + kakaoCheck + "]";
+		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
+				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
+				+ ", kakaoCheck=" + kakaoCheck + "]";
 	}
-
-	
-
-	
 	
 }
