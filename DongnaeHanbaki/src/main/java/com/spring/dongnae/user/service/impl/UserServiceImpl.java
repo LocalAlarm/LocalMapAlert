@@ -51,20 +51,16 @@ public class UserServiceImpl implements UserService {
 		userDAO.insertKakaoUser(vo);
 	}
 	
-<<<<<<< HEAD
 	@Override
 	public UserVO getIdUser(String emial) {
 		return userDAO.getIdUser(emial);
 	}
-
-=======
 	
 	// 이메일 중복체크
 	@Override	
 	public String doubleCheckEmail(String email) {
 		return userDAO.doubleCheckEmail(email);
 	}
->>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 
 	//kakao
 //    @Override

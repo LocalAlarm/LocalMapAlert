@@ -16,14 +16,10 @@ public class UserVO {
 	private String recoverEmail;
 	private String image;
 	private int kakaoCheck;
-<<<<<<< HEAD
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
-=======
 	// 상세주소, 복구이메일 추가 - 건희
->>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
-	
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
@@ -60,10 +56,6 @@ public class UserVO {
 		this.nickname = nickname;
 	}
 	
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 	public String getImage() {
 		return image;
 	}
@@ -80,11 +72,6 @@ public class UserVO {
 		this.kakaoCheck = kakaoCheck;
 	}
 	
-<<<<<<< HEAD
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return authorities;
-//    }
-=======
 	public String getRecoverEmail() {
 		return recoverEmail;
 	}
@@ -100,7 +87,6 @@ public class UserVO {
 	public void setDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
->>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 
 	@Override
 	public String toString() {

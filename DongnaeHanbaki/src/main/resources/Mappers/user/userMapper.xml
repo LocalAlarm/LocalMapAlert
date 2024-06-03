@@ -23,14 +23,15 @@
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
 	
-<<<<<<< HEAD
-	<select id="getIdUser" parameterType="userVO" resultType="userVO">
+	<select id="getIdUser" parameterType="String" resultType="userVO">
 		SELECT * 
-=======
+		FROM USERS
+		WHERE EMAIL = #{email}  
+	</select>
+		
 	<!-- 이메일 중복체크 - 건희 -->
 	<select id="doubleCheckEmail" parameterType="String" resultType="String">
 		SELECT EMAIL
->>>>>>> branch 'gun1' of https://github.com/LocalAlarm/LocalMapAlert.git
 		FROM USERS 
 		WHERE EMAIL = #{email} 
 	</select>
