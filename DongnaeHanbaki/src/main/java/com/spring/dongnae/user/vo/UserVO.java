@@ -4,6 +4,9 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 public class UserVO {
 	private String email;
 	private String password;
@@ -13,6 +16,7 @@ public class UserVO {
 	private int kakaoCheck;
 	
 	private Collection<? extends GrantedAuthority> authorities;
+	
 	
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");

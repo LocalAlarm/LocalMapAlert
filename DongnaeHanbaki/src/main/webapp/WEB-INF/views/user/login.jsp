@@ -52,7 +52,7 @@ th {
 
 	<div id="container">
 		<h1>로그인 [login.jsp]</h1>
-		<form id="loginForm" action="${pageContext.request.contextPath}/login-proc" method="post">
+		<form id="loginForm" action="login-proc" method="post">
 			<table>
 				<tr>
 					<th>아이디</th>
@@ -86,19 +86,7 @@ th {
 
 	</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const csrfParameterName = "${_csrf.parameterName}";
-        const csrfToken = "${_csrf.token}";
-        
-        console.log('CSRF Parameter Name:', csrfParameterName);
-        console.log('CSRF Token:', csrfToken);
-        
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            console.log('Form action:', this.action);
-        });
-    });
-</script>
+
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
   integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
