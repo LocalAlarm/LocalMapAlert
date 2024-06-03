@@ -154,42 +154,31 @@
         
         // 마커를 저장하는 배열
         var markers = [];
-        var circles = null; 
 
 
         // 마커 추가를 위한 임시 위치 저장
         var tempLatLng;
 
-        // 클릭 이벤트 발생 시 마커 추가
+     // 클릭 이벤트 발생 시 마커 추가
         kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-        	resetcircle();
             tempLatLng = mouseEvent.latLng;
             var lat = tempLatLng.getLat();
             var lng = tempLatLng.getLng();
             console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
-            
-         	// 지도의 중심을 클릭된 위치로 이동
-         	map.setLevel(2);
+
+            // 지도의 중심을 클릭된 위치로 이동
+            map.setLevel(2);
             map.setCenter(tempLatLng);
-            
+
             document.getElementById('markerLat').value = lat;
             document.getElementById('markerLng').value = lng;
             document.getElementById('inputForm').style.display = 'block';
-            
-         // 구멍 뚫린 빨간색 원 생성
-            circles = new kakao.maps.Circle({
-                center: tempLatLng, 
-                radius: 20, // 반지름 (미터 단위)
-                strokeWeight: 5, // 선의 두께
-                strokeColor: '#FF0000', // 선의 색깔
-                strokeOpacity: 1, // 선의 불투명도
-                strokeStyle: 'solid', // 선의 스타일
-                fillColor: 'rgba(255,0,0,0)', // 채우기 색깔 (투명)
-                fillOpacity: 0.7 // 채우기 불투명도
-            });
 
-            // 지도에 원을 표시
-            circles.setMap(map);
+            // 임시 마커 생성
+            tempMarker = new kakao.maps.Marker({
+                position: tempLatLng,
+                map: map
+            });
         });
 
         // 폼 제출 시 마커 추가
@@ -203,25 +192,23 @@
 
             addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerType + " : " + markerContent, "자세한 내용 : " + markerDetails);
             document.getElementById('inputForm').style.display = 'none';
-            resetcircle();
+            resetTempMarker();
             resetForm(); 
         });
 
-        // 폼 취소 시 폼 닫기
+     	// 폼 취소 시 폼 닫기
         function closeForm() {
             document.getElementById('inputForm').style.display = 'none';
-            resetcircle(); // 원 제거
+            resetTempMarker(); // 임시 마커 제거
             resetForm();
         }
-
-	    // 원들 제거 함수
-	    function removeCircles() {
-	        for (var i = 0; i < circles.length; i++) {
-	                circles[i].setMap(null);
-	            }
-	        circles = [];
-	    }
-
+		
+   		// 임시 마커 제거 함수
+        function resetTempMarker() {
+            if (tempMarker !== null) {
+                tempMarker.setMap(null);
+            }
+        }
         // 마커 생성 및 지도에 표시하는 함수
         function addMarker(position, markerType, content, detailedContent) {
             var markerImage = null;
@@ -296,15 +283,10 @@
      	// 폼 제출 시 초기화 함수
         function resetForm() {
             document.getElementById("markerForm").reset(); // 폼 초기화
-            document.getElementById("markerType").selectedIndex = 0; // 마커 종류를 선택해주세요로 초기화
+            document.getElementById("markerType").selectedIndex = 0; //마커 종류 초기화
         }
      	
-     	function resetcircle() {
-     		 // 이전에 생성된 원 제거
-            if (circles !== null) {
-                circles.setMap(null);
-            }
-     	}
+     	
     </script>
 </body>
 </html>
