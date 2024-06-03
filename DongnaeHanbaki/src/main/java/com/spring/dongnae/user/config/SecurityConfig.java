@@ -23,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
+            	//컨트롤러 전에 실행 
 //                .antMatchers("/", "/home", "/register", "/login", "/resources/**", "/login-proc", "index.jsp").permitAll()
                 .anyRequest().permitAll()
                 .and()

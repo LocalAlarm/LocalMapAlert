@@ -12,6 +12,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,6 +28,9 @@ import com.spring.dongnae.user.vo.UserVO;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public UserServiceImpl() {
 		System.out.println(">> UserServiceImpl() 객체생성");
