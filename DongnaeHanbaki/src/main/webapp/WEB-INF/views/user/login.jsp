@@ -56,7 +56,7 @@ th {
 			<table>
 				<tr>
 					<th>아이디</th>
-					<td><input type="text" name="email" value="${user.email }"></td>
+					<td><input type="text" id="email" name="username" value="${user.email }"></td>
 				</tr>
 				<tr>
 					<th>패스워드</th>

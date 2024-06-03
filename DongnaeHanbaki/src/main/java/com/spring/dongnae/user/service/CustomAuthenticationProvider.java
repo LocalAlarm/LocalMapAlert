@@ -24,9 +24,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         System.out.println("Authentication 작동");
         String email = authentication.getName();
         String password = (String) authentication.getCredentials();
-        
-        System.out.println(email);
-        System.out.println(password);
 
         UserVO formUserVO = new UserVO();
         formUserVO.setEmail(email);
@@ -35,10 +32,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UserVO userVO = userService.getUser(formUserVO);
 
         if (userVO == null) {
+        	System.out.println("유저vo가 null값!");
             throw new BadCredentialsException("Invalid Email or Password");
         }
 
         if (!passwordEncoder.matches(password, userVO.getPassword())) {
+        	System.out.println("match가 안된다!!");
             throw new BadCredentialsException("Invalid Email or Password");
         }
 
