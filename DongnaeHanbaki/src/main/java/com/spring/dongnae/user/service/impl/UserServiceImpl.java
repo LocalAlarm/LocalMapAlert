@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public UserVO getUserByEmail(String email) {
+		return userDAO.getUserByEmail(email);
+	}
+	
+	@Override
 	public void insertUser(UserVO vo) {
 		userDAO.insertUser(vo);
 	}
