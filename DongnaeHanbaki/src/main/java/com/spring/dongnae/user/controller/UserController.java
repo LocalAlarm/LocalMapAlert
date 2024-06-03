@@ -54,9 +54,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginView(@ModelAttribute("user") UserVO vo) {
-        System.out.println(">> 로그인 화면이동 - loginView()");
-        vo.setEmail("test1@naver.com");
-        vo.setPassword("test1");
         return "user/login";
     }
 
