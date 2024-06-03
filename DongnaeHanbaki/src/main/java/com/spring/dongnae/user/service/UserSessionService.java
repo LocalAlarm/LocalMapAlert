@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
+@Scope("singleton")
 public class UserSessionService {
 	
 	private List<Integer> activeUserHashes = Collections.synchronizedList(new ArrayList<>());
+	
+	public UserSessionService() {
+        System.out.println("UserSessionService instance created: " + this);
+    }
 	
     public void addUserSession(String username) {
         int userHash = username.hashCode();

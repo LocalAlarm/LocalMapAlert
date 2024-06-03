@@ -24,6 +24,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         userSessionService.addUserSession(username);
         System.out.println("User " + username + " logged in with hash: " + username.hashCode());
         System.out.println("Active User Hashes: " + userSessionService.getActiveUserHashes());
+        System.out.println("UserSessionService instance: " + userSessionService);
         response.sendRedirect("/dongnae/home");
     }
 }
