@@ -13,6 +13,10 @@
 		</if>
 	</select>
 	
+ 	<select id="getUserByEmail" parameterType="string" resultType="userVO">
+		SELECT * FROM USERS WHERE EMAIL = #{email}
+	</select>
+	
 	<insert id="insertUser" parameterType="userVO">
 		INSERT INTO USERS
 		VALUES (#{email}, #{password}, #{address}, #{nickname}, #{image}, #{kakaoCheck})
