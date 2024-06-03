@@ -52,11 +52,11 @@ th {
 
 	<div id="container">
 		<h1>로그인 [login.jsp]</h1>
-		<form id="loginForm" action="login-proc" method="post">
+		<form id="loginForm" action="authenticate" method="post">
 			<table>
 				<tr>
 					<th>아이디</th>
-					<td><input type="text" id="email" name="username" value="${user.email }"></td>
+					<td><input type="text" id="email" name="email" value="${user.email }"></td>
 				</tr>
 				<tr>
 					<th>패스워드</th>
@@ -66,7 +66,7 @@ th {
 				<tr>
 					<td colspan="2" class="center"><input type="submit"
 						value="로그인">
-          <input type="button" value="회원가입" onclick="location.href='join'">
+          <input type="button" value="회원가입" onclick="location.href='joinform'">
             </td>
 				</tr>
 			</table>

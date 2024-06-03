@@ -23,6 +23,12 @@
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
 	
+	<select id="getIdUser" parameterType="userVO" resultType="userVO">
+		SELECT * 
+		FROM USERS 
+		WHERE EMAIL = #{email} 
+	</select>
+	
 </mapper>
 
 

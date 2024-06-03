@@ -66,7 +66,7 @@
 <div>
     <div>
     <h1>회원가입</h1>
-        <form action="" method="post">
+        <form action="join" method="post">
             <table>
                 <tr> 
                     <td>

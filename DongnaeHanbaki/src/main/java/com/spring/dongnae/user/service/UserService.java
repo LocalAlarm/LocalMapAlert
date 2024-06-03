@@ -10,7 +10,8 @@ public interface UserService {
 	UserVO getUser(UserVO vo);
 	void insertUser(UserVO vo);
 	void insertKakaoUser(UserVO vo);
+	UserVO getIdUser (String email);
 	// kakao
-	public String getAccessToken(String authorize_code);
+//	public String getAccessToken(String authorize_code);
 //	public String getuserinfo(String access_Token, HttpSession session, RedirectAttributes rttr);
 }

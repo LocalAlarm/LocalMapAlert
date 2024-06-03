@@ -15,7 +15,7 @@ public class UserVO {
 	private String image;
 	private int kakaoCheck;
 	
-	private Collection<? extends GrantedAuthority> authorities;
+//	private Collection<? extends GrantedAuthority> authorities;
 	
 	
 	public UserVO() {
@@ -71,9 +71,9 @@ public class UserVO {
 		this.kakaoCheck = kakaoCheck;
 	}
 	
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return authorities;
+//    }
 
 	@Override
 	public String toString() {
