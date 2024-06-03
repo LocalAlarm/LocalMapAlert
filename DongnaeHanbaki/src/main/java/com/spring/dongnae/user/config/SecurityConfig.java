@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.spring.dongnae.user.service.CustomAuthenticationProvider;
+import com.spring.dongnae.user.service.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -17,20 +18,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
+    
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
             .authorizeRequests()
-            	//컨트롤러 전에 실행 
-//                .antMatchers("/", "/home", "/register", "/login", "/resources/**", "/login-proc", "index.jsp").permitAll()
                 .anyRequest().permitAll()
                 .and()
             .formLogin()
                 .loginPage("/login").permitAll()
                 .loginProcessingUrl("/login-proc").permitAll()
-                .defaultSuccessUrl("/home", true)
+                .successHandler(customAuthenticationSuccessHandler)
                 .failureUrl("/login?error=true")
                 .and()
             .logout()
