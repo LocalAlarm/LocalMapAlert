@@ -7,12 +7,14 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.user.dto.KakaoDTO;
@@ -117,9 +119,63 @@ public class UserController {
   
   // 회원가입 페이지로 이동 - 건희
 	@RequestMapping("/join")
-	   public String join() {
-	       System.out.println(">> 회원가입 화면 이동 - join()");
-	       return "user/join";
-	   }
-  
+	public String join() {
+	    System.out.println(">> 회원가입 화면 이동 - join()");
+	    return "user/join";
+	}
+	
+	//이메일 중복체크 - 건희
+	 @RequestMapping(value = "/checkEmail", method = RequestMethod.POST)
+	 @ResponseBody
+	 public String checkEmail(@RequestParam("email") String email) {
+		 	System.out.println("email : " + email);
+	        return userService.doubleCheckEmail(email);
+	 }
+	 
+	// 회원가입 완료 페이지로 이동 - 건희
+	// 회원가입 완료 페이지로 이동 및 회원가입 처리 - 건희
+	    @RequestMapping(value = "/joinOk", method = RequestMethod.POST)
+	    public String joinOk(HttpServletRequest request, @RequestParam("image") MultipartFile image, Model model) {
+	        System.out.println(">> 회원가입 완료 처리 - joinOk()");
+	        
+	        String email = request.getParameter("email");
+	        String password = request.getParameter("password");
+	        String nickname = request.getParameter("nickname");
+	        String address = request.getParameter("address");
+	        String detailAddress = request.getParameter("detailAddress");
+	        String recoverEmail = request.getParameter("recoverEmail");
+
+	        UserVO user = new UserVO();
+	        user.setEmail(email);
+	        user.setPassword(password);
+	        user.setNickname(nickname);
+	        user.setAddress(address);
+	        user.setDetailAddress(detailAddress);
+	        user.setRecoverEmail(recoverEmail);
+	        
+	        // 파일 업로드 처리
+	        if (!image.isEmpty()) {
+	            try {
+	                byte[] bytes = image.getBytes();
+	                // 원하는 파일 저장 위치에 저장하는 로직 추가
+	                // 예시: Files.write(Paths.get("path/to/save/" + image.getOriginalFilename()), bytes);
+	                user.setImage(image.getOriginalFilename());
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                model.addAttribute("message", "파일 업로드 중 오류가 발생했습니다.");
+	                return "user/joinOk";
+	            }
+	        }
+
+	        try {
+	            userService.insertUser(user);
+	            model.addAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
+	            return "user/joinOk";
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            model.addAttribute("message", "회원가입 중 오류가 발생했습니다.");
+	            return "user/joinOk";
+	        }
+	    }
+	 
 }

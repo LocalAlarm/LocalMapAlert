@@ -46,7 +46,13 @@ public class UserServiceImpl implements UserService {
 	public void insertKakaoUser(UserVO vo) {
 		userDAO.insertKakaoUser(vo);
 	}
-
+	
+	
+	// 이메일 중복체크
+	@Override	
+	public String doubleCheckEmail(String email) {
+		return userDAO.doubleCheckEmail(email);
+	}
 
 	//kakao
     @Override

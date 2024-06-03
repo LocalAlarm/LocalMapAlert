@@ -15,13 +15,20 @@
 	
 	<insert id="insertUser" parameterType="userVO">
 		INSERT INTO USERS
-		VALUES (#{email}, #{password}, #{address}, #{nickname}, #{image}, #{kakaoCheck})
+		VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck})
 	</insert>
 	
 	<insert id="insertKakaoUser" parameterType="userVO">
 		INSERT INTO USERS (EMAIL, NICKNAME, IMAGE, KAKAOCHECK)
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
+	
+	<!-- 이메일 중복체크 - 건희 -->
+	<select id="doubleCheckEmail" parameterType="String" resultType="String">
+		SELECT EMAIL
+		FROM USERS 
+		WHERE EMAIL = #{email} 
+	</select>
 	
 </mapper>
 

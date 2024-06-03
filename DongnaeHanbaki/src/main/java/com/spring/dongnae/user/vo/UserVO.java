@@ -3,14 +3,18 @@ package com.spring.dongnae.user.vo;
 public class UserVO {
 	private String email;
 	private String password;
-	private String address;
 	private String nickname;
+	private String address;
+	private String detailAddress;
+	private String recoverEmail;
 	private String image;
 	private int kakaoCheck;
+	// 상세주소, 복구이메일 추가 - 건희
+	
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
-
+	
 	public String getEmail() {
 		return email;
 	}
@@ -43,8 +47,6 @@ public class UserVO {
 		this.nickname = nickname;
 	}
 	
-	
-
 	public String getImage() {
 		return image;
 	}
@@ -60,15 +62,28 @@ public class UserVO {
 	public void setKakaoCheck(int kakaoCheck) {
 		this.kakaoCheck = kakaoCheck;
 	}
+	
+	public String getRecoverEmail() {
+		return recoverEmail;
+	}
+
+	public void setRecoverEmail(String recoverEmail) {
+		this.recoverEmail = recoverEmail;
+	}
+
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
+	}
 
 	@Override
 	public String toString() {
-		return "UserVO [email=" + email + ", password=" + password + ", address=" + address + ", nickname=" + nickname
-				+ ", image=" + image + ", kakaoCheck=" + kakaoCheck + "]";
+		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
+				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
+				+ ", kakaoCheck=" + kakaoCheck + "]";
 	}
-
-	
-
-	
 	
 }
