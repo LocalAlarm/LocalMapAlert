@@ -43,5 +43,10 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<!-- 절대적 순서 배열 -->
+	<absolute-ordering>
+		<name>spring_web</name>
+	</absolute-ordering>
 
 </web-app>

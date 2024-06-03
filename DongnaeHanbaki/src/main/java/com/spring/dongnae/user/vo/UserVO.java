@@ -1,5 +1,9 @@
 package com.spring.dongnae.user.vo;
 
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+
 public class UserVO {
 	private String email;
 	private String password;
@@ -7,6 +11,9 @@ public class UserVO {
 	private String nickname;
 	private String image;
 	private int kakaoCheck;
+	
+	private Collection<? extends GrantedAuthority> authorities;
+	
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
@@ -43,7 +50,6 @@ public class UserVO {
 		this.nickname = nickname;
 	}
 	
-	
 
 	public String getImage() {
 		return image;
@@ -60,6 +66,10 @@ public class UserVO {
 	public void setKakaoCheck(int kakaoCheck) {
 		this.kakaoCheck = kakaoCheck;
 	}
+	
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
 	@Override
 	public String toString() {

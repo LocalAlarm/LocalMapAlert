@@ -7,7 +7,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,28 +31,28 @@ public class UserController {
         System.out.println("========= UserController() 객체생성");
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST) 
-    public String login(UserVO vo) throws Exception {
-        System.out.println(">> 로그인 처리");
-        System.out.println("vo : " + vo);
+//    @PostMapping("/loginProc")
+//    public String login(UserVO vo) throws Exception {
+//        System.out.println(">> 로그인 처리");
+//        System.out.println("vo : " + vo);
+//
+//        if (vo.getEmail() == null || vo.getEmail().equals("")) {
+//            throw new IllegalArgumentException("아이디는 반드시 입력해야 합니다");
+//        }
+//        
+//        UserVO user = userService.getUser(vo);
+//        System.out.println("user : " + user);
+//        
+//        if (user != null) {
+//            System.out.println(">>로그인 성공");
+//            return "user/main"; 
+//        } else {
+//            System.out.println(">>로그인 실패~~~");
+//            return "user/login"; 
+//        }
+//    }
 
-        if (vo.getEmail() == null || vo.getEmail().equals("")) {
-            throw new IllegalArgumentException("아이디는 반드시 입력해야 합니다");
-        }
-        
-        UserVO user = userService.getUser(vo);
-        System.out.println("user : " + user);
-        
-        if (user != null) {
-            System.out.println(">>로그인 성공");
-            return "user/main"; 
-        } else {
-            System.out.println(">>로그인 실패~~~");
-            return "user/login"; 
-        }
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping("/login")
     public String loginView(@ModelAttribute("user") UserVO vo) {
         System.out.println(">> 로그인 화면이동 - loginView()");
         vo.setEmail("test1@naver.com");
