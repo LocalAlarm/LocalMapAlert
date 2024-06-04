@@ -8,8 +8,6 @@
 //import org.springframework.security.core.AuthenticationException;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.stereotype.Component;
-//
-//import com.spring.dongnae.user.vo.CustomUserDetails;
 //import com.spring.dongnae.user.vo.UserVO;
 //
 //@Component
@@ -27,23 +25,22 @@
 //        String email = authentication.getName();
 //        String password = (String) authentication.getCredentials();
 //
-//        UserVO formUserVO = new UserVO();
-//        formUserVO.setEmail(email);
-//        formUserVO.setPassword(password);
-//
-//        UserVO userVO = userService.getUser(formUserVO);
-//
+//        UserVO userVO = userService.getUserByEmail(email);
+//        
 //        if (userVO == null) {
-//        	System.out.println("유저vo가 null값!");
 //            throw new BadCredentialsException("Invalid Email or Password");
 //        }
+//        
+//        // 입력된 비밀번호 인코딩 후 출력
+//        String encodedPassword = passwordEncoder.encode(password);
+//        System.out.println("인코딩된 입력 비밀번호: " + encodedPassword);
 //
 //        if (!passwordEncoder.matches(password, userVO.getPassword())) {
 //        	System.out.println("match가 안된다!!");
 //            throw new BadCredentialsException("Invalid Email or Password");
 //        }
 //
-//        return new UsernamePasswordAuthenticationToken(userVO, password, CustomUserDetails.getAuthorities());
+//        return new UsernamePasswordAuthenticationToken(userVO, password, userVO.getAuthorities());
 //    }
 //
 //    @Override

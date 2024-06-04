@@ -8,6 +8,7 @@ import com.spring.dongnae.user.vo.UserVO;
 
 public interface UserService {
 	UserVO getUser(UserVO vo);
+	UserVO getUserByEmail(String email);
 	void insertUser(UserVO vo);
 	void insertKakaoUser(UserVO vo);
 	UserVO getIdUser (String email);
