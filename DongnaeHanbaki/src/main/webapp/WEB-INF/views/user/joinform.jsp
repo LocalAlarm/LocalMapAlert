@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
+<jsp:include page="../../patials/commonHead.jsp"></jsp:include>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
@@ -154,60 +156,44 @@
 </script>
 </head>
 <body>
-<div>
-	<div>
-		<h1>회원가입</h1>
-		<form action="join" method="post">
-			<table>
-				<tr> 
-					<td>
-						<input type="email" name="email" title="이메일" placeholder="이메일 입력">
-						<input type="button" value="이메일 중복 체크" onclick="checkEmail(this.form)">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="password" id="password" name="password" title="비밀번호" placeholder="비밀번호 입력">
-						<button type="button" onclick="passwordVisibility('password', this)">비밀번호 보이기</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="password" id="passwordCheck" name="passwordCheck" title="비밀번호 확인" placeholder="비밀번호 확인">
-						<button type="button" onclick="passwordVisibility('passwordCheck', this)">비밀번호 보이기</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="text" name="nickname" title="닉네임" placeholder="닉네임 입력(영어나 한글로만 이루어진 8글자 이하)">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="text" id="sample5_address" placeholder="주소">
-						<input type="button" value="주소 검색" onclick="sample5_execDaumPostcode()"><br>
-						<div id="map" style="width:350px;height:350px;margin-top:10px;display:none"></div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="text" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="file" name="image">
-					</td>
-				</tr>
-				<tr>
-					<td class="button" colspan="2">
-						<input type="submit" value="회원가입 완료" onclick="return checkEmail(this.form)">
-						<input type="button" value="뒤로가기" onclick="goBack()">
-					</td>
-				</tr>
-			</table>
-		</form> 
-	</div>
+<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
+<div class="loginWrapper">
+    <div class="logo">
+        <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717463449/%EB%8F%99%EB%84%A4%ED%95%9C%EB%B0%94%ED%80%B4__1_-removebg-preview_cgjoy5.png" alt="로고 이미지">
+    </div>
+    <h2>회원가입</h2>
+<form action="join" method="post">
+    <div class="mb-3">
+        <input type="email" class="form-control" name="email" title="이메일" placeholder="이메일 입력">
+        <input type="button" value="이메일 중복 체크" onclick="checkEmail(this.form)">
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" id="password" name="password" title="비밀번호" placeholder="비밀번호 입력">
+        <button type="button" onclick="passwordVisibility('password', this)">비밀번호 보이기</button>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" id="passwordCheck" name="passwordCheck" title="비밀번호 확인" placeholder="비밀번호 확인">
+        <button type="button" onclick="passwordVisibility('passwordCheck', this)">비밀번호 보이기</button>
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="nickname" title="닉네임" placeholder="닉네임 입력(영어나 한글로만 이루어진 8글자 이하)">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="sample5_address" placeholder="주소">
+        <input type="button" value="주소 검색" onclick="sample5_execDaumPostcode()"><br>
+        <div id="map" style="width:350px;height:350px;margin-top:10px;display:none"></div>
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
+    </div>
+    <div class="mb-3">
+        <input type="file" name="image">
+    </div>
+    <div class="d-flex justify-content-center mb-2 px-3">
+        <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="회원가입 하기" onclick="return checkEmail(this.form)">
+        <input type="button" class="btn btn-light ms-2"" value="뒤로가기" onclick="goBack()">
+    </div>
+</form>
 </div>
 </body>
 </html>
