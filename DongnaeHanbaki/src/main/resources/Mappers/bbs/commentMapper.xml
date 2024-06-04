@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.bbs.CommentDAO">
+
+ 	<select id="getCommentList" parameterType="string" resultType="commentVO">
+		SELECT * FROM COMMENT
+		WHERE BBS_IDX = #{bbsIdx}
+		ORDER BY COMMENT_IDX DESC
+	</select>
+	
+ 	<select id="getComment" parameterType="string" resultType="commentVO">
+		SELECT * FROM COMMENT
+		WHERE COMMENT_IDX = #{commentIdx}
+	</select>
+	
+	<insert id="insertComment" parameterType="commentVO">
+		INSERT INTO COMMENT
+		       (COMMENT_IDX, WRITER, CONTENT, PWD, WRITE_DATE, 
+		       IP, BBS_IDX)
+		VALUES (COMMENTS_SEQ.NEXTVAL, #{writer}, #{content}, #{pwd}, SYSDATE, 
+		       #{ip}, #{bbsIdx})
+	</insert>
+	
+	<update id="updateComment" parameterType="commentVO">
+	</update>
+	<delete id="deleteComment" parameterType="String">
+	</delete>
+	
+</mapper>
+
+
+
+
+
