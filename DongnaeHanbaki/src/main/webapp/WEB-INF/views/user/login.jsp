@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -7,86 +7,86 @@
 <head>
 <meta charset="UTF-8">
 <title>로그인</title>
+<jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <style>
-#container {
-	width: 700px;
-	margin: auto;
+body {
+    background-image: url('https://images.unsplash.com/photo-1548345680-f5475ea5df84?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* 원하는 이미지 URL로 변경 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* 로고와 로그인 폼을 세로로 정렬하기 위해 추가 */
+    align-items: center; /* 로고와 로그인 폼을 가운데로 정렬하기 위해 추가 */
+    justify-content: center;
+    color: white;
 }
 
-h1 {
-	text-align: center;
+#kakaoImg {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+#kakaoImg:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+.loginWrapper {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    background-color: rgba(90, 90, 90, 0.8); /* 배경색을 반투명하게 설정 */
+    color: white;
+    margin-top: 5px; /* 로고와 로그인 폼 사이의 간격을 조절하기 위해 수정 */
 }
 
-table {
-	border-collapse: collapse;
+
+.loginWrapper label {
+    color: white;
 }
 
-table, th, td {
-	border: 1px solid black;
-	margin: 0 auto;
+.logo {
+    margin-bottom: -50px; /* 로고 아래 여백 조절 */
+    text-align: center; /* 로고를 가운데 정렬 */
 }
 
-th {
-	background-color: orange;
-}
-
-.center {
-	text-align: center;
-}
-
-.kakao-btn {
-	text-align: center;
-	margin-top: 20px;
-	cursor: pointer;
-}
-
-.kakao-btn:hover {
-	opacity: 0.8;
+.logo img {
+    width: 200px; /* 로고 이미지의 너비 설정 */
+    height: auto; /* 로고 이미지의 높이 자동 조정 */
 }
 </style>
 </head>
 <body>
-
-\${user } : ${user }<br>
-\${userVO } : ${userVO }
-
-	<div id="container">
-		<h1>로그인 [login.jsp]</h1>
-		<form id="loginForm" action="authenticate" method="post">
-			<table>
-				<tr>
-					<th>아이디</th>
-					<td><input type="text" id="email" name="email" value="${user.email }"></td>
-				</tr>
-				<tr>
-					<th>패스워드</th>
-					<td><input type="password" name="password"
-						value="${user.password }"></td>
-				</tr>
-				<tr>
-					<td colspan="2" class="center"><input type="submit"
-						value="로그인">
-          <input type="button" value="회원가입" onclick="location.href='joinform'">
-            </td>
-				</tr>
-			</table>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		</form>
-		<div class="kakao-btn" onclick="loginWithKakao()">
-			<img
-				src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
-				width="222" alt="카카오 로그인 버튼" />
-		</div>
-
-<!-- 		<p id="token-result"> -->
-<!-- 			토큰: <span id="token-value"></span> -->
-<!-- 		</p> -->
-<!-- 		<button class="api-btn" onclick="requestUserInfo()" -->
-<!-- 			style="visibility: hidden">사용자 정보 가져오기</button> -->
-
-	</div>
-
-
+<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
+    <div class="loginWrapper">
+	    <div class="logo">
+	        <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717399397/mainLogo_hzmpm0.png" alt="로고 이미지">
+	    </div>
+        <form id="loginForm" action="authenticate" method="post">
+             <div class="mb-3">
+                <label for="email" class="form-label">이메일</label>
+                <input type="email" class="form-control" id="email" name="email" >
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" class="form-control" id="password" name="password">
+             </div>
+             
+             <div class="d-flex justify-content-center mb-2 px-3">
+                <button type="submit" class="btn btn-primary me-2">로그인</button>
+                <input type="button" class="btn btn-light ms-2" value="회원가입" onclick="location.href='joinform'">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+             </div>
+        </form>
+        
+        <div class="kakao-btn d-flex justify-content-center">
+            <img
+                src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
+                width="222" alt="카카오 로그인 버튼" id="kakaoImg" onclick="loginWithKakao()" />
+        </div>
+    </div>
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
   integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
@@ -99,37 +99,6 @@ th {
       state: 'userme'
     });
   }
-
-//   function requestUserInfo() {
-//     Kakao.API.request({
-//       url: '/v2/user/me',
-//     })
-//       .then(function(res) {
-//         alert(JSON.stringify(res));
-//       })
-//       .catch(function(err) {
-//         alert(
-//           'failed to request user information: ' + JSON.stringify(err)
-//         );
-//       });
-//   }
-
-//   // 아래는 데모를 위한 UI 코드입니다.
-//   displayToken();
-//   function displayToken() {
-//     var token = getCookie('authorize-access-token');
-
-//     if(token) {
-//       Kakao.Auth.setAccessToken(token);
-//       document.querySelector('#token-result').innerText = 'login success, ready to request API';
-//       document.querySelector('button.api-btn').style.visibility = 'visible';
-//     }
-//   }
-
-//   function getCookie(name) {
-//     var parts = document.cookie.split(name + '=');
-//     if (parts.length === 2) { return parts[1].split(';')[0]; }
-//   }
 </script>
 
 </body>
