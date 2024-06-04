@@ -56,9 +56,6 @@ body {
     width: 200px; /* 로고 이미지의 너비 설정 */
     height: auto; /* 로고 이미지의 높이 자동 조정 */
 }
-
-
-
 </style>
 </head>
 <body>
@@ -67,10 +64,10 @@ body {
 	    <div class="logo">
 	        <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717399397/mainLogo_hzmpm0.png" alt="로고 이미지">
 	    </div>
-        <form id="loginForm" action="login-proc" method="post">
+        <form id="loginForm" action="authenticate" method="post">
              <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
-                <input type="email" class="form-control" id="email" name="username" >
+                <input type="email" class="form-control" id="email" name="email" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
@@ -79,7 +76,7 @@ body {
              
              <div class="d-flex justify-content-center mb-2 px-3">
                 <button type="submit" class="btn btn-primary me-2">로그인</button>
-                <input type="button" class="btn btn-light ms-2" value="회원가입" onclick="location.href='join'">
+                <input type="button" class="btn btn-light ms-2" value="회원가입" onclick="location.href='joinform'">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
              </div>
         </form>
