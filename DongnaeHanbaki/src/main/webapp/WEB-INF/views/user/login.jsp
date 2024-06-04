@@ -83,6 +83,7 @@ body {
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
              </div>
         </form>
+        
         <div class="kakao-btn d-flex justify-content-center">
             <img
                 src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
