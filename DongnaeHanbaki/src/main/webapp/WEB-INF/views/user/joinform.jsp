@@ -9,6 +9,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
 <script>
+	//주소찾기
 	var mapContainer, mapOption, map, geocoder, marker;
 
 	window.onload = function() {
