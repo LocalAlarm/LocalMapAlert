@@ -30,8 +30,8 @@
 	</select>
 		
 	<!-- 이메일 중복체크 - 건희 -->
-	<select id="doubleCheckEmail" parameterType="String" resultType="String">
-		SELECT EMAIL
+	<select id="doubleCheckEmail" parameterType="String" resultType="int">
+		SELECT COUNT(*)
 		FROM USERS 
 		WHERE EMAIL = #{email} 
 	</select>

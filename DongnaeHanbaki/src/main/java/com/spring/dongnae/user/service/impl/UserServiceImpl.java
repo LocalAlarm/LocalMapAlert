@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 	
 	// 이메일 중복체크
 	@Override	
-	public String doubleCheckEmail(String email) {
+	public int doubleCheckEmail(String email) {
 		return userDAO.doubleCheckEmail(email);
 	}
 

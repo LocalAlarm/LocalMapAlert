@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,10 +104,19 @@ public class UserController {
       return check;
    }
 
-   // 카카오로그인후
-   @GetMapping("/main")
+   // (카카오)로그인후
+   @GetMapping("/kakaomain")
    public String kakaoLogin() {
-      System.out.println(">>카카오 로그인 성공");
+      System.out.println(">>(카카오) 로그인 성공");
+      return "user/main";
+   }
+   
+   // 로그인후
+   @GetMapping("/main")
+   public String main() {
+	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      String username = authentication.getName();
+      System.out.println(">> 로그인 성공 사용자 : " + username);
       return "user/main";
    }
 
@@ -123,11 +136,15 @@ public class UserController {
    }
 
    // 이메일 중복체크 - 건희
-   @RequestMapping(value = "/checkEmail", method = RequestMethod.POST)
+   @PostMapping("/checkEmail")
    @ResponseBody
-   public String checkEmail(@RequestParam("email") String email) {
+   public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
       System.out.println("email : " + email);
-      return userService.doubleCheckEmail(email);
+      if (userService.doubleCheckEmail(email) > 0) {
+    	  System.out.println("이메일 중복!!!!");
+    	  return ResponseEntity.ok("duplicate");
+      }
+      return ResponseEntity.ok("pass");
    }
 
 

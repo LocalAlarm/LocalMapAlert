@@ -8,5 +8,5 @@ public interface UserDAO {
 	void insertUser(UserVO vo);
 	UserVO getIdUser(String email);
 	
-	String doubleCheckEmail(String email);
+	int doubleCheckEmail(String email);
 }
