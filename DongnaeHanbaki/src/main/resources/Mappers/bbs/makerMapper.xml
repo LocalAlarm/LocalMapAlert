@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.bbs.MakerDAO">
+	
+ 	<select id="getMakerList" resultType="makerVO">
+	
+	</select>
+	
+ 	<select id="getMaker" parameterType="string" resultType="makerVO">
+	
+	</select>
+	
+	<insert id="insertMaker" parameterType="makerVO">
+	
+	</insert>
+	
+	<update id="updateMaker" parameterType="makerVO">
+	</update>
+	<delete id="deleteMaker" parameterType="String">
+	</delete>
+	
+</mapper>
+
+
+
+
+

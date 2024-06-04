@@ -41,4 +41,5 @@
 	
 	<!-- Mapper 인터페이스 사용 방식 적용 -->
 	<mybatis-spring:scan base-package="com.spring.dongnae.user.dao"/>
+	<mybatis-spring:scan base-package="com.spring.dongnae.bbs"/>
 </beans>

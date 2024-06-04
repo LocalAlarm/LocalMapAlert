@@ -9,6 +9,9 @@
 	</settings>
 	<typeAliases>
         <typeAlias alias="userVO" type="com.spring.dongnae.user.vo.UserVO" />
+        <typeAlias alias="bbsVO" type="com.spring.dongnae.bbs.BbsVO" />
+        <typeAlias alias="makerVO" type="com.spring.dongnae.bbs.MakerVO" />
+        <typeAlias alias="commentVO" type="com.spring.dongnae.bbs.CommentVO" />
     </typeAliases>
 </configuration>
 
