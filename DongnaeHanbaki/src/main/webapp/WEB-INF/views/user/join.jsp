@@ -13,6 +13,7 @@
 	mapOption = {
 	    center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
 	    level: 5 // 지도의 확대 레벨
+	    
 	};
 	
 	//지도를 미리 생성
