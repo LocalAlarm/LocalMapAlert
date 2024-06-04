@@ -7,5 +7,7 @@ public interface UserDAO {
 	UserVO getUserByEmail(String email);
 	void insertKakaoUser(UserVO vo);
 	void insertUser(UserVO vo);
+	UserVO getIdUser(String email);
 	
+	String doubleCheckEmail(String email);
 }
