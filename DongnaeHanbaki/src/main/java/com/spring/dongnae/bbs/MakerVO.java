@@ -1,15 +1,30 @@
 package com.spring.dongnae.bbs;
 
 public class MakerVO {
-	String maker_idx;
+	String makerIdx;
+	String userEmail;
+	String limitRole;
 	String type;
 	String image;
-	String image_pi;
-	public String getMaker_idx() {
-		return maker_idx;
+	String imagePi;
+	String delYn;
+	public String getMakerIdx() {
+		return makerIdx;
 	}
-	public void setMaker_idx(String maker_idx) {
-		this.maker_idx = maker_idx;
+	public void setMakerIdx(String makerIdx) {
+		this.makerIdx = makerIdx;
+	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	public String getRole() {
+		return limitRole;
+	}
+	public void setRole(String limitRole) {
+		this.limitRole = limitRole;
 	}
 	public String getType() {
 		return type;
@@ -23,16 +38,22 @@ public class MakerVO {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public String getImage_pi() {
-		return image_pi;
+	public String getImagePi() {
+		return imagePi;
 	}
-	public void setImage_pi(String image_pi) {
-		this.image_pi = image_pi;
+	public void setImagePi(String imagePi) {
+		this.imagePi = imagePi;
+	}
+	public String getDelYn() {
+		return delYn;
+	}
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
 	}
 	@Override
 	public String toString() {
-		return "MakerVO [maker_idx=" + maker_idx + ", type=" + type + ", image=" + image + ", image_pi=" + image_pi
-				+ "]";
+		return "MakerVO [makerIdx=" + makerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type=" + type
+				+ ", image=" + image + ", imagePi=" + imagePi + ", delYn=" + delYn + "]";
 	}
 	
 }
