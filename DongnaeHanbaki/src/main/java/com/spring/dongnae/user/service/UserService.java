@@ -19,4 +19,6 @@ public interface UserService {
 	// 이메일 중복 체크 - 건희
 	int doubleCheckEmail(String email);
 	
+	// 이메일 찾기 - 건희
+	String findUserEmail(UserVO vo);
 }
