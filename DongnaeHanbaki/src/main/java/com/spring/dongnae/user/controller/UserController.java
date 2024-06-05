@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,10 +104,19 @@ public class UserController {
       return check;
    }
 
-   // 카카오로그인후
-   @GetMapping("/main")
+   // (카카오)로그인후
+   @GetMapping("/kakaomain")
    public String kakaoLogin() {
-      System.out.println(">>카카오 로그인 성공");
+      System.out.println(">>(카카오) 로그인 성공");
+      return "user/main";
+   }
+   
+   // 로그인후
+   @GetMapping("/main")
+   public String main() {
+	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      String username = authentication.getName();
+      System.out.println(">> 로그인 성공 사용자 : " + username);
       return "user/main";
    }
 
@@ -123,58 +136,16 @@ public class UserController {
    }
 
    // 이메일 중복체크 - 건희
-   @RequestMapping(value = "/checkEmail", method = RequestMethod.POST)
+   @PostMapping("/checkEmail")
    @ResponseBody
-   public String checkEmail(@RequestParam("email") String email) {
+   public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
       System.out.println("email : " + email);
-      return userService.doubleCheckEmail(email);
+      if (userService.doubleCheckEmail(email) > 0) {
+    	  System.out.println("이메일 중복!!!!");
+    	  return ResponseEntity.ok("duplicate");
+      }
+      return ResponseEntity.ok("pass");
    }
 
-//   // 회원가입 완료 페이지로 이동 - 건희
-//   // 회원가입 완료 페이지로 이동 및 회원가입 처리 - 건희
-//   @RequestMapping(value = "/joinOk", method = RequestMethod.POST)
-//   public String joinOk(HttpServletRequest request, @RequestParam("image") MultipartFile image, Model model) {
-//      System.out.println(">> 회원가입 완료 처리 - joinOk()");
-//
-//      String email = request.getParameter("email");
-//      String password = request.getParameter("password");
-//      String nickname = request.getParameter("nickname");
-//      String address = request.getParameter("address");
-//      String detailAddress = request.getParameter("detailAddress");
-//      String recoverEmail = request.getParameter("recoverEmail");
-//
-//      UserVO user = new UserVO();
-//      user.setEmail(email);
-//      user.setPassword(password);
-//      user.setNickname(nickname);
-//      user.setAddress(address);
-//      user.setDetailAddress(detailAddress);
-//      user.setRecoverEmail(recoverEmail);
-//
-//      // 파일 업로드 처리
-//      if (!image.isEmpty()) {
-//         try {
-//            byte[] bytes = image.getBytes();
-//            // 원하는 파일 저장 위치에 저장하는 로직 추가
-//            // 예시: Files.write(Paths.get("path/to/save/" + image.getOriginalFilename()),
-//            // bytes);
-//            user.setImage(image.getOriginalFilename());
-//         } catch (Exception e) {
-//            e.printStackTrace();
-//            model.addAttribute("message", "파일 업로드 중 오류가 발생했습니다.");
-//            return "user/joinOk";
-//         }
-//      }
-
-//      try {
-//         userService.insertUser(user);
-//         model.addAttribute("message", "회원가입이 성공적으로 완료되었습니다.");
-//         return "user/joinOk";
-//      } catch (Exception e) {
-//         e.printStackTrace();
-//         model.addAttribute("message", "회원가입 중 오류가 발생했습니다.");
-//         return "user/joinOk";
-//      }
-//   }
 
 }

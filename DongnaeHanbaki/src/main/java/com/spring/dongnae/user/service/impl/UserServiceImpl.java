@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public UserVO getUserByEmail(String email) {
+		return userDAO.getUserByEmail(email);
+	}
+	
+	@Override
 	public void insertUser(UserVO vo) {
 		userDAO.insertUser(vo);
 	}
@@ -58,7 +63,7 @@ public class UserServiceImpl implements UserService {
 	
 	// 이메일 중복체크
 	@Override	
-	public String doubleCheckEmail(String email) {
+	public int doubleCheckEmail(String email) {
 		return userDAO.doubleCheckEmail(email);
 	}
 

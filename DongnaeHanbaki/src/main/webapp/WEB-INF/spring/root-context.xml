@@ -10,7 +10,6 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- base-package 설정 : include, exclude 필터 사용 설정 -->
 	<context:component-scan base-package="com.spring.dongnae">
-		<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/> -->
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	

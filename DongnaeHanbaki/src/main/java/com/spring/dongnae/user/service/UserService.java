@@ -8,6 +8,7 @@ import com.spring.dongnae.user.vo.UserVO;
 
 public interface UserService {
 	UserVO getUser(UserVO vo);
+	UserVO getUserByEmail(String email);
 	void insertUser(UserVO vo);
 	void insertKakaoUser(UserVO vo);
 	UserVO getIdUser (String email);
@@ -16,6 +17,6 @@ public interface UserService {
 //	public String getuserinfo(String access_Token, HttpSession session, RedirectAttributes rttr);
 	
 	// 이메일 중복 체크 - 건희
-	String doubleCheckEmail(String email);
+	int doubleCheckEmail(String email);
 	
 }
