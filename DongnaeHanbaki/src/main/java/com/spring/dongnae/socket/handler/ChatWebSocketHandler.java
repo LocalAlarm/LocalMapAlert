@@ -1,34 +1,50 @@
 package com.spring.dongnae.socket.handler;
 
-import org.springframework.web.socket.CloseStatus;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import com.spring.dongnae.socket.scheme.ChatMessage;
+import com.spring.dongnae.socket.scheme.ChatMessageRepository;
 
 public class ChatWebSocketHandler extends TextWebSocketHandler {
+	
+    private final ChatMessageRepository chatMessageRepository;
 
-    private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
+    // In-memory storage for WebSocket sessions and user IDs
+    private final Map<WebSocketSession, String> sessions = new ConcurrentHashMap<>();
+
+    public ChatWebSocketHandler(ChatMessageRepository chatMessageRepository) {
+        this.chatMessageRepository = chatMessageRepository;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.add(session);
+        // Here you would authenticate the user and fetch their user ID
+        String userId = authenticateUser(session);
+        sessions.put(session, userId);
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (WebSocketSession webSocketSession : sessions) {
-            if (webSocketSession.isOpen()) {
-                webSocketSession.sendMessage(message);
-            }
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String userId = sessions.get(session);
+        String payload = message.getPayload();
+
+        // Save the message to MongoDB
+        ChatMessage chatMessage = new ChatMessage(userId, payload);
+        chatMessageRepository.save(chatMessage);
+
+        // Broadcast the message to all connected clients
+        for (WebSocketSession s : sessions.keySet()) {
+            s.sendMessage(new TextMessage(userId + ": " + payload));
         }
     }
 
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessions.remove(session);
+    private String authenticateUser(WebSocketSession session) {
+        // Implement your user authentication logic here
+        return "sampleUserId"; // Replace with actual user ID
     }
 }

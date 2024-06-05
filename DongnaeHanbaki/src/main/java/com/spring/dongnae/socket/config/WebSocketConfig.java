@@ -11,8 +11,14 @@ import com.spring.dongnae.socket.handler.ChatWebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    private final ChatWebSocketHandler chatWebSocketHandler;
+
+    public WebSocketConfig(ChatWebSocketHandler chatWebSocketHandler) {
+        this.chatWebSocketHandler = chatWebSocketHandler;
+    }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ChatWebSocketHandler(), "/chat").setAllowedOrigins("*");
+        registry.addHandler(chatWebSocketHandler, "/chat").setAllowedOrigins("*");
     }
 }
