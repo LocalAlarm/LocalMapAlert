@@ -44,6 +44,8 @@
 	
 	<insert id="insertBbs" parameterType="bbsVO">
 		INSERT INTO BBS
+		(BBS_IDX, MAKER_IDX, WRITER, MAP_IDX, TITLE, CONTENT, 
+			WRITE_DATE, IMAGE, HIT, LATITUDE, LOGITUDE, DEL_YN)
 		VALUES (#{bbsIdx},#{makerIdx},#{writer},#{mapIdx},
 				#{title},#{content},#{writeDate},#{image},
 				#{hit},#{latitude},#{longitude},0)
@@ -82,7 +84,8 @@
 	<update id="deleteBbs" parameterType="bbsVO">
 		UPDATE BBS
 		SET DEL_YN = 1
-		WHERE BBS_IDX = #{bbsIdx}
+		WHERE DEL_YN = 0
+		AND BBS_IDX = #{bbsIdx}
 	</update>
 	
 	<select id="getDelBbsList" resultType="bbsVO">

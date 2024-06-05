@@ -22,6 +22,9 @@ public class BbsServiceClient {
 			System.out.println(bbs.toString());
 			
 		}
+		vo.setBbsIdx("59");
+		int num = bbsService.deleteBbs(vo);
+		System.out.println("num : " + num);
 		
 		//3. 스프링 컨테이너 종료(close)
 		container.close();

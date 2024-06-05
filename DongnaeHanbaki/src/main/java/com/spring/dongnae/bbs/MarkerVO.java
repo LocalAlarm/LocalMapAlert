@@ -1,17 +1,17 @@
 package com.spring.dongnae.bbs;
 
-public class MakerVO {
-	String makerIdx;
+public class MarkerVO {
+	String markerIdx;
 	String userEmail;
 	String limitRole;
 	String type;
 	String image;
 	String delYn;
-	public String getMakerIdx() {
-		return makerIdx;
+	public String getMarkerIdx() {
+		return markerIdx;
 	}
-	public void setMakerIdx(String makerIdx) {
-		this.makerIdx = makerIdx;
+	public void setMarkerIdx(String markerIdx) {
+		this.markerIdx = markerIdx;
 	}
 	public String getUserEmail() {
 		return userEmail;
@@ -45,7 +45,7 @@ public class MakerVO {
 	}
 	@Override
 	public String toString() {
-		return "MakerVO [makerIdx=" + makerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type=" + type
+		return "MakerVO [markerIdx=" + markerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type=" + type
 				+ ", image=" + image + ", imagePi=" + ", delYn=" + delYn + "]";
 	}
 	

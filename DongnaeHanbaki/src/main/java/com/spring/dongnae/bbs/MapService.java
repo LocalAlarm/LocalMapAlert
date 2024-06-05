@@ -1,10 +1,10 @@
-package com.spring.dongnae.bbs.dao;
+package com.spring.dongnae.bbs;
 
 import java.util.List;
 
 import com.spring.dongnae.bbs.MapVO;
 
-public interface MapDAO {
+public interface MapService {
 	//WHERE DEL_YN = 0 적용중
 	
 	//유저이메일(제작자) 또는 등급으로 리스트얻기, 값이 있으면 조건 검색

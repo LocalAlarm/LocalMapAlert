@@ -2,7 +2,7 @@ package com.spring.dongnae.bbs;
 
 public class BbsVO {
 	String bbsIdx;
-	String makerIdx;
+	String markerIdx;
 	String writer;
 	String mapIdx;
 	String title;
@@ -19,11 +19,11 @@ public class BbsVO {
 	public void setBbsIdx(String bbsIdx) {
 		this.bbsIdx = bbsIdx;
 	}
-	public String getMakerIdx() {
-		return makerIdx;
+	public String getMarkerIdx() {
+		return markerIdx;
 	}
-	public void setMakerIdx(String makerIdx) {
-		this.makerIdx = makerIdx;
+	public void setMarkerIdx(String markerIdx) {
+		this.markerIdx = markerIdx;
 	}
 	public String getWriter() {
 		return writer;
@@ -87,7 +87,7 @@ public class BbsVO {
 	}
 	@Override
 	public String toString() {
-		return "BbsVO [bbsIdx=" + bbsIdx + ", makerIdx=" + makerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
+		return "BbsVO [bbsIdx=" + bbsIdx + ", markerIdx=" + markerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
 				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
 				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", logitude=" + logitude
 				+ ", delYn=" + delYn + "]";
