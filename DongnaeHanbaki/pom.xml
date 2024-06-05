@@ -87,6 +87,19 @@
 		    <version>3.0.0</version>
 		</dependency>
 		
+		<!-- 이메일 인증 -->
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+		
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

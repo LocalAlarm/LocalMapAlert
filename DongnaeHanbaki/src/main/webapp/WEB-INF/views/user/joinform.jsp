@@ -20,8 +20,13 @@
 <script>
    //중복체크
    var duplicateCheck = false;
+   //인증번호입력체크
+   var authenticCheck = false;
+   //인증번호
+   var code = "";
    //회원가입 폼에 필수 입력값 없으면 회원가입 완료버튼 못가게 막으면 됨
    //나머지 함수도 체크하면 다 "" 처리
+   //
    //주소찾기
    var mapContainer, mapOption, map, geocoder, marker;
 
@@ -180,11 +185,13 @@
                $("#email").focus();
             } else {
                if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {
-                  $("#email").prop("readonly", true);
+                  	   $("#email").prop("readonly", true);
                        $("#emailDuplicate").attr("disabled", true);
                        $("#emailDuplicate").prop("type", "hidden");
                        $("#emailReset").attr("disabled", false);
                        $("#emailReset").prop("type", "button");
+                       $("#authentic").prop("type", "button");
+                       $("#authenticNumber").prop("type", "text");
                        duplicateCheck = true;
                    }
                return false;
@@ -203,78 +210,126 @@
       $("#email").val('');
       $("#emailDuplicate").attr("disabled", false);
       $("#emailDuplicate").prop("type", "button");
-        $("#emailReset").attr("disabled", true);
-        $("#emailReset").prop("type", "hidden");
-   }
-
-   // 비번 일치 확인
-   function passwordOk(frm) {
-      var password = frm.password.value;
-      var passwordCheck = frm.passwordCheck.value;
-
-      // 비밀번호 형식 검증을 위한 정규 표현식
-      var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
-      if (!passwordPattern.test(password)) {
-         alert("비밀번호는 영어 문자와 하나의 특수 문자를 포함하여 8글자 이상이어야 합니다.");
-
-         // 비밀번호와 비밀번호 확인 필드를 초기화
-         frm.password.value = '';
-         frm.passwordCheck.value = '';
-         return false;
-      }
-
-      if (password !== passwordCheck) {
-         alert("비밀번호가 일치하지 않습니다.");
-
-         // 비밀번호와 비밀번호 확인 필드를 초기화
-         frm.password.value = '';
-         frm.passwordCheck.value = '';
-         return false;
-      }
+      $("#emailReset").attr("disabled", true);
+      $("#emailReset").prop("type", "hidden");
+      $("#authentic").prop("type", "hidden");
+      $("#authenticNumber").prop("type", "hidden");
       
-      checkPassowrd = true;
-
+      
    }
    
    
-   function nicknameOk(frm) {
-      var nickname = frm.nickname.value;
-      
-      // 닉네임 형식 검증을 위한 정규 표현식
-      var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
+	//이메일 본인 인증
+	function authenticEmail() {
+		var email = $("#email").val().trim();
+		if (email.length == 0) {
+			alert("이메일을 입력해주세요!");
+			$("#email").focus();
+			return false;
+		}
 
-      if (!nicknamePattern.test(nickname)) {
-         alert("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.");
-         return false;
-      }
-   }
+		//이메일인증api
+		$.ajax({
+			type : "POST",
+			url : "mailAuthentic",
+			data : {
+				email : email
+			},
+			success : function(data) {
+				console.log("data: " + data);
+				$("#authenticNumber").attr("disabled", false);
+				code = data;
+			},
+			error : function(request, status, error) {
+				alert("ajax 실행 실패");
+				alert("code:" + request.status + "\n" + "error :" + error);
+			}
+
+		});
+		authenticCheck = true;
+	}
+	// 인증번호 비교
+	function authenticComp() {
+	    var input = $("#authenticNumber").val().trim();
+	    
+	    if (input == code) {
+	        $("#authenticWord").text("인증번호가 일치합니다.").css("color", "#0404B4");
+	    } else {
+	        $("#authenticWord").text("인증번호가 일치하지 않습니다.").css("color", "red");
+	    }
+	}
 
 
-   function joinValidate() {
-      var email = $("#email").val().trim();
-      var password = $("#password").val().trim();
-      console.log(password);
-      var nickname = $("#nickname").val().trim();
-      var recoverEmail = $("#recoverEmail").val().trim();
-      if (email == "") {
-         alert("이메일을 입력해주세요!");
-         $("#email").focus();
-         return false;
-      } else if (!duplicateCheck) {
-         alert("이메일 중복체크해주세요!");
-         $("#email").focus();
-         return false;
-      } else if (password == "") {
-         alert("비밀번호를 입력해주세요!");
-         $("#password").focus();
-         return false;
-      } else if (nickname == "") {
-         alert("닉네임을 입력해주세요!");
-         $("#nickname").focus();
-         return false;
-      }
-   }
+	// 비번 일치 확인
+	function passwordOk(frm) {
+		var password = frm.password.value;
+		var passwordCheck = frm.passwordCheck.value;
+
+		// 비밀번호 형식 검증을 위한 정규 표현식
+		var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+		if (!passwordPattern.test(password)) {
+			alert("비밀번호는 영어 문자와 하나의 특수 문자를 포함하여 8글자 이상이어야 합니다.");
+
+			// 비밀번호와 비밀번호 확인 필드를 초기화
+			frm.password.value = '';
+			frm.passwordCheck.value = '';
+			return false;
+		}
+
+		if (password !== passwordCheck) {
+			alert("비밀번호가 일치하지 않습니다.");
+
+			// 비밀번호와 비밀번호 확인 필드를 초기화
+			frm.password.value = '';
+			frm.passwordCheck.value = '';
+			return false;
+		}
+	}
+
+	function nicknameOk(frm) {
+		var nickname = frm.nickname.value;
+
+		// 닉네임 형식 검증을 위한 정규 표현식
+		var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
+
+		if (!nicknamePattern.test(nickname)) {
+			alert("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.");
+			return false;
+		}
+	}
+
+	function joinValidate() {
+		var email = $("#email").val().trim();
+		var password = $("#password").val().trim();
+		var nickname = $("#nickname").val().trim();
+		var recoverEmail = $("#recoverEmail").val().trim();
+		if (email == "") {
+			alert("이메일을 입력해주세요!");
+			$("#email").focus();
+			return false;
+		} else if (!duplicateCheck) {
+			alert("이메일 중복체크해주세요!");
+			$("#email").focus();
+			return false;
+		} else if (!authenticCheck) {
+			alert("이메일 인증해주세요!");
+			$("#authentic").focus();
+			return false;
+		} else if (password == "") {
+			alert("비밀번호를 입력해주세요!");
+			$("#password").focus();
+			return false;
+		} else if (nickname == "") {
+			alert("닉네임을 입력해주세요!");
+			$("#nickname").focus();
+			return false;
+		} else if (recoverEmail == "") {
+			alert("복구이메일을 입력해주세요!");
+			$("#recoverEmail").focus();
+			return false;
+		}
+	}
 </script>
 </head>
 <body>
@@ -284,19 +339,25 @@
         <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717463449/%EB%8F%99%EB%84%A4%ED%95%9C%EB%B0%94%ED%80%B4__1_-removebg-preview_cgjoy5.png" alt="로고 이미지">
     </div>
      <h2>회원가입</h2>
-    <form action="join" method="post">
+    <form action="join" method="post" onsubmit="return joinValidate()">
         <div class="mb-3">
-            <input type="email" class="form-control" name="email" title="이메일" placeholder="이메일 입력" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-info" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;">
+            <input type="email" class="form-control" id="email" name="email" title="이메일" placeholder="이메일 입력" style="margin-bottom: 10px;">
+             <input type="button" class="btn btn-outline-info" id="emailDuplicate" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;" />
+            <input type="hidden" class="btn btn-outline-info" id="emailReset" value="다시 입력" onclick="resetEmail()" disabled />
+        </div>
+         <div class="mb-3" style="margin-bottom: 20px !important;">
+            <input type="hidden" class="btn btn-outline-info" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
+            <input type="hidden" class="form-control" id="authenticNumber" name="authenticNumber" title="인증하기" placeholder="인증번호 입력" disabled onblur="authenticComp()">
+            <span id="authenticWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="password" class="form-control" id="password" name="password" title="비밀번호" placeholder="비밀번호 입력">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="password" class="form-control" id="passwordCheck" name="passwordCheck" title="비밀번호 확인" placeholder="비밀번호 확인">
+            <input type="password" class="form-control" id="passwordCheck" name="passwordCheck" title="비밀번호 확인" placeholder="비밀번호 확인" onblur="passwordOk(this.form)">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" name="nickname" title="닉네임" placeholder="닉네임">
+            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="text" class="form-control" id="sample5_address" placeholder="주소" style="margin-bottom: 10px;">
@@ -304,7 +365,7 @@
             <div id="map" style="width:350px;height:350px;margin-top:10px;display:none"></div>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
+            <input type="text" class="form-control" id="recoverEmail" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="file" class="form-control" name="image">
