@@ -9,7 +9,6 @@ public class BbsVO {
 	String content;
 	String writeDate;
 	String image;
-	String imagePi;
 	String hit;
 	String latitude;
 	String logitude;
@@ -62,12 +61,6 @@ public class BbsVO {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public String getImagePi() {
-		return imagePi;
-	}
-	public void setImagePi(String imagePi) {
-		this.imagePi = imagePi;
-	}
 	public String getHit() {
 		return hit;
 	}
@@ -96,7 +89,7 @@ public class BbsVO {
 	public String toString() {
 		return "BbsVO [bbsIdx=" + bbsIdx + ", makerIdx=" + makerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
 				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
-				+ ", imagePi=" + imagePi + ", hit=" + hit + ", latitude=" + latitude + ", logitude=" + logitude
+				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", logitude=" + logitude
 				+ ", delYn=" + delYn + "]";
 	}
 	

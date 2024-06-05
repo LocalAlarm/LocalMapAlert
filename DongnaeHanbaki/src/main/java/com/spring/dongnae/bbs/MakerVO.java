@@ -6,7 +6,6 @@ public class MakerVO {
 	String limitRole;
 	String type;
 	String image;
-	String imagePi;
 	String delYn;
 	public String getMakerIdx() {
 		return makerIdx;
@@ -38,12 +37,6 @@ public class MakerVO {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public String getImagePi() {
-		return imagePi;
-	}
-	public void setImagePi(String imagePi) {
-		this.imagePi = imagePi;
-	}
 	public String getDelYn() {
 		return delYn;
 	}
@@ -53,7 +46,7 @@ public class MakerVO {
 	@Override
 	public String toString() {
 		return "MakerVO [makerIdx=" + makerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type=" + type
-				+ ", image=" + image + ", imagePi=" + imagePi + ", delYn=" + delYn + "]";
+				+ ", image=" + image + ", imagePi=" + ", delYn=" + delYn + "]";
 	}
 	
 }
