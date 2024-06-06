@@ -3,6 +3,8 @@ package com.spring.dongnae.socket.handler;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -10,8 +12,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.spring.dongnae.socket.scheme.ChatMessage;
 import com.spring.dongnae.socket.scheme.ChatMessageRepository;
 
+@Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 	
+	@Autowired
     private final ChatMessageRepository chatMessageRepository;
 
     // In-memory storage for WebSocket sessions and user IDs
