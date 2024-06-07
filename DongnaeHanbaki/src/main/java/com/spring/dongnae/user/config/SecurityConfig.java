@@ -56,8 +56,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Autowired
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(customAuthenticationProvider);
-//    }
 }
