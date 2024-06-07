@@ -1,10 +1,13 @@
 package com.spring.dongnae.socket.handler;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,6 +16,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.spring.dongnae.socket.scheme.ChatMessage;
 import com.spring.dongnae.socket.scheme.ChatMessageRepository;
+import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
@@ -30,17 +34,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // Here you would authenticate the user and fetch their user ID
-        String userId = authenticateUser(session);
-        sessions.put(session, userId);
+    	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
+        String token = getAuthenticatedUser().getToken();
+        sessions.put(session, token);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String userId = sessions.get(session);
+        String token = sessions.get(session);
         String payload = message.getPayload();
+        
 
         // 사용자 ID로 기존 메시지 문서 검색
-        Optional<ChatMessage> optionalChatMessage = chatMessageRepository.findByUserId(userId);
+        Optional<ChatMessage> optionalChatMessage = chatMessageRepository.findByUserId(token);
         ChatMessage chatMessage;
 
         if (optionalChatMessage.isPresent()) {
@@ -48,15 +54,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             chatMessage = optionalChatMessage.get();
         } else {
             // 새로운 메시지 문서 생성
-            chatMessage = new ChatMessage(userId);
+            chatMessage = new ChatMessage(token);
         }
         
-        chatMessage.addMessage(payload);
+        //현재 로그인한 유저의 토큰값 가져와서 hashmap으로 만들어야함.
+        HashMap<String, String> messageMap = new HashMap<String, String>();
+        messageMap.put("from", token);
+        messageMap.put("message", payload);
+        chatMessage.addMessage(messageMap);
         chatMessageRepository.save(chatMessage);
 
         // Broadcast the message to all connected clients
         for (WebSocketSession s : sessions.keySet()) {
-            s.sendMessage(new TextMessage(userId + ": " + payload));
+            s.sendMessage(new TextMessage(token + ": " + payload));
         }
     }
 
@@ -65,8 +75,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    private String authenticateUser(WebSocketSession session) {
-        // Implement your user authentication logic here
-        return "sampleUserId"; // Replace with actual user ID
+    public UserVO getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+        	System.out.println("userVo tostring : " + ((UserVO) authentication.getPrincipal()).toString());
+            return (UserVO) authentication.getPrincipal();
+        }
+        return null;
     }
 }

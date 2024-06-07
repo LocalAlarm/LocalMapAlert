@@ -6,6 +6,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.spring.dongnae.user.vo.UserVO;
@@ -39,8 +40,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         	System.out.println("match가 안된다!!");
             throw new BadCredentialsException("Invalid Email or Password");
         }
-
-        return new UsernamePasswordAuthenticationToken(userVO, password, userVO.getAuthorities());
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userVO, password, userVO.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        System.out.println("SecurityContextHolder.getContext().setAuthentication(auth)");
+        return auth;
     }
 
     @Override
