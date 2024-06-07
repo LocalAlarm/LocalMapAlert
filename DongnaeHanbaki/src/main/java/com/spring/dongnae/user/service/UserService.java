@@ -11,7 +11,14 @@ public interface UserService {
 	UserVO getUserByEmail(String email);
 	void insertUser(UserVO vo);
 	void insertKakaoUser(UserVO vo);
+	UserVO getIdUser (String email);
 	// kakao
-	public String getAccessToken(String authorize_code);
+//	public String getAccessToken(String authorize_code);
 //	public String getuserinfo(String access_Token, HttpSession session, RedirectAttributes rttr);
+	
+	// 이메일 중복 체크 - 건희
+	int doubleCheckEmail(String email);
+	
+	// 이메일 찾기 - 건희
+	String findUserEmail(UserVO vo);
 }
