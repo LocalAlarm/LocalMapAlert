@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: ￬ﾝﾴ￬ﾛﾐ￬ﾄﾱ
-Build-Jdk: 1.8.0_292
+Built-By: bigna
+Build-Jdk: 1.8.0_391
 Created-By: Maven Integration for Eclipse
 
