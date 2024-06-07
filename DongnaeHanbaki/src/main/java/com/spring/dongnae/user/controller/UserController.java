@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Random;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,15 +27,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.cloudinary.ImageUploadController;
+import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
@@ -69,7 +73,8 @@ public class UserController {
    }
 
    @RequestMapping("/loginerror")
-   public String loginError() {
+   public String loginError(@ModelAttribute("user") UserVO vo) {
+	   System.out.println(vo);
       System.out.println(">> 로그인 에러");
       return "user/loginerror";
    }
@@ -81,6 +86,7 @@ public class UserController {
       return "user/redirect";
    }
 
+   
    // kakao로그인 data 컨트롤
    @RequestMapping(value = "/kakaoData", method = RequestMethod.POST)
    @ResponseBody
@@ -168,7 +174,7 @@ public class UserController {
        userService.insertUser(userVO);
        return "redirect:login";
    }
-
+   
    // 이메일 중복체크 - 건희
    @PostMapping("/checkEmail")
    @ResponseBody
@@ -229,39 +235,39 @@ public class UserController {
 	   }
 	   
 	   //이메일 보내기
-//	   String setFrom = "jailju1016@gmail.com";
-//	   String senderName = "동네한바퀴";
-//	   String toMail = email;
-//	   String title = "회원가입 이메일 본인인증";
-//	   StringBuilder sb = new StringBuilder();
-//	   sb.append("<html><body>");
-//	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
-//	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
-//	   sb.append("<br>");
-//	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
-//	   sb.append("<html><body>");        
-//	   sb.append("<html><body>");
-//	   sb.append("<html><body>");
-//	   sb.append("</body></html>");
-//	   String content = sb.toString();
-//	   
-//		try {
-//			MimeMessage message = mailSender.createMimeMessage();
-//			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-//			helper.setFrom(new InternetAddress(setFrom, senderName));
-//			helper.setTo(toMail);
-//			helper.setSubject(title);
-//			helper.setText(content, true);
-//			mailSender.send(message);
-//
-//			 // 첨부 파일 추가
-////			FileSystemResource file = new FileSystemResource(new File());
-////			helper.addAttachment(, file);
-//	        
-//		} catch (MessagingException | UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-//	   
+	   String setFrom = "jailju1016@gmail.com";
+	   String senderName = "동네한바퀴";
+	   String toMail = email;
+	   String title = "회원가입 이메일 본인인증";
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("<html><body>");
+	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
+	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
+	   sb.append("<br>");
+	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
+	   sb.append("<html><body>");        
+	   sb.append("<html><body>");
+	   sb.append("<html><body>");
+	   sb.append("</body></html>");
+	   String content = sb.toString();
+	   
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+			helper.setFrom(new InternetAddress(setFrom, senderName));
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content, true);
+			mailSender.send(message);
+
+			 // 첨부 파일 추가
+//			FileSystemResource file = new FileSystemResource(new File());
+//			helper.addAttachment(, file);
+	        
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	   
 	   return authenticNum.toString();
    }
 

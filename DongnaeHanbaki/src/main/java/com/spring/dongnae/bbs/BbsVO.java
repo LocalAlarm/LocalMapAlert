@@ -1,32 +1,41 @@
 package com.spring.dongnae.bbs;
 
 public class BbsVO {
-	String bbs_idx;
-	String maker_idx;
+	String bbsIdx;
+	String markerIdx;
 	String writer;
+	String mapIdx;
 	String title;
 	String content;
-	String write_date;
+	String writeDate;
+	String image;
 	String hit;
 	String latitude;
-	String longitude;
-	public String getBbs_idx() {
-		return bbs_idx;
+	String logitude;
+	String delYn;
+	public String getBbsIdx() {
+		return bbsIdx;
 	}
-	public void setBbs_idx(String bbs_idx) {
-		this.bbs_idx = bbs_idx;
+	public void setBbsIdx(String bbsIdx) {
+		this.bbsIdx = bbsIdx;
 	}
-	public String getMaker_idx() {
-		return maker_idx;
+	public String getMarkerIdx() {
+		return markerIdx;
 	}
-	public void setMaker_idx(String maker_idx) {
-		this.maker_idx = maker_idx;
+	public void setMarkerIdx(String markerIdx) {
+		this.markerIdx = markerIdx;
 	}
 	public String getWriter() {
 		return writer;
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;
+	}
+	public String getMapIdx() {
+		return mapIdx;
+	}
+	public void setMapIdx(String mapIdx) {
+		this.mapIdx = mapIdx;
 	}
 	public String getTitle() {
 		return title;
@@ -40,11 +49,17 @@ public class BbsVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getWrite_date() {
-		return write_date;
+	public String getWriteDate() {
+		return writeDate;
 	}
-	public void setWrite_date(String write_date) {
-		this.write_date = write_date;
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public String getHit() {
 		return hit;
@@ -58,16 +73,24 @@ public class BbsVO {
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
-	public String getLongitude() {
-		return longitude;
+	public String getLogitude() {
+		return logitude;
 	}
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
+	public void setLogitude(String logitude) {
+		this.logitude = logitude;
+	}
+	public String getDelYn() {
+		return delYn;
+	}
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
 	}
 	@Override
 	public String toString() {
-		return "BbsVO [bbs_idx=" + bbs_idx + ", maker_idx=" + maker_idx + ", writer=" + writer + ", title=" + title
-				+ ", content=" + content + ", write_date=" + write_date + ", hit=" + hit + ", latitude=" + latitude
-				+ ", logitude=" + longitude + "]";
+		return "BbsVO [bbsIdx=" + bbsIdx + ", markerIdx=" + markerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
+				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
+				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", logitude=" + logitude
+				+ ", delYn=" + delYn + "]";
 	}
+	
 }

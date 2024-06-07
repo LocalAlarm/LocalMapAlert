@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.bbs.dao.MapDAO">
+	
+ 	<select id="getMapList" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		<if test="${userEmail} != null">
+		AND USER_EMAIL = ${userEmail}
+		</if>
+		<if test="${limitRole} != null">
+		AND LIMIT_ROLE = ${limitRole}
+		</if>
+	</select>
+	
+ 	<select id="getMap" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		AND MAP_IDX = ${maPIdx}
+	</select>
+	
+	<insert id="insertMap" parameterType="mapVO">
+		INSERT INTO MAP (MAP_IDX, USER_EMAIL, LIMIT_ROLE, TITLE,
+			CENTER_LATITUDE, CENTER_LOGITUDE, DEL_YN)
+		VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{limitRole}, #{title},
+			#{centerLatitude}, #{centerLogitude}, 0)
+	</insert>
+	
+	<update id="updateMap" parameterType="mapVO">
+		UPDATE MAKER
+		SET 
+		<if test="#{title} != null">
+			TITLE= #{title}
+		</if>
+		<if test="#{centerLatitude} != null">
+			CENTER_LATITUDE = #{centerLatitude}
+		</if>
+		<if test="#{centerLogitude} != null">
+			CENTER_LOGITUDE = #{centerLogitude}
+		</if>
+		WHERE DEL_YN = 0
+		AND MAP_IDX = ${mapIdx}
+	</update>
+	
+	<update id="deleteMap" parameterType="mapVO">
+		UPDATE MAP
+		SET DEL_YN = 1
+		WHERE DEL_YN = 0
+		AND MAP_IDX = ${mapIdx}
+	</update>
+	
+</mapper>
+
+
+
+
+
