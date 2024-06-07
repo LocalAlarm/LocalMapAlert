@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import com.spring.dongnae.socket.handler.ChatWebSocketHandler;
 
@@ -19,6 +20,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatWebSocketHandler, "/chat").setAllowedOrigins("*");
+        registry.addHandler(chatWebSocketHandler, "/chat")
+                .addInterceptors(new HttpSessionHandshakeInterceptor()) // HTTP 세션 정보를 웹소켓 세션으로 전달
+                .setAllowedOrigins("*");
     }
 }

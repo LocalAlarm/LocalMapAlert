@@ -24,6 +24,8 @@
    var authenticCheck = false;
    //인증번호
    var code = "";
+   //비번체크
+   var passwordCheck = false;
    //회원가입 폼에 필수 입력값 없으면 회원가입 완료버튼 못가게 막으면 됨
    //나머지 함수도 체크하면 다 "" 처리
    //
@@ -213,7 +215,12 @@
       $("#emailReset").attr("disabled", true);
       $("#emailReset").prop("type", "hidden");
       $("#authentic").prop("type", "hidden");
+      $("#authenticReset").prop("type", "hidden");
+      $("#authenticNumber").val('');
       $("#authenticNumber").prop("type", "hidden");
+      $("#authenticNumber").attr("disabled", true);
+      $("#authenticWord").text("");
+      authenticCheck = false;
       
       
    }
@@ -266,6 +273,10 @@
 	function resetAuthentic() {
 		$("#authentic").prop("type", "button");
 		$("#authenticReset").prop("type", "hidden");
+		$("#authenticNumber").val('');
+   	    $("#authenticNumber").attr("disabled", true);
+   	    $("#authenticWord").text("");
+  	    authenticCheck = false;
 	}
 
 
@@ -278,23 +289,19 @@
 		var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 		if (!passwordPattern.test(password)) {
-			alert("비밀번호는 영어 문자와 하나의 특수 문자를 포함하여 8글자 이상이어야 합니다.");
-
-			// 비밀번호와 비밀번호 확인 필드를 초기화
-			frm.password.value = '';
-			frm.passwordCheck.value = '';
+			$("#passwordWord").text("비밀번호는 영어 문자와 하나의 특수 문자를 포함하여 8글자 이상이어야 합니다.").css("color", "red");
 			return false;
 		}
 
 		if (password !== passwordCheck) {
-			alert("비밀번호가 일치하지 않습니다.");
-
-			// 비밀번호와 비밀번호 확인 필드를 초기화
-			frm.password.value = '';
-			frm.passwordCheck.value = '';
+			$("#passwordWord").text("비밀번호가 일치하지 않습니다.").css("color", "red");
 			return false;
 		}
+		
+		$("#passwordWord").text("인증번호가 일치합니다.").css("color", "#0404B4");
+		passwordCheck = true;
 	}
+	
 
 	function nicknameOk(frm) {
 		var nickname = frm.nickname.value;
@@ -327,6 +334,10 @@
 			return false;
 		} else if (password == "") {
 			alert("비밀번호를 입력해주세요!");
+			$("#password").focus();
+			return false;
+		} else if (!passwordCheck) {
+			alert("비밀번호 확인과 비교해주세요!");
 			$("#password").focus();
 			return false;
 		} else if (nickname == "") {
@@ -365,6 +376,7 @@
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="password" class="form-control" id="passwordCheck" name="passwordCheck" title="비밀번호 확인" placeholder="비밀번호 확인" onblur="passwordOk(this.form)">
+            <span id="passwordWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
@@ -374,7 +386,7 @@
             <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
             <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
             <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목">
-            <div id="map" style="width:350px;height:350px;margin-top:10px;display:none"></div>
+            <div id="map" style="width:270px;height:350px;  margin-top:10px;display:none"></div>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="text" class="form-control" id="recoverEmail" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
@@ -383,7 +395,7 @@
             <input type="file" class="form-control" name="image" id="image" accept="image/*">
         </div>
         <div class="d-flex justify-content-center mb-2 px-3">
-            <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="회원가입 하기" onclick="return checkEmail(this.form)">
+            <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="회원가입 하기">
             <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
         </div>
     </form>

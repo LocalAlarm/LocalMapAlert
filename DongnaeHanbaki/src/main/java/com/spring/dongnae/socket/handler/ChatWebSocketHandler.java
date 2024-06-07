@@ -34,10 +34,21 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // Here you would authenticate the user and fetch their user ID
-    	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
+//    	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
+    	UserVO authenticatedUser = getAuthenticatedUser(session);
+    	System.out.println("chat : " + authenticatedUser);
+    	 if (authenticatedUser != null) {
+             String token = authenticatedUser.getToken();
+             sessions.put(session, token);
+             System.out.println("Connected: " + token);
+         } else {
+             System.out.println("No authenticated user found.");
+             session.close(CloseStatus.NOT_ACCEPTABLE);
+         }
 //        String token = getAuthenticatedUser().getToken();
-    	String token = "dsa";
-        sessions.put(session, token);
+//        System.out.println("token : " + token);
+//    	String token = "dsa";
+//        sessions.put(session, token);
     }
 
     @Override
@@ -76,12 +87,24 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    public UserVO getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-        	System.out.println("userVo tostring : " + ((UserVO) authentication.getPrincipal()).toString());
-            return (UserVO) authentication.getPrincipal();
+    private UserVO getAuthenticatedUser(WebSocketSession session) {
+        // HttpSession에서 SecurityContext를 통해 인증된 사용자 정보 가져오기
+        Object principal = session.getAttributes().get("SPRING_SECURITY_CONTEXT");
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            if (authentication != null && authentication.isAuthenticated()) {
+                return (UserVO) authentication.getPrincipal();
+            }
         }
         return null;
     }
+    
+//    public UserVO getAuthenticatedUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.isAuthenticated()) {
+//        	System.out.println("userVo tostring : " + ((UserVO) authentication.getPrincipal()).toString());
+//            return (UserVO) authentication.getPrincipal();
+//        }
+//        return null;
+//    }
 }
