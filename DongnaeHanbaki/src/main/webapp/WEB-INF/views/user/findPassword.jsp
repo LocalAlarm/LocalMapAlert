@@ -33,7 +33,7 @@
         
        <div class="input-group mb-3">
 		  <input type="text" class="form-control" placeholder="인증번호 입력" aria-label="인증번호 입력" aria-describedby="button-addon2" disabled>
-		  <button class="btn btn-dark" type="button" id="button-addon2">인증번호 받기</button>
+		  <button class="btn btn-dark" type="button" id="button-addon2" disabled>인증번호 받기</button>
 		</div>
        
 <!-- 			새 비밀번호 입력 및 확인 -->
