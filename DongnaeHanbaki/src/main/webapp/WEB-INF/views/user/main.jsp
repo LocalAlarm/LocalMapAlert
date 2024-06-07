@@ -23,6 +23,7 @@
  
 <div id="container">
 	<h3>테스트님 환영합니다...<a href="logout">로그아웃</a></h3>
+	<h1><a href="map">지도보기</a></h1>
 </div>
 
 </body>
