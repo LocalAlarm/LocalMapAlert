@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 public class UserVO {
+	private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
+	
 	private String email;
 	private String password;
 	private String nickname;
@@ -17,7 +19,8 @@ public class UserVO {
 	private String image;
 	private int kakaoCheck;
 	private String token;
-	private int role;
+
+	private String role;
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
@@ -106,11 +109,29 @@ public class UserVO {
 		this.role = role;
 	}
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
 		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
 				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
 				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", role=" + role + "]";
+
 	}
 
 	

@@ -48,7 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .logout()
 //            	.logoutSuccessUrl("/login")
-                .permitAll();
+                .permitAll()
+        		.and()
+            .sessionManagement()
+            	.sessionFixation().none();
     }
 
     @Bean
@@ -56,8 +59,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Autowired
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(customAuthenticationProvider);
-//    }
 }
