@@ -16,6 +16,7 @@ public class UserVO {
 	private String recoverEmail;
 	private String image;
 	private int kakaoCheck;
+	private String token;
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
@@ -87,12 +88,23 @@ public class UserVO {
 	public void setDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
+	
+	
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	@Override
 	public String toString() {
 		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
 				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
-				+ ", kakaoCheck=" + kakaoCheck + "]";
+				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + "]";
 	}
+
 	
 }

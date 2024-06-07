@@ -142,6 +142,7 @@ public class UserController {
    @PostMapping("/join")
    public String join(@ModelAttribute UserVO userVO) {
       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+      userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
       System.out.println(">> 회원가입 처리");
       userService.insertUser(userVO);
       return "redirect:login";
