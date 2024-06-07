@@ -7,9 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 public class UserVO {
 	private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
-	
+
 	private String email;
 	private String password;
 	private String nickname;
@@ -17,19 +18,18 @@ public class UserVO {
 	private String detailAddress;
 	private String recoverEmail;
 	private String image;
+	private String imagePi;
 	private int kakaoCheck;
 	private String token;
-
 	private String role;
-	
+
 //	private Collection<? extends GrantedAuthority> authorities;
-	
 
 	// 상세주소, 복구이메일 추가 - 건희
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -61,13 +61,21 @@ public class UserVO {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	
+
 	public String getImage() {
 		return image;
 	}
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getImagePi() {
+		return imagePi;
+	}
+
+	public void setImagePi(String imagePi) {
+		this.imagePi = imagePi;
 	}
 
 	public int getKakaoCheck() {
@@ -77,7 +85,7 @@ public class UserVO {
 	public void setKakaoCheck(int kakaoCheck) {
 		this.kakaoCheck = kakaoCheck;
 	}
-	
+
 	public String getRecoverEmail() {
 		return recoverEmail;
 	}
@@ -93,21 +101,6 @@ public class UserVO {
 	public void setDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
-	public String getToken() {
-		return token;
-	}
-	
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	public int getRole() {
-		return role;
-	}
-	
-	public void setRole(int role) {
-		this.role = role;
-	}
 
 	public String getToken() {
 		return token;
@@ -117,7 +110,6 @@ public class UserVO {
 		this.token = token;
 	}
 
-	
 	public String getRole() {
 		return role;
 	}
@@ -130,9 +122,7 @@ public class UserVO {
 	public String toString() {
 		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
 				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
-				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", role=" + role + "]";
-
+				+ ", imagePi=" + imagePi + ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", role=" + role + "]";
 	}
 
-	
 }

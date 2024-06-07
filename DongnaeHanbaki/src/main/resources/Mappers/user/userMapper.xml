@@ -18,10 +18,12 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="userVO">
-      INSERT INTO USERS
-      VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck}
-               , #{token}, #{role})
-   </insert>
+		INSERT INTO USERS
+		VALUES
+		(#{email}, #{password}, #{nickname}, #{address}, #{detailAddress},
+		#{recoverEmail}, #{image}, #{imagePi},
+		#{kakaoCheck}, #{token}, #{role} )
+	</insert>
 
 	
 	<insert id="insertKakaoUser" parameterType="userVO">
@@ -51,8 +53,3 @@
 	</select> 
 	
 </mapper>
-
-
-
-
-

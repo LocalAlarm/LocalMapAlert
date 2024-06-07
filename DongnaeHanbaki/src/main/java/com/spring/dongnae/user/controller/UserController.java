@@ -2,6 +2,7 @@ package com.spring.dongnae.user.controller;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
@@ -45,12 +47,14 @@ public class UserController {
    private final UserService userService;
    private final PasswordEncoder passwordEncoder;
    private final JavaMailSender mailSender;
+   private final ImageUploadController imageUploadController;
 
    @Autowired
-   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController) {
       this.userService = userService;
       this.passwordEncoder = passwordEncoder;
       this.mailSender = mailSender;
+      this.imageUploadController = imageUploadController;
       System.out.println("========= UserController() 객체생성");
    }
 
@@ -158,13 +162,19 @@ public class UserController {
    }
    
    @PostMapping("/join")
-   public String join(@ModelAttribute UserVO userVO) {
-      userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
-      userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
-      System.out.println(">> 회원가입 처리");
-      userService.insertUser(userVO);
-      return "redirect:login";
+   public String join(@ModelAttribute UserVO userVO, MultipartFile image) {
+       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
+       System.out.println(">> 회원가입 처리");
+       if (image.getName() != null) {
+           Map<String, String> imageMap = imageUploadController.uploadImage(image);
+           userVO.setImagePi(imageMap.get("public_id"));
+           userVO.setImage(imageMap.get("url"));
+       }
+       userService.insertUser(userVO);
+       return "redirect:login";
    }
+   
    // 이메일 중복체크 - 건희
    @PostMapping("/checkEmail")
    @ResponseBody
@@ -224,39 +234,39 @@ public class UserController {
 		   authenticNum.append(num.charAt(index));
 	   }
 	   
-	   //이메일 보내기
-	   String setFrom = "jailju1016@gmail.com";
-	   String senderName = "동네한바퀴";
-	   String toMail = email;
-	   String title = "회원가입 이메일 본인인증";
-	   StringBuilder sb = new StringBuilder();
-	   sb.append("<html><body>");
-	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
-	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
-	   sb.append("<br>");
-	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
-	   sb.append("<html><body>");        
-	   sb.append("<html><body>");
-	   sb.append("<html><body>");
-	   sb.append("</body></html>");
-	   String content = sb.toString();
-	   
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-			helper.setFrom(new InternetAddress(setFrom, senderName));
-			helper.setTo(toMail);
-			helper.setSubject(title);
-			helper.setText(content, true);
-			mailSender.send(message);
-
-			 // 첨부 파일 추가
-//			FileSystemResource file = new FileSystemResource(new File());
-//			helper.addAttachment(, file);
-	        
-		} catch (MessagingException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+//	   //이메일 보내기
+//	   String setFrom = "jailju1016@gmail.com";
+//	   String senderName = "동네한바퀴";
+//	   String toMail = email;
+//	   String title = "회원가입 이메일 본인인증";
+//	   StringBuilder sb = new StringBuilder();
+//	   sb.append("<html><body>");
+//	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
+//	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
+//	   sb.append("<br>");
+//	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
+//	   sb.append("<html><body>");        
+//	   sb.append("<html><body>");
+//	   sb.append("<html><body>");
+//	   sb.append("</body></html>");
+//	   String content = sb.toString();
+//	   
+//		try {
+//			MimeMessage message = mailSender.createMimeMessage();
+//			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+//			helper.setFrom(new InternetAddress(setFrom, senderName));
+//			helper.setTo(toMail);
+//			helper.setSubject(title);
+//			helper.setText(content, true);
+//			mailSender.send(message);
+//
+//			 // 첨부 파일 추가
+////			FileSystemResource file = new FileSystemResource(new File());
+////			helper.addAttachment(, file);
+//	        
+//		} catch (MessagingException | UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
 	   
 	   return authenticNum.toString();
    }
