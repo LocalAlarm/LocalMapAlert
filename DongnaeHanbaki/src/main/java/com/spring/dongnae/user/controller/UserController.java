@@ -172,5 +172,12 @@ public class UserController {
 		}
 		return "user/emailFound";
 	}
-
+   
+   // 비밀번호 찾기 - 건희
+   @RequestMapping("/findPassword")
+   public String showFindPasswordForm() {
+       return "user/findPassword"; 
+   }
+   
+   
 }
