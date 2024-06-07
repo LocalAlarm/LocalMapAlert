@@ -9,31 +9,45 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.spring.dongnae.user.service.CustomAuthenticationProvider;
+//import com.spring.dongnae.user.service.CustomAuthenticationProvider;
+
+import com.spring.dongnae.user.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomAuthenticationProvider customAuthenticationProvider;
+//    @Autowired
+//    private CustomAuthenticationProvider customAuthenticationProvider;
+	@Autowired
+	CustomUserDetailsService customUserDetailsService;
 
+	@Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService)
+            .passwordEncoder(passwordEncoder());
+    }
+	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
             .authorizeRequests()
             	//컨트롤러 전에 실행 
-//                .antMatchers("/", "/home", "/register", "/login", "/resources/**", "/login-proc", "index.jsp").permitAll()
+//                .antMatchers("/login", "/joinform").permitAll()
+//                .anyRequest().authenticated()
                 .anyRequest().permitAll()
                 .and()
             .formLogin()
                 .loginPage("/login").permitAll()
-                .loginProcessingUrl("/login-proc").permitAll()
-                .defaultSuccessUrl("/home", true)
-                .failureUrl("/login?error=true")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginProcessingUrl("/authenticate")
+                .defaultSuccessUrl("/main", true)
+                .failureUrl("/loginerror")
                 .and()
             .logout()
+//            	.logoutSuccessUrl("/login")
                 .permitAll();
     }
 
@@ -42,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(customAuthenticationProvider);
-    }
+//    @Autowired
+//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(customAuthenticationProvider);
+//    }
 }

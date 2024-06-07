@@ -86,7 +86,7 @@
         	  success: function (data) {
         		  console.log(data);
         		  if (data) {
-        			 window.location.replace("main"); 
+        			 window.location.replace("kakaomain"); 
         		  }
         	  },
 	          error: function(jqXHR, textStatus, errorThrown) {
