@@ -7,15 +7,15 @@
 <title>이메일 찾기 결과</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
-	<style>
+   <style>
         .text-center {
             text-align: center;
         }
     </style>
     <script>
-	    function goBack() {
-	        window.history.back();
-	    }
+       function goBack() {
+           window.history.back();
+       }
     </script>
 </head>
 <body>
@@ -26,26 +26,26 @@
     </div> 
     <h4 align="center">이메일 찾기 결과</h4>
     <hr>
-    	<c:choose>
-        	<c:when test="${empty findEmail}">
-            	<div class="text-center">
-		            <p>조회결과가 없습니다.</p>
-		        </div>
-		        
-		        <div class="d-flex justify-content-center mb-2 px-3">
-		            <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
-		        </div>
+       <c:choose>
+           <c:when test="${empty findEmail}">
+               <div class="text-center">
+                  <p>조회결과가 없습니다.</p>
+              </div>
+              
+              <div class="d-flex justify-content-center mb-2 px-3">
+                  <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
+              </div>
             </c:when>
             <c:otherwise>
-            	<div class="mb-3">
-					<input type="text" class="form-control" style="margin-bottom: 10px;" value="${findEmail}" readonly="readonly">
-				</div>
+               <div class="mb-3">
+               <input type="text" class="form-control" style="margin-bottom: 10px;" value="${findEmail}" readonly="readonly">
+            </div>
                 <!-- 로그인 버튼 추가 -->
                 <div class="d-flex justify-content-center mb-2 px-3">
-			    	<input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="로그인"   onclick="location.href='login'">
-			    </div>
-           	</c:otherwise>
-     	</c:choose>
+                <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="로그인"   onclick="location.href='login'">
+             </div>
+              </c:otherwise>
+        </c:choose>
 </div>
 </body>
 </html>

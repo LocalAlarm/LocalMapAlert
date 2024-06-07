@@ -40,22 +40,22 @@
     </div> 
     <h4 align="center">이메일 찾기</h4>
     <hr>
-    	<form action="findEmailProcess" method="post" onsubmit="return validateForm()">
-        	<div class="mb-3">
-		    	<input type="text" class="form-control" name="nickname" title="닉네임" placeholder="닉네임 입력" style="margin-bottom: 10px;">
-		    </div>
-		    
-		    <div class="mb-3">
-		    	<input type="text" class="form-control" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력" style="margin-bottom: 10px;">
-		    </div>
-		    
-		    
-		     <div class="d-flex justify-content-center mb-2 px-3">
-	            <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="찾기">
-	            <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
-	        </div>
+       <form action="findEmailProcess" method="post" onsubmit="return validateForm()">
+           <div class="mb-3">
+             <input type="text" class="form-control" name="nickname" title="닉네임" placeholder="닉네임 입력" style="margin-bottom: 10px;">
+          </div>
+          
+          <div class="mb-3">
+             <input type="text" class="form-control" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력" style="margin-bottom: 10px;">
+          </div>
+          
+          
+           <div class="d-flex justify-content-center mb-2 px-3">
+               <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="찾기">
+               <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
+           </div>
             
-		</form> 
+      </form> 
 </div> 
 </body>
 </html>

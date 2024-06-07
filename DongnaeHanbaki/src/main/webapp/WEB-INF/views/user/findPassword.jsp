@@ -9,11 +9,11 @@
 <title>비밀번호 찾기</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
-	<script>
-		 function goBack() {
-	         window.history.back();
-	     }
-	</script>
+<script>
+       function goBack() {
+            window.history.back();
+        }
+</script>
 </head>
 <body>
 <jsp:include page="../../patials/commonBody.jsp"></jsp:include>
@@ -26,17 +26,17 @@
     <form action="join" method="post">
         <div class="mb-3">
             <input type="text" class="form-control" name="id" title="아이디" placeholder="아이디 입력" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="window.location.href='findEmail';" style="margin-top: auto;">
+            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="" style="margin-top: auto;">
         </div>
         
        <div class="input-group mb-3">
-		  <input type="text" class="form-control" placeholder="인증번호 입력" aria-label="인증번호 입력" aria-describedby="button-addon2">
+		  <input type="text" class="form-control" placeholder="인증번호 입력" aria-label="인증번호 입력" aria-describedby="button-addon2" disabled>
 		  <button class="btn btn-dark" type="button" id="button-addon2">인증번호 받기</button>
 		</div>
        
 <!-- 			새 비밀번호 입력 및 확인 -->
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="password" class="form-control" id="password-input" name="password-input" title="새 비밀번호 입력" placeholder="새 비밀번호 입력">
+            <input type="password" class="form-control" id="password-input" name="password-input" title="새 비밀번호 입력" placeholder="새 비밀번호 입력" disabled>
         </div>
         
         <div class="mb-3" style="margin-bottom: 20px !important;">
