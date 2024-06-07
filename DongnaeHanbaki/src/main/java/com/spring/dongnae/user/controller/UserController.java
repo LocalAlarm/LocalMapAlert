@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -125,10 +126,11 @@ public class UserController {
    
    // 로그인후
    @GetMapping("/main")
-   public String main() {
+   public String main(HttpSession session) {
 	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       String username = authentication.getName();
       System.out.println(">> 로그인 성공 사용자 : " + username);
+      session.setAttribute("username", username);
       return "user/main";
    }
 
