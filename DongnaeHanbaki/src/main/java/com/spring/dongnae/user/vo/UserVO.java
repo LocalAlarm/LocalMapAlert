@@ -3,27 +3,27 @@ package com.spring.dongnae.user.vo;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-public class UserVO implements UserDetails {
+public class UserVO {
 	private String email;
 	private String password;
-	private String address;
 	private String nickname;
+	private String address;
+	private String detailAddress;
+	private String recoverEmail;
 	private String image;
 	private int kakaoCheck;
-	private String token;
 	
-	private Collection<? extends GrantedAuthority> authorities;
+//	private Collection<? extends GrantedAuthority> authorities;
 	
-	
+	// 상세주소, 복구이메일 추가 - 건희
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
 	}
-
+	
 	public String getEmail() {
 		return email;
 	}
@@ -56,7 +56,6 @@ public class UserVO implements UserDetails {
 		this.nickname = nickname;
 	}
 	
-
 	public String getImage() {
 		return image;
 	}
@@ -73,54 +72,27 @@ public class UserVO implements UserDetails {
 		this.kakaoCheck = kakaoCheck;
 	}
 	
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-    
-
-	public String getToken() {
-		return token;
+	public String getRecoverEmail() {
+		return recoverEmail;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setRecoverEmail(String recoverEmail) {
+		this.recoverEmail = recoverEmail;
+	}
+
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
 	}
 
 	@Override
 	public String toString() {
-		return "UserVO [email=" + email + ", password=" + password + ", address=" + address + ", nickname=" + nickname
-				+ ", image=" + image + ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", authorities="
-				+ authorities + "]";
+		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
+				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
+				+ ", kakaoCheck=" + kakaoCheck + "]";
 	}
-
-	@Override
-	public String getUsername() {
-		return email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 	
 }

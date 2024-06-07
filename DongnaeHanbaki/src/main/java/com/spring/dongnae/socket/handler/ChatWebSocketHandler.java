@@ -35,7 +35,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // Here you would authenticate the user and fetch their user ID
     	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
-        String token = getAuthenticatedUser().getToken();
+//        String token = getAuthenticatedUser().getToken();
+    	String token = "dsa";
         sessions.put(session, token);
     }
 
