@@ -129,11 +129,13 @@ public class UserController {
    public String main(HttpSession session) {
 	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.isAuthenticated()) {
-          session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-          String username = authentication.getName();
-          System.out.println(">> 로그인 성공 사용자 : " + username);
+          String email = authentication.getName();
+          System.out.println(">> 로그인 성공 사용자 : " + email);
+          UserVO userVO = userService.getIdUser(email);
+          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
+          session.setAttribute("user", userVO);
       }
-      return "user/main";
+      return "user/profile";
    }
    
 // 로그인후
