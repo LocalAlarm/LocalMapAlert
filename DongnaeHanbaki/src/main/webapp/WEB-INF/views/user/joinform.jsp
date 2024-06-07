@@ -227,7 +227,7 @@
 			$("#email").focus();
 			return false;
 		}
-
+		
 		//이메일인증api
 		$.ajax({
 			type : "POST",
@@ -238,6 +238,8 @@
 			success : function(data) {
 				console.log("data: " + data);
 				$("#authenticNumber").attr("disabled", false);
+				$("#authentic").prop("type", "hidden");
+				$("#authenticReset").prop("type", "button");
 				code = data;
 			},
 			error : function(request, status, error) {
@@ -246,7 +248,6 @@
 			}
 
 		});
-		authenticCheck = true;
 	}
 	// 인증번호 비교
 	function authenticComp() {
@@ -254,9 +255,17 @@
 	    
 	    if (input == code) {
 	        $("#authenticWord").text("인증번호가 일치합니다.").css("color", "#0404B4");
+	        authenticCheck = true;
 	    } else {
 	        $("#authenticWord").text("인증번호가 일치하지 않습니다.").css("color", "red");
+	        authenticCheck = false;
 	    }
+	}
+	
+	//다시 인증
+	function resetAuthentic() {
+		$("#authentic").prop("type", "button");
+		$("#authenticReset").prop("type", "hidden");
 	}
 
 
@@ -342,11 +351,12 @@
     <form action="join" method="post" onsubmit="return joinValidate()">
         <div class="mb-3">
             <input type="email" class="form-control" id="email" name="email" title="이메일" placeholder="이메일 입력" style="margin-bottom: 10px;">
-             <input type="button" class="btn btn-outline-info" id="emailDuplicate" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;" />
+            <input type="button" class="btn btn-outline-info" id="emailDuplicate" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;" />
             <input type="hidden" class="btn btn-outline-info" id="emailReset" value="다시 입력" onclick="resetEmail()" disabled />
         </div>
          <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="hidden" class="btn btn-outline-info" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
+            <input type="hidden" class="btn btn-outline-info" id="authenticReset" value="다시 인증하기" onclick="resetAuthentic()" />
             <input type="hidden" class="form-control" id="authenticNumber" name="authenticNumber" title="인증하기" placeholder="인증번호 입력" disabled onblur="authenticComp()">
             <span id="authenticWord"></span>
         </div>
@@ -360,8 +370,10 @@
             <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" id="sample5_address" placeholder="주소" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample5_execDaumPostcode()" style="margin-top: auto;"><br>
+            <input type="text" class="form-control" id="sample6_address" placeholder="주소" style="margin-bottom: 10px;">
+            <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
+            <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
+            <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목">
             <div id="map" style="width:350px;height:350px;margin-top:10px;display:none"></div>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">

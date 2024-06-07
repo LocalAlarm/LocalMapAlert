@@ -1,14 +1,18 @@
 package com.spring.dongnae.user.controller;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -171,25 +175,36 @@ public class UserController {
 	   }
 	   
 	   //이메일 보내기
-	   String setForm = "jailju1016@gmail.com";
+	   String setFrom = "jailju1016@gmail.com";
+	   String senderName = "동네한바퀴";
 	   String toMail = email;
 	   String title = "회원가입 이메일 본인인증";
-	   String content = "홈페이지를 방문해주셔서 감사합니다." +
-				"<br><br>" +
-				"인증 번호는 " + authenticNum.toString() + " 입니다." +
-				"<br>" +
-				"해당 인증번호를 인증번호 확인란에 기입하여 주세요.";
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("<html><body>");
+	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
+	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
+	   sb.append("<br>");
+	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
+	   sb.append("<html><body>");        
+	   sb.append("<html><body>");
+	   sb.append("<html><body>");
+	   sb.append("</body></html>");
+	   String content = sb.toString();
 	   
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-			helper.setFrom(setForm);
+			helper.setFrom(new InternetAddress(setFrom, senderName));
 			helper.setTo(toMail);
 			helper.setSubject(title);
-			helper.setText(content);
+			helper.setText(content, true);
 			mailSender.send(message);
 
-		} catch (MessagingException e) {
+			 // 첨부 파일 추가
+//			FileSystemResource file = new FileSystemResource(new File());
+//			helper.addAttachment(, file);
+	        
+		} catch (MessagingException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	   
