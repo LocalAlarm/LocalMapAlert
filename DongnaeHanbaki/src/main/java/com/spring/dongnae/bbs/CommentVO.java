@@ -1,45 +1,65 @@
 package com.spring.dongnae.bbs;
 
 public class CommentVO {
-	String coment_idx;
-	String bbs_idx;
+	String commentIdx;
+	String bbsIdx;
 	String writer;
 	String content;
-	String write_date;
-	public String getComent_idx() {
-		return coment_idx;
+	String writeDate;
+	String delYn;
+	
+	public String getCommentIdx() {
+		return commentIdx;
 	}
-	public void setComent_idx(String coment_idx) {
-		this.coment_idx = coment_idx;
+
+	public void setCommentIdx(String commentIdx) {
+		this.commentIdx = commentIdx;
 	}
-	public String getBbs_idx() {
-		return bbs_idx;
+
+	public String getBbsIdx() {
+		return bbsIdx;
 	}
-	public void setBbs_idx(String bbs_idx) {
-		this.bbs_idx = bbs_idx;
+
+	public void setBbsIdx(String bbsIdx) {
+		this.bbsIdx = bbsIdx;
 	}
+
 	public String getWriter() {
 		return writer;
 	}
+
 	public void setWriter(String writer) {
 		this.writer = writer;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getWrite_date() {
-		return write_date;
+
+	public String getWriteDate() {
+		return writeDate;
 	}
-	public void setWrite_date(String write_date) {
-		this.write_date = write_date;
+
+	public void setWriteDate(String writeDate) {
+		this.writeDate = writeDate;
 	}
+
+	public String getDelYn() {
+		return delYn;
+	}
+
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
+	}
+
 	@Override
 	public String toString() {
-		return "CommentVO [coment_idx=" + coment_idx + ", bbs_idx=" + bbs_idx + ", writer=" + writer + ", content="
-				+ content + ", write_date=" + write_date + "]";
+		return "CommentVO [commentIdx=" + commentIdx + ", bbsIdx=" + bbsIdx + ", writer=" + writer + ", content="
+				+ content + ", writeDate=" + writeDate + ", delYn=" + delYn + "]";
 	}
 	
 }

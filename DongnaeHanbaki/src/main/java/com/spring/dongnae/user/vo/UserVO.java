@@ -19,10 +19,12 @@ public class UserVO {
 	private String image;
 	private int kakaoCheck;
 	private String token;
+
 	private String role;
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
+
 	// 상세주소, 복구이메일 추가 - 건희
 	public UserVO() {
 		System.out.println(">> UserVO() 객체생성");
@@ -91,6 +93,21 @@ public class UserVO {
 	public void setDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
+	public String getToken() {
+		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	public int getRole() {
+		return role;
+	}
+	
+	public void setRole(int role) {
+		this.role = role;
+	}
 
 	public String getToken() {
 		return token;
@@ -113,7 +130,8 @@ public class UserVO {
 	public String toString() {
 		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
 				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
-				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + "]";
+				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", role=" + role + "]";
+
 	}
 
 	

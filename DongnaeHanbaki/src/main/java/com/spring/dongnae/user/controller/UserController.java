@@ -69,7 +69,8 @@ public class UserController {
    }
 
    @RequestMapping("/loginerror")
-   public String loginError() {
+   public String loginError(@ModelAttribute("user") UserVO vo) {
+	   System.out.println(vo);
       System.out.println(">> 로그인 에러");
       return "user/loginerror";
    }
@@ -81,6 +82,7 @@ public class UserController {
       return "user/redirect";
    }
 
+   
    // kakao로그인 data 컨트롤
    @RequestMapping(value = "/kakaoData", method = RequestMethod.POST)
    @ResponseBody
@@ -154,7 +156,7 @@ public class UserController {
       System.out.println(">> 회원가입 화면 이동 - joinForm()");
       return "user/joinform";
    }
-
+   
    @PostMapping("/join")
    public String join(@ModelAttribute UserVO userVO) {
       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
@@ -163,7 +165,6 @@ public class UserController {
       userService.insertUser(userVO);
       return "redirect:login";
    }
-
    // 이메일 중복체크 - 건희
    @PostMapping("/checkEmail")
    @ResponseBody
