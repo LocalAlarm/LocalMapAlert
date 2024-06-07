@@ -1,7 +1,7 @@
 package com.spring.dongnae.user.controller;
 
 import java.io.UnsupportedEncodingException;
-
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -156,26 +156,18 @@ public class UserController {
    }
    
    @PostMapping("/join")
-   public String join(@ModelAttribute UserVO userVO) {
-      userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
-      userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
-      System.out.println(">> 회원가입 처리");
-      userService.insertUser(userVO);
-      return "redirect:login";
+   public String join(@ModelAttribute UserVO userVO, MultipartFile image) {
+       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
+       System.out.println(">> 회원가입 처리");
+       if (image.getName() != null) {
+           Map<String, String> imageMap = imageUploadController.uploadImage(image);
+           userVO.setImagePi(imageMap.get("public_id"));
+           userVO.setImage(imageMap.get("url"));
+       }
+       userService.insertUser(userVO);
+       return "redirect:login";
    }
-   
-//   @PostMapping("/join")
-//   public String join(@ModelAttribute UserVO userVO) {
-//       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
-//       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
-//       System.out.println(">> 회원가입 처리");
-////       if (image.getName() != null) {
-////           String imageURL = imageUploadController.uploadImage(image);
-////           userVO.setImage(imageURL);
-////       }
-//       userService.insertUser(userVO);
-//       return "redirect:login";
-//   }
 
    // 이메일 중복체크 - 건희
    @PostMapping("/checkEmail")

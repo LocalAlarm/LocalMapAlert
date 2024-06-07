@@ -15,7 +15,8 @@ public class ImageUploadController {
 
 	private static PropertiesConfig propertiesConfig;
 	
-    public String uploadImage(MultipartFile file) {
+    @SuppressWarnings("unchecked")
+	public Map<String, String> uploadImage(MultipartFile file) {
         if (file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")) {
             try {
                 Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -23,15 +24,10 @@ public class ImageUploadController {
                         "api_key", propertiesConfig.getKey(),
                         "api_secret", propertiesConfig.getSecret()));
 
-                Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-                System.out.println(uploadResult.toString());
-                String imageUrl = (String) uploadResult.get("url");
-                // 이미지 URL을 저장하거나 사용할 수 있습니다.
-                System.out.println("Uploaded image URL: " + imageUrl);
-                return imageUrl;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
         return null;
     }

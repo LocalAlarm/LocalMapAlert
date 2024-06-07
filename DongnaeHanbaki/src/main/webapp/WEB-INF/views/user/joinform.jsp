@@ -25,7 +25,7 @@
    //인증번호
    var code = "";
    //비번체크
-   var passwordCheck = false;
+   var passwordSurvey = false;
    //회원가입 폼에 필수 입력값 없으면 회원가입 완료버튼 못가게 막으면 됨
    //나머지 함수도 체크하면 다 "" 처리
    //
@@ -298,8 +298,8 @@
 			return false;
 		}
 		
-		$("#passwordWord").text("인증번호가 일치합니다.").css("color", "#0404B4");
-		passwordCheck = true;
+		$("#passwordWord").text("비밀번호가 일치합니다.").css("color", "#0404B4");
+		passwordSurvey = true;
 	}
 	
 
@@ -336,7 +336,7 @@
 			alert("비밀번호를 입력해주세요!");
 			$("#password").focus();
 			return false;
-		} else if (!passwordCheck) {
+		} else if (passwordSurvey == false) {
 			alert("비밀번호 확인과 비교해주세요!");
 			$("#password").focus();
 			return false;
