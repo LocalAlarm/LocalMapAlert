@@ -18,14 +18,35 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO USERS
-		VALUES (#{email}, #{password}, #{address}, #{nickname}, #{image}, #{kakaoCheck})
-	</insert>
+      INSERT INTO USERS
+      VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck}, #{token})
+    </insert>
 	
 	<insert id="insertKakaoUser" parameterType="userVO">
 		INSERT INTO USERS (EMAIL, NICKNAME, IMAGE, KAKAOCHECK)
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
+	
+	<select id="getIdUser" parameterType="String" resultType="userVO">
+		SELECT * 
+		FROM USERS
+		WHERE EMAIL = #{email}  
+	</select>
+		
+	<!-- 이메일 중복체크 - 건희 -->
+	<select id="doubleCheckEmail" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM USERS 
+		WHERE EMAIL = #{email} 
+	</select>
+	
+	<!-- 복구 이메일과 닉네임으로 이메일 찾기 - 건희 -->
+	<select id="findUserEmail" parameterType="userVO" resultType="String">
+		SELECT EMAIL
+		FROM USERS
+		WHERE NICKNAME = #{nickname}
+		     AND RECOVEREMAIL = #{recoverEmail}
+	</select> 
 	
 </mapper>
 
