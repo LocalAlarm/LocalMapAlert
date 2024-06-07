@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
@@ -158,6 +159,31 @@ public class UserController {
       return ResponseEntity.ok("pass");
    }
    
+   // 이메일 찾기 - 건희
+   @RequestMapping("/findEmail")
+   public String showFindEmailForm() {
+       return "user/findEmail"; 
+   }
+   
+   // 이메일 찾기 결과 - 건희
+   @PostMapping("/findEmailProcess")
+	public String findEmail(HttpServletRequest request, Model model,UserVO vo,
+			@RequestParam String nickname, 
+			@RequestParam String recoverEmail) {
+		try {
+			vo.setNickname(nickname);
+			vo.setRecoverEmail(recoverEmail); 
+			
+			String email = userService.findUserEmail(vo);
+			
+			model.addAttribute("findEmail", email); 
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "user/emailFound";
+	}
+
    //이메일 인증
    @PostMapping("/mailAuthentic")
    @ResponseBody

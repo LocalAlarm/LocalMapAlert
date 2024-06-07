@@ -40,6 +40,14 @@
 		WHERE EMAIL = #{email} 
 	</select>
 	
+	<!-- 복구 이메일과 닉네임으로 이메일 찾기 - 건희 -->
+	<select id="findUserEmail" parameterType="userVO" resultType="String">
+		SELECT EMAIL
+		FROM USERS
+		WHERE NICKNAME = #{nickname}
+		     AND RECOVEREMAIL = #{recoverEmail}
+	</select> 
+	
 </mapper>
 
 

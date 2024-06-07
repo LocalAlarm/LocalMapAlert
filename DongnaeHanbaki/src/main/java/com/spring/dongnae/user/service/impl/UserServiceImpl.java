@@ -61,12 +61,18 @@ public class UserServiceImpl implements UserService {
 		return userDAO.getIdUser(emial);
 	}
 	
-	// 이메일 중복체크
+	// 이메일 중복체크 - 건희
 	@Override	
 	public int doubleCheckEmail(String email) {
 		return userDAO.doubleCheckEmail(email);
 	}
-
+	
+	// 이메일 찾기 - 건희
+	@Override
+	public String findUserEmail(UserVO vo) {
+		return userDAO.findUserEmail(vo); 
+	}
+	
 	//kakao
 //    @Override
 //    public String getAccessToken(String authorize_code) {
