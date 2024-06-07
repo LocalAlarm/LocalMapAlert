@@ -19,6 +19,7 @@ public class UserVO {
 	private String image;
 	private int kakaoCheck;
 	private String token;
+	private String role;
 	
 //	private Collection<? extends GrantedAuthority> authorities;
 	
@@ -90,8 +91,6 @@ public class UserVO {
 	public void setDetailAddress(String detailAddress) {
 		this.detailAddress = detailAddress;
 	}
-	
-	
 
 	public String getToken() {
 		return token;
@@ -99,6 +98,15 @@ public class UserVO {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	@Override

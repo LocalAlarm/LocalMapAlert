@@ -36,10 +36,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         // Here you would authenticate the user and fetch their user ID
 //    	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
     	UserVO authenticatedUser = getAuthenticatedUser(session);
+    	System.out.println("chat : " + authenticatedUser);
     	 if (authenticatedUser != null) {
-             String username = authenticatedUser.getEmail();
-             sessions.put(session, username);
-             System.out.println("Connected: " + username);
+             String token = authenticatedUser.getToken();
+             sessions.put(session, token);
+             System.out.println("Connected: " + token);
          } else {
              System.out.println("No authenticated user found.");
              session.close(CloseStatus.NOT_ACCEPTABLE);
