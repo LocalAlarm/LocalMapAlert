@@ -91,8 +91,8 @@ window.onload = function() {
         <div class="toast" id="chatToast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
             <img src="${pageContext.request.contextPath}/resources/img/chat-dots.svg" class="rounded me-2" alt="ChatIcon"> <!-- 아이콘 이미지 -->
-            <strong class="me-auto">Bootstrap</strong> 
-            <small>11 mins ago</small>
+            <strong class="me-auto">Chat</strong> 
+            <small>채팅방 이름</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> <!-- 닫기 버튼 -->
         </div>
         <div class="toast-body">
