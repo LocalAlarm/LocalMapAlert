@@ -36,10 +36,11 @@
 	</select>
 	
  	<select id="getBbs" parameterType="bbsVO" resultType="bbsVO">
-		SELECT * FROM BBS
-		<!-- 삭제되지 않은 글만 조회 -->
+		<!-- SELECT * FROM BBS
+		삭제되지 않은 글만 조회
 		WHERE DEL_YN = 0
-		AND BBS_IDX = #{bbsIdx}
+		AND BBS_IDX = #{bbsIdx} -->
+		SELECT * FROM BBS
 	</select>
 	
 	<insert id="insertBbs" parameterType="bbsVO">

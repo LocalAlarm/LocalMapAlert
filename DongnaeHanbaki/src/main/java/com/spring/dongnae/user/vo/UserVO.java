@@ -8,105 +8,110 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 public class UserVO {
-   private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
-   
-   private String email;
-   private String password;
-   private String nickname;
-   private String address;
-   private String detailAddress;
-   private String recoverEmail;
-   private String image;
-   private int kakaoCheck;
-   private String token;
-   
-//   private Collection<? extends GrantedAuthority> authorities;
-   
-   // 상세주소, 복구이메일 추가 - 건희
-   public UserVO() {
-      System.out.println(">> UserVO() 객체생성");
-   }
-   
-   public String getEmail() {
-      return email;
-   }
+	private String email;
+	private String password;
+	private String nickname;
+	private String address;
+	private String detailAddress;
+	private String recoverEmail;
+	private String image;
+	private int kakaoCheck;
+	private String token;
+	private int role;
+	
+//	private Collection<? extends GrantedAuthority> authorities;
+	
 
-   public void setEmail(String email) {
-      this.email = email;
-   }
+	// 상세주소, 복구이메일 추가 - 건희
+	public UserVO() {
+		System.out.println(">> UserVO() 객체생성");
+	}
+	
+	public String getEmail() {
+		return email;
+	}
 
-   public String getPassword() {
-      return password;
-   }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-   public void setPassword(String password) {
-      this.password = password;
-   }
+	public String getPassword() {
+		return password;
+	}
 
-   public String getAddress() {
-      return address;
-   }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-   public void setAddress(String address) {
-      this.address = address;
-   }
+	public String getAddress() {
+		return address;
+	}
 
-   public String getNickname() {
-      return nickname;
-   }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-   public void setNickname(String nickname) {
-      this.nickname = nickname;
-   }
-   
-   public String getImage() {
-      return image;
-   }
+	public String getNickname() {
+		return nickname;
+	}
 
-   public void setImage(String image) {
-      this.image = image;
-   }
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
+	public String getImage() {
+		return image;
+	}
 
-   public int getKakaoCheck() {
-      return kakaoCheck;
-   }
+	public void setImage(String image) {
+		this.image = image;
+	}
 
-   public void setKakaoCheck(int kakaoCheck) {
-      this.kakaoCheck = kakaoCheck;
-   }
-   
-   public String getRecoverEmail() {
-      return recoverEmail;
-   }
+	public int getKakaoCheck() {
+		return kakaoCheck;
+	}
 
-   public void setRecoverEmail(String recoverEmail) {
-      this.recoverEmail = recoverEmail;
-   }
+	public void setKakaoCheck(int kakaoCheck) {
+		this.kakaoCheck = kakaoCheck;
+	}
+	
+	public String getRecoverEmail() {
+		return recoverEmail;
+	}
 
-   public String getDetailAddress() {
-      return detailAddress;
-   }
+	public void setRecoverEmail(String recoverEmail) {
+		this.recoverEmail = recoverEmail;
+	}
 
-   public void setDetailAddress(String detailAddress) {
-      this.detailAddress = detailAddress;
-   }
-   
-   
+	public String getDetailAddress() {
+		return detailAddress;
+	}
 
-   public String getToken() {
-      return token;
-   }
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
+	}
+	public String getToken() {
+		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+	public int getRole() {
+		return role;
+	}
+	
+	public void setRole(int role) {
+		this.role = role;
+	}
 
-   public void setToken(String token) {
-      this.token = token;
-   }
+	@Override
+	public String toString() {
+		return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
+				+ ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
+				+ ", kakaoCheck=" + kakaoCheck + ", token=" + token + ", role=" + role + "]";
+	}
 
-   @Override
-   public String toString() {
-      return "UserVO [email=" + email + ", password=" + password + ", nickname=" + nickname + ", address=" + address
-            + ", detailAddress=" + detailAddress + ", recoverEmail=" + recoverEmail + ", image=" + image
-            + ", kakaoCheck=" + kakaoCheck + ", token=" + token + "]";
-   }
-
-   
+	
 }
