@@ -19,7 +19,7 @@
 	
 	<insert id="insertUser" parameterType="userVO">
 		INSERT INTO USERS
-		VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck})
+		VALUES (#{email}, #{password}, #{nickname}, #{address}, #{detailAddress}, #{recoverEmail}, #{image}, #{kakaoCheck}, #{token})
 	</insert>
 	
 	<insert id="insertKakaoUser" parameterType="userVO">
@@ -47,6 +47,8 @@
 		WHERE NICKNAME = #{nickname}
 		     AND RECOVEREMAIL = #{recoverEmail}
 	</select> 
+	
+	
 	
 </mapper>
 

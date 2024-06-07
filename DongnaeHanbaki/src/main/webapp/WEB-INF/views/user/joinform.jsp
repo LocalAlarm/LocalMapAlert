@@ -348,7 +348,7 @@
         <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717463449/%EB%8F%99%EB%84%A4%ED%95%9C%EB%B0%94%ED%80%B4__1_-removebg-preview_cgjoy5.png" alt="로고 이미지">
     </div>
      <h2>회원가입</h2>
-    <form action="join" method="post" onsubmit="return joinValidate()">
+    <form action="join" method="post" enctype="multipart/form-data" onsubmit="return joinValidate()">
         <div class="mb-3">
             <input type="email" class="form-control" id="email" name="email" title="이메일" placeholder="이메일 입력" style="margin-bottom: 10px;">
             <input type="button" class="btn btn-outline-info" id="emailDuplicate" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;" />
@@ -380,7 +380,7 @@
             <input type="text" class="form-control" id="recoverEmail" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="file" class="form-control" name="image">
+            <input type="file" class="form-control" name="image" id="image" accept="image/*">
         </div>
         <div class="d-flex justify-content-center mb-2 px-3">
             <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="회원가입 하기" onclick="return checkEmail(this.form)">
