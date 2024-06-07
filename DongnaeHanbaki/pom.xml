@@ -87,6 +87,19 @@
 		    <version>3.0.0</version>
 		</dependency>
 		
+		<!-- 이메일 인증 -->
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.6.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+		
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -227,7 +240,25 @@
 		    <artifactId>spring-security-web</artifactId>
 		    <version>${org.springframework.security-version}</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-taglibs</artifactId>
+		    <version>${org.springframework.security-version}</version>
+		</dependency>
+
+	    <!-- Spring Data MongoDB -->
+	    <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-mongodb</artifactId>
+	        <version>1.10.23.RELEASE</version>
+	    </dependency>
+	
+	    <!-- MongoDB Java Driver -->
+	    <dependency>
+	       <groupId>org.mongodb</groupId>
+	       <artifactId>mongo-java-driver</artifactId>
+	       <version>3.6.4</version>
+	    </dependency>	</dependencies>
     <build>
         <plugins>
             <plugin>

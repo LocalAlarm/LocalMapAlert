@@ -33,10 +33,10 @@
 	</logger>
 	
 	<!-- Spring Security Logger -->
-    <logger name="org.springframework.security">
+<!--     <logger name="org.springframework.security">
         <level value="DEBUG" />
     </logger>
-
+ -->
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
