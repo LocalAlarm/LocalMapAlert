@@ -94,6 +94,11 @@
 		<!-- 삭제된 글 보기 -->
 		WHERE DEL_YN = 1
 	</select>
+	
+	<select id ="getEventAccidents" resultType="bbsVO">
+		SELECT * FROM BBS 
+		WHERE CONTENT = #{content}
+	</select>
 </mapper>
 
 
