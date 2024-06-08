@@ -24,4 +24,6 @@ public interface BbsDAO {
 	
 	//삭제된 게시글들 리턴 (필요한가?)
 	List<BbsVO> getDelBbsList();
+
+	List<BbsVO> getEventAccidents(String content);
 }

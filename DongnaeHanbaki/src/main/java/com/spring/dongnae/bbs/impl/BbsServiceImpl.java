@@ -61,5 +61,9 @@ public class BbsServiceImpl implements BbsService{
 	public List<BbsVO> getDelBbsList() {
 		return bbsDAO.getDelBbsList();
 	}
+	 @Override
+	    public List<BbsVO> getEventAccidents(String content) {
+	        return bbsDAO.getEventAccidents(content);
+	}
 
 }

@@ -108,7 +108,12 @@ function addMarker(position, markerType, content, detailedContent) {
     });
 
     // 마커에 click 이벤트 등록
-    kakao.maps.event.addListener(marker, 'click', function() {
+     kakao.maps.event.addListener(marker, 'click', function() {
+        // 지도 중심을 마커 위치로 이동하고 레벨을 1로 설정
+        map.setCenter(marker.getPosition());
+        map.setLevel(1);
+
+        // 팝업 창 내용 설정 및 표시
         document.getElementById('popupContent').innerText = detailedContent;
         document.getElementById('popup').style.display = 'block';
     });
@@ -137,3 +142,4 @@ function closePopup() {
 function resetForm() {
     document.getElementById('markerForm').reset();
 }
+

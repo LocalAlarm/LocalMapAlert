@@ -21,7 +21,7 @@
             <div class="col-2" id="sidebar">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                    <button class="nav-link" id="v-pills-profile-tab" onclick="loadEventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
+					<button class="nav-link" id="v-pills-profile-tab" onclick="loadEventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
                     <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
                     <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
                 </div>
@@ -91,38 +91,33 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script>
     function loadEventAccidents() {
-    	 $.ajax({
-    	        url: contextPath + '/eventAccidents',
-    	        method: 'GET',
-    	        data: { mapIdx: '1' },
-    	        success: function(data) {
-    	            // 받아온 데이터를 배열로 변환
-    	            var accidentsArray = [];
-    	            accidentsArray.push(data);
+        $.ajax({
+            url: contextPath + "/getEventAccidents",
+            method: "GET",
+            dataType: "json",
+            success: function(data) {
+                // 기존 마커 제거
+                hideMarkers();
+                markers = [];
+                console.log("1");
+                // 가져온 데이터로 마커 생성
+                data.forEach(function(event) {
+                    var position = new kakao.maps.LatLng(event.latitude, event.logitude);
+                    var content = event.title + " : " + event.content;
+                    var detailedContent = event.title + " : " + event.content + "\n자세한 내용 : " + event.details;
+                    addMarker(position, "사건 사고", content, detailedContent);
+                });
 
-    	            // 데이터를 받아와서 처리
-    	            accidentsArray.forEach(function(accident) {
-    	                // 각각의 사건사고 정보에서 위도(latitude)와 경도(longitude) 추출
-    	                var latitude = accident.LATITUDE;
-    	                var longitude = accident.LONGITUDE;
-    	                
-    	                // 마커 생성
-    	                var markerPosition = new kakao.maps.LatLng(latitude, longitude);
-    	                var marker = new kakao.maps.Marker({
-    	                    position: markerPosition
-    	                });
-    	                
-    	                // 생성한 마커를 지도에 표시
-    	                marker.setMap(map);
-    	                console.log(accident);
-    	            });
-    	        },
-
-            error: function(error) {
-                console.error('Error loading event accidents', error);
+                console.log("2");
+                // 마커 보이기
+                showMarkers();
+            },
+            error: function(xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류 발생: " + error);
             }
         });
     }
+
     </script>
 </body>
 </html>
