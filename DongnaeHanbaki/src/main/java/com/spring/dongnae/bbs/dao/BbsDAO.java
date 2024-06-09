@@ -26,5 +26,8 @@ public interface BbsDAO {
 	List<BbsVO> getDelBbsList();
 
 	List<BbsVO> getMenu(String content);
+	List<BbsVO> allMenu(BbsVO vo);
+
+	void insertMarker(BbsVO vo);
 
 }
