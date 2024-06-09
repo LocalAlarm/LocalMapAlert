@@ -12,9 +12,11 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.socket.scheme.ChatMessage;
 import com.spring.dongnae.socket.scheme.ChatMessageRepository;
 import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
@@ -23,6 +25,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final ChatMessageRepository chatMessageRepository;
     @Autowired
     private final UserService userService;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     // In-memory storage for WebSocket sessions and user IDs
     private final Map<WebSocketSession, String> sessions = new ConcurrentHashMap<>();
@@ -46,7 +50,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                  for (Map<String, String> messageMap : chatMessage.getMessages()) {
                  	String fromToken = messageMap.get("from");
                  	String dbMessage = messageMap.get("message");
-                 	session.sendMessage(new TextMessage(userService.getUserByToken(fromToken).getNickname() + ": " + dbMessage));
+                 	String jsonMessage = objectMapper.writeValueAsString(transToJson(userService.getUserByToken(fromToken), dbMessage));
+                 	session.sendMessage(new TextMessage(jsonMessage));
                  }
              } else {
                  // 새로운 메시지 문서 생성
@@ -72,15 +77,26 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         messageMap.put("message", payload);
         newMessage.addMessage(messageMap);
         chatMessageRepository.save(newMessage);
+        
+        // JSON 메시지 생성
+        String jsonMessage = objectMapper.writeValueAsString(transToJson(userService.getUserByToken(token), payload));
 
         // Broadcast the message to all connected clients
         for (WebSocketSession s : sessions.keySet()) {
-            s.sendMessage(new TextMessage(userService.getUserByToken(token).getNickname() + ": " + payload));
+            s.sendMessage(new TextMessage(jsonMessage));
         }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
+    }
+    
+    private Map<String,String> transToJson(UserVO userVO, String message) {
+    	Map<String, String> jsonMap = new HashMap<>();
+    	jsonMap.put("fromEmail", userVO.getEmail());
+    	jsonMap.put("fromNickName", userVO.getNickname());
+    	jsonMap.put("message", message);
+    	return jsonMap;
     }
 }

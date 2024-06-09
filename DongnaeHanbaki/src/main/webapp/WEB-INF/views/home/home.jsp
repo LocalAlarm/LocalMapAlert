@@ -45,10 +45,14 @@ function connect() {
         console.log('Connected to WebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
     socket.onmessage = function(event) {
-        displayMessage(event.data, 'received'); // 메시지 수신 시 화면에 표시
+    	var jsonMessage = JSON.parse(event.data);
+    	displayMessage(jsonMessage.fromNickName, jsonMessage.message, 'received');
     };
     socket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
+    };
+    socket.onerror = function(error) {
+        console.log("WebSocket error: " + error);
     };
 }
 
@@ -57,16 +61,16 @@ function sendMessage() {
     var message = messageInput.value;
     if(message.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
         socket.send(message); // WebSocket을 통해 메시지 전송
-//         displayMessage(message, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
+//        displayMessage("닉네임", message, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
         messageInput.value = ''; // 입력창 비우기
     }
 }
 
-function displayMessage(message, type) {
+function displayMessage(nickname, message, type) {
     var chatBox = document.getElementById('chatBox');
     var messageDiv = document.createElement('div');
     messageDiv.classList.add('message', type); // 메시지 스타일 지정
-    messageDiv.textContent = message; // 메시지 내용 설정
+    messageDiv.textContent = nickname + ': ' + message; // 메시지 내용 설정
     chatBox.appendChild(messageDiv); // 메시지를 채팅 박스에 추가
     chatBox.scrollTop = chatBox.scrollHeight; // 새 메시지가 추가될 때 스크롤을 맨 아래로 이동
 }
