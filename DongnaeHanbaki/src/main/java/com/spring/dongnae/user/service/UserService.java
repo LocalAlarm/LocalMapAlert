@@ -21,4 +21,7 @@ public interface UserService {
 	
 	// 이메일 찾기 - 건희
 	String findUserEmail(UserVO vo);
+	
+	// token 값으로 이메일, 닉네임 불러오는 기
+	UserVO getUserByToken(String token);
 }

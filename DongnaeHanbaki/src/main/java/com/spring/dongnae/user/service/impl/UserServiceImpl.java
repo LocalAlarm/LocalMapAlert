@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
 	public String findUserEmail(UserVO vo) {
 		return userDAO.findUserEmail(vo); 
 	}
+
+	@Override
+	public UserVO getUserByToken(String token) {
+		return userDAO.getUserByToken(token);
+	}
 	
 	//kakao
 //    @Override

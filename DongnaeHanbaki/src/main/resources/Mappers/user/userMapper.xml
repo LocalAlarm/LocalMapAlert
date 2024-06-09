@@ -52,4 +52,10 @@
 		     AND RECOVEREMAIL = #{recoverEmail}
 	</select> 
 	
+	<select id="getUserByToken" parameterType="string" resultType="userVO">
+		SELECT EMAIL, NICKNAME
+		FROM USERS
+		WHERE TOKEN = #{token}
+	</select>
+	
 </mapper>

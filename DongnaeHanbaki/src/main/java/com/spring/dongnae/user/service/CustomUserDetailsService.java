@@ -30,6 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 		CustomUserDetails cud = new CustomUserDetails();
 		cud.setUsername(userVO.getEmail());
 		cud.setPassword(userVO.getPassword());
+		cud.setToken(userVO.getToken());
 //		List<>
 		
 		//역할

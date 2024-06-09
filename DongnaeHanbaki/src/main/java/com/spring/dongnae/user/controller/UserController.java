@@ -39,6 +39,7 @@ import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Controller
@@ -144,18 +145,6 @@ public class UserController {
           
       }
       return "user/profile";
-   }
-   
-// 로그인후
-   @GetMapping("/home")
-   public String home(HttpSession session) {
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (authentication != null && authentication.isAuthenticated()) {
-          session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-          String username = authentication.getName();
-          System.out.println(">> 로그인 성공 사용자 : " + username);
-      }
-      return "home/home";
    }
 
    // 회원가입 페이지로 이동 - 건희

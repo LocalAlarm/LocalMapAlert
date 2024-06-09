@@ -16,39 +16,35 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.spring.dongnae.socket.scheme.ChatMessage;
 import com.spring.dongnae.socket.scheme.ChatMessageRepository;
-import com.spring.dongnae.user.vo.UserVO;
+import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.CustomUserDetails;
 
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
     
     @Autowired
     private final ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private final UserService userService;
 
     // In-memory storage for WebSocket sessions and user IDs
     private final Map<WebSocketSession, String> sessions = new ConcurrentHashMap<>();
 
-    public ChatWebSocketHandler(ChatMessageRepository chatMessageRepository) {
+    public ChatWebSocketHandler(ChatMessageRepository chatMessageRepository, UserService userService) {
         this.chatMessageRepository = chatMessageRepository;
+		this.userService = userService;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // Here you would authenticate the user and fetch their user ID
-//    	System.out.println("afterConneoctionEstablished : " + getAuthenticatedUser().toString());
-    	UserVO authenticatedUser = getAuthenticatedUser(session);
-    	System.out.println("chat : " + authenticatedUser);
-    	 if (authenticatedUser != null) {
-             String token = authenticatedUser.getToken();
+    	String token = (String) session.getAttributes().get("userToken");
+    	 if (token != null) {
              sessions.put(session, token);
              System.out.println("Connected: " + token);
          } else {
              System.out.println("No authenticated user found.");
              session.close(CloseStatus.NOT_ACCEPTABLE);
          }
-//        String token = getAuthenticatedUser().getToken();
-//        System.out.println("token : " + token);
-//    	String token = "dsa";
-//        sessions.put(session, token);
     }
 
     @Override
@@ -78,7 +74,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         // Broadcast the message to all connected clients
         for (WebSocketSession s : sessions.keySet()) {
-            s.sendMessage(new TextMessage(token + ": " + payload));
+            s.sendMessage(new TextMessage(userService.getUserByToken(token).getNickname() + ": " + payload));
         }
     }
 
@@ -86,25 +82,4 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
     }
-
-    private UserVO getAuthenticatedUser(WebSocketSession session) {
-        // HttpSession에서 SecurityContext를 통해 인증된 사용자 정보 가져오기
-        Object principal = session.getAttributes().get("SPRING_SECURITY_CONTEXT");
-        if (principal instanceof Authentication) {
-            Authentication authentication = (Authentication) principal;
-            if (authentication != null && authentication.isAuthenticated()) {
-                return (UserVO) authentication.getPrincipal();
-            }
-        }
-        return null;
-    }
-    
-//    public UserVO getAuthenticatedUser() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated()) {
-//        	System.out.println("userVo tostring : " + ((UserVO) authentication.getPrincipal()).toString());
-//            return (UserVO) authentication.getPrincipal();
-//        }
-//        return null;
-//    }
 }
