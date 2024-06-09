@@ -14,12 +14,20 @@ import com.spring.dongnae.bbs.BbsVO;
 public class BbsController {
     
     @Autowired
-    private BbsService bbsService; // BbsService를 통해 데이터베이스와 통신합니다.
+    private BbsService bbsService; 
     
     @RequestMapping("/getEventAccidents")
     @ResponseBody
     public List<BbsVO> getEventAccidents() {
         String content = "사건사고";
-        return bbsService.getEventAccidents(content);
+        return bbsService.getMenu(content);
     }
+    
+    @RequestMapping("/getEvents")
+    @ResponseBody
+    public List<BbsVO> getEvents() {
+        String content = "이벤트";
+        return bbsService.getMenu(content);
+    }
+    
 }

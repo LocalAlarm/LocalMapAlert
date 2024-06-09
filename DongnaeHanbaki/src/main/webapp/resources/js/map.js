@@ -142,4 +142,42 @@ function closePopup() {
 function resetForm() {
     document.getElementById('markerForm').reset();
 }
+//사건사고 클릭
+function loadEventAccidents() {
+        $.ajax({
+            url: contextPath + "/getEventAccidents",
+            method: "GET",
+            dataType: "json",
+            success: function(data) {
+                // 기존 마커 제거
+                hideMarkers();
+                markers = [];
+
+                // 가져온 데이터로 마커 생성
+                var contentHtml = ''; // 새로운 콘텐츠를 위한 변수
+                data.forEach(function(event) {
+                    var position = new kakao.maps.LatLng(event.latitude, event.logitude);
+                    var content = event.title + " : " + event.content;
+                    var detailedContent = event.title + " : " + event.content + "\n자세한 내용 : " + event.details;
+                    addMarker(position, "사건 사고", content, detailedContent);
+                    
+                    // 각 이벤트 사고를 HTML 콘텐츠로 추가
+                    contentHtml += '<div>' + detailedContent + '</div>';
+                });
+
+                // 마커 보이기
+                showMarkers();
+
+                // 네비게이션 바 탭 활성화
+                $('#v-pills-profile-tab').tab('show');
+
+                // 콘텐츠 업데이트
+                $('#event-accidents-content').html(contentHtml);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("데이터를 가져오는 중 오류 발생: " + error);
+	            }
+	        });
+	    }
+	    
 
