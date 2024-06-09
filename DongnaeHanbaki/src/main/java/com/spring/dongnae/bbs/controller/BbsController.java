@@ -2,8 +2,12 @@ package com.spring.dongnae.bbs.controller;
 
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,4 +34,18 @@ public class BbsController {
         return bbsService.getMenu(content);
     }
     
+    @RequestMapping("/allMenu")
+    @ResponseBody
+    public List<BbsVO> allMenu(BbsVO vo) {
+    	return bbsService.allMenu(vo);
+    }
+    
+    @PostMapping("/saveMarker")
+    public ResponseEntity<String> saveMarker(@RequestBody BbsVO vo) {
+        System.out.println("세이브 마커 컨트롤러");
+        bbsService.saveMarker(vo);
+        return ResponseEntity.ok("마커 저장.");
+    }
+
+ 
 }
