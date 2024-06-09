@@ -1,6 +1,9 @@
-package com.spring.dongnae.socket.scheme;
+package com.spring.dongnae.socket.repo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.spring.dongnae.socket.scheme.ChatMessage;
+
 import java.util.Optional;
 
 public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {

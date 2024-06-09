@@ -13,8 +13,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.socket.repo.ChatMessageRepository;
 import com.spring.dongnae.socket.scheme.ChatMessage;
-import com.spring.dongnae.socket.scheme.ChatMessageRepository;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
 
