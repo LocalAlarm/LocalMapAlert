@@ -95,7 +95,7 @@
 		WHERE DEL_YN = 1
 	</select>
 	
-	<select id ="getEventAccidents" resultType="bbsVO">
+	<select id ="getMenu" resultType="bbsVO">
 		SELECT * FROM BBS 
 		WHERE CONTENT = #{content}
 	</select>
