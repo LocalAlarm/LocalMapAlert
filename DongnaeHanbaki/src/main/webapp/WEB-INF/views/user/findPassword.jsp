@@ -13,6 +13,21 @@
        function goBack() {
             window.history.back();
         }
+       //이메일 찾기
+       function findPasswordByEmail() {
+    	   var email = $("#id").val().trim();
+    	   console.log(email);
+    	   $.ajax({
+    		   type: "POST",
+    		   url:  "findEmail",
+    		   data: {
+    			   email: email
+    		   },
+    		   success: function(data) {
+    			   console.log("data: " + data);
+    		   }
+    	   })
+       }
        
 </script>
 </head>
@@ -27,13 +42,13 @@
      <hr>
     <form action="join" method="post">
         <div class="mb-3">
-            <input type="text" class="form-control" name="id" title="아이디" placeholder="아이디 입력" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="" style="margin-top: auto;">
+            <input type="text" class="form-control" id="id" name="id" title="아이디" placeholder="아이디 입력" style="margin-bottom: 10px;">
+            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="findPasswordByEmail()" style="margin-top: auto;">
         </div>
         
        <div class="input-group mb-3">
 		  <input type="text" class="form-control" placeholder="인증번호 입력" aria-label="인증번호 입력" aria-describedby="button-addon2" disabled>
-		  <button class="btn btn-dark" type="button" id="button-addon2">인증번호 받기</button>
+		  <button class="btn btn-dark" type="button" id="button-addon2" disabled>인증번호 받기</button>
 		</div>
        
 <!-- 			새 비밀번호 입력 및 확인 -->

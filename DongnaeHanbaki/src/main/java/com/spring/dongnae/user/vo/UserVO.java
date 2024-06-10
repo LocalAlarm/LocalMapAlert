@@ -1,8 +1,11 @@
 package com.spring.dongnae.user.vo;
 
+import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
 
 public class UserVO {
+	private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
 
 	private String email;
 	private String password;
