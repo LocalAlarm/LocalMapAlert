@@ -13,6 +13,21 @@
        function goBack() {
             window.history.back();
         }
+       //이메일 찾기
+       function findPasswordByEmail() {
+    	   var email = $("#id").val().trim();
+    	   console.log(email);
+    	   $.ajax({
+    		   type: "POST",
+    		   url:  "findEmail",
+    		   data: {
+    			   email: email
+    		   },
+    		   success: function(data) {
+    			   console.log("data: " + data);
+    		   }
+    	   })
+       }
        
 </script>
 </head>
@@ -27,8 +42,8 @@
      <hr>
     <form action="join" method="post">
         <div class="mb-3">
-            <input type="text" class="form-control" name="id" title="아이디" placeholder="아이디 입력" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="" style="margin-top: auto;">
+            <input type="text" class="form-control" id="id" name="id" title="아이디" placeholder="아이디 입력" style="margin-bottom: 10px;">
+            <input type="button" class="btn btn-outline-info" value="아이디 찾기" onclick="findPasswordByEmail()" style="margin-top: auto;">
         </div>
         
        <div class="input-group mb-3">
