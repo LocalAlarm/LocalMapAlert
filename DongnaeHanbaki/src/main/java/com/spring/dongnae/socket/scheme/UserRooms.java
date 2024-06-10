@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserRooms {
 	
 	@Id
-	private String id;
+	private String id; // 토큰값이 들어갈거임
 	private String email;
 	private List<String> chatRoomIds;
 	
