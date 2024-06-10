@@ -65,9 +65,8 @@ String token = userDetails.getToken();
 	<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
-	<div id="chatList">
-	</div>
-<!-- 		<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button> -->
+	<div id="chatList"></div>
+	<!-- 		<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button> -->
 	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button> -->
 	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button> -->
 	<!-- Toast 버튼 -->
@@ -85,8 +84,7 @@ String token = userDetails.getToken();
 				<!-- 닫기 버튼 -->
 			</div>
 			<div class="toast-body">
-				<div id="chatBox">
-				</div>
+				<div id="chatBox"></div>
 			</div>
 			<!-- 채팅 메시지 표시 영역 -->
 			<input type="text" id="message" placeholder="Enter your message" />
@@ -98,7 +96,7 @@ String token = userDetails.getToken();
 </body>
 <script>
 var socket = null;
-var token = '<%= token %>';
+var token = '<%=token%>';
 const chatToast = document.getElementById('chatToast');
 
 function connect() {
@@ -113,14 +111,18 @@ function connect() {
         $('#chatList').html(buttonHtml);
         
         for(const element of jsonChatRoom.messages) {
-        	if(token === element.senderToken) {
-        		displayMessage("충희", element.content, 'sent');
-        	} else {
-	        	displayMessage(element.senderToken, element.content, 'received');
-			}
+        	// getNickname 함수를 호출하여 토큰에 대한 닉네임을 가져옴
+        	getNickname(element.senderToken).then(nickname => {
+	        	if(token === element.senderToken) {
+	        		displayMessage(nickname, element.content, 'sent'); // 바꾼닉넴 활용
+	        	} else {
+		        	displayMessage(nickname, element.content, 'received'); // 바꾼닉넴 활용
+				}
+        	});
         	
         }
     };
+    
     socket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
@@ -140,8 +142,9 @@ function sendMessage() {
     	};
     	console.log(jsonMsg);
      	socket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
-//         socket.send(content); // WebSocket을 통해 메시지 전송
-        displayMessage("닉네임", content, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
+    	getNickname(token).then(nickname => {
+	        displayMessage(nickname, content, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
+    	});
         messageInput.value = ''; // 입력창 비우기
     }
 }
@@ -196,6 +199,25 @@ function getIdByClass(className) {
     return null;
 }
 
+// 비동기로 토큰에 대한 닉네임을 가져오는 함수
+async function getNickname(token) {
+    try {
+        const response = await fetch('/dongnae/api/getNickname', { // 서버에서 토큰에 대한 닉네임을 가져오는 API 엔드포인트
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token: token }) // 토큰을 서버로 전달
+        });
+
+        const data = await response.json();
+        return data.nickname; // 서버에서 받은 닉네임 반환
+    } catch (error) {
+        console.error('Error fetching nickname:', error);
+        return null; // 오류 발생 시 null 반환
+    }
+};
+
 window.onload = function() {
     connect(); // 페이지 로드 시 WebSocket 연결
     scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
@@ -217,8 +239,6 @@ $(document).ready(function(){
         scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
     });
 });
-
-
 
 </script>
 </html>
