@@ -156,7 +156,7 @@ public class UserController {
           System.out.println(">> 로그인 성공 사용자 : " + username);
       }
       return "home/home";
-   }
+   }  
 
    // 회원가입 페이지로 이동
    @GetMapping("/joinform")
