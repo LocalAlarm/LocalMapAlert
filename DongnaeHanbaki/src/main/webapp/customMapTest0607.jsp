@@ -45,7 +45,10 @@ crossorigin="anonymous"></script>
 
 <div class="container-fluid">
 <div class="row">
-      <div class="col-6 border" style="height: 600px;"></div>
+      <div class="col-6 border" style="height: 600px;">
+        <h3>지금 뜨는 커스텀맵</h3>
+      </div>
+      
 	  <div class="col-6 border" style="height: 600px;"></div>
 </div>
 </div>
