@@ -45,7 +45,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
              Optional<ChatMessage> optionalChatMessage = chatMessageRepository.findByUserId(token);
              ChatMessage chatMessage;
              // 기존 채팅방이 있으면 해당 데이터를 가져옴
-             if (optionalChatMessage.isPresent()) {
+             if (optionalChatMessage.isPresent()) { //몽고디비에서 토큰에 해당되는게 있는지 체크 없으면 else로 감
                  chatMessage = optionalChatMessage.get();
                  for (Map<String, String> messageMap : chatMessage.getMessages()) {
                  	String fromToken = messageMap.get("from");
@@ -56,6 +56,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
              } else {
                  // 새로운 메시지 문서 생성
                  chatMessage = new ChatMessage(token);
+                 chatMessageRepository.save(chatMessage);
              }
          } else {
              session.close(CloseStatus.NOT_ACCEPTABLE);

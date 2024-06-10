@@ -159,7 +159,7 @@ public class UserController {
        userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
        userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
        System.out.println(">> 회원가입 처리");
-       if (image.getName() != null) {
+       if (image != null && !image.isEmpty()) { // null 체크 - && !image.isEmpty()
            Map<String, String> imageMap = imageUploadController.uploadImage(image);
            userVO.setImagePi(imageMap.get("public_id"));
            userVO.setImage(imageMap.get("url"));
