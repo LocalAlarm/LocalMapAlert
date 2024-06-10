@@ -60,7 +60,11 @@ function sendMessage() {
     var messageInput = document.getElementById('message');
     var message = messageInput.value;
     if(message.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
-        socket.send(message); // WebSocket을 통해 메시지 전송
+    	var jsonMsg = {
+    		content: message,
+    		timestamp: new Date().getTime()
+    	};
+        socket.send(jsonMsg); // WebSocket을 통해 메시지 전송
 //        displayMessage("닉네임", message, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
         messageInput.value = ''; // 입력창 비우기
     }

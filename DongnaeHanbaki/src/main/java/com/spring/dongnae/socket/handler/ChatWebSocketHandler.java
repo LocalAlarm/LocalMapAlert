@@ -15,12 +15,16 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.socket.repo.ChatMessageRepository;
 import com.spring.dongnae.socket.scheme.ChatMessage;
+import com.spring.dongnae.socket.service.ChatRoomService;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
     
+	
+	@Autowired
+	private final ChatRoomService chatRoomService;
     @Autowired
     private final ChatMessageRepository chatMessageRepository;
     @Autowired
@@ -31,8 +35,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     // In-memory storage for WebSocket sessions and user IDs
     private final Map<WebSocketSession, String> sessions = new ConcurrentHashMap<>();
 
-    public ChatWebSocketHandler(ChatMessageRepository chatMessageRepository, UserService userService) {
-        this.chatMessageRepository = chatMessageRepository;
+    public ChatWebSocketHandler(ChatRoomService chatRoomService, ChatMessageRepository chatMessageRepository, UserService userService) {
+        this.chatRoomService = chatRoomService;
+		this.chatMessageRepository = chatMessageRepository;
 		this.userService = userService;
     }
 

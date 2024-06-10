@@ -31,6 +31,10 @@ public class UserRooms {
 	public void setChatRoomIds(List<String> chatRoomIds) {
 		this.chatRoomIds = chatRoomIds;
 	}
+	public void addChatRoom(String roomId) {
+		this.chatRoomIds.add(roomId);
+	}
+	
 	@Override
 	public String toString() {
 		return "UserRoom [id=" + id + ", email=" + email + ", chatRoomIds=" + chatRoomIds + "]";
