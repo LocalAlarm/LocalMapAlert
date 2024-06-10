@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page
+	import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
+<%
+	CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+		.getPrincipal();
+String token = userDetails.getToken();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,39 +40,86 @@
 }
 
 #chatBox {
-    overflow-y: scroll; /* 수직 스크롤바 */
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    position: relative;
-    resize: vertical; /* 수평으로만 크기 조절 가능 */
-    transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
+	overflow-y: scroll; /* 수직 스크롤바 */
+	width: 100%;
+	height: 150px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	position: relative;
+	resize: vertical; /* 수평으로만 크기 조절 가능 */
+	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
 }
 
 .resize-handle {
-    position: absolute;
-    bottom: 0; /* 아래쪽에 위치하도록 설정 */
-    left: 0;
-    width: 100%;
-    height: 10px;
-    background: #ccc;
-    cursor: ns-resize;
+	position: absolute;
+	bottom: 0; /* 아래쪽에 위치하도록 설정 */
+	left: 0;
+	width: 100%;
+	height: 10px;
+	background: #ccc;
+	cursor: ns-resize;
 }
 </style>
-
-
+</head>
+<body>
+	<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
+	<!-- 공통 바디 파일 포함 -->
+	<h1>WebSocket Chat</h1>
+	<div id="chatList">
+	</div>
+<!-- 		<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button> -->
+	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button> -->
+	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button> -->
+	<!-- Toast 버튼 -->
+	<div class="toast-container chat-toast-container bottom-0 end-0 p-3">
+		<div class="toast" id="chatToast" role="alert" aria-live="assertive"
+			aria-atomic="true" data-bs-autohide="false">
+			<div class="toast-header">
+				<img
+					src="${pageContext.request.contextPath}/resources/img/chat-dots.svg"
+					class="rounded me-2" alt="ChatIcon">
+				<!-- 아이콘 이미지 -->
+				<strong class="me-auto">Chat</strong> <small>채팅방 이름</small>
+				<button type="button" class="btn-close" data-bs-dismiss="toast"
+					aria-label="Close"></button>
+				<!-- 닫기 버튼 -->
+			</div>
+			<div class="toast-body">
+				<div id="chatBox">
+				</div>
+			</div>
+			<!-- 채팅 메시지 표시 영역 -->
+			<input type="text" id="message" placeholder="Enter your message" />
+			<!-- 메시지 입력 필드 -->
+			<button onclick="sendMessage()">Send</button>
+			<!-- 전송 버튼 -->
+		</div>
+	</div>
+</body>
 <script>
 var socket = null;
+var token = '<%= token %>';
+const chatToast = document.getElementById('chatToast');
 
 function connect() {
-    socket = new WebSocket('ws://localhost:8088/dongnae/chat'); // WebSocket 서버에 연결
+    socket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
     socket.onopen = function(event) {
         console.log('Connected to WebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
     socket.onmessage = function(event) {
-        var jsonMessage = JSON.parse(event.data);
-        displayMessage(jsonMessage.fromNickName, jsonMessage.message, 'received');
+        var jsonChatRoom = JSON.parse(event.data);
+        var buttonHtml = '';
+        buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + jsonChatRoom.id + '">' + jsonChatRoom.roomName + '</button>';
+        $('#chatList').html(buttonHtml);
+        
+        for(const element of jsonChatRoom.messages) {
+        	if(token === element.senderToken) {
+        		displayMessage("충희", element.content, 'sent');
+        	} else {
+	        	displayMessage(element.senderToken, element.content, 'received');
+			}
+        	
+        }
     };
     socket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
@@ -76,10 +131,17 @@ function connect() {
 
 function sendMessage() {
     var messageInput = document.getElementById('message');
-    var message = messageInput.value;
-    if (message.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
-        socket.send(message); // WebSocket을 통해 메시지 전송
-        displayMessage("닉네임", message, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
+    var content = messageInput.value;
+    if (content.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
+    	var jsonMsg = {
+  			"roomId": getIdByClass('chat-toast-container'),
+    		"content": content,
+    		"timestamp": Date.now()
+    	};
+    	console.log(jsonMsg);
+     	socket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
+//         socket.send(content); // WebSocket을 통해 메시지 전송
+        displayMessage("닉네임", content, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
         messageInput.value = ''; // 입력창 비우기
     }
 }
@@ -124,9 +186,18 @@ function scrollToBottom() {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function getIdByClass(className) {
+    // 특정 클래스명을 가진 모든 요소를 가져옵니다.
+    var elements = document.getElementsByClassName(className);
+    // 요소가 존재할 경우, 첫 번째 요소의 아이디를 반환합니다.
+    if (elements.length > 0) {
+        return elements[0].id;
+    }
+    return null;
+}
+
 window.onload = function() {
     connect(); // 페이지 로드 시 WebSocket 연결
-    initResize(); // 페이지 로드 시 크기 조절 기능 초기화
     scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
     document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
@@ -135,51 +206,11 @@ window.onload = function() {
         }
     });
 };
-</script>
-</head>
-<body>
-	<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
-	<!-- 공통 바디 파일 포함 -->
-	<h1>WebSocket Chat</h1>
-
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$H/U.H8Qqi2BgmBL.jI0VkeJEMpDeR3Mc49f95uJDqpinK8tyW/EOK">dsadas@naver.com</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button>
-	<!-- Toast 버튼 -->
-	<div class="toast-container bottom-0 end-0 p-3">
-		<div class="toast" id="chatToast" role="alert" aria-live="assertive"
-			aria-atomic="true" data-bs-autohide="false">
-			<div class="toast-header">
-				<img
-					src="${pageContext.request.contextPath}/resources/img/chat-dots.svg"
-					class="rounded me-2" alt="ChatIcon">
-				<!-- 아이콘 이미지 -->
-				<strong class="me-auto">Chat</strong> <small>채팅방 이름</small>
-				<button type="button" class="btn-close" data-bs-dismiss="toast"
-					aria-label="Close"></button>
-				<!-- 닫기 버튼 -->
-			</div>
-			<div class="toast-body">
-				<div id="chatBox">
-					<div id="resizeHandle" class="resize-handle"></div>
-				</div>
-			</div>
-			<!-- 채팅 메시지 표시 영역 -->
-			<input type="text" id="message" placeholder="Enter your message" />
-			<!-- 메시지 입력 필드 -->
-			<button onclick="sendMessage()">Send</button>
-			<!-- 전송 버튼 -->
-		</div>
-	</div>
-</body>
-<script>
-// const chatToastTrigger = document.getElementById('chatToastBtn')
-const chatToast = document.getElementById('chatToast')
 
 $(document).ready(function(){
-    $(".chatToastBtn").click(function(){
+    $('#chatList').on('click', '.chatToastBtn', function(){
         var buttonId = $(this).attr('id');
+        const chatToast = document.getElementById('chatToast'); // chatToast 요소 가져오기
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast)
         $('.toast-container').attr('id', buttonId);
         toastBootstrap.show() // Toast 버튼 클릭 시 Toast 표시
@@ -187,13 +218,7 @@ $(document).ready(function(){
     });
 });
 
-// if (chatToastTrigger) {
-//     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast)
-//     chatToastTrigger.addEventListener('click', () => {
-//         toastBootstrap.show() // Toast 버튼 클릭 시 Toast 표시
-//         scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
-//     })
-// }
+
 
 </script>
 </html>
