@@ -15,39 +15,6 @@
 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
 crossorigin="anonymous"></script>
 
-<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">새 글 작성</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body ">
-         <!-- 사용자 입력 폼 -->
-      <form id="markerForm">
-  		  <label for="markerType">마커선택</label>
-          <select class="form-select" id="markerType" required>
-              <option value="사건 사고">사건 사고</option>
-              <option value="이벤트">이벤트</option>
-          </select>
-		  <div class="mb-3">
-		    <label for="markerContent">내용</label>
-               <input type="text" class="form-control" id="markerContent" required>
-		  </div>
-		  <div class="mb-3">
-		    <label for="markerDetails">자세한 내용</label>
-                <textarea class="form-control" id="markerDetails" rows="3" required></textarea>
-		  </div>
-		  <input type="hidden" id="markerLat">
-            <input type="hidden" id="markerLng">
-            <button type="submit" class="btn btn-primary">추가</button>
-            <button type="button" class="btn btn-secondary" onclick="closeForm()">취소</button>
-      </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <hr>
 <!-- 페이지 위 -->
 <div class="p-3 text-center">
@@ -75,17 +42,11 @@ crossorigin="anonymous"></script>
   </div>
 </nav>
 <hr>
-<!-- 사이드바 -->
+
 <div class="container-fluid">
-<div class="row" style="height: 500px;">
-	<div class="col-5 bg-body-secondary p-3" style="height: 500px;">
-	</div>
-	
-	<div class="vr"></div>
-	
-<!-- 지도를 표시할 div 입니다 -->
-	<div class="col-5 bg-body-tertiary p-3" style="height: 500px;">
-	</div>
+<div class="row">
+      <div class="col-6 border" style="height: 600px;"></div>
+	  <div class="col-6 border" style="height: 600px;"></div>
 </div>
 </div>
 
