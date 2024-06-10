@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.marker.dao.MarkerDataDAO">
+
+	<select id ="getMenu" resultType="MarkerDataVO">
+		SELECT * FROM MARKERDATA 
+		WHERE MARKER_IDX = #{marker_idx}
+	</select>
+	<select id ="allMenu" resultType="MarkerDataVO">
+		SELECT * FROM MARKERDATA 
+	</select>
+	
+	<insert id="insertMarker" parameterType="MarkerDataVO">
+	    INSERT INTO MARKERDATA (markerdata_idx, marker_idx, title, content, latitude, longitude)
+	    VALUES (SEQ_MARKERDATA_IDX.NEXTVAL, #{marker_idx}, #{title}, #{content}, #{latitude}, #{longitude})
+	</insert>
+	
+</mapper>
+
+
+
+
+
