@@ -31,6 +31,7 @@
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
 	
+	
 	<select id="getIdUser" parameterType="String" resultType="userVO">
 		SELECT * 
 		FROM USERS
