@@ -15,29 +15,21 @@
 
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
     <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
-     <div class="container-fluid">
-        <div class="row">
-            <div class="col-2" id="sidebar">
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                    <button class="nav-link" id="v-pills-profile-tab" onclick="loadEventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
-                    <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
-                    <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
-                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2" id="sidebar">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick ="allMenu()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="loadEventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
+                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="loadEvents()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
+                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
             </div>
-            <div class="col-10" id="content">
-                <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">전체 목록 콘텐츠</div>
-                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                        <div id="event-accidents-content">사건 사고 콘텐츠</div>
-                    </div>
-                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">이벤트 콘텐츠</div>
-                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">나만의 지도 콘텐츠</div>
-                </div>
-            </div>
-        </div>
+        </div>       
     </div>
+</div>
     
     <!-- 지도 -->
     <div id="map"></div>
@@ -55,7 +47,7 @@
 	            <label for="markerType">마커 종류</label>
 	            <select class="form-select" id="markerType" required>
 	                <option value="" selected disabled hidden>마커 종류를 선택해주세요</option>
-	                <option value="사건 사고">사건 사고</option>
+	                <option value="사건사고">사건사고</option>
 	                <option value="이벤트">이벤트</option>
 	            </select>
 	        </div>
@@ -87,42 +79,6 @@
     </script>
     <script src="${pageContext.request.contextPath}/resources/js/map.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script>
-    function loadEventAccidents() {
-    	 $.ajax({
-    	        url: contextPath + '/eventAccidents',
-    	        method: 'GET',
-    	        data: { mapIdx: '1' },
-    	        success: function(data) {
-    	            // 받아온 데이터를 배열로 변환
-    	            var accidentsArray = [];
-    	            accidentsArray.push(data);
-
-    	            // 데이터를 받아와서 처리
-    	            accidentsArray.forEach(function(accident) {
-    	                // 각각의 사건사고 정보에서 위도(latitude)와 경도(longitude) 추출
-    	                var latitude = accident.LATITUDE;
-    	                var longitude = accident.LONGITUDE;
-    	                
-    	                // 마커 생성
-    	                var markerPosition = new kakao.maps.LatLng(latitude, longitude);
-    	                var marker = new kakao.maps.Marker({
-    	                    position: markerPosition
-    	                });
-    	                
-    	                // 생성한 마커를 지도에 표시
-    	                marker.setMap(map);
-    	                console.log(accident);
-    	            });
-    	        },
-
-            error: function(error) {
-                console.error('Error loading event accidents', error);
-            }
-        });
-    }
-    </script>
 </body>
 </html>

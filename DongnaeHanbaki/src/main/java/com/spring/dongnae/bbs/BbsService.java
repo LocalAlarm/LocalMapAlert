@@ -17,4 +17,12 @@ public interface BbsService {
 		
 		//삭제된 게시글들 리턴 (필요한가?)
 		List<BbsVO> getDelBbsList();
+		
+		List<BbsVO> getMenu(String content);
+		
+		List<BbsVO> allMenu(BbsVO vo);
+
+		void saveMarker(BbsVO vo);
+	
+
 }

@@ -10,9 +10,11 @@ public class BbsVO {
 	String writeDate;
 	String image;
 	String hit;
-	String latitude;
-	String logitude;
+	double latitude;
+	double longitude;
 	String delYn;
+	private int SEQ_BBS_IDX;
+
 	public String getBbsIdx() {
 		return bbsIdx;
 	}
@@ -67,17 +69,17 @@ public class BbsVO {
 	public void setHit(String hit) {
 		this.hit = hit;
 	}
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	public String getLogitude() {
-		return logitude;
+	public double getLongitude() {
+	    return longitude;
 	}
-	public void setLogitude(String logitude) {
-		this.logitude = logitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	public String getDelYn() {
 		return delYn;
@@ -85,11 +87,17 @@ public class BbsVO {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
+	public int getSEQ_BBS_IDX() {
+	    return SEQ_BBS_IDX;
+	}
+	public void setSEQ_BBS_IDX(int SEQ_BBS_IDX) {
+	    this.SEQ_BBS_IDX = SEQ_BBS_IDX;
+	}
 	@Override
 	public String toString() {
 		return "BbsVO [bbsIdx=" + bbsIdx + ", markerIdx=" + markerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
 				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
-				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", logitude=" + logitude
+				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", longitude=" + longitude
 				+ ", delYn=" + delYn + "]";
 	}
 	
