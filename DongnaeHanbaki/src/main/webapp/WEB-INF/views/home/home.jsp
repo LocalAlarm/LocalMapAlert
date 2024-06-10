@@ -142,10 +142,10 @@ window.onload = function() {
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
 
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="123">채팅시작</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="456">채팅시작</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="789">채팅시작</button>
-	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="357">채팅시작</button>
+	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$H/U.H8Qqi2BgmBL.jI0VkeJEMpDeR3Mc49f95uJDqpinK8tyW/EOK">dsadas@naver.com</button>
+	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button>
+	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button>
+	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button>
 	<!-- Toast 버튼 -->
 	<div class="toast-container bottom-0 end-0 p-3">
 		<div class="toast" id="chatToast" role="alert" aria-live="assertive"
@@ -181,6 +181,7 @@ $(document).ready(function(){
     $(".chatToastBtn").click(function(){
         var buttonId = $(this).attr('id');
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast)
+        $('.toast-container').attr('id', buttonId);
         toastBootstrap.show() // Toast 버튼 클릭 시 Toast 표시
         scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
     });
