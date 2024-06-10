@@ -12,7 +12,7 @@ var markers = [];
 var tempLatLng;
 var tempMarker = null;
 
-// 클릭 이벤트 발생 시 마커 추가
+// 마우스 우클릭 이벤트 발생 시 마커 추가
 kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
     tempLatLng = mouseEvent.latLng;
     var lat = tempLatLng.getLat();
@@ -55,21 +55,23 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
     };
 
-    // AJAX를 사용하여 서버로 데이터를 전송합니다
     $.ajax({
-        url: 'saveMarker', 
+        url: 'saveM', 
         method: 'POST', 
         contentType: 'application/json', 
         data: JSON.stringify(markerData), 
         success: function(response) {
    
             console.log('마커가 저장 성공:', response);
+            console.log(markerData);
+            
+            
+            // 폼 숨기기
+            document.getElementById('inputForm').style.display = 'none';
+            // 폼 초기화
+            document.getElementById('markerForm').reset();
+             // 마커 생성 및 지도에 표시
             addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerContent, markerDetails);
-            console.log('1');
-            resetForm();
-            console.log('2');
-            resetTempMarker();
-            console.log('3');
         },
         error: function(xhr, status, error) {
             console.error('마커 저장 중 오류 발생:', error);
@@ -99,11 +101,20 @@ function addMarker(position, markerType, content, detailedContent) {
     var imageSrc, imageSize, imageOption;
 
     // 마커 이미지 설정
-    if (markerType === '사건 사고') {
-        imageSrc = contextPath + '/resources/image/ohno.png'; 
-        imageSize = new kakao.maps.Size(60, 60);
-        imageOption = {offset: new kakao.maps.Point(27, 69)};
-        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+    switch (markerType) {
+        case '이벤트': // 이벤트
+            imageSrc = contextPath + '/resources/image/default.png';
+            imageSize = new kakao.maps.Size(60, 60);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;
+        case '사건 사고': // 사건사고
+            imageSrc = contextPath + '/resources/image/ohno.png'; 
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(25, 50)};
+            break;
+        default:
+            console.error('Unknown marker type: ' + markerType);
+            return;
     }
 	
 	 // 최대 글자 수 설정
@@ -168,9 +179,9 @@ function resetForm() {
     document.getElementById('markerForm').reset();
 }
 //사건사고 클릭
-function loadEventAccidents() {
+function EventAccidents() {
         $.ajax({
-            url: "getEventAccidents",
+            url: "EventAccidents",
             method: "GET",
             dataType: "json",
             success: function(data) {
@@ -179,14 +190,11 @@ function loadEventAccidents() {
                 markers = [];
 
                 // 가져온 데이터로 마커 생성
-                var contentHtml = ''; // 새로운 콘텐츠를 위한 변수
                 data.forEach(function(event) {
                     var position = new kakao.maps.LatLng(event.latitude, event.longitude);
                     var content = event.title + " : " + event.content;
                     var detailedContent = event.content + " : " + event.title + "\n자세한 내용 : " + event.title;
                     addMarker(position, "사건 사고", content, detailedContent);
-                    
-                   
                 });
 
                 // 마커 보이기
@@ -194,20 +202,17 @@ function loadEventAccidents() {
 
                 // 네비게이션 바 탭 활성화
                 $('#v-pills-profile-tab').tab('show');
-
-                // 콘텐츠 업데이트
-                $('#event-accidents-content').html(contentHtml);
-	            },
-	            error: function(xhr, status, error) {
-	                console.error("데이터를 가져오는 중 오류 발생: " + error);
-	            }
-	    });
+            },
+            error: function(xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류 발생: " + error);
+            }
+    });
 }
 	    
 //이벤트사고 클릭
-function loadEvents() {
+function Events() {
 	        $.ajax({
-	            url: "getEvents",
+	            url: "Events",
 	            method: "GET",
 	            dataType: "json",
 	            success: function(data) {
@@ -216,14 +221,11 @@ function loadEvents() {
 	                markers = [];
 
 	                // 가져온 데이터로 마커 생성
-	                var contentHtml = ''; // 새로운 콘텐츠를 위한 변수
 	                data.forEach(function(event) {
 	                    var position = new kakao.maps.LatLng(event.latitude, event.longitude);
 	                    var content = event.content + " : " + event.title;
                    		var detailedContent = event.content + " : " + event.title + "\n자세한 내용 : " + event.title;
 	                    addMarker(position, "이벤트", content, detailedContent);
-	                    
-	                    
 	                });
 
 	                // 마커 보이기
@@ -231,9 +233,6 @@ function loadEvents() {
 
 	                // 네비게이션 바 탭 활성화
 	                $('#v-pills-messages-tab').tab('show');
-
-	                // 콘텐츠 업데이트
-	                $('#events-content').html(contentHtml);
 	            },
 	            error: function(xhr, status, error) {
 	                console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -242,9 +241,9 @@ function loadEvents() {
 }
 
 //전체목록 클릭
-function allMenu() {
+function all() {
 	        $.ajax({
-	            url: "allMenu",
+	            url: "all",
 	            method: "GET",
 	            dataType: "json",
 	            success: function(data) {
@@ -253,7 +252,6 @@ function allMenu() {
 	                markers = [];
 
 	                // 가져온 데이터로 마커 생성
-	                var contentHtml = ''; // 새로운 콘텐츠를 위한 변수
 	                data.forEach(function(event) {
 	                    var position = new kakao.maps.LatLng(event.latitude, event.longitude);
 	                    var content = event.content + " : " + event.title;
@@ -270,8 +268,6 @@ function allMenu() {
 	                // 네비게이션 바 탭 활성화
 	                $('v-pills-home-tab').tab('show');
 
-	                // 콘텐츠 업데이트
-	                $('#events-content').html(contentHtml);
 	            },
 	            error: function(xhr, status, error) {
 	                console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -280,5 +276,5 @@ function allMenu() {
 }
 // 페이지 로드될 때 전체 목록 표시
 $(document).ready(function() {
-	allMenu();
+	all();
 });

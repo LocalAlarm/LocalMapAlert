@@ -22,9 +22,9 @@
     <div class="row">
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick ="allMenu()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="loadEventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
-                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="loadEvents()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
+                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick ="all()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="EventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
+                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="Events()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
                 <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
             </div>
         </div>       
