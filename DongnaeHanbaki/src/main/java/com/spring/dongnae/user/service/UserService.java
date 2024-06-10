@@ -21,4 +21,7 @@ public interface UserService {
 	
 	// 이메일 찾기 - 건희
 	String findUserEmail(UserVO vo);
+	
+	//비번찾기 중 이메일찾기
+	String findPasswordByEmail(String email);
 }

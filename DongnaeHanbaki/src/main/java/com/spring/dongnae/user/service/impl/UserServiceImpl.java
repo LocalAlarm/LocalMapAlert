@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
 	public String findUserEmail(UserVO vo) {
 		return userDAO.findUserEmail(vo); 
 	}
+
+	@Override
+	public String findPasswordByEmail(String email) {
+		return userDAO.findPasswordByEmail(email);
+	}
 	
 	//kakao
 //    @Override

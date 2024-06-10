@@ -158,7 +158,7 @@ public class UserController {
       return "home/home";
    }
 
-   // 회원가입 페이지로 이동 - 건희
+   // 회원가입 페이지로 이동
    @GetMapping("/joinform")
    public String joinForm() {
       System.out.println(">> 회원가입 화면 이동 - joinForm()");
@@ -179,7 +179,7 @@ public class UserController {
        return "redirect:login";
    }
    
-   // 이메일 중복체크 - 건희
+   // 이메일 중복체크 
    @PostMapping("/checkEmail")
    @ResponseBody
    public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
@@ -191,13 +191,13 @@ public class UserController {
       return ResponseEntity.ok("pass");
    }
    
-   // 이메일 찾기 - 건희
+   // 이메일 찾기 
    @RequestMapping("/findEmail")
    public String showFindEmailForm() {
        return "user/findEmail"; 
    }
    
-   // 이메일 찾기 결과 - 건희
+   // 이메일 찾기 결과 
    @PostMapping("/findEmailProcess")
 	public String findEmail(HttpServletRequest request, Model model,UserVO vo,
 			@RequestParam String nickname, 
@@ -216,12 +216,6 @@ public class UserController {
 		return "user/emailFound";
 	}
 
-   // 비밀번호 찾기 - 건희
-   @RequestMapping("/findPassword")
-   public String showFindPasswordForm() {
-       return "user/findPassword"; 
-   }
-   
    //이메일 인증
    @PostMapping("/mailAuthentic")
    @ResponseBody
@@ -274,5 +268,17 @@ public class UserController {
 	   
 	   return authenticNum.toString();
    }
+   
+   // 비밀번호 찾기
+   @RequestMapping("/findPassword")
+   public String showFindPasswordForm() {
+       return "user/findPassword"; 
+   }
 
+   @PostMapping("/findEmail")
+   @ResponseBody
+   public String findEmail(@RequestParam("email") String email) {
+	   String findEmail = userService.findPasswordByEmail(email);
+	   return findEmail;
+   }
 }

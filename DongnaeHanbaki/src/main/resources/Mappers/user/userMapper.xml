@@ -31,6 +31,7 @@
 		VALUES (#{email}, #{nickname}, #{image}, #{kakaoCheck})
 	</insert>
 	
+	
 	<select id="getIdUser" parameterType="String" resultType="userVO">
 		SELECT * 
 		FROM USERS
@@ -51,5 +52,12 @@
 		WHERE NICKNAME = #{nickname}
 		     AND RECOVEREMAIL = #{recoverEmail}
 	</select> 
+	
+	<!-- 비번 찾기 (이메일찾기) -->
+	<select id="findPasswordByEmail" parameterType="String" resultType="String">
+		SELECT EMAIL
+		FROM USERS
+		WHERE EMAIL = #{email}
+	</select>
 	
 </mapper>
