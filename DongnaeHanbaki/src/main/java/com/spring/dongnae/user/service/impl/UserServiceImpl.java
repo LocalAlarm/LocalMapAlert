@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserVO searchUserByEmail(String email) {
-		return userDAO.searchUserByEmail(email);
+	public List<UserVO> searchFriendByEmail(String email) {
+		return userDAO.searchFriendByEmail(email);
 	}
 	//비번찾기 중 이메일 찾기
 	@Override

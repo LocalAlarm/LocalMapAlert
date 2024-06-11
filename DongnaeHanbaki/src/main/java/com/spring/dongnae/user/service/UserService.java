@@ -1,10 +1,7 @@
 package com.spring.dongnae.user.service;
 
+import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.dongnae.user.vo.UserVO;
 
@@ -28,7 +25,7 @@ public interface UserService {
 	UserVO getUserByToken(String token);
 	
 	// email 값으로 이메일, 닉네임, 사진, 토큰 불러오는 기능
-	UserVO searchUserByEmail(String email);
+	List<UserVO> searchFriendByEmail(String email);
 
 	//비번찾기 중 이메일찾기
 	String findPasswordByEmail(String email);

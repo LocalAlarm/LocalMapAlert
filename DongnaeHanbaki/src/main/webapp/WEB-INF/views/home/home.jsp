@@ -66,15 +66,14 @@ String token = userDetails.getToken();
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
 	<div id="chatList"></div>
-	<form class="d-flex" role="search">
-		<input class="form-control me-2" type="search" placeholder="Search"
-			aria-label="Search">
-		<button class="btn btn-outline-success" type="submit">Search</button>
-	</form>
-	<!-- 		<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button> -->
-	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button> -->
-	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button> -->
-	<!-- Toast 버튼 -->
+	<div>
+		<form class="d-flex" role="search">
+			<input class="form-control me-2" type="search" placeholder="Search" id="searchFriend" aria-label="Search">
+			<button class="btn btn-outline-success" type="submit">Search</button>
+		</form>
+		<ul class="list-group" id="searchResults">
+		</ul>
+	</div>
 	<div class="toast-container chat-toast-container bottom-0 end-0 p-3">
 		<div class="toast" id="chatToast" role="alert" aria-live="assertive"
 			aria-atomic="true" data-bs-autohide="false">
@@ -146,14 +145,6 @@ function connectFriend() {
     friendSocket.onmessage = async function(event) {
         try {
             var friendJsonData = JSON.parse(event.data);
-
-            if (isChatRoom(jsonData)) {
-                handleChatRoom(jsonData);
-            } else if (isMessage(jsonData)) {
-                handleMessage(jsonData);
-            } else {
-                console.error("Unknown data type received:", jsonData);
-            }
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
@@ -185,8 +176,8 @@ async function handleChatRoom(chatRoom) {
     if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
         for (const element of chatRoom.messages) {
             // 닉네임 가져오기
-            const nickname = await getNickname(element.senderToken);
-            console.log(nickname);
+            console.log(element.senderToken);
+            const nickname = await getNickname(element.senderToken); 
             // 가져온 닉네임을 사용하여 메시지 표시
             if (token === element.senderToken) {
                 displayMessage(nickname, element.content, 'sent');
@@ -203,7 +194,6 @@ async function handleChatRoom(chatRoom) {
 async function handleMessage(message) {
     // 닉네임 가져오기
     const nickname = await getNickname(message.senderToken);
-    console.log(nickname);
     // 가져온 닉네임을 사용하여 메시지 표시
     if (token === message.senderToken) {
         displayMessage(nickname, message.content, 'sent');
@@ -221,7 +211,6 @@ function sendMessage() {
     		"content": content,
     		"timestamp": Date.now()
     	};
-    	console.log(jsonMsg);
      	chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
         messageInput.value = ''; // 입력창 비우기
     }
@@ -317,7 +306,86 @@ $(document).ready(function(){
         toastBootstrap.show() // Toast 버튼 클릭 시 Toast 표시
         scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
     });
+    
+    // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
+    $(document).on('mouseenter', '.searchResultsElement', function() {
+        // 마우스가 요소에 들어왔을 때 수행할 작업을 여기에 추가합니다.
+        $(this).addClass('active'); // 예시: 클래스 추가
+    });
+
+    // searchResultsElement 클래스를 가진 요소에 대한 마우스 리브 이벤트 처리
+    $(document).on('mouseleave', '.searchResultsElement', function() {
+        // 마우스가 요소에서 나갔을 때 수행할 작업을 여기에 추가합니다.
+        $(this).removeClass('active'); // 예시: 클래스 제거
+    });
+    
+    $(document).on('click', '.searchResultsElement', function() {
+        // 마우스가 요소에서 나갔을 때 수행할 작업을 여기에 추가합니다.
+        const clickText = $(this).text();
+        $('#searchFriend').val(clickText);
+        hideSearchResults();
+    });
 });
+
+//검색창 입력 시 이벤트 처리
+$('#searchFriend').on('input', function() {
+    var searchString = $(this).val(); // 검색어 가져오기
+    if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
+    	searchUserByEmail(searchString);
+    } else {
+        // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
+        hideSearchResults();
+    }
+});
+
+//검색 요청 함수
+async function searchUserByEmail(email) {
+    try {
+        const response = await fetch('/dongnae/api/searchUserByEmail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
+            displaySearchResults(data); // 검색 결과를 화면에 표시
+			
+        } else {
+            hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
+        }
+    } catch (error) {
+        console.error(error);
+        // 에러 처리
+    }
+}
+
+
+//검색 결과를 화면에 표시하는 함수
+function displaySearchResults(results) {
+    // 검색 결과를 표시할 HTML 문자열을 생성합니다.
+    var html = '';
+    results.forEach(function(result) {
+        // 각 결과를 리스트 아이템으로 표시합니다.
+        html += '<li class="list-group-item searchResultsElement">' + result.email + '</li>'; 
+    });
+
+    // 생성된 HTML을 검색 결과 창에 넣어줍니다.
+    $('#searchResults').html(html);
+
+    // 검색 결과 창을 보이게 합니다.
+    $('#searchResults').show();
+}
+
+//검색 결과 창을 숨기는 함수
+function hideSearchResults() {
+    // 검색 결과 창을 숨깁니다.
+    $('#searchResults').hide();
+}
 
 </script>
 </html>

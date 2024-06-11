@@ -18,7 +18,7 @@ public class NicknameController {
 		this.userService = userService;
 	}
 	
-    @PostMapping("/api/getNickname")
+	@PostMapping(value = "/api/getNickname", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> getNickname(@RequestBody TokenRequest tokenRequest) {
         String nickname = userService.getUserByToken(tokenRequest.getToken()).getNickname();
         String jsonResponse = "{\"nickname\": \"" + nickname + "\"}";
