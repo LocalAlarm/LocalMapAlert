@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -73,9 +74,23 @@ public class UserServiceImpl implements UserService {
 		return userDAO.findUserEmail(vo); 
 	}
 
+	//비번찾기 중 이메일 찾기
 	@Override
 	public String findPasswordByEmail(String email) {
 		return userDAO.findPasswordByEmail(email);
+	}
+
+	//비번바꾸기
+	@Override
+	public void updatePassowrd(UserVO vo) {
+		userDAO.updatePassowrd(vo);
+	}
+
+	//프로필 수정
+	@Override
+	public void updateProfile(Map<String, Object> map) {
+		userDAO.updateProfile(map);
+		
 	}
 	
 	//kakao

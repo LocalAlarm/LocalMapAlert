@@ -80,13 +80,13 @@
                     }
                     // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
                     if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
+                        extraAddr = '' + extraAddr + '';
                     }
                     // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("sample6_extraAddress").value = extraAddr;
+                    document.getElementById("sample6_detailAddress").value = extraAddr;
                 
                 } else {
-                    document.getElementById("sample6_extraAddress").value = '';
+                    document.getElementById("sample6_detailAddress").value = '';
                 }
 
                 // 주소 정보를 해당 필드에 추가
@@ -382,10 +382,10 @@
             <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" id="sample6_address" placeholder="주소" style="margin-bottom: 10px;">
+            <input type="text" class="form-control" id="sample6_address" name="address" placeholder="주소" style="margin-bottom: 10px;">
             <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
             <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
-            <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목">
+<!--             <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목"> -->
             <div id="map" style="width:270px;height:350px;  margin-top:10px;display:none"></div>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">

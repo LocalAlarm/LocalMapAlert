@@ -15,4 +15,5 @@ public interface MapDAO {
 	int insertMap(MapVO vo);
 	int updateMap(MapVO vo);
 	int deleteMap(MapVO vo);
+	
 }

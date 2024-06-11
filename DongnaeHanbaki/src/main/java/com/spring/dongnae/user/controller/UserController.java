@@ -2,6 +2,7 @@ package com.spring.dongnae.user.controller;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -146,7 +147,7 @@ public class UserController {
       return "user/profile";
    }
    
-// 로그인후
+   // 로그인후
    @GetMapping("/home")
    public String home(HttpSession session) {
 	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -156,7 +157,7 @@ public class UserController {
           System.out.println(">> 로그인 성공 사용자 : " + username);
       }
       return "home/home";
-   }
+   }  
 
    // 회원가입 페이지로 이동
    @GetMapping("/joinform")
@@ -175,6 +176,7 @@ public class UserController {
            userVO.setImagePi(imageMap.get("public_id"));
            userVO.setImage(imageMap.get("url"));
        }
+       System.out.println(userVO);
        userService.insertUser(userVO);
        return "redirect:login";
    }
@@ -271,7 +273,8 @@ public class UserController {
    
    // 비밀번호 찾기
    @RequestMapping("/findPassword")
-   public String showFindPasswordForm() {
+   public String showFindPasswordForm(@RequestParam(value = "profile", required = false) String profile, Model model) {
+	   model.addAttribute("profile", profile);
        return "user/findPassword"; 
    }
 
@@ -280,5 +283,56 @@ public class UserController {
    public String findEmail(@RequestParam("email") String email) {
 	   String findEmail = userService.findPasswordByEmail(email);
 	   return findEmail;
+   }
+   
+   @PostMapping("/passwordChange")
+   public String passwordChange(@ModelAttribute UserVO userVO, @RequestParam(value = "profile", required = false) String profile) {
+	   System.out.println("비번바꾸기 처리");
+	   userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+	   System.out.println("바꾸기 vo : " + userVO);
+	   String redirectURL = "redirect:login";
+       if (profile != null) {
+    	   //프로필에서 온거 구분 하지만 비번바꾸면 로그아웃되고 다시 로그인?
+//           redirectURL += ;
+       }
+	   userService.updatePassowrd(userVO);
+	   return redirectURL;
+   }
+   
+   @GetMapping("/profile")
+   public String profile(HttpSession session) {
+	   UserVO userVO = (UserVO) session.getAttribute("user");
+	   System.out.println("프로필vo : " + userVO);
+	   return "user/profile";
+   }
+   
+   @PostMapping("/updateProfile")
+   @ResponseBody
+   public void updateProfile(@RequestParam(value = "email", required = false) String email
+		   , @RequestParam(value = "idx", required = false) String idxS
+		   , @RequestParam(value = "newValue", required = false) String newValue
+		   , @RequestParam(value = "address", required = false) String address
+		   , @RequestParam(value = "detailAddress", required = false) String detailAddress
+		   , @RequestParam(value = "image", required = false) MultipartFile image) {
+	   Map<String, Object> map = new HashMap<String, Object>();
+	   map.put("email", email);
+	   int idx = Integer.parseInt(idxS);
+	   map.put("idx", idx);
+	   System.out.println("프로필 수정처리 : " + map);
+	   System.out.println("email : " + email);
+	   if (idx == 5 && image.getName() != null) {
+           Map<String, String> imageMap = imageUploadController.uploadImage(image);
+           map.put("image", imageMap.get("url"));
+           map.put("imagePi", imageMap.get("public_id"));
+       }
+	   else if (idx == 1) {
+		   map.put("address", idx);
+		   map.put("idx", idx);
+	   } else {
+		   map.put("newValue", newValue);
+	   }
+
+	   System.out.println("프로필 수정처리 : " + map);
+	   userService.updateProfile(map);
    }
 }
