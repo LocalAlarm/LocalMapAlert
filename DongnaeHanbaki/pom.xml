@@ -258,7 +258,13 @@
 	       <groupId>org.mongodb</groupId>
 	       <artifactId>mongo-java-driver</artifactId>
 	       <version>3.6.4</version>
-	    </dependency>	</dependencies>
+	    </dependency>
+	   	<dependency>
+		    <groupId>com.cloudinary</groupId>
+		    <artifactId>cloudinary-http44</artifactId>
+		    <version>1.26.0</version> <!-- 최신 버전 확인하여 사용 -->
+		</dependency> 
+   	</dependencies>
     <build>
         <plugins>
             <plugin>

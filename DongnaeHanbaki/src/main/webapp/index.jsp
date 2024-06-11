@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>index</title>
 </head>
 <body>
@@ -15,6 +16,7 @@
         <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
+        <br>
         <br>
         <input type="submit" value="Login">
     </form>

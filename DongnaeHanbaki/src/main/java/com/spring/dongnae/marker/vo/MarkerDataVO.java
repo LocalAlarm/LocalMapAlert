@@ -1,10 +1,8 @@
-package com.spring.dongnae.bbs;
+package com.spring.dongnae.marker.vo;
 
-public class BbsVO {
-	String bbsIdx;
+public class MarkerDataVO {
+	String markerdateIdx;
 	String markerIdx;
-	String writer;
-	String mapIdx;
 	String title;
 	String content;
 	String writeDate;
@@ -12,32 +10,17 @@ public class BbsVO {
 	String hit;
 	double latitude;
 	double longitude;
-	String delYn;
-	private int SEQ_BBS_IDX;
-
-	public String getBbsIdx() {
-		return bbsIdx;
+	public String getMarkerdateIdx() {
+		return markerdateIdx;
 	}
-	public void setBbsIdx(String bbsIdx) {
-		this.bbsIdx = bbsIdx;
+	public void setMarkerdateIdx(String markerdateIdx) {
+		this.markerdateIdx = markerdateIdx;
 	}
 	public String getMarkerIdx() {
 		return markerIdx;
 	}
 	public void setMarkerIdx(String markerIdx) {
 		this.markerIdx = markerIdx;
-	}
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
-	public String getMapIdx() {
-		return mapIdx;
-	}
-	public void setMapIdx(String mapIdx) {
-		this.mapIdx = mapIdx;
 	}
 	public String getTitle() {
 		return title;
@@ -76,29 +59,16 @@ public class BbsVO {
 		this.latitude = latitude;
 	}
 	public double getLongitude() {
-	    return longitude;
+		return longitude;
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public String getDelYn() {
-		return delYn;
-	}
-	public void setDelYn(String delYn) {
-		this.delYn = delYn;
-	}
-	public int getSEQ_BBS_IDX() {
-	    return SEQ_BBS_IDX;
-	}
-	public void setSEQ_BBS_IDX(int SEQ_BBS_IDX) {
-	    this.SEQ_BBS_IDX = SEQ_BBS_IDX;
-	}
 	@Override
 	public String toString() {
-		return "BbsVO [bbsIdx=" + bbsIdx + ", markerIdx=" + markerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
-				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
-				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", longitude=" + longitude
-				+ ", delYn=" + delYn + "]";
+		return "MarkerDataVO [markerdateIdx=" + markerdateIdx + ", markerIdx=" + markerIdx + ", title=" + title
+				+ ", content=" + content + ", writeDate=" + writeDate + ", image=" + image + ", hit=" + hit
+				+ ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 	
 }

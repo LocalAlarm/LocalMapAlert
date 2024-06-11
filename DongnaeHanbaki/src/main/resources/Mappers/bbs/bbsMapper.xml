@@ -2,17 +2,22 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.spring.dongnae.bbs.BbsDAO">
+<mapper namespace="com.spring.dongnae.bbs.dao.BbsDAO">
 	
 	<!-- 페이징 위한 게시글 목록 - begin ~ end 까지 -->
+	
 	<select id="getPagingBbsList" parameterType="Map" resultType="bbsVO">
-	<![CDATA[
 		SELECT *
 		FROM (SELECT ROWNUM R_NUM, B.*
 		      FROM (SELECT *
 		            FROM BBS
+					<!-- 삭제되지 않은 글만 조회 -->
+					WHERE DEL_YN = 0
+		            <!-- mapIdx 일치하는 값만 조회 -->
+					AND MAP_IDX = #{mapIdx}
 		            ORDER BY BBS_IDX DESC
 		           ) B
+	<![CDATA[          
 		      WHERE ROWNUM <= #{end}
 		     )
 		WHERE R_NUM >= #{begin} 
@@ -20,22 +25,31 @@
 	</select>
 	
 	<!-- 지도 마커 표시 위한 게시글 목록 - 24시간 이내 작성된 게시글 목록 -->
- 	<select id="getMarkingBbsList" resultType="bbsVO">
-		SELECT BBS_IDX, MAKER_IDX, WRITER, TITLE, CONTENT, TO_CHAR(WRITE_DATE,'MM/DD HH:MI:SS') 
-			HIT, LATITUDE, LONGITUDE
+ 	<select id="getMarkingBbsList" parameterType="bbsVO" resultType="bbsVO">
+		SELECT *
 		FROM BBS
-		WHERE WRITE_DATE >= (SELECT SYSDATE - 1 FROM DUAL)
+		<!-- 삭제되지 않은 글만 조회 -->
+		WHERE DEL_YN = 0
+		AND MAP_IDX = #{mapIdx}
+		AND WRITE_DATE >= (SELECT SYSDATE - 1 FROM DUAL)
 		ORDER BY BBS_IDX DESC
 	</select>
 	
- 	<select id="getBbs" parameterType="string" resultType="bbsVO">
+ 	<select id="getBbs" parameterType="bbsVO" resultType="bbsVO">
+		<!-- SELECT * FROM BBS
+		삭제되지 않은 글만 조회
+		WHERE DEL_YN = 0
+		AND BBS_IDX = #{bbsIdx} -->
 		SELECT * FROM BBS
-		WHERE BBS_IDX = #{bbsIdx}
 	</select>
 	
 	<insert id="insertBbs" parameterType="bbsVO">
 		INSERT INTO BBS
-		VALUES (#{bbsIdx},#{makerIdx},#{writer},#{title},#{content},#{writeDate},#{hit},#{latitude},#{longitude})
+		(BBS_IDX, MAKER_IDX, WRITER, MAP_IDX, TITLE, CONTENT, 
+			WRITE_DATE, IMAGE, HIT, LATITUDE, LOGITUDE, DEL_YN)
+		VALUES (#{bbsIdx},#{makerIdx},#{writer},#{mapIdx},
+				#{title},#{content},#{writeDate},#{image},
+				#{hit},#{latitude},#{longitude},0)
 	</insert>
 	
 	<update id="updateBbs" parameterType="bbsVO">
@@ -56,13 +70,43 @@
 		<if test="#{longitude} != null">
 			LONGITUDE = #{longitude},
 		</if>
+		<if test="#{image} != null">
+			IMAGE = #{image},
+		</if>
 			BBS_IDX = #{bbsIdx}
-		WHERE BBS_IDX = #{bbsIdx}
+		<!-- 삭제되지 않은 글만 조회 -->
+		WHERE DEL_YN = 0
+		AND BBS_IDX = #{bbsIdx}
 	</update>
 	
-	<delete id="deleteBbs" parameterType="String">
+	<!-- <delete id="deleteBbs" parameterType="String">
 		DELETE FROM BBS WHERE BBS_IDX = #{bbsIdx}
-	</delete>
+	</delete> -->
+	<update id="deleteBbs" parameterType="bbsVO">
+		UPDATE BBS
+		SET DEL_YN = 1
+		WHERE DEL_YN = 0
+		AND BBS_IDX = #{bbsIdx}
+	</update>
+	
+	<select id="getDelBbsList" resultType="bbsVO">
+		SELECT * FROM BBS
+		<!-- 삭제된 글 보기 -->
+		WHERE DEL_YN = 1
+	</select>
+	
+	<select id ="getMenu" resultType="bbsVO">
+		SELECT * FROM BBS 
+		WHERE CONTENT = #{content}
+	</select>
+	<select id ="allMenu" resultType="bbsVO">
+		SELECT * FROM BBS 
+	</select>
+	
+	<insert id="insertMarker" parameterType="bbsVO">
+	    INSERT INTO BBS (bbs_idx, content, title, latitude, longitude)
+	    VALUES (SEQ_BBS_IDX.NEXTVAL, #{content}, #{title}, #{latitude}, #{longitude})
+	</insert>
 	
 </mapper>
 
