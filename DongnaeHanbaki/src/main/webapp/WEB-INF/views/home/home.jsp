@@ -272,7 +272,7 @@ async function getNickname(token) {
         const response = await fetch('/dongnae/api/getNickname', { // 서버에서 토큰에 대한 닉네임을 가져오는 API 엔드포인트
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json; charset=utf-8'
             },
             body: JSON.stringify({ token: token }) // 토큰을 서버로 전달
         });
