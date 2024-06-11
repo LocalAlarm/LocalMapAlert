@@ -1,7 +1,7 @@
 package com.spring.dongnae.marker.vo;
 
 public class MarkerDataVO {
-	String markerdateIdx;
+	String markerdataIdx;
 	String markerIdx;
 	String title;
 	String content;
@@ -10,11 +10,11 @@ public class MarkerDataVO {
 	String hit;
 	double latitude;
 	double longitude;
-	public String getMarkerdateIdx() {
-		return markerdateIdx;
+	public String getMarkerdataIdx() {
+		return markerdataIdx;
 	}
-	public void setMarkerdateIdx(String markerdateIdx) {
-		this.markerdateIdx = markerdateIdx;
+	public void setMarkerdataIdx(String markerdataIdx) {
+		this.markerdataIdx = markerdataIdx;
 	}
 	public String getMarkerIdx() {
 		return markerIdx;
@@ -66,7 +66,7 @@ public class MarkerDataVO {
 	}
 	@Override
 	public String toString() {
-		return "MarkerDataVO [markerdateIdx=" + markerdateIdx + ", markerIdx=" + markerIdx + ", title=" + title
+		return "MarkerDataVO [markerdataIdx=" + markerdataIdx + ", markerIdx=" + markerIdx + ", title=" + title
 				+ ", content=" + content + ", writeDate=" + writeDate + ", image=" + image + ", hit=" + hit
 				+ ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
