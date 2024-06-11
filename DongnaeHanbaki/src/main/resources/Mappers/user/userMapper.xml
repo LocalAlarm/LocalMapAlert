@@ -60,4 +60,46 @@
 		WHERE EMAIL = #{email}
 	</select>
 	
+	<!-- 비번 바꾸기 -->
+	<update id="updatePassowrd" parameterType="userVO">
+		UPDATE USERS
+		SET PASSWORD = #{password}
+		WHERE EMAIL = #{email}
+	</update>
+	
+	<!-- 프로필 정보 수정 -->
+	<update id="updateProfile" parameterType="Map">
+    	UPDATE USERS
+	    <set>
+	        <choose>
+	            <when test="idx == 1">
+	                <if test="detailAddress != null">
+	                    ADDRESS = #{address},
+	                    DETAILADDRESS = #{detailAddress}
+	                </if>
+	                <if test="detailAddress == null">
+	                    ADDRESS = #{address}
+	                </if>
+	            </when>
+	            <when test="idx == 2">
+	                DETAILADDRESS = #{newValue}
+	            </when>
+	            <when test="idx == 3">
+	                NICKNAME = #{newValue}
+	            </when>
+	            <when test="idx == 4">
+	                RECOVEREMAIL = #{newValue}
+	            </when>
+	            <when test="idx == 5">
+	                IMAGE = #{image},
+	                IMAGE_PI = #{imagePi}
+	            </when>
+	        </choose>
+	    </set>
+	    WHERE EMAIL = #{email}
+	</update>
+
+
+
+	
 </mapper>

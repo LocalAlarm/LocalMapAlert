@@ -1,5 +1,7 @@
 package com.spring.dongnae.user.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,4 +26,10 @@ public interface UserService {
 	
 	//비번찾기 중 이메일찾기
 	String findPasswordByEmail(String email);
+	
+	//비번바꾸기
+	void updatePassowrd(UserVO vo);
+	
+	//프로필 수정
+	void updateProfile(Map<String, Object> map);
 }
