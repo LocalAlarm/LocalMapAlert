@@ -35,6 +35,8 @@ kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
         position: tempLatLng,
         map: map
     });
+    
+    resetTempMarker()
 });
 
 // 폼 제출 시 마커 정보를 서버로 전송
@@ -42,19 +44,19 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
     event.preventDefault();
     
     var markerIdx = document.getElementById('markerType').value;
-    var markerTitle = document.getElementById('markerContent').value;
-    var markerContent = document.getElementById('markerDetails').value;
+    var markerContent = document.getElementById('markerContent').value;
+    var markerDetails = document.getElementById('markerDetails').value;
     var lat = document.getElementById('markerLat').value;
     var lng = document.getElementById('markerLng').value;
     var markerType; // markerType 변수 추가
 
     // markerIdx에 따라 markerType 결정
     switch (markerIdx) {
-        case '1':
-            markerType = '이벤트';
+        case '이벤트':
+            markerType = '1';
             break;
-        case '2':
-            markerType = '사건사고';
+        case '사건사고':
+            markerType = '2';
             break;
         default:
             console.error('Unknown marker type:', markerIdx);
@@ -63,9 +65,9 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
 
     // 서버에 전송할 데이터를 JSON 형식으로 저장
     var markerData = {
-        markerIdx: markerIdx,
-        title: markerTitle,
-        content: markerContent,
+        markerIdx: markerType,
+        title: markerContent,
+        content: markerDetails,
         latitude: lat,
         longitude: lng
     };
