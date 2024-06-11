@@ -101,36 +101,26 @@ const chatToast = document.getElementById('chatToast');
 
 function connect() {
     socket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
+
     socket.onopen = function(event) {
         console.log('Connected to WebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
+
     socket.onmessage = async function(event) {
         try {
-            var jsonChatRoom = JSON.parse(event.data);
-            var buttonHtml = '';
-            buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + jsonChatRoom.id + '">' + jsonChatRoom.roomName + '</button>';
-            $('#chatList').html(buttonHtml);
-            
-            if (Array.isArray(jsonChatRoom.messages)) { // 메시지가 배열인지 확인
-                for (const element of jsonChatRoom.messages) {
-                    // 닉네임 가져오기
-                    const nickname = await getNickname(element.senderToken);
-                    console.log(nickname);
-                    // 가져온 닉네임을 사용하여 메시지 표시
-                    if (token === element.senderToken) {
-                        displayMessage(nickname, element.content, 'sent');
-                    } else {
-                        displayMessage(nickname, element.content, 'received');
-                    }
-                }
+            var jsonData = JSON.parse(event.data);
+
+            if (isChatRoom(jsonData)) {
+                handleChatRoom(jsonData);
+            } else if (isMessage(jsonData)) {
+                handleMessage(jsonData);
             } else {
-                console.error("jsonChatRoom.messages is not an array");
+                console.error("Unknown data type received:", jsonData);
             }
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
     };
-
     
     socket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
@@ -138,6 +128,50 @@ function connect() {
     socket.onerror = function(error) {
         console.log("WebSocket error: " + error);
     };
+}
+// ChatRoom인지 판별하는 함수
+function isChatRoom(data) {
+    return data.roomName !== undefined && data.userIds !== undefined;
+}
+
+// Message인지 판별하는 함수
+function isMessage(data) {
+    return data.senderToken !== undefined && data.content !== undefined;
+}
+//ChatRoom 데이터를 처리하는 함수
+async function handleChatRoom(chatRoom) {
+    var buttonHtml = '';
+    buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + chatRoom.id + '">' + chatRoom.roomName + '</button>';
+    $('#chatList').html(buttonHtml);
+
+    if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
+        for (const element of chatRoom.messages) {
+            // 닉네임 가져오기
+            const nickname = await getNickname(element.senderToken);
+            console.log(nickname);
+            // 가져온 닉네임을 사용하여 메시지 표시
+            if (token === element.senderToken) {
+                displayMessage(nickname, element.content, 'sent');
+            } else {
+                displayMessage(nickname, element.content, 'received');
+            }
+        }
+    } else {
+        console.error("chatRoom.messages is not an array");
+    }
+}
+
+// Message 데이터를 처리하는 함수
+async function handleMessage(message) {
+    // 닉네임 가져오기
+    const nickname = await getNickname(message.senderToken);
+    console.log(nickname);
+    // 가져온 닉네임을 사용하여 메시지 표시
+    if (token === message.senderToken) {
+        displayMessage(nickname, message.content, 'sent');
+    } else {
+        displayMessage(nickname, message.content, 'received');
+    }
 }
 
 function sendMessage() {
@@ -151,9 +185,6 @@ function sendMessage() {
     	};
     	console.log(jsonMsg);
      	socket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
-    	getNickname(token).then(nickname => {
-	        displayMessage(nickname, content, 'sent'); // 보낸 메시지를 화면에 표시 (주석 처리됨)
-    	});
         messageInput.value = ''; // 입력창 비우기
     }
 }
