@@ -69,3 +69,8 @@
 		    color: #333; /* 텍스트 색상 */
 		    line-height: 1.5; /* 텍스트 줄 간격 */
 		}
+		/* 인포윈도우의 내용에 대한 스타일 설정 */
+		.kakao-infowindow div {
+		    white-space: nowrap; /* 줄 바꿈 방지 */
+		    maxWidth: 1000;
+		}
