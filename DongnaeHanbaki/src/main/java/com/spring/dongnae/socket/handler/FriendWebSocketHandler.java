@@ -1,8 +1,6 @@
 package com.spring.dongnae.socket.handler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,11 +15,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
-import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.FriendInfo;
 import com.spring.dongnae.socket.scheme.FriendRoom;
 import com.spring.dongnae.user.service.UserService;
-import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class FriendWebSocketHandler extends TextWebSocketHandler {
@@ -63,25 +59,15 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 			} else {
 				// 새로운 메시지 문서 생성
 				friendRoom = new FriendRoom(userService.getUserByToken(token));
-				List<String> requestIds = new ArrayList<String>();
-				List<FriendInfo> friendIds = new ArrayList<FriendInfo>();
-				requestIds.add("b@naver.com");
-				FriendInfo friendInfo = new FriendInfo();
-				friendInfo.setRoomId("66669cdeb3474e4adc175dda");
-				friendInfo.setRoomName("test");
-				friendInfo.setToken("$2a$10$H/U.H8Qqi2BgmBL.jI0VkeJEMpDeR3Mc49f95uJDqpinK8tyW/EOK");
-				friendIds.add(friendInfo);
-				friendRoom.setFriendIds(friendIds);
-				friendRoom.setRequestIds(requestIds);
-				friendRoomRepository.save(friendRoom);
 				
+//				friendRoomRepository.save(friendRoom);
+				friendRoomRepository.save(createTestValue(token, friendRoom));
 			}
 		} else {
 			session.close(CloseStatus.NOT_ACCEPTABLE);
 		}
 	}
 
-	// 메시지를 입력하고 보냈을 때를 처리하는 코드
 	// 
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -91,5 +77,21 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 
+	}
+	
+	private FriendRoom createTestValue(String token, FriendRoom friendRoom) {
+		friendRoom = new FriendRoom(userService.getUserByToken(token));
+		ArrayList<String> requestIds = new ArrayList<String>();
+		ArrayList<FriendInfo> friendIds = new ArrayList<FriendInfo>();
+		requestIds.add("b@naver.com");
+		FriendInfo friendInfo = new FriendInfo();
+		friendInfo.setRoomId("66669cdeb3474e4adc175dda");
+		friendInfo.setRoomName("test");
+		friendInfo.setToken("$2a$10$H/U.H8Qqi2BgmBL.jI0VkeJEMpDeR3Mc49f95uJDqpinK8tyW/EOK");
+		friendInfo.setChatRoomId("66669cdeb3474e4adc175dda");
+		friendIds.add(friendInfo);
+		friendRoom.setFriendIds(friendIds);
+		friendRoom.setRequestIds(requestIds);
+		return friendRoom;
 	}
 }

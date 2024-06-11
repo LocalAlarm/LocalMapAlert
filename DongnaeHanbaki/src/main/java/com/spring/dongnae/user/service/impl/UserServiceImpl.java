@@ -77,6 +77,12 @@ public class UserServiceImpl implements UserService {
 	public UserVO getUserByToken(String token) {
 		return userDAO.getUserByToken(token);
 	}
+
+	@Override
+	public UserVO searchUserByEmail(String email) {
+		// TODO Auto-generated method stub
+		return userDAO.searchUserByEmail(email);
+	}
 	
 	//kakao
 //    @Override

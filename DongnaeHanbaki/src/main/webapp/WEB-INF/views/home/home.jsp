@@ -66,6 +66,11 @@ String token = userDetails.getToken();
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
 	<div id="chatList"></div>
+	<form class="d-flex" role="search">
+		<input class="form-control me-2" type="search" placeholder="Search"
+			aria-label="Search">
+		<button class="btn btn-outline-success" type="submit">Search</button>
+	</form>
 	<!-- 		<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$qXOdXhvKATGwm6KtxTVpa.JWafliXcMUj4VjILwO494navv.FlOSS">d@naver.com</button> -->
 	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$sPByjFU1EdQXoezpmKgTkOaRLH7DD7wn56vdHRow9IEveZqU2IgIW">qwe123@naver.com</button> -->
 	<!-- 	<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="$2a$10$XS3FPzVS7s96.jKZYsy2i.fa..rvH/Kgjmw.Qj3efBZDHEWVsEBbO">d1@naver.com</button> -->
@@ -95,51 +100,52 @@ String token = userDetails.getToken();
 	</div>
 </body>
 <script>
-var socket = null;
+var chatSocket = null;
+var friendSocket = null;
 var token = '<%=token%>';
 const chatToast = document.getElementById('chatToast');
 
 function connectChat() {
-    socket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
+	chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
-    socket.onopen = function(event) {
+	chatSocket.onopen = function(event) {
         console.log('Connected to ChatWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    socket.onmessage = async function(event) {
+    chatSocket.onmessage = async function(event) {
         try {
-            var jsonData = JSON.parse(event.data);
+            var chatJsonData = JSON.parse(event.data);
 
-            if (isChatRoom(jsonData)) {
-                handleChatRoom(jsonData);
-            } else if (isMessage(jsonData)) {
-                handleMessage(jsonData);
+            if (isChatRoom(chatJsonData)) {
+                handleChatRoom(chatJsonData);
+            } else if (isMessage(chatJsonData)) {
+                handleMessage(chatJsonData);
             } else {
-                console.error("Unknown data type received:", jsonData);
+                console.error("Unknown data type received:", chatJsonData);
             }
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
     };
     
-    socket.onclose = function(event) {
+    chatSocket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
-    socket.onerror = function(error) {
+    chatSocket.onerror = function(error) {
         console.log("WebSocket error: " + error);
     };
 }
 
 function connectFriend() {
-    socket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
+	friendSocket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
 
-    socket.onopen = function(event) {
+	friendSocket.onopen = function(event) {
         console.log('Connected to FriendWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    socket.onmessage = async function(event) {
+    friendSocket.onmessage = async function(event) {
         try {
-            var jsonData = JSON.parse(event.data);
+            var friendJsonData = JSON.parse(event.data);
 
             if (isChatRoom(jsonData)) {
                 handleChatRoom(jsonData);
@@ -153,10 +159,10 @@ function connectFriend() {
         }
     };
     
-    socket.onclose = function(event) {
+    friendSocket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
-    socket.onerror = function(error) {
+    friendSocket.onerror = function(error) {
         console.log("WebSocket error: " + error);
     };
 }
@@ -216,7 +222,7 @@ function sendMessage() {
     		"timestamp": Date.now()
     	};
     	console.log(jsonMsg);
-     	socket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
+     	chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
         messageInput.value = ''; // 입력창 비우기
     }
 }
