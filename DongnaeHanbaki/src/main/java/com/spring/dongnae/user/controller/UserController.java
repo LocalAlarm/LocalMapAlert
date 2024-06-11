@@ -340,3 +340,5 @@ public class UserController {
 	   userService.updateProfile(map);
    }
 }
+
+

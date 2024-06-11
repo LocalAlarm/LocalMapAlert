@@ -23,6 +23,8 @@
    var code = "";
    //비번체크
    var passwordSurvey = false;
+  	//닉네임체크
+  	var nicknameSurvey = false;
    //회원가입 폼에 필수 입력값 없으면 회원가입 완료버튼 못가게 막으면 됨
    //나머지 함수도 체크하면 다 "" 처리
    //
@@ -306,8 +308,11 @@
 		var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
 
 		if (!nicknamePattern.test(nickname)) {
-			alert("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.");
-			return false;
+			$("#nicknameWord").text("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.").css("color", "red");
+			nicknameSurvey = false; 
+		} else {
+			$("#nicknameWord").text("사용가능한 닉네임입니다.").css("color", "#0404B4");
+			nicknameSurvey = true;
 		}
 	}
 
@@ -338,6 +343,10 @@
 			return false;
 		} else if (nickname == "") {
 			alert("닉네임을 입력해주세요!");
+			$("#nickname").focus();
+			return false;
+		} else if (!nicknameSurvey) {
+			alert("닉네임을 확인해주세요 !");
 			$("#nickname").focus();
 			return false;
 		} else if (recoverEmail == "") {
@@ -376,7 +385,8 @@
             <span id="passwordWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
+            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임" onblur="nicknameOk(this.form)">
+            <span id="nicknameWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="text" class="form-control" id="sample6_address" name="address" placeholder="주소" style="margin-bottom: 10px;">
