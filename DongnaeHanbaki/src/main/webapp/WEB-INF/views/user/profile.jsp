@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+ <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -260,6 +260,11 @@
 			var detailAddress = $("#sample6_detailAddress").val();
 			formData.append("address", address);
 			formData.append("detailAddress", detailAddress);
+		}
+		if (idx == "2") {
+			var detailAddress = $("#popupInput").val();
+			console.log(nickname);
+			formData.append("newValue", detailAddress);
 		}
 		if (idx == "3") {
 			var nickname = $("#nickname-text").val();
