@@ -104,24 +104,33 @@ function connect() {
     socket.onopen = function(event) {
         console.log('Connected to WebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
-    socket.onmessage = function(event) {
-        var jsonChatRoom = JSON.parse(event.data);
-        var buttonHtml = '';
-        buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + jsonChatRoom.id + '">' + jsonChatRoom.roomName + '</button>';
-        $('#chatList').html(buttonHtml);
-        
-        for(const element of jsonChatRoom.messages) {
-        	// getNickname 함수를 호출하여 토큰에 대한 닉네임을 가져옴
-        	getNickname(element.senderToken).then(nickname => {
-	        	if(token === element.senderToken) {
-	        		displayMessage(nickname, element.content, 'sent'); // 바꾼닉넴 활용
-	        	} else {
-		        	displayMessage(nickname, element.content, 'received'); // 바꾼닉넴 활용
-				}
-        	});
-        	
+    socket.onmessage = async function(event) {
+        try {
+            var jsonChatRoom = JSON.parse(event.data);
+            var buttonHtml = '';
+            buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + jsonChatRoom.id + '">' + jsonChatRoom.roomName + '</button>';
+            $('#chatList').html(buttonHtml);
+            
+            if (Array.isArray(jsonChatRoom.messages)) { // 메시지가 배열인지 확인
+                for (const element of jsonChatRoom.messages) {
+                    // 닉네임 가져오기
+                    const nickname = await getNickname(element.senderToken);
+                    console.log(nickname);
+                    // 가져온 닉네임을 사용하여 메시지 표시
+                    if (token === element.senderToken) {
+                        displayMessage(nickname, element.content, 'sent');
+                    } else {
+                        displayMessage(nickname, element.content, 'received');
+                    }
+                }
+            } else {
+                console.error("jsonChatRoom.messages is not an array");
+            }
+        } catch (e) {
+            console.error("Error processing WebSocket message: ", e);
         }
     };
+
     
     socket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력

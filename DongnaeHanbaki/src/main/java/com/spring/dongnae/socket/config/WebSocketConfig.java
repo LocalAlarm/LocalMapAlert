@@ -25,11 +25,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(chatListWebSocketHandler, "/chatList")
                 .addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인
                 .setAllowedOrigins("*");
+        
         registry.addHandler(chatListWebSocketHandler, "/chat")
         		.addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인
         		.setAllowedOrigins("*");
+        
         registry.addHandler(chatListWebSocketHandler, "/friend")
-	       		.addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인
+	       		.addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인 / 친구추가
 	       		.setAllowedOrigins("*");
     }
 }
