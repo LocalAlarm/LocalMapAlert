@@ -36,7 +36,6 @@ kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
         map: map
     });
     
-    resetTempMarker()
 });
 
 // 폼 제출 시 마커 정보를 서버로 전송
@@ -110,9 +109,9 @@ function resetTempMarker() {
 }
 
 // 마커 생성 및 지도에 표시하는 함수
-function addMarker(position, markerType, content, detailedContent) {
+function addMarker(position, markerType, title, content) {
     var imageSrc, imageSize, imageOption;
-	console.log(markerType);
+
     // 마커 이미지 설정
     switch (markerType) {
         case '1': // 이벤트
@@ -130,6 +129,8 @@ function addMarker(position, markerType, content, detailedContent) {
             return;
     }
 
+    resetTempMarker();
+    
     // 마커 이미지 생성
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
@@ -140,13 +141,41 @@ function addMarker(position, markerType, content, detailedContent) {
     });
     markers.push(marker); // 배열에 마커 추가
 
-    // 최대 글자 수 설정
-    var maxLength = 10;
-    var trimmedContent = content.length > maxLength ? content.substring(0, maxLength) + "..." : content;
+    // markerType에 따라 인포윈도우에 표시할 내용을 생성하는 함수
+    function generateInfoContent(markerType, title) {
+        var type;
+        switch (markerType) {
+            case '1':
+                type = "이벤트";
+                break;
+            case '2':
+                type = "사건사고";
+                break;
+            default:
+                type = "알 수 없음";
+                break;
+        }
+        return `${type} : ${title}`;
+    }
+
+    // 인포윈도우 내용에 적용될 CSS 스타일
+    var infowindowContentStyle = `
+        width: 200px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    `;
+
+    // markerType 값에 따라 사건사고 또는 이벤트와 타이틀을 조합하여 인포윈도우에 표시할 내용을 생성
+    var infowindowContent = `
+        <div style="${infowindowContentStyle}">
+            ${generateInfoContent(markerType, title)}
+        </div>`;
 
     // 마커에 표시할 인포윈도우를 생성
     var infowindow = new kakao.maps.InfoWindow({
-        content: '<div>' + content + '</div>' // 표시내용
+        content: infowindowContent
     });
 
     // 마커에 mouseover 이벤트 등록
@@ -166,10 +195,14 @@ function addMarker(position, markerType, content, detailedContent) {
         map.setLevel(1);
 
         // 팝업 창 내용 설정 및 표시
-        document.getElementById('popupContent').innerText = detailedContent;
+        var detailedContent = `${generateInfoContent(markerType, title)}<br>자세한 내용 : ${content}`;
+        document.getElementById('popupContent').innerHTML = detailedContent;
         document.getElementById('popup').style.display = 'block';
     });
 }
+
+
+
 
 //전체목록 클릭
 function All() {
@@ -184,13 +217,11 @@ function All() {
 
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
-                var position = new kakao.maps.LatLng(event.LATITUDE, event.LONGITUDE);
-                var content = event.CONTENT + " : " + event.TITLE;
-                var detailedContent = event.CONTENT + " : " + event.TITLE + "\n자세한 내용 : " + event.TITLE;
-
-                // MAKER_IDX 값에 따라 markerType 결정
-                var markerType = event.MAKER_IDX == 1 ? '1' : '2';
-                addMarker(position, markerType, content, detailedContent);     
+                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                var title = event.title;
+                var content = event.content;
+                var markerType = event.markerIdx;
+                addMarker(position, markerType, title, content);
             });
 
             // 마커 보이기
@@ -205,9 +236,6 @@ function All() {
        }
    });
 }
-
-
-
 // 페이지 로드될 때 전체 목록 표시
 $(document).ready(function() {
     All();
@@ -251,10 +279,10 @@ function EventAccidents() {
             // 가져온 데이터로 마커 생성
             data.forEach(function (event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                var content = event.title + " : " + event.content;
-                var detailedContent = event.content + " : " + event.title + "\n자세한 내용 : " + event.title;
+                 var title = event.title;
+                var content = event.content;
                 var markerType = event.markerIdx;
-                addMarker(position, markerType, content, detailedContent);
+                addMarker(position, markerType, title, content);
             });
 
             // 마커 보이기
@@ -283,10 +311,10 @@ function Events() {
             // 가져온 데이터로 마커 생성
             data.forEach(function (event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                var content = event.title + " : " + event.content;
-                var detailedContent = event.content + " : " + event.title + "\n자세한 내용 : " + event.title;
+                 var title = event.title;
+                var content = event.content;
                 var markerType = event.markerIdx;
-                addMarker(position, markerType, content, detailedContent);
+                addMarker(position, markerType, title, content);
             });
 
             // 마커 보이기
@@ -314,13 +342,11 @@ function All() {
 
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
-                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                var content = event.title + " : " + event.content;
-                var detailedContent = event.content + " : " + event.title + "\n자세한 내용 : " + event.title;
-
-                // MAKER_IDX 값에 따라 markerType 결정
-                var markerType = event.markerIdx; // markerType을 MAKER_IDX 값으로 설정
-                addMarker(position, markerType, content, detailedContent);     
+               var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                var title = event.title;
+                var content = event.content;
+                var markerType = event.markerIdx;
+                addMarker(position, markerType, title, content);
             });
 
             // 마커 보이기
