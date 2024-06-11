@@ -14,6 +14,10 @@ public interface UserDAO {
 	int doubleCheckEmail(String email);
 	 // 이메일 찾기 - 건희
 	String findUserEmail(UserVO vo);
+	
+	// 토큰 값으로 이메일, 닉네임 찾기
+	UserVO getUserByToken(String token);
+	UserVO searchUserByEmail(String email);
 	//비번찾기 중 이메일찾기
 	String findPasswordByEmail(String email);
 	//비번바꾸기

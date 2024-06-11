@@ -5,11 +5,12 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetails implements UserDetails{
+public class CustomUserDetails implements UserDetails {
 	private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
 
 	private String username;
     private String password;
+    private String token;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -41,6 +42,14 @@ public class CustomUserDetails implements UserDetails{
 	
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getToken() {
+		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override
@@ -81,11 +90,11 @@ public class CustomUserDetails implements UserDetails{
 
 	@Override
 	public String toString() {
-		return "CustomUserDetails [username=" + username + ", password=" + password + ", isEnabled=" + isEnabled
-				+ ", isAccountNonExpired=" + isAccountNonExpired + ", isAccountNonLocked=" + isAccountNonLocked
-				+ ", isCredentialsNonExpired=" + isCredentialsNonExpired + ", authorities=" + authorities + "]";
+		return "CustomUserDetails [username=" + username + ", password=" + password + ", token=" + token
+				+ ", isEnabled=" + isEnabled + ", isAccountNonExpired=" + isAccountNonExpired + ", isAccountNonLocked="
+				+ isAccountNonLocked + ", isCredentialsNonExpired=" + isCredentialsNonExpired + ", authorities="
+				+ authorities + "]";
 	}
-	
 	
 
 }

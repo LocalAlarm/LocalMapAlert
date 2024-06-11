@@ -40,6 +40,7 @@ import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
+import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Controller
@@ -146,18 +147,6 @@ public class UserController {
       }
       return "user/profile";
    }
-   
-   // 로그인후
-   @GetMapping("/home")
-   public String home(HttpSession session) {
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (authentication != null && authentication.isAuthenticated()) {
-          session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-          String username = authentication.getName();
-          System.out.println(">> 로그인 성공 사용자 : " + username);
-      }
-      return "home/home";
-   }  
 
    // 회원가입 페이지로 이동
    @GetMapping("/joinform")
@@ -172,8 +161,7 @@ public class UserController {
        userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
        userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
        System.out.println(">> 회원가입 처리");
-       if (image != null && !image.isEmpty()) {
-    	   System.out.println("이미지 있음!!!!!!!!");
+       if (image != null && !image.isEmpty()) { // null 체크 - && !image.isEmpty()
            Map<String, String> imageMap = imageUploadController.uploadImage(image);
            userVO.setImagePi(imageMap.get("public_id"));
            userVO.setImage(imageMap.get("url"));
