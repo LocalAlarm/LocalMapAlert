@@ -1,6 +1,5 @@
 package com.spring.dongnae.socket.handler;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.Message;
 import com.spring.dongnae.socket.scheme.UserRooms;
 import com.spring.dongnae.user.service.UserService;
-import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class ChatListWebSocketHandler extends TextWebSocketHandler {
