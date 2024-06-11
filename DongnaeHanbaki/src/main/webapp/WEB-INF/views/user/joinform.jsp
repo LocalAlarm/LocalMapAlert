@@ -8,9 +8,6 @@
 <title>회원가입</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
 <style>
 
     .mb-3 {
@@ -131,7 +128,6 @@
                     // 주소를 해당 필드에 추가
                     document.getElementById('sample6_address').value = address;
                     document.getElementById('sample6_detailAddress').value = '';
-                    document.getElementById('sample6_extraAddress').value = '';
                 }
             });
         });
@@ -358,6 +354,7 @@
 			$("#recoverEmail").focus();
 			return false;
 		}
+		alert("회원가입이 완료되었습니다.");
 	}
 </script>
 </head>
@@ -375,8 +372,8 @@
             <input type="hidden" class="btn btn-outline-info" id="emailReset" value="다시 입력" onclick="resetEmail()" disabled />
         </div>
          <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="hidden" class="btn btn-outline-info" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
-            <input type="hidden" class="btn btn-outline-info" id="authenticReset" value="다시 인증하기" onclick="resetAuthentic()" />
+            <input type="hidden" class="btn btn-outline-info mb-3" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
+            <input type="hidden" class="btn btn-outline-info mb-3" id="authenticReset" value="다시 인증하기" onclick="resetAuthentic()" />
             <input type="hidden" class="form-control" id="authenticNumber" name="authenticNumber" title="인증하기" placeholder="인증번호 입력" disabled onblur="authenticComp()">
             <span id="authenticWord"></span>
         </div>
@@ -393,8 +390,8 @@
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
             <input type="text" class="form-control" id="sample6_address" name="address" placeholder="주소" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
-            <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
+            <input type="button" class="btn btn-outline-warning mb-3" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
+            <input type="text" class="form-control" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
 <!--             <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목"> -->
             <div id="map" style="width:270px;height:350px;  margin-top:10px;display:none"></div>
         </div>

@@ -14,7 +14,7 @@
 	
 	<insert id="insertMarker" parameterType="MarkerDataVO">
 	    INSERT INTO MARKERDATA (markerdata_idx, marker_idx, title, content, latitude, longitude)
-	    VALUES (SEQ_MARKERDATA_IDX.NEXTVAL, #{marker_idx}, #{title}, #{content}, #{latitude}, #{longitude})
+	    VALUES (SEQ_MARKERDATA_IDX.NEXTVAL, #{markerIdx}, #{title}, #{content}, #{latitude}, #{longitude})
 	</insert>
 	
 </mapper>
