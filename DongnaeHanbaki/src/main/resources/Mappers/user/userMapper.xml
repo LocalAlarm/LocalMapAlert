@@ -53,7 +53,7 @@
 	</select> 
 	
 	<select id="getUserByToken" parameterType="string" resultType="userVO">
-		SELECT EMAIL, NICKNAME
+		SELECT EMAIL, NICKNAME, TOKEN, IMAGE
 		FROM USERS
 		WHERE TOKEN = #{token}
 	</select>

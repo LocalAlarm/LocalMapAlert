@@ -105,6 +105,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		sessions.remove(session);
+		String token = (String) session.getAttributes().get("userToken");
+		sessions.remove(token);
 	}
 }

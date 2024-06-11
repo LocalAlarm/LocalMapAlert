@@ -1,11 +1,14 @@
 package com.spring.dongnae.socket.scheme;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.spring.dongnae.user.vo.UserVO;
 
 //친구추가
+@Document(collection = "friendRoom")
 public class FriendRoom {
 
 	@Id
@@ -13,8 +16,16 @@ public class FriendRoom {
 	private String email;
 	private String token;
 	// 키 값에 요청한 사람의 이메일 , value값에 토큰 넣음
-	private HashMap<String, String> requestIds; // 친구추가 요청받은 아이디(목록) 들
-	private HashMap<String, FriendInfo> friendIds;
+	private List<String> requestIds; // 친구추가 요청받은 아이디(목록) 들
+	private List<FriendInfo> friendIds;
+	
+	public FriendRoom() {
+	}
+	
+	public FriendRoom(UserVO userVO) {
+		this.email = userVO.getEmail();
+		this.token = userVO.getToken();
+	}
 
 	public String getId() {
 		return id;
@@ -40,19 +51,19 @@ public class FriendRoom {
 		this.token = token;
 	}
 
-	public HashMap<String, String> getRequestIds() {
+	public List<String> getRequestIds() {
 		return requestIds;
 	}
 
-	public void setRequestIds(HashMap<String, String> requestIds) {
+	public void setRequestIds(List<String> requestIds) {
 		this.requestIds = requestIds;
 	}
 
-	public HashMap<String, FriendInfo> getFriendIds() {
+	public List<FriendInfo> getFriendIds() {
 		return friendIds;
 	}
 
-	public void setFriendIds(HashMap<String, FriendInfo> friendIds) {
+	public void setFriendIds(List<FriendInfo> friendIds) {
 		this.friendIds = friendIds;
 	}
 

@@ -99,11 +99,11 @@ var socket = null;
 var token = '<%=token%>';
 const chatToast = document.getElementById('chatToast');
 
-function connect() {
+function connectChat() {
     socket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
     socket.onopen = function(event) {
-        console.log('Connected to WebSocket'); // 연결 성공 시 콘솔에 메시지 출력
+        console.log('Connected to ChatWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
     socket.onmessage = async function(event) {
@@ -129,6 +129,38 @@ function connect() {
         console.log("WebSocket error: " + error);
     };
 }
+
+function connectFriend() {
+    socket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
+
+    socket.onopen = function(event) {
+        console.log('Connected to FriendWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
+    };
+
+    socket.onmessage = async function(event) {
+        try {
+            var jsonData = JSON.parse(event.data);
+
+            if (isChatRoom(jsonData)) {
+                handleChatRoom(jsonData);
+            } else if (isMessage(jsonData)) {
+                handleMessage(jsonData);
+            } else {
+                console.error("Unknown data type received:", jsonData);
+            }
+        } catch (e) {
+            console.error("Error processing WebSocket message: ", e);
+        }
+    };
+    
+    socket.onclose = function(event) {
+        console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
+    };
+    socket.onerror = function(error) {
+        console.log("WebSocket error: " + error);
+    };
+}
+
 // ChatRoom인지 판별하는 함수
 function isChatRoom(data) {
     return data.roomName !== undefined && data.userIds !== undefined;
@@ -259,7 +291,8 @@ async function getNickname(token) {
 };
 
 window.onload = function() {
-    connect(); // 페이지 로드 시 WebSocket 연결
+    connectChat(); // 페이지 로드 시 WebSocket 연결
+    connectFriend();
     scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
     document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
