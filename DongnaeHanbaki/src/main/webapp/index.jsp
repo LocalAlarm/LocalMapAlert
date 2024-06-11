@@ -10,6 +10,7 @@
     <h2>index</h2>
     <a href="login">로그인</a>
     <a href="map">지도보기</a>
+    <a href="customMap">커스텀지도보기</a>
     <form action="login" method="post">
         <label for="id">ID:</label>
         <input type="text" id="id" name="id">
