@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>프로필페이지</title>
+<jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <style>
     table {
         width: 50%;
@@ -56,9 +57,7 @@
         z-index: 500;
     }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
+
 <script>
 	//주소찾기
    var mapContainer, mapOption, map, geocoder, marker;
@@ -179,12 +178,14 @@
 				$("#recoverEmail-text").prop("type", "hidden");
 				$("#recoverEmailCheckWord").text("");
 				$("#imageUpdate").prop("type", "hidden");
+				$("#saveUpdate").attr("disabled", false);
 				break;
 			case 2: 
 				Label = "새 상세주소를 입력하세요: ";
 				$("#popupInput").prop("type", "text");
 				$("#sample6_address").prop("type", "hidden");
 				$("#sample6_detailAddress").prop("type", "hidden");
+				$("#map").css("display", "none");
 				$("#findAddress").prop("type", "hidden");
 				$("#nickname-text").prop("type", "hidden");
 				$("#nicknameCheckWord").text("");
@@ -198,6 +199,7 @@
 				$("#popupInput").prop("type", "hidden");
 				$("#sample6_address").prop("type", "hidden");
 				$("#sample6_detailAddress").prop("type", "hidden");
+				$("#map").css("display", "none");
 				$("#findAddress").prop("type", "hidden");
 				$("#nickname-text").prop("type", "text");
 				$("#nicknameCheckWord").text("");
@@ -210,6 +212,7 @@
 				$("#popupInput").prop("type", "hidden");
 				$("#sample6_address").prop("type", "hidden");
 				$("#sample6_detailAddress").prop("type", "hidden");
+				$("#map").css("display", "none");
 				$("#findAddress").prop("type", "hidden");
 				$("#nickname-text").prop("type", "hidden");
 				$("#nicknameCheckWord").text("");
@@ -222,6 +225,7 @@
 				$("#popupInput").prop("type", "hidden");
 				$("#sample6_address").prop("type", "hidden");
 				$("#sample6_detailAddress").prop("type", "hidden");
+				$("#map").css("display", "none");
 				$("#findAddress").prop("type", "hidden");
 				$("#nickname-text").prop("type", "hidden");
 				$("#nicknameCheckWord").text("");
@@ -231,50 +235,42 @@
 				break;
 			case 6:
 				if (confirm("비밀번호를 수정하면 다시 로그인합니다. \n수정하시겠습니까?")) {
-					location.href="findPassword";
+					location.href="findPassword?profile=profile";
 				} else {
 					break;
 				}
 		}
-		
-		$("#popupLabel").text(Label);
-		$("#popupInput").data("idx", idx);	
-		$(".popup, .overlay").show();
+		if (idx == "6") {
+			closePopup();
+		} else {
+			$("#popupLabel").text(Label);
+			$("#popupInput").data("idx", idx);	
+			$(".popup, .overlay").show();
+		}
 	}
 	
 	function updateProfile() {
 		var idx = $("#popupInput").data("idx");
 		var email = $("#email").text().trim();
+		var formData = new FormData();
+		formData.append("email", email);
+		formData.append("idx", idx);
 		if (idx == "1") {
 			var address = $("#sample6_address").val();
 			var detailAddress = $("#sample6_detailAddress").val();
-			var data = {
-				email : email,
-				idx : idx,
-				address : address,
-				detailAddress : detailAddress
-			};
+			formData.append("address", address);
+			formData.append("detailAddress", detailAddress);
 		}
 		if (idx == "3") {
 			var nickname = $("#nickname-text").val();
-			var data = {
-				email : email,
-				idx : idx,
-				newValue : nickname
-			};
+			console.log(nickname);
+			formData.append("newValue", nickname);
 		}
 		if (idx == "4") {
 			var recoverEmail = $("#recoverEmail-text").val();
-			var data = {
-				email : email,
-				idx : idx,
-				newValue : recoverEmail
-			};
+			formData.append("newValue", recoverEmail);
 		}
 		if (idx == "5") {
-			var formData = new FormData();
-			formData.append("email", email);
-			formData.append("idx", idx);
 			formData.append("image", $("#imageUpdate")[0].files[0]);
 		} else {
 			var newValue = $("#popupInput").val().trim();
@@ -285,41 +281,22 @@
 			};
 		}
 		// 파일 전송 AJAX 요청
-		if (idx == "5") {
-			$.ajax({
-				type : "POST",
-				url : "updateProfile",
-				data : formData,
-				processData : false,
-				contentType : false,
-				success : function(response) {
-					console.log(response);
-					alert("프로필이 업데이트 되었습니다.");
-					location.reload();
-				},
-				error : function(request, status, error) {
-					alert("프로필 업데이트에 실패했습니다.");
-					console.error("Error:", request.status, error);
-				}
-			});
-		} else {
-			$.ajax({
-				type : "POST",
-				url : "updateProfile",
-				data : JSON.stringify(data),
-				contentType : "application/json; charset=utf-8",
-				success : function(response) {
-					console.log(response);
-					alert("프로필이 업데이트 되었습니다.");
-					location.reload();
-				},
-				error : function(request, status, error) {
-					alert("프로필 업데이트에 실패했습니다.");
-					console.error("Error:", request.status, error);
-				}
-
-			});
-		}
+		$.ajax({
+			type : "POST",
+			url : "updateProfile",
+			data : formData,
+			processData : false,
+			contentType : false,
+			success : function(response) {
+				console.log(response);
+				alert("프로필이 업데이트 되었습니다.");
+				location.reload();
+			},
+			error : function(request, status, error) {
+				alert("프로필 업데이트에 실패했습니다.");
+				console.error("Error:", request.status, error);
+			}
+		});
 		$(".popup, .overlay").hide();
 	}
 
@@ -372,6 +349,7 @@
 </script>
 </head>
 <body>
+<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
     <h1>프로필 정보</h1>
     <table>
         <tr>

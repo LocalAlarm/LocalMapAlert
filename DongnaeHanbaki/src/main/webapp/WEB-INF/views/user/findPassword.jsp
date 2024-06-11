@@ -12,11 +12,14 @@
 	href="${pageContext.request.contextPath}/resources/css/login.css">
 <script>
 	   //프로필 수정이면 주제 바꾸기 -> 이메일값도받아서 default로넣음? 그럼의미가있나?
-	   window.onload = function() {
-		   var profileValue = document.getElementById("profile").value;
-		   console.log(profileValue);
-		   $("#subject").text("비밀번호 수정");
-	   }
+	  window.onload = function() {
+		    var profileValue = document.getElementById("profile").value;
+		    console.log(profileValue);
+		    if (profileValue !== null && profileValue.trim() !== "") {
+		        $("#subject").text("비밀번호 수정");
+		    }
+	  }
+
 	   //이메일 찾기 버튼 클릭 체크
 	   var findEamilCheck = false;
 	   //인증번호 체크

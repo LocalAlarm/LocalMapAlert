@@ -277,6 +277,7 @@ public class UserController {
    // 비밀번호 찾기
    @RequestMapping("/findPassword")
    public String showFindPasswordForm(@RequestParam(value = "profile", required = false) String profile, Model model) {
+	   System.out.println("location : " + profile);
 	   model.addAttribute("profile", profile);
        return "user/findPassword"; 
    }
@@ -329,13 +330,13 @@ public class UserController {
            map.put("imagePi", imageMap.get("public_id"));
        }
 	   else if (idx == 1) {
-		   map.put("address", idx);
-		   map.put("idx", idx);
+		   map.put("address", address);
+		   map.put("detailAddress", detailAddress);
 	   } else {
 		   map.put("newValue", newValue);
 	   }
 
-	   System.out.println("프로필 수정처리 : " + map);
+	   System.out.println("프로필 수정처리>> : " + map);
 	   userService.updateProfile(map);
    }
 }
