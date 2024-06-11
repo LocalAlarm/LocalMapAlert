@@ -167,16 +167,18 @@ public class UserController {
    }
    
    @PostMapping("/join")
-   public String join(@ModelAttribute UserVO userVO, MultipartFile image) {
-	   System.out.println("userVO : " + userVO);
+   public String join(@ModelAttribute UserVO userVO, 
+		   	@RequestParam(value = "image", required = false) MultipartFile image) {
        userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
        userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
        System.out.println(">> 회원가입 처리");
-       if (image.getName() != null) {
+       if (image != null && !image.isEmpty()) {
+    	   System.out.println("이미지 있음!!!!!!!!");
            Map<String, String> imageMap = imageUploadController.uploadImage(image);
            userVO.setImagePi(imageMap.get("public_id"));
            userVO.setImage(imageMap.get("url"));
        }
+       userVO.setRole("USER");
        System.out.println(userVO);
        userService.insertUser(userVO);
        return "redirect:login";
@@ -321,7 +323,7 @@ public class UserController {
 	   map.put("idx", idx);
 	   System.out.println("프로필 수정처리 : " + map);
 	   System.out.println("email : " + email);
-	   if (idx == 5 && image.getName() != null) {
+	   if (idx == 5 && image != null && !image.isEmpty()) {
            Map<String, String> imageMap = imageUploadController.uploadImage(image);
            map.put("image", imageMap.get("url"));
            map.put("imagePi", imageMap.get("public_id"));
