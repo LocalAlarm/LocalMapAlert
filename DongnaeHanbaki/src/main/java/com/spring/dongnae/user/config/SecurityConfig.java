@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import com.spring.dongnae.user.service.CustomAuthenticationProvider;
 
+import com.spring.dongnae.user.service.CustomAuthenticationSuccessHandler;
 import com.spring.dongnae.user.service.CustomUserDetailsService;
 
 @Configuration
@@ -22,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 
+	@Autowired
+	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	 
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService)
@@ -34,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
             	//컨트롤러 전에 실행 
+            	.antMatchers("/admin/**").hasRole("ADMIN")
 //                .antMatchers("/login", "/joinform").permitAll()
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll()
@@ -43,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .loginProcessingUrl("/authenticate")
-                .defaultSuccessUrl("/main", true)
+//                .defaultSuccessUrl("/", true)
+                .successHandler(customAuthenticationSuccessHandler) // 커스텀 성공 핸들러 설정
                 .failureUrl("/loginerror")
                 .and()
             .logout()

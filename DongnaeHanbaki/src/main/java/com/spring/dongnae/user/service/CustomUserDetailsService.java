@@ -1,6 +1,7 @@
 package com.spring.dongnae.user.service;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,10 +34,17 @@ public class CustomUserDetailsService implements UserDetailsService{
 //		List<>
 		
 		//역할
-		cud.setAuthorities(Arrays.asList(
-	            new SimpleGrantedAuthority("ROLE_USER"),
-	            new SimpleGrantedAuthority("ROLE_ADMIN")
-	        ));
+//		cud.setAuthorities(Arrays.asList(
+//	            new SimpleGrantedAuthority("ROLE_USER"),
+//	            new SimpleGrantedAuthority("ROLE_ADMIN")
+//	        ));
+		if ("ADMIN".equals(userVO.getRole())) {
+			cud.setAuthorities(Collections.singletonList
+					(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		} else {
+			cud.setAuthorities(Collections.singletonList
+					(new SimpleGrantedAuthority("ROLE_USER")));
+		}
 		
 		cud.setEnabled(true);
 		cud.setAccountNonExpired(true);
