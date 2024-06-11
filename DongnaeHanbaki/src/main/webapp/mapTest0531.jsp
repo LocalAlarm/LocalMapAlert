@@ -24,7 +24,7 @@
     .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
     .info .link {color: #5085BB;}
 
-	.popupContent {
+/* 	.popupContent {
 	    display: inline-block;
 	    position: relative;
 	    background: #ccc;
@@ -40,7 +40,7 @@
 	    border-left: 5px solid transparent;
 	    bottom: -9px;
 	    left: 5px;
-	}
+	} */
 </style>
 </head>
 
@@ -82,36 +82,54 @@ crossorigin="anonymous"></script>
   </div>
 </div>
 
+<hr>
 <!-- 페이지 위 -->
-<div class="p-5 text-center">
+<div class="p-3 text-center">
   <h1>동네한바퀴</h1>
 </div>
-
+<hr>
+<!-- 네비바 -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <a class="nav-link" href="#">커스텀맵</a>
+        <a class="nav-link" href="#">Pricing</a>
+        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+      </div>
+    </div>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+<hr>
 <!-- 사이드바 -->
 <div class="container-fluid">
 <div class="row">
-<div class="col-2" id="sidebar">
-	<ul class="nav flex-column">
-	  <li class="nav-item">
-	    <a class="nav-link active" aria-current="page" href="#">전체</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">사건사고</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">이벤트</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link disabled" aria-disabled="true">커스텀지도</a>
-	  </li>
-	</ul>
-</div>
+	<div class="col-2" id="sidebar">
+		<div class="list-group">
+		  <a href="#" class="list-group-item list-group-item-action">전체보기</a>
+		  <a href="#collapseExample" class="list-group-item" data-bs-toggle="collapse" 
+		  	role="button" aria-expanded="false" aria-controls="collapseExample">태그별 보기 	▼</a>
+		  	<div class="collapse" id="collapseExample">
+			  <a href="#" class="list-group-item py-1 px-4">사건사고</a>
+			  <a href="#" class="list-group-item py-1 px-4">이벤트</a>
+			</div>
+		  <a href="#" class="list-group-item list-group-item-action">목록으로 보기</a>
+		</div>
+	</div>
 
 <!-- 지도를 표시할 div 입니다 -->
-<div class="col-8">
-	<div id="map" style="width:100%;height:100vh;"></div>
+	<div class="col-8">
+		<div id="map" style="width:100%;height:70vh;"></div>
 	</div>
-	</div>
+</div>
 </div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d15ec03b27e51b25ee4bac136a965d54&libraries=services,clusterer,drawing"></script>

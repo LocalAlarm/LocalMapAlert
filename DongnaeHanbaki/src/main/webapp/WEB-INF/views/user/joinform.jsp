@@ -8,9 +8,6 @@
 <title>회원가입</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
 <style>
 
     .mb-3 {
@@ -26,6 +23,8 @@
    var code = "";
    //비번체크
    var passwordSurvey = false;
+  	//닉네임체크
+  	var nicknameSurvey = false;
    //회원가입 폼에 필수 입력값 없으면 회원가입 완료버튼 못가게 막으면 됨
    //나머지 함수도 체크하면 다 "" 처리
    //
@@ -80,13 +79,13 @@
                     }
                     // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
                     if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
+                        extraAddr = '' + extraAddr + '';
                     }
                     // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("sample6_extraAddress").value = extraAddr;
+                    document.getElementById("sample6_detailAddress").value = extraAddr;
                 
                 } else {
-                    document.getElementById("sample6_extraAddress").value = '';
+                    document.getElementById("sample6_detailAddress").value = '';
                 }
 
                 // 주소 정보를 해당 필드에 추가
@@ -129,7 +128,6 @@
                     // 주소를 해당 필드에 추가
                     document.getElementById('sample6_address').value = address;
                     document.getElementById('sample6_detailAddress').value = '';
-                    document.getElementById('sample6_extraAddress').value = '';
                 }
             });
         });
@@ -310,8 +308,11 @@
 		var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
 
 		if (!nicknamePattern.test(nickname)) {
-			alert("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.");
-			return false;
+			$("#nicknameWord").text("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.").css("color", "red");
+			nicknameSurvey = false; 
+		} else {
+			$("#nicknameWord").text("사용가능한 닉네임입니다.").css("color", "#0404B4");
+			nicknameSurvey = true;
 		}
 	}
 
@@ -344,11 +345,16 @@
 			alert("닉네임을 입력해주세요!");
 			$("#nickname").focus();
 			return false;
+		} else if (!nicknameSurvey) {
+			alert("닉네임을 확인해주세요 !");
+			$("#nickname").focus();
+			return false;
 		} else if (recoverEmail == "") {
 			alert("복구이메일을 입력해주세요!");
 			$("#recoverEmail").focus();
 			return false;
 		}
+		alert("회원가입이 완료되었습니다.");
 	}
 </script>
 </head>
@@ -366,8 +372,8 @@
             <input type="hidden" class="btn btn-outline-info" id="emailReset" value="다시 입력" onclick="resetEmail()" disabled />
         </div>
          <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="hidden" class="btn btn-outline-info" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
-            <input type="hidden" class="btn btn-outline-info" id="authenticReset" value="다시 인증하기" onclick="resetAuthentic()" />
+            <input type="hidden" class="btn btn-outline-info mb-3" id="authentic" value="본인인증" onclick="authenticEmail()" style="margin-top: auto;">
+            <input type="hidden" class="btn btn-outline-info mb-3" id="authenticReset" value="다시 인증하기" onclick="resetAuthentic()" />
             <input type="hidden" class="form-control" id="authenticNumber" name="authenticNumber" title="인증하기" placeholder="인증번호 입력" disabled onblur="authenticComp()">
             <span id="authenticWord"></span>
         </div>
@@ -379,13 +385,14 @@
             <span id="passwordWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임">
+            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임" onblur="nicknameOk(this.form)">
+            <span id="nicknameWord"></span>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">
-            <input type="text" class="form-control" id="sample6_address" placeholder="주소" style="margin-bottom: 10px;">
-            <input type="button" class="btn btn-outline-warning" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
-            <input type="text" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
-            <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목">
+            <input type="text" class="form-control" id="sample6_address" name="address" placeholder="주소" style="margin-bottom: 10px;">
+            <input type="button" class="btn btn-outline-warning mb-3" value="주소 검색" onclick="sample6_execDaumPostcode()" style="margin-top: auto;"><br>
+            <input type="text" class="form-control" name="detailAddress" id="sample6_detailAddress" placeholder="상세주소">
+<!--             <input type="text" name="extraAddress" id="sample6_extraAddress" placeholder="참고항목"> -->
             <div id="map" style="width:270px;height:350px;  margin-top:10px;display:none"></div>
         </div>
         <div class="mb-3" style="margin-bottom: 20px !important;">

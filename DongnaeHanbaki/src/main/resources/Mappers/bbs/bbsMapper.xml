@@ -94,6 +94,20 @@
 		<!-- 삭제된 글 보기 -->
 		WHERE DEL_YN = 1
 	</select>
+	
+	<select id ="getMenu" resultType="bbsVO">
+		SELECT * FROM BBS 
+		WHERE CONTENT = #{content}
+	</select>
+	<select id ="allMenu" resultType="bbsVO">
+		SELECT * FROM BBS 
+	</select>
+	
+	<insert id="insertMarker" parameterType="bbsVO">
+	    INSERT INTO BBS (bbs_idx, content, title, latitude, longitude)
+	    VALUES (SEQ_BBS_IDX.NEXTVAL, #{content}, #{title}, #{latitude}, #{longitude})
+	</insert>
+	
 </mapper>
 
 

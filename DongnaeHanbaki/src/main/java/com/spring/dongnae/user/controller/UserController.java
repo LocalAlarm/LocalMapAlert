@@ -2,6 +2,7 @@ package com.spring.dongnae.user.controller;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -147,7 +148,7 @@ public class UserController {
       return "user/profile";
    }
 
-   // 회원가입 페이지로 이동 - 건희
+   // 회원가입 페이지로 이동
    @GetMapping("/joinform")
    public String joinForm() {
       System.out.println(">> 회원가입 화면 이동 - joinForm()");
@@ -155,7 +156,8 @@ public class UserController {
    }
    
    @PostMapping("/join")
-   public String join(@ModelAttribute UserVO userVO, MultipartFile image) {
+   public String join(@ModelAttribute UserVO userVO, 
+		   	@RequestParam(value = "image", required = false) MultipartFile image) {
        userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
        userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
        System.out.println(">> 회원가입 처리");
@@ -164,11 +166,13 @@ public class UserController {
            userVO.setImagePi(imageMap.get("public_id"));
            userVO.setImage(imageMap.get("url"));
        }
+       userVO.setRole("USER");
+       System.out.println(userVO);
        userService.insertUser(userVO);
        return "redirect:login";
    }
    
-   // 이메일 중복체크 - 건희
+   // 이메일 중복체크 
    @PostMapping("/checkEmail")
    @ResponseBody
    public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
@@ -180,13 +184,13 @@ public class UserController {
       return ResponseEntity.ok("pass");
    }
    
-   // 이메일 찾기 - 건희
+   // 이메일 찾기 
    @RequestMapping("/findEmail")
    public String showFindEmailForm() {
        return "user/findEmail"; 
    }
    
-   // 이메일 찾기 결과 - 건희
+   // 이메일 찾기 결과 
    @PostMapping("/findEmailProcess")
 	public String findEmail(HttpServletRequest request, Model model,UserVO vo,
 			@RequestParam String nickname, 
@@ -205,12 +209,6 @@ public class UserController {
 		return "user/emailFound";
 	}
 
-   // 비밀번호 찾기 - 건희
-   @RequestMapping("/findPassword")
-   public String showFindPasswordForm() {
-       return "user/findPassword"; 
-   }
-   
    //이메일 인증
    @PostMapping("/mailAuthentic")
    @ResponseBody
@@ -263,5 +261,72 @@ public class UserController {
 	   
 	   return authenticNum.toString();
    }
+   
+   // 비밀번호 찾기
+   @RequestMapping("/findPassword")
+   public String showFindPasswordForm(@RequestParam(value = "profile", required = false) String profile, Model model) {
+	   System.out.println("location : " + profile);
+	   model.addAttribute("profile", profile);
+       return "user/findPassword"; 
+   }
 
+   @PostMapping("/findEmail")
+   @ResponseBody
+   public String findEmail(@RequestParam("email") String email) {
+	   String findEmail = userService.findPasswordByEmail(email);
+	   return findEmail;
+   }
+   
+   @PostMapping("/passwordChange")
+   public String passwordChange(@ModelAttribute UserVO userVO, @RequestParam(value = "profile", required = false) String profile) {
+	   System.out.println("비번바꾸기 처리");
+	   userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+	   System.out.println("바꾸기 vo : " + userVO);
+	   String redirectURL = "redirect:login";
+       if (profile != null) {
+    	   //프로필에서 온거 구분 하지만 비번바꾸면 로그아웃되고 다시 로그인?
+//           redirectURL += ;
+       }
+	   userService.updatePassowrd(userVO);
+	   return redirectURL;
+   }
+   
+   @GetMapping("/profile")
+   public String profile(HttpSession session) {
+	   UserVO userVO = (UserVO) session.getAttribute("user");
+	   System.out.println("프로필vo : " + userVO);
+	   return "user/profile";
+   }
+   
+   @PostMapping("/updateProfile")
+   @ResponseBody
+   public void updateProfile(@RequestParam(value = "email", required = false) String email
+		   , @RequestParam(value = "idx", required = false) String idxS
+		   , @RequestParam(value = "newValue", required = false) String newValue
+		   , @RequestParam(value = "address", required = false) String address
+		   , @RequestParam(value = "detailAddress", required = false) String detailAddress
+		   , @RequestParam(value = "image", required = false) MultipartFile image) {
+	   Map<String, Object> map = new HashMap<String, Object>();
+	   map.put("email", email);
+	   int idx = Integer.parseInt(idxS);
+	   map.put("idx", idx);
+	   System.out.println("프로필 수정처리 : " + map);
+	   System.out.println("email : " + email);
+	   if (idx == 5 && image != null && !image.isEmpty()) {
+           Map<String, String> imageMap = imageUploadController.uploadImage(image);
+           map.put("image", imageMap.get("url"));
+           map.put("imagePi", imageMap.get("public_id"));
+       }
+	   else if (idx == 1) {
+		   map.put("address", address);
+		   map.put("detailAddress", detailAddress);
+	   } else {
+		   map.put("newValue", newValue);
+	   }
+
+	   System.out.println("프로필 수정처리>> : " + map);
+	   userService.updateProfile(map);
+   }
 }
+
+

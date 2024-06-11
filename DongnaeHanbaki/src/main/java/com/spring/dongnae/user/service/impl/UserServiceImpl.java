@@ -1,24 +1,11 @@
 package com.spring.dongnae.user.service.impl;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.google.gson.JsonParser;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
@@ -80,8 +67,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO searchUserByEmail(String email) {
-		// TODO Auto-generated method stub
 		return userDAO.searchUserByEmail(email);
+	}
+	//비번찾기 중 이메일 찾기
+	@Override
+	public String findPasswordByEmail(String email) {
+		return userDAO.findPasswordByEmail(email);
+	}
+
+	//비번바꾸기
+	@Override
+	public void updatePassowrd(UserVO vo) {
+		userDAO.updatePassowrd(vo);
+	}
+
+	//프로필 수정
+	@Override
+	public void updateProfile(Map<String, Object> map) {
+		userDAO.updateProfile(map);
 	}
 	
 	//kakao

@@ -61,5 +61,21 @@ public class BbsServiceImpl implements BbsService{
 	public List<BbsVO> getDelBbsList() {
 		return bbsDAO.getDelBbsList();
 	}
+	
+	@Override
+	public List<BbsVO> getMenu(String content) {
+		return bbsDAO.getMenu(content);
+	}
+	
+	@Override
+	public List<BbsVO> allMenu(BbsVO vo) {
+		return bbsDAO.allMenu(vo);
+	}
+	
+	public void saveMarker(BbsVO vo) {
+	    System.out.println("세이브 마커 서비스임플");
+	    bbsDAO.insertMarker(vo);
+	}
+
 
 }

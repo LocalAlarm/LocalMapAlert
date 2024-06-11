@@ -4,10 +4,6 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 public class UserVO {
 	private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
 
