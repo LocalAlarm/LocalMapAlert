@@ -62,8 +62,8 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 			} else {
 				// 새로운 메시지 문서 생성
 				friendRoom = new FriendRoom(userService.getUserByToken(token));
-//				friendRoomRepository.save(friendRoom);
-				friendRoomRepository.save(createTestValue(token, friendRoom));
+				friendRoomRepository.save(friendRoom);
+//				friendRoomRepository.save(createTestValue(token, friendRoom));
 			}
 		} else {
 			session.close(CloseStatus.NOT_ACCEPTABLE);
@@ -108,7 +108,6 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 		friendInfo.setRoomId("66669cdeb3474e4adc175dda");
 		friendInfo.setRoomName("test");
 		friendInfo.setToken("$2a$10$H/U.H8Qqi2BgmBL.jI0VkeJEMpDeR3Mc49f95uJDqpinK8tyW/EOK");
-		friendInfo.setChatRoomId("66669cdeb3474e4adc175dda");
 		friendIds.add(friendInfo);
 		friendRoom.setFriendIds(friendIds);
 		friendRoom.setRequestIds(requestIds);

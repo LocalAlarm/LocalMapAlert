@@ -94,15 +94,7 @@ String token = userDetails.getToken();
                         <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
                         <span class="nav_name">친구목록</span>
                         <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-                        <ul class="collapse__menu">
-                            <li><a href="#" class="collapse__sublink">Data</a></li>
-                            <li><a href="#" class="collapse__sublink">Members</a></li>
-							<li><a href="#" class="collapse__sublink">Data</a></li>
-							<li><a href="#" class="collapse__sublink">Group</a></li>
-							<li><a href="#" class="collapse__sublink">Members</a></li>
-							<li><a href="#" class="collapse__sublink">Data</a></li>
-							<li><a href="#" class="collapse__sublink">Group</a></li>
-                            <li><a href="#" class="collapse__sublink">Members</a></li>
+                        <ul class="collapse__menu" id="friendList">
                         </ul>
                     </div>
                     <div class="nav__link collapse__nav">
@@ -122,7 +114,6 @@ String token = userDetails.getToken();
     </div>
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
-	<div id="chatList"></div>
 	<div>
 		<div class="d-flex" role="search">
 			<input class="form-control me-2" type="search" placeholder="Search"
@@ -171,7 +162,7 @@ function connectChat() {
         console.log('Connected to ChatWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    chatSocket.onmessage = async function(event) {
+    chatSocket.onmessage = function(event) {
         try {
             var chatJsonData = JSON.parse(event.data);
 
@@ -181,7 +172,6 @@ function connectChat() {
                 handleMessage(chatJsonData);
             } else if (isUserRooms(chatJsonData)) {
             	handleUserRooms(chatJsonData);
-                console.log(chatJsonData);
             } else {
                 console.error("Unknown data type received:", chatJsonData);
             }
@@ -205,9 +195,12 @@ function connectFriend() {
         console.log('Connected to FriendWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    friendSocket.onmessage = async function(event) {
+    friendSocket.onmessage = function(event) {
         try {
             var friendJsonData = JSON.parse(event.data);
+            // 추후 if문으로 json데이터의 형태를 구별해야 한다.
+            console.log(friendJsonData);
+            handleFriendRoom(friendJsonData);
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
@@ -235,63 +228,52 @@ function isUserRooms(data) {
     return data.chatRoomIds !== undefined && data.email !== undefined;
 }
 
-
+async function handleFriendRoom(friendRoom) {
+	var friendListHtml = '';
+	
+	if(Array.isArray(friendRoom.friendIds)) {
+		for (const element of friendRoom.friendIds) {
+			const nickname = await getNickname(element.token);
+			console.log(nickname);
+			friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';
+			$('#friendList').html(friendListHtml);
+		}
+	}
+}
 
 //ChatRoom 데이터를 처리하는 함수
-async function handleChatRoom(chatRoom) {
-    var buttonHtml = '';
-    buttonHtml += '<li class="mb-2 chatToastBtn collapse__sublink" id="' + chatRoom.id + '">' + chatRoom.roomName + '</li>';
-    buttonHtml += '<li class="mb-2 chatToastBtn collapse__sublink" id="안녕난재일">' + chatRoom.roomName + '</li>';
-    $('#chatList').html(buttonHtml);
+// async function handleChatRoom(chatRoom) {
+//     var buttonHtml = '';
+//     buttonHtml += '<li class="mb-2 chatToastBtn collapse__sublink" id="' + chatRoom.id + '">' + chatRoom.roomName + '</li>';
+//     $('#chatList').html(buttonHtml);
 
-    if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
-        for (const element of chatRoom.messages) {
-            // 닉네임 가져오기
-//             console.log(element.senderToken);
-            const nickname = await getNickname(element.senderToken); 
-            // 가져온 닉네임을 사용하여 메시지 표시
-            if (token === element.senderToken) {
-                displayMessage(nickname, element.content, 'sent');
-            } else {
-                displayMessage(nickname, element.content, 'received');
-            }
-        }
-    } else {
-        console.error("chatRoom.messages is not an array");
-    }
-}
+//     if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
+//         for (const element of chatRoom.messages) {
+//             // 닉네임 가져오기
+//             const nickname = await getNickname(element.senderToken); 
+//             // 가져온 닉네임을 사용하여 메시지 표시
+//             if (token === element.senderToken) {
+//                 displayMessage(nickname, element.content, 'sent');
+//             } else {
+//                 displayMessage(nickname, element.content, 'received');
+//             }
+//         }
+//     } else {
+//         console.error("chatRoom.messages is not an array");
+//     }
+// }
 
 async function handleUserRooms(userRooms) {
     if (Array.isArray(userRooms.chatRoomIds)) { // 메시지가 배열인지 확인
         for (const element of userRooms.chatRoomIds) {
             var buttonHtml = '';
             buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="안녕난재일">' + element + '</li>';
             $('#chatList').html(buttonHtml);
         }
     } else {
         console.error("userRooms.chatRoomIds is not an array");
     }
 }
-async function handleChatRoom(chatRoom) {
-    if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
-        for (const element of chatRoom.messages) {
-            // 닉네임 가져오기
-//             console.log(element.senderToken);
-            const nickname = await getNickname(element.senderToken); 
-            // 가져온 닉네임을 사용하여 메시지 표시
-            if (token === element.senderToken) {
-                displayMessage(nickname, element.content, 'sent');
-            } else {
-                displayMessage(nickname, element.content, 'received');
-            }
-        }
-    } else {
-        console.error("chatRoom.messages is not an array");
-    }
-}
-
-
 
 // Message 데이터를 처리하는 함수
 async function handleMessage(message) {
@@ -406,7 +388,6 @@ async function searchUserByEmail(email) {
         }
         const data = await response.json();
         const searchString = $('#searchFriend').val();
-        console.log(data);
         if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
             displaySearchResults(data, searchString); // 검색 결과를 화면에 표시
         } else {
@@ -493,7 +474,6 @@ function showFriendRequestNotification(senderName) {
 window.onload = function() {
     connectChat(); // 페이지 로드 시 Chat WebSocket 연결
     connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-    scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
     document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             sendMessage(); // 엔터 키 누를 시 메시지 전송
@@ -503,14 +483,40 @@ window.onload = function() {
 };
 
 $(document).ready(function() {
-    $('#chatList').on('click', '.chatToastBtn', function(){
-        var buttonId = $(this).attr('id');
-        console.log(buttonId);
-        const chatToast = document.getElementById('chatToast'); // chatToast 요소 가져오기
+    $('#chatList, #friendList').on('click', '.chatToastBtn', function(){
+        const chatToast = document.getElementById('chatToast');
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
-        $('.toast-container').attr('id', buttonId);
-        toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
-        scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
+    	toastBootstrap.hide();
+        var buttonId = $(this).attr('id');
+        $.ajax({
+            type: 'POST',
+            url: '/dongnae/api/getChatHistory',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: buttonId }), // 버튼 ID 전송
+            success: async function(response) {
+                if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
+                    for (const element of response.messages) {
+                        // 닉네임 가져오기
+                        const nickname = await getNickname(element.senderToken); 
+                        // 가져온 닉네임을 사용하여 메시지 표시
+                        if (token === element.senderToken) {
+                            displayMessage(nickname, element.content, 'sent');
+                        } else {
+                            displayMessage(nickname, element.content, 'received');
+                        }
+                    }
+                } else {
+                    console.error("chatRoom.messages is not an array");
+                }
+                $('.toast-container').attr('id', buttonId);
+                toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
+                scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
+            },
+            error: function(xhr, status, error) {
+                // 에러 시 처리
+                console.error('An error occurred while fetching chat info:', error);
+            }
+        });
     });
     
     // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
@@ -544,7 +550,6 @@ $(document).ready(function() {
     // 친구 요청 버튼 클릭 시 이벤트 처리
     $('#request-friend-button').on('click', async function(event) {
         const searchString = $('#searchFriend').val();
-        console.log(searchString);
         const matchingResult = $('#searchResults').children().filter(function() {
             return $(this).text() === searchString;
         });
@@ -612,8 +617,5 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 });
-
-
 </script>
 </html>
-

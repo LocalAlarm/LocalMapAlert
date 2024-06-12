@@ -5,7 +5,6 @@ public class FriendInfo {
 
 	private String roomId;
 	private String roomName;
-	private String chatRoomId;
 	private String token;
 
 	public String getRoomId() {
@@ -24,13 +23,6 @@ public class FriendInfo {
 		this.roomName = roomName;
 	}
 
-	public String getChatRoomId() {
-		return chatRoomId;
-	}
-
-	public void setChatRoomId(String chatRoomId) {
-		this.chatRoomId = chatRoomId;
-	}
 
 	public String getToken() {
 		return token;
@@ -42,7 +34,7 @@ public class FriendInfo {
 
 	@Override
 	public String toString() {
-		return "FriendInfo [roomId=" + roomId + ", roomName=" + roomName + ", chatRoomId=" + chatRoomId + ", token="
+		return "FriendInfo [roomId=" + roomId + ", roomName=" + roomName + ", token="
 				+ token + "]";
 	}
 
