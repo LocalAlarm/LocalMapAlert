@@ -49,7 +49,7 @@ crossorigin="anonymous"></script>
 <div class="row gy-2">
       <div class="col-6 border" style="height: 600px;">
         <div class="text-center p-1"><h3>다른 커스텀맵 보기</h3></div>
-	    <div class="row g-1 p-2 border rounded">
+	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5>커스텀맵1</h5>
 		    <h6>제작자 : 둥둥</h6>
@@ -63,7 +63,7 @@ crossorigin="anonymous"></script>
 		  </div>
         </div>
         
-	    <div class="row g-1 p-2 border rounded">
+	    <div class="row g-1 p-2 border rounded  mb-2">
 		  <div class="col-3">
 		    <h5>커스텀맵1</h5>
 		    <h6>제작자 : 둥둥</h6>
@@ -81,7 +81,7 @@ crossorigin="anonymous"></script>
 	  <div class="col-6 border" style="height: 600px;">
 	  
         <div class="text-center p-1"><h3>나의 커스텀맵</h3></div>
-        <div class="row g-1 p-2 border rounded">
+        <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5>대동여지도</h5>
 		    <h6>제작자 : 김정호</h6>
