@@ -7,9 +7,11 @@
 	<select id ="getMenu" resultType="MarkerDataVO">
 		SELECT * FROM MARKERDATA 
 		WHERE MARKER_IDX = #{marker_idx}
+		ORDER BY WRITE_DATE
 	</select>
 	<select id ="allMenu" resultType="MarkerDataVO">
 		SELECT * FROM MARKERDATA 
+		ORDER BY WRITE_DATE
 	</select>
 	
 	<insert id="insertMarker" parameterType="MarkerDataVO">
