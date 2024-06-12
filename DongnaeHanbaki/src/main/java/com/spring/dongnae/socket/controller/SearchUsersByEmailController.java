@@ -1,4 +1,4 @@
-package com.spring.dongnae.user.controller;
+package com.spring.dongnae.socket.controller;
 
 import java.util.List;
 

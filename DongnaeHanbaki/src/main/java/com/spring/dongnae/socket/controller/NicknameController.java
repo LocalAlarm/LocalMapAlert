@@ -1,4 +1,4 @@
-package com.spring.dongnae.user.controller;
+package com.spring.dongnae.socket.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

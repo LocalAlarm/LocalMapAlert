@@ -5,8 +5,7 @@
 	import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
 <%
-	CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-		.getPrincipal();
+CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 String token = userDetails.getToken();
 %>
 <!DOCTYPE html>
@@ -15,6 +14,7 @@ String token = userDetails.getToken();
 <meta charset="UTF-8">
 <title>WebSocket Chat</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
+<link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
 <!-- 공통 헤더 파일 포함 -->
 
 <style>
@@ -39,15 +39,19 @@ String token = userDetails.getToken();
 	text-align: left;
 }
 
+.chat-toast-container {
+    position: fixed; /* 위치를 고정 */
+    resize: vertical; /* 수평으로만 크기 조절 가능 */
+	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
+}
 #chatBox {
-	overflow-y: scroll; /* 수직 스크롤바 */
 	width: 100%;
 	height: 150px;
-	padding: 10px;
+	overflow-y: scroll; /* 수직 스크롤바 */
+	padding : 10px;
 	border: 1px solid #ccc;
-	position: relative;
-	resize: vertical; /* 수평으로만 크기 조절 가능 */
-	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
+    bottom: 10px; /* 하단 여백 */
+    right: 10px; /* 우측 여백 */
 }
 
 .resize-handle {
@@ -61,8 +65,61 @@ String token = userDetails.getToken();
 }
 </style>
 </head>
-<body>
-	<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
+<body id="body-pd">
+<jsp:include page="../../patials/commonBody.jsp"></jsp:include>
+    <div class="l-navbar" id="side-navbar">
+        <nav class="nav sidebar">
+            <div>
+                <div class="nav__brand">
+                    <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
+                    <a href="#" class="nav__logo">유저이름</a>
+                </div>
+                <div class="nav__list">
+                    <a href="#" class="nav__link active">
+                        <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">홈페이지</span>
+                    </a>
+                    <div class="nav__link collapse__nav">
+                        <ion-icon name="person-add-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">친구요청</span>
+                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+						<ul class="collapse__menu">
+						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Data')">Data</a></li>
+						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Group')">Group</a></li>
+						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Members')">Members</a></li>
+						</ul>
+                    </div>
+
+                    <div class="nav__link collapse__nav">
+                        <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">친구목록</span>
+                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+                        <ul class="collapse__menu">
+                            <li><a href="#" class="collapse__sublink">Data</a></li>
+                            <li><a href="#" class="collapse__sublink">Members</a></li>
+							<li><a href="#" class="collapse__sublink">Data</a></li>
+							<li><a href="#" class="collapse__sublink">Group</a></li>
+							<li><a href="#" class="collapse__sublink">Members</a></li>
+							<li><a href="#" class="collapse__sublink">Data</a></li>
+							<li><a href="#" class="collapse__sublink">Group</a></li>
+                            <li><a href="#" class="collapse__sublink">Members</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav__link collapse__nav">
+                        <ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">채팅방</span>
+                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+                        <ul class="collapse__menu" id="chatList">
+                        </ul>
+                    </div>
+                </div>
+                <a href="#" class="nav__link">
+                    <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
+                    <span class="nav_name">Log out</span>
+                </a>
+            </div>
+        </nav>
+    </div>
 	<!-- 공통 바디 파일 포함 -->
 	<h1>WebSocket Chat</h1>
 	<div id="chatList"></div>
@@ -122,6 +179,9 @@ function connectChat() {
                 handleChatRoom(chatJsonData);
             } else if (isMessage(chatJsonData)) {
                 handleMessage(chatJsonData);
+            } else if (isUserRooms(chatJsonData)) {
+            	handleUserRooms(chatJsonData);
+                console.log(chatJsonData);
             } else {
                 console.error("Unknown data type received:", chatJsonData);
             }
@@ -160,7 +220,7 @@ function connectFriend() {
         console.log("WebSocket error: " + error);
     };
 }
-// 	형님 화장실 다녀올게요
+
 // ChatRoom인지 판별하는 함수
 function isChatRoom(data) {
     return data.roomName !== undefined && data.userIds !== undefined;
@@ -170,10 +230,18 @@ function isChatRoom(data) {
 function isMessage(data) {
     return data.senderToken !== undefined && data.content !== undefined;
 }
+
+function isUserRooms(data) {
+    return data.chatRoomIds !== undefined && data.email !== undefined;
+}
+
+
+
 //ChatRoom 데이터를 처리하는 함수
 async function handleChatRoom(chatRoom) {
     var buttonHtml = '';
-    buttonHtml += '<button type="button" class="btn btn-primary mb-2 chatToastBtn" id="' + chatRoom.id + '">' + chatRoom.roomName + '</button>';
+    buttonHtml += '<li class="mb-2 chatToastBtn collapse__sublink" id="' + chatRoom.id + '">' + chatRoom.roomName + '</li>';
+    buttonHtml += '<li class="mb-2 chatToastBtn collapse__sublink" id="안녕난재일">' + chatRoom.roomName + '</li>';
     $('#chatList').html(buttonHtml);
 
     if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
@@ -192,6 +260,38 @@ async function handleChatRoom(chatRoom) {
         console.error("chatRoom.messages is not an array");
     }
 }
+
+async function handleUserRooms(userRooms) {
+    if (Array.isArray(userRooms.chatRoomIds)) { // 메시지가 배열인지 확인
+        for (const element of userRooms.chatRoomIds) {
+            var buttonHtml = '';
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="안녕난재일">' + element + '</li>';
+            $('#chatList').html(buttonHtml);
+        }
+    } else {
+        console.error("userRooms.chatRoomIds is not an array");
+    }
+}
+async function handleChatRoom(chatRoom) {
+    if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
+        for (const element of chatRoom.messages) {
+            // 닉네임 가져오기
+//             console.log(element.senderToken);
+            const nickname = await getNickname(element.senderToken); 
+            // 가져온 닉네임을 사용하여 메시지 표시
+            if (token === element.senderToken) {
+                displayMessage(nickname, element.content, 'sent');
+            } else {
+                displayMessage(nickname, element.content, 'received');
+            }
+        }
+    } else {
+        console.error("chatRoom.messages is not an array");
+    }
+}
+
+
 
 // Message 데이터를 처리하는 함수
 async function handleMessage(message) {
@@ -288,103 +388,9 @@ async function getNickname(token) {
     }
 };
 
-window.onload = function() {
-    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-    scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
-    document.getElementById('message').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            sendMessage(); // 엔터 키 누를 시 메시지 전송
-            event.preventDefault(); // 엔터 키의 기본 동작 막기
-        }
-    });
-};
-
-$(document).ready(function() {
-    // 초기 상태에서 버튼 비활성화
-    disableFriendRequestButton(); 
-
-    $('#chatList').on('click', '.chatToastBtn', function(){
-        var buttonId = $(this).attr('id');
-        const chatToast = document.getElementById('chatToast'); // chatToast 요소 가져오기
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
-        $('.toast-container').attr('id', buttonId);
-        toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
-        scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
-    });
-    
-    // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
-    $(document).on('mouseenter', '.searchResultsElement', function() {
-        $(this).addClass('active'); // 예시: 클래스 추가
-    });
-
-    $(document).on('mouseleave', '.searchResultsElement', function() {
-        $(this).removeClass('active'); // 예시: 클래스 제거
-    });
-    
-    $(document).on('click', '.searchResultsElement', function() {
-        const clickText = $(this).text();
-        $('#searchFriend').val(clickText);
-        hideSearchResults();
-        enableFriendRequestButton(); // 클릭된 값과 일치하므로 버튼 활성화
-    });
-
-    // 검색창 입력 시 이벤트 처리
-    $('#searchFriend').on('input', function() {
-        var searchString = $(this).val(); // 검색어 가져오기
-        if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
-            searchUserByEmail(searchString);
-        } else {
-            hideSearchResults(); // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
-            $('#searchResults').empty(); // 검색 결과 비우기
-            disableFriendRequestButton(); // 버튼 비활성화
-        }
-    });
-
-    // 친구 요청 버튼 클릭 시 이벤트 처리
-    $('#request-friend-button').on('click', async function(event) {
-        const searchString = $('#searchFriend').val();
-        console.log(searchString);
-        const matchingResult = $('#searchResults').children().filter(function() {
-            return $(this).text() === searchString;
-        });
-        if (matchingResult.length === 1) {
-            // 친구 요청 확인 메시지 표시
-            if (confirm("친구 요청을 보내시겠습니까?")) {
-                // 확인 버튼을 눌렀을 때의 동작
-                const requestEmail = matchingResult.text();
-                const requestData = {
-                	request : "REQUEST",
-               		requestEmail : requestEmail
-                };
-                
-                try {
-                    const response = await fetch('/dongnae/api/sendFriendRequest', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    alert("친구 요청이 성공적으로 전송되었습니다!");
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert("친구 요청 전송에 실패했습니다.");
-                }
-            } else {
-                // 취소 버튼을 눌렀을 때의 동작
-                event.preventDefault(); // 기본 동작 막기
-            }
-        } else {
-            event.preventDefault(); // 기본 동작 막기
-            alert("잘못 검색하였습니다"); // 알림 창 띄우기
-        }
-    });
-});
+function showAlert(message) {
+    alert(message);
+}
 
 async function searchUserByEmail(email) {
     try {
@@ -484,5 +490,130 @@ function showFriendRequestNotification(senderName) {
     }
 }
 
+window.onload = function() {
+    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
+    scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
+    document.getElementById('message').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage(); // 엔터 키 누를 시 메시지 전송
+            event.preventDefault(); // 엔터 키의 기본 동작 막기
+        }
+    });
+};
+
+$(document).ready(function() {
+    $('#chatList').on('click', '.chatToastBtn', function(){
+        var buttonId = $(this).attr('id');
+        console.log(buttonId);
+        const chatToast = document.getElementById('chatToast'); // chatToast 요소 가져오기
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
+        $('.toast-container').attr('id', buttonId);
+        toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
+        scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
+    });
+    
+    // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
+    $(document).on('mouseenter', '.searchResultsElement', function() {
+        $(this).addClass('active'); // 예시: 클래스 추가
+    });
+
+    $(document).on('mouseleave', '.searchResultsElement', function() {
+        $(this).removeClass('active'); // 예시: 클래스 제거
+    });
+    
+    $(document).on('click', '.searchResultsElement', function() {
+        const clickText = $(this).text();
+        $('#searchFriend').val(clickText);
+        hideSearchResults();
+        enableFriendRequestButton(); // 클릭된 값과 일치하므로 버튼 활성화
+    });
+
+    // 검색창 입력 시 이벤트 처리
+    $('#searchFriend').on('input', function() {
+        var searchString = $(this).val(); // 검색어 가져오기
+        if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
+            searchUserByEmail(searchString);
+        } else {
+            hideSearchResults(); // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
+            $('#searchResults').empty(); // 검색 결과 비우기
+            disableFriendRequestButton(); // 버튼 비활성화
+        }
+    });
+
+    // 친구 요청 버튼 클릭 시 이벤트 처리
+    $('#request-friend-button').on('click', async function(event) {
+        const searchString = $('#searchFriend').val();
+        console.log(searchString);
+        const matchingResult = $('#searchResults').children().filter(function() {
+            return $(this).text() === searchString;
+        });
+        if (matchingResult.length === 1) {
+            // 친구 요청 확인 메시지 표시
+            if (confirm("친구 요청을 보내시겠습니까?")) {
+                // 확인 버튼을 눌렀을 때의 동작
+                const requestEmail = matchingResult.text();
+                const requestData = {
+                	request : "REQUEST",
+               		requestEmail : requestEmail
+                };
+                
+                try {
+                    const response = await fetch('/dongnae/api/sendFriendRequest', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    alert("친구 요청이 성공적으로 전송되었습니다!");
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert("친구 요청 전송에 실패했습니다.");
+                }
+            } else {
+                // 취소 버튼을 눌렀을 때의 동작
+                event.preventDefault(); // 기본 동작 막기
+            }
+        } else {
+            event.preventDefault(); // 기본 동작 막기
+            alert("잘못 검색하였습니다"); // 알림 창 띄우기
+        }
+    });
+    
+    // COLLAPSE MENU
+    $(document).on('click', '.collapse__nav', function(e) {
+        // li 요소가 클릭된 경우는 제외
+        if(!$(e.target).is('card, card *, li, li*')) {
+            let $collapseMenu = $(this).closest('.collapse__nav').find('.collapse__menu');
+            let $collapseLink = $(this).closest('.collapse__nav').find('.collapse__link');
+            
+            $collapseMenu.toggleClass('showCollapse');
+            $collapseLink.toggleClass('rotate');
+        }
+    });
+    // 사이드바를 확장하는 클릭 이벤트 리스너
+    $('#nav-toggle').on('click', function(){
+        $('#side-navbar').toggleClass('expander');
+        $('#body-pd').toggleClass('body-pd');
+        
+        // 모든 collapse__menu에서 showCollapse 클래스 제거
+        $('.collapse__menu').removeClass('showCollapse');
+        $('.collapse__link').removeClass('rotate');
+    });
+
+    // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
+    $(document).on('click', '.nav__link', function(){
+        $('.nav__link').removeClass('active');
+        $(this).addClass('active');
+    });
+});
+
+
 </script>
 </html>
+
