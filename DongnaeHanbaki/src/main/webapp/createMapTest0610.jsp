@@ -11,7 +11,7 @@
 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
 .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
 .map_wrap {position:relative;width:100%;height:800px;}
-#menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+#menu_wrap {position:absolute;top:0;left:0;bottom:0;width:280px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
 .bg_white {background:#fff;}
 #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
 #menu_wrap .option{text-align: center;}
@@ -47,7 +47,8 @@
 </style>
 </head>
 
-<body>
+
+<body id="body-pd">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <jsp:include page="/WEB-INF/patials/commonBody.jsp"></jsp:include>
 
@@ -65,7 +66,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <a class="nav-link" aria-current="page" href="#">Home</a>
         <a class="nav-link" href="#">커스텀맵</a>
         <a class="nav-link" href="#">Pricing</a>
         <a class="nav-link disabled" aria-disabled="true">Disabled</a>
@@ -80,7 +81,7 @@
 <hr>
 
 <!-- 커스텀맵 조회 -->
-<div class="container-xxl">
+<div class="container-fluid">
 <div class="row gy-2">
 	  <!-- 만들어진 지도 표시 -->
       <div class="col-6 border" style="height: 800px;">      
@@ -119,7 +120,7 @@
 		</div>
 		<form class="collapse show" id="collapseExample">
 			<div class="input-group mb-3  py-2">
-			  <form onsubmit="searchPlaces(); return false;">
+			   <form onsubmit="searchPlaces(); return false;">
 			  	<input type="text" class="form-control" id="keyword" placeholder="중심 주소를 입력해 주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
 			  	<button class="btn btn-outline-secondary" onclick="openMap()" type="button" id="button-addon2">검색</button>
 			   </form>
@@ -161,9 +162,18 @@
 			    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">표시된 마커 보기</button>
 			</ul>
 			<div class="tab-content" id="myTabContent">
-			  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
-			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
-			  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+			  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0" style="background-color: white;">
+				  <!-- 여기다 tool박스나 드로잉 라이브러리 연결 -->...
+				  <p>
+				    <button onclick="selectOverlay('MARKER')">마커</button>
+				    <button onclick="selectOverlay('POLYLINE')">선</button>
+				    <button onclick="selectOverlay('CIRCLE')">원</button>
+				    <button onclick="selectOverlay('RECTANGLE')">사각형</button>
+				    <button onclick="selectOverlay('POLYGON')">다각형</button>
+				  </p>
+			  </div>
+			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0" style="background-color: white;">...</div>
+			  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0" style="background-color: white;">...</div>
 			</div>
 		</div>
 		</div>
@@ -178,29 +188,91 @@
 var markers = [];
 //주소찾기
 var mapContainer, mapOption, map, geocoder, marker;
-//장소 검색 객체를 생성합니다
-var ps = new kakao.maps.services.Places();  
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };
-    
+var options = { // Drawing Manager를 생성할 때 사용할 옵션입니다
+	    map: map, // Drawing Manager로 그리기 요소를 그릴 map 객체입니다
+	    drawingMode: [ // drawing manager로 제공할 그리기 요소 모드입니다
+	        kakao.maps.drawing.OverlayType.MARKER,
+	        kakao.maps.drawing.OverlayType.POLYLINE,
+	        kakao.maps.drawing.OverlayType.RECTANGLE,
+	        kakao.maps.drawing.OverlayType.CIRCLE,
+	        kakao.maps.drawing.OverlayType.POLYGON
+	    ],
+	    // 사용자에게 제공할 그리기 가이드 툴팁입니다
+	    // 사용자에게 도형을 그릴때, 드래그할때, 수정할때 가이드 툴팁을 표시하도록 설정합니다
+	    guideTooltip: ['draw', 'drag', 'edit'], 
+	    markerOptions: { // 마커 옵션입니다 
+	        draggable: true, // 마커를 그리고 나서 드래그 가능하게 합니다 
+	        removable: true // 마커를 삭제 할 수 있도록 x 버튼이 표시됩니다  
+	    },
+	    polylineOptions: { // 선 옵션입니다
+	        draggable: true, // 그린 후 드래그가 가능하도록 설정합니다
+	        removable: true, // 그린 후 삭제 할 수 있도록 x 버튼이 표시됩니다
+	        editable: true, // 그린 후 수정할 수 있도록 설정합니다 
+	        strokeColor: '#39f', // 선 색
+	        hintStrokeStyle: 'dash', // 그리중 마우스를 따라다니는 보조선의 선 스타일
+	        hintStrokeOpacity: 0.5  // 그리중 마우스를 따라다니는 보조선의 투명도
+	    },
+	    rectangleOptions: {
+	        draggable: true,
+	        removable: true,
+	        editable: true,
+	        strokeColor: '#39f', // 외곽선 색
+	        fillColor: '#39f', // 채우기 색
+	        fillOpacity: 0.5 // 채우기색 투명도
+	    },
+	    circleOptions: {
+	        draggable: true,
+	        removable: true,
+	        editable: true,
+	        strokeColor: '#39f',
+	        fillColor: '#39f',
+	        fillOpacity: 0.5
+	    },
+	    polygonOptions: {
+	        draggable: true,
+	        removable: true,
+	        editable: true,
+	        strokeColor: '#39f',
+	        fillColor: '#39f',
+	        fillOpacity: 0.5,
+	        hintStrokeStyle: 'dash',
+	        hintStrokeOpacity: 0.5
+	    }
+	};
+
+// 위에 작성한 옵션으로 Drawing Manager를 생성합니다
+var manager = new kakao.maps.drawing.DrawingManager(options);
+
+
+
 function openMap() {
-	var map = new kakao.maps.Map(mapContainer, mapOption);
 	geocoder = new daum.maps.services.Geocoder();
+	map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성합니다
 	marker = new daum.maps.Marker({
 	 	   position: new daum.maps.LatLng(37.537187, 127.005476),
 	 	   map: map
 	 	});
 	
-
+    
 	// 키워드로 장소를 검색합니다
 	searchPlaces();
 
+	 // 지도 크기 조절
+    var rangeInput = document.getElementById('customRange3');
+    rangeInput.addEventListener('input', function() {
+       const value = this.value;
+       console.log('Range 값:', value);
+       map.setLevel(value);
+     });
+    
     // 지도 클릭 이벤트 등록
     daum.maps.event.addListener(map, 'click', function(mouseEvent) {	
         // 클릭한 위치의 좌표
@@ -215,14 +287,21 @@ function openMap() {
                 var address = result[0].address.address_name;
 
                 // 주소를 해당 필드에 추가
-//                 document.getElementById('address').value = address;
                 $("#address").text(address);
-//                 document.getElementById('sample6_detailAddress').value = '';
             }
-        });
-    });
+     	 });
+     
+   });
 // }
+  //기본마커 그리기 버튼
+    //버튼 클릭 시 호출되는 핸들러 입니다
+    function selectOverlay(type) {
+        // 그리기 중이면 그리기를 취소합니다
+        manager.cancel();
 
+        // 클릭한 그리기 요소 타입을 선택합니다
+        manager.select(kakao.maps.drawing.OverlayType[type]);
+    }
 //키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
 
@@ -234,7 +313,7 @@ function searchPlaces() {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    ps.keywordSearch( keyword, placesSearchCB); 
+    ps.keywordSearch(keyword, placesSearchCB); 
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -278,10 +357,10 @@ function displayPlaces(places) {
     
     for ( var i=0; i<places.length; i++ ) {
 
-        // 마커를 생성하고 지도에 표시합니다
+        // 마커를 생성하고 지도에 표시합니다 -> 장소들의 위치값 저장
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
             marker = addMarker(placePosition, i), 
-            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+            itemEl = getListItem(i, places[i], placePosition); // 검색 결과 항목 Element를 생성합니다
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
@@ -299,13 +378,25 @@ function displayPlaces(places) {
                 infowindow.close();
             });
 
-            itemEl.onmouseover =  function () {
-                displayInfowindow(marker, title);
-            };
+//             itemEl.onmouseover =  function () {
+//                 displayInfowindow(marker, title);
+//             };
 
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
+            
+            // 마커 클릭 이벤트 등록
+            kakao.maps.event.addListener(marker, 'click', function() {
+            	displayInfowindow(marker, title);
+                map.setCenter(marker.getPosition());
+            });
+            
+            itemEl.onclick = function () {
+            	displayInfowindow(marker, title);
+                map.setCenter(marker.getPosition());
+            };
+            
         })(marker, places[i].place_name);
 
         fragment.appendChild(itemEl);
@@ -320,7 +411,7 @@ function displayPlaces(places) {
 }
 
 //검색결과 항목을 Element로 반환하는 함수입니다
-function getListItem(index, places) {
+function getListItem(index, places, placePosition) {
 
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
@@ -339,6 +430,16 @@ function getListItem(index, places) {
 
     el.innerHTML = itemStr;
     el.className = 'item';
+    
+    // 'info' div를 클릭할 때마다 마커의 위치를 업데이트합니다
+    el.querySelector('.info').addEventListener('click', function() {
+        // 기존 마커의 위치를 업데이트합니다
+        marker.setPosition(placePosition);
+        // 지도의 중심을 새로운 위치로 설정합니다
+        map.setCenter(placePosition);
+        // 주소업데이트
+        document.getElementById('address').textContent = places.address_name;
+    });
 
     return el;
 }
@@ -362,10 +463,6 @@ function addMarker(position, idx, title) {
 //     marker.setMap(map); // 지도 위에 마커를 표출합니다
     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
 
- // 마커 클릭 이벤트 등록
-    kakao.maps.event.addListener(marker, 'click', function() {
-        map.setCenter(marker.getPosition());
-    });
     return marker;
 }
 
