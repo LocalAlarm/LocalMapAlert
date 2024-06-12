@@ -89,7 +89,7 @@ String token = userDetails.getToken();
 					aria-label="Close"></button>
 				<!-- 닫기 버튼 -->
 			</div>
-			1
+
 			<div class="toast-body">
 				<div id="chatBox"></div>
 			</div>
