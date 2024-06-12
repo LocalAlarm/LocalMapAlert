@@ -11,27 +11,6 @@
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
     <link href="${pageContext.request.contextPath}/resources/css/map.css" rel="stylesheet">
-    <style>
-    #markerlist {
-        position: absolute; /* 수정된 부분 */
-        top: 0; /* 수정된 부분 */
-        right: 0; /* 수정된 부분 */
-        width: 30%;
-        height: 100%;
-        overflow-y: auto;
-        padding: 10px;
-        background-color: #f7f7f7;
-        border-left: 1px solid #ccc;
-    }
-    .marker-item {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-    .marker-item:last-child {
-        border-bottom: none;
-    }
-</style>
-
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -54,15 +33,14 @@
     
 <!-- 마커 리스트 -->
 <div id="markerlist">
- <button id="closeMarkerListBtn" class="btn-close" aria-label="Close"></button>
-    <h2>Marker List</h2>
-    <div id="markerList"></div>
+    <h2 class="p-3" id="markerListHeader">마커 목록</h2>
+    <div id="markerList" class="p-3"></div>
 </div>
     
 <!-- 마커 보이기 감추기 버튼 -->
 <div class="overlay-button">
-    <button onclick="hideMarkers()" class="btn btn-secondary btn-sm">마커 감추기</button>
-    <button onclick="showMarkers()" class="btn btn-secondary btn-sm">마커 보이기</button>
+    <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 on/off</button>
+    <button id="toggleMarkerListBtn" onclick="toggleMarkerList()" class="btn btn-secondary btn-sm">게시판 on/off</button>
 </div>
 
 <!-- 사용자 입력 폼 -->
@@ -104,6 +82,6 @@
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/map.js"></script>
 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
