@@ -78,6 +78,10 @@
 		    ]]>
 	</select>
 	
+<!-- 	<select id="plusFriend"> -->
+	
+<!-- 	</select> -->
+	
 	<!-- 비번 찾기 (이메일찾기) -->
 	<select id="findPasswordByEmail" parameterType="String" resultType="String">
 		SELECT EMAIL

@@ -58,6 +58,10 @@ public class FriendRoom {
 	public void setRequestIds(List<String> requestIds) {
 		this.requestIds = requestIds;
 	}
+	
+	public void addFriendRequest(String email) {
+		this.requestIds.add(email);
+	}
 
 	public List<FriendInfo> getFriendIds() {
 		return friendIds;

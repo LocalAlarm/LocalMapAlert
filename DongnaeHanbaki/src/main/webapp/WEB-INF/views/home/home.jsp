@@ -67,10 +67,12 @@ String token = userDetails.getToken();
 	<h1>WebSocket Chat</h1>
 	<div id="chatList"></div>
 	<div>
-		<form class="d-flex" role="search">
-			<input class="form-control me-2" type="search" placeholder="Search" id="searchFriend" aria-label="Search">
-			<button class="btn btn-outline-success" type="submit">Search</button>
-		</form>
+		<div class="d-flex" role="search">
+			<input class="form-control me-2" type="search" placeholder="Search"
+				id="searchFriend" aria-label="Search">
+			<button class="btn btn-secondary" id="request-friend-button"
+				type="button">친구요청</button>
+		</div>
 		<ul class="list-group" id="searchResults">
 		</ul>
 	</div>
@@ -87,6 +89,7 @@ String token = userDetails.getToken();
 					aria-label="Close"></button>
 				<!-- 닫기 버튼 -->
 			</div>
+			1
 			<div class="toast-body">
 				<div id="chatBox"></div>
 			</div>
@@ -157,7 +160,7 @@ function connectFriend() {
         console.log("WebSocket error: " + error);
     };
 }
-
+// 	형님 화장실 다녀올게요
 // ChatRoom인지 판별하는 함수
 function isChatRoom(data) {
     return data.roomName !== undefined && data.userIds !== undefined;
@@ -176,7 +179,7 @@ async function handleChatRoom(chatRoom) {
     if (Array.isArray(chatRoom.messages)) { // 메시지가 배열인지 확인
         for (const element of chatRoom.messages) {
             // 닉네임 가져오기
-            console.log(element.senderToken);
+//             console.log(element.senderToken);
             const nickname = await getNickname(element.senderToken); 
             // 가져온 닉네임을 사용하여 메시지 표시
             if (token === element.senderToken) {
@@ -297,48 +300,92 @@ window.onload = function() {
     });
 };
 
-$(document).ready(function(){
+$(document).ready(function() {
+    // 초기 상태에서 버튼 비활성화
+    disableFriendRequestButton(); 
+
     $('#chatList').on('click', '.chatToastBtn', function(){
         var buttonId = $(this).attr('id');
         const chatToast = document.getElementById('chatToast'); // chatToast 요소 가져오기
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast)
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
         $('.toast-container').attr('id', buttonId);
-        toastBootstrap.show() // Toast 버튼 클릭 시 Toast 표시
+        toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
         scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
     });
     
     // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
     $(document).on('mouseenter', '.searchResultsElement', function() {
-        // 마우스가 요소에 들어왔을 때 수행할 작업을 여기에 추가합니다.
         $(this).addClass('active'); // 예시: 클래스 추가
     });
 
-    // searchResultsElement 클래스를 가진 요소에 대한 마우스 리브 이벤트 처리
     $(document).on('mouseleave', '.searchResultsElement', function() {
-        // 마우스가 요소에서 나갔을 때 수행할 작업을 여기에 추가합니다.
         $(this).removeClass('active'); // 예시: 클래스 제거
     });
     
     $(document).on('click', '.searchResultsElement', function() {
-        // 마우스가 요소에서 나갔을 때 수행할 작업을 여기에 추가합니다.
         const clickText = $(this).text();
         $('#searchFriend').val(clickText);
         hideSearchResults();
+        enableFriendRequestButton(); // 클릭된 값과 일치하므로 버튼 활성화
+    });
+
+    // 검색창 입력 시 이벤트 처리
+    $('#searchFriend').on('input', function() {
+        var searchString = $(this).val(); // 검색어 가져오기
+        if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
+            searchUserByEmail(searchString);
+        } else {
+            hideSearchResults(); // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
+            $('#searchResults').empty(); // 검색 결과 비우기
+            disableFriendRequestButton(); // 버튼 비활성화
+        }
+    });
+
+    // 친구 요청 버튼 클릭 시 이벤트 처리
+    $('#request-friend-button').on('click', async function(event) {
+        const searchString = $('#searchFriend').val();
+        console.log(searchString);
+        const matchingResult = $('#searchResults').children().filter(function() {
+            return $(this).text() === searchString;
+        });
+        if (matchingResult.length === 1) {
+            // 친구 요청 확인 메시지 표시
+            if (confirm("친구 요청을 보내시겠습니까?")) {
+                // 확인 버튼을 눌렀을 때의 동작
+                const requestEmail = matchingResult.text();
+                const requestData = {
+                	request : "REQUEST",
+               		requestEmail : requestEmail
+                };
+                
+                try {
+                    const response = await fetch('/dongnae/api/sendFriendRequest', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    alert("친구 요청이 성공적으로 전송되었습니다!");
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert("친구 요청 전송에 실패했습니다.");
+                }
+            } else {
+                // 취소 버튼을 눌렀을 때의 동작
+                event.preventDefault(); // 기본 동작 막기
+            }
+        } else {
+            event.preventDefault(); // 기본 동작 막기
+            alert("잘못 검색하였습니다"); // 알림 창 띄우기
+        }
     });
 });
 
-//검색창 입력 시 이벤트 처리
-$('#searchFriend').on('input', function() {
-    var searchString = $(this).val(); // 검색어 가져오기
-    if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
-    	searchUserByEmail(searchString);
-    } else {
-        // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
-        hideSearchResults();
-    }
-});
-
-//검색 요청 함수
 async function searchUserByEmail(email) {
     try {
         const response = await fetch('/dongnae/api/searchUserByEmail', {
@@ -352,26 +399,31 @@ async function searchUserByEmail(email) {
             throw new Error('Failed to fetch user data');
         }
         const data = await response.json();
+        const searchString = $('#searchFriend').val();
+        console.log(data);
         if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
-            displaySearchResults(data); // 검색 결과를 화면에 표시
-			
+            displaySearchResults(data, searchString); // 검색 결과를 화면에 표시
         } else {
             hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
+            disableFriendRequestButton(); // 버튼 비활성화
         }
     } catch (error) {
         console.error(error);
         // 에러 처리
+        disableFriendRequestButton(); // 버튼 비활성화
     }
 }
 
-
-//검색 결과를 화면에 표시하는 함수
-function displaySearchResults(results) {
+function displaySearchResults(results, searchString) {
     // 검색 결과를 표시할 HTML 문자열을 생성합니다.
     var html = '';
+    var matchFound = false;
     results.forEach(function(result) {
         // 각 결과를 리스트 아이템으로 표시합니다.
         html += '<li class="list-group-item searchResultsElement">' + result.email + '</li>'; 
+        if (result.email === searchString) {
+            matchFound = true;
+        }
     });
 
     // 생성된 HTML을 검색 결과 창에 넣어줍니다.
@@ -379,12 +431,57 @@ function displaySearchResults(results) {
 
     // 검색 결과 창을 보이게 합니다.
     $('#searchResults').show();
+
+    if (matchFound) {
+        enableFriendRequestButton(); // 일치하는 검색 결과가 있을 때만 버튼 활성화
+    } else {
+        disableFriendRequestButton(); // 일치하는 검색 결과가 없으면 버튼 비활성화
+    }
 }
 
-//검색 결과 창을 숨기는 함수
+
+// 검색 결과 창을 숨기는 함수
 function hideSearchResults() {
     // 검색 결과 창을 숨깁니다.
     $('#searchResults').hide();
+}
+
+// 친구 요청 버튼을 비활성화하는 함수
+function disableFriendRequestButton() {
+    $('#request-friend-button').prop('disabled', true);
+    $('#request-friend-button').addClass('btn-secondary');
+    $('#request-friend-button').removeClass('btn-outline-success');
+}
+
+// 친구 요청 버튼을 활성화하는 함수
+function enableFriendRequestButton() {
+    $('#request-friend-button').prop('disabled', false);
+    $('#request-friend-button').removeClass('btn-secondary');
+    $('#request-friend-button').addClass('btn-outline-success');
+}
+
+//친구 요청이 도착했을 때 웹 페이지에서 알림을 표시하는 함수
+function showFriendRequestNotification(senderName) {
+    if (Notification.permission === "granted") {
+        // 사용자에게 알림 표시 권한이 이미 부여된 경우
+        var notification = new Notification('친구 요청', {
+            body: senderName + '님이 친구 요청을 보냈습니다.',
+        });
+    } else if (Notification.permission !== "denied") {
+        // 사용자에게 알림 표시 권한을 요청
+        Notification.requestPermission().then(function(permission) {
+            if (permission === "granted") {
+                // JSON 형식의 알림 메시지 생성
+                var notificationMessage = {
+                    title: '친구 요청',
+                    body: senderName + '님이 친구 요청을 보냈습니다.'
+                };
+                // 알림 표시
+                var notification = new Notification(notificationMessage.title, notificationMessage);
+                console.log(notification);
+            }
+        });
+    }
 }
 
 </script>

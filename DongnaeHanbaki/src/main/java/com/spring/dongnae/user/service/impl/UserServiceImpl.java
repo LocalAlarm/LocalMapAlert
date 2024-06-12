@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 	public void updateProfile(Map<String, Object> map) {
 		userDAO.updateProfile(map);
 	}
-	
+
 	//kakao
 //    @Override
 //    public String getAccessToken(String authorize_code) {

@@ -35,4 +35,5 @@ public interface UserService {
 	
 	//프로필 수정
 	void updateProfile(Map<String, Object> map);
+	
 }
