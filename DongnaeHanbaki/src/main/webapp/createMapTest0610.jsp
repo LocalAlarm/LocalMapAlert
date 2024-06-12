@@ -80,7 +80,7 @@
 <hr>
 
 <!-- 커스텀맵 조회 -->
-<div class="container-fluid">
+<div class="container-xxl">
 <div class="row gy-2">
 	  <!-- 만들어진 지도 표시 -->
       <div class="col-6 border" style="height: 800px;">      
@@ -345,6 +345,7 @@ function getListItem(index, places) {
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarker(position, idx, title) {
+	console.log("dddddddddddddd : " + position);
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
         imgOptions =  {
@@ -358,9 +359,13 @@ function addMarker(position, idx, title) {
             image: markerImage 
         });
 
-    marker.setMap(map); // 지도 위에 마커를 표출합니다
+//     marker.setMap(map); // 지도 위에 마커를 표출합니다
     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
 
+ // 마커 클릭 이벤트 등록
+    kakao.maps.event.addListener(marker, 'click', function() {
+        map.setCenter(marker.getPosition());
+    });
     return marker;
 }
 
