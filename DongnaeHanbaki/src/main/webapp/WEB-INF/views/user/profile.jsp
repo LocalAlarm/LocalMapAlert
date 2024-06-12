@@ -391,9 +391,9 @@
         <tr>
             <td>비밀번호 수정</td>
             <td colspan="2"><input type="button" id="fixPassword" value="비밀번호수정" onclick="popup(6)"></td>
+            <a href = "map">지도바로가기</a>
         </tr>
     </table>
-    
     <div class="popup">
      <p id="popupLabel"></p>
      <input type="text" id="popupInput">

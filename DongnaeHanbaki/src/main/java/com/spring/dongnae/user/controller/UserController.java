@@ -140,6 +140,7 @@ public class UserController {
           String email = authentication.getName();
           System.out.println(">> 로그인 성공 사용자 : " + email);
           UserVO userVO = userService.getIdUser(email);
+          System.out.println(userVO);
           userVO.setPassword("");
           System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
           session.setAttribute("user", userVO);
