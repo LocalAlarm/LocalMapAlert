@@ -77,19 +77,23 @@ crossorigin="anonymous"></script>
 			<div class="row">
 				<div class="col-11 py-3">
 					<h5>&nbsp;&nbsp;&nbsp;&nbsp;댓글보기(0개)</h5>
+					<div class="col btn-group" role="group" aria-label="Basic radio toggle button group">
+					  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+					  <label class="btn btn-outline-secondary" for="btnradio1">최신순</label>
+					  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+					  <label class="btn btn-outline-secondary" for="btnradio3">작성순</label>
+					</div>
 					<hr>
 				</div>
 			</div>
-			<div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-			    <div class="vr p-0"></div>
-		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
-			</div>
+			<form class="row mx-2 my-3">
+				<div class="input-group p-0">
+				  <button class="btn btn-outline-primary col-2" type="button" id="button-addon1">댓글작성</button>
+				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
+				  <input type="hidden" id="writer" value="${userVO.email }">
+				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
+				</div>
+			</form>
 			<div class="row m-2">
 				<div class="col-2">
 	            	<img src="#" alt="사진" id="writer-info-profile-img">
