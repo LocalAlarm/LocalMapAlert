@@ -297,8 +297,8 @@ async function getNickname(token) {
 };
 
 window.onload = function() {
-    connectChat(); // 페이지 로드 시 WebSocket 연결
-    connectFriend();
+    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
     scrollToBottom(); // 페이지 로드 시 스크롤을 맨 아래로 이동
     document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {

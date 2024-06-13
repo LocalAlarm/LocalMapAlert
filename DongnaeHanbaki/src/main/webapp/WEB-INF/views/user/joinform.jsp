@@ -385,7 +385,6 @@
 	    });
 
 	    return false; 
-		
 	}
 </script>
 </head>
