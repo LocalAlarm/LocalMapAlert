@@ -88,7 +88,7 @@ crossorigin="anonymous"></script>
 			</div>
 			<form class="row mx-2 my-3">
 				<div class="input-group p-0">
-				  <button class="btn btn-outline-primary col-2" type="button" id="button-addon1">댓글작성</button>
+				  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1">댓글작성</button>
 				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
 				  <input type="hidden" id="writer" value="${userVO.email }">
 				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
