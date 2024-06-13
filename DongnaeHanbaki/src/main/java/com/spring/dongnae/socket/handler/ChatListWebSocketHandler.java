@@ -54,14 +54,16 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 			// 기존 채팅방이 있으면 해당 데이터를 가져옴
 			if (optionalUserRooms.isPresent()) {
 				userRooms = optionalUserRooms.get();
-				for (String chatRoomId : userRooms.getChatRoomIds()) {
-					Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
-					if (chatRoomOptional.isPresent()) {
-						ChatRoom chatRoom = chatRoomOptional.get();
-						String json = objectMapper.writeValueAsString(chatRoom);
-						session.sendMessage(new TextMessage(json));
-					}
-				}
+				String json = objectMapper.writeValueAsString(userRooms);
+				session.sendMessage(new TextMessage(json));
+//				for (String chatRoomId : userRooms.getChatRoomIds()) {
+//					Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
+//					if (chatRoomOptional.isPresent()) {
+//						ChatRoom chatRoom = chatRoomOptional.get();
+//						String json = objectMapper.writeValueAsString(chatRoom);
+//						session.sendMessage(new TextMessage(json));
+//					}
+//				}
 			} else {
 				// 새로운 메시지 문서 생성
 				userRooms = new UserRooms(userService.getUserByToken(token).getEmail(), token);
@@ -78,7 +80,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		String token = (String) session.getAttributes().get("userToken");
 		String payload = message.getPayload();
 		System.out.println("payload : " + payload);
-		Message newMessage = objectMapper.readValue(payload, Message.class);
+		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
 		newMessage.setSenderToken(token);
 
 		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());

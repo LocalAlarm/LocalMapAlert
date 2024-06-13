@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -38,4 +39,7 @@ public interface UserService {
 	
 	//프로필 수정
 	void updateProfile(Map<String, Object> map);
+	
+	//친구아이디 찾기
+	List<UserVO> searchFriendByEmail(String email);
 }

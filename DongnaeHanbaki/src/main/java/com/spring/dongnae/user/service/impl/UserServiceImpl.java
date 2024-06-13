@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateProfile(Map<String, Object> map) {
 		userDAO.updateProfile(map);
+	}
+	
+	@Override
+	public List<UserVO> searchFriendByEmail(String email) {
+		return userDAO.searchFriendByEmail(email);
 	}
 	
 	//kakao
