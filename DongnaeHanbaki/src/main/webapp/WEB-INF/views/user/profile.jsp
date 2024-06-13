@@ -565,8 +565,25 @@
                 <td class="profile-link">></td>
             </tr>
         </tbody>
-    </table>
-    
+	</table> 
+	
+	<table class="profile-table">
+        <thead>
+            <tr>
+                <th colspan="2">지도</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row" onclick="location.href='map'">
+                <td class="profile-row">
+                    <div class="profile-value">지도 바로가기</div>
+                    <div class="profile-value2">날 눌러줘</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+        </tbody>
+	</table> 
+	
     <div class="popup">
      <p id="popupLabel"></p>
      <input type="text" id="popupInput">
