@@ -9,6 +9,24 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
+<script>
+	/* 수정창 이동 */
+	function goOneCustomMap(){
+		alert("수정 페이지로 이동합니다");
+	}
+	/* 삭제하기 */
+	function deleteMap(){
+		alert("지도를  삭제합니다");
+	}
+	/* 댓글작성하기 */
+	function insertComment(frm){
+		alert("댓글을 작성합니다");
+	}
+</script>
+<!-- 
+맵 VO : mapVO
+댓글목록 : commentsList 
+-->
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
@@ -45,10 +63,11 @@ crossorigin="anonymous"></script>
 <!-- 
 커스텀 맵 VO : mapVO
 마커타입 종류 : markerTypeList
-마커리스트 : markerList -->
+마커리스트 : markerList 
+-->
 	<div class="container">
 		<div class="row p-3 text-center">
-			<h3>제목 : 커스텀맵 1</h3>
+			<h3>제목 : 맛?집 지도</h3>
 		</div>
 		<div class="row gy-2">
 			<!-- 만들어진 지도 표시 -->
@@ -72,11 +91,30 @@ crossorigin="anonymous"></script>
 			</ul>
 			<div class="tab-content p-2" id="myTabContent">
 			  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-			    <pre class="p-3">강남역 주면 김치찌개집
+			    
+			    <table class="table table-sm mt-1">
+				  <tbody>
+				    <tr>
+				      <th> 제목</th>
+				      <td>지도의 제목</td>
+				    </tr>
+				    <tr>
+				      <th> 중심주소</th>
+				      <td>모도 모시 모구</td>
+				    </tr>
+				    <tr>
+				      <th> 지도 크기</th>
+				      <td>확대배율 : 3</td>
+				    </tr>
+				  </tbody>
+				</table>
+			    <pre class="p-3">강남역 주면 음식점
 먹어본곳 표시함
 			    </pre>
 			  </div>
-			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
+			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+			  
+			  </div>
 			  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
 			  	<table class="table table-sm table-hover">
 				  <colgroup>
@@ -91,20 +129,16 @@ crossorigin="anonymous"></script>
 				    </tr>
 				  </thead>
 				  <tbody>
+				  	<!-- 예시 마커 -->
 				    <tr>
 				      <th scope="row">1</th>
-				      <td>Mark</td>
-				      <td>Otto</td>
+				      <td>찌개마커</td>
+				      <td>맛잇네요</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">2</th>
-				      <td>Jacob</td>
-				      <td>Thornton</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">3</th>
-				      <td>Larry the Bird</td>
-				      <td>twitter</td>
+				      <td>찌개마커</td>
+				      <td>별로에요</td>
 				    </tr>
 				  </tbody>
 				</table>
@@ -112,121 +146,58 @@ crossorigin="anonymous"></script>
 			</div>
 			</div>
 		</div> 
-		
-		<!-- 커스텀맵 공개중일 경우 댓글&댓글입력창 표시 -->
-		<c:if test='${mapVO.openYn }.equals("1")'> 
-		<!-- 댓글창 -->
-			<div class="row">
-				<div class="col-11 py-3">
-					<h5>&nbsp;&nbsp;&nbsp;&nbsp;댓글보기(0개)</h5>
-					<div class="col btn-group" role="group" aria-label="Basic radio toggle button group">
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-					  <label class="btn btn-outline-secondary" for="btnradio1">최신순</label>
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-					  <label class="btn btn-outline-secondary" for="btnradio3">작성순</label>
-					</div>
-					<hr>
-				</div>
-			</div>
-			<form class="row mx-2 my-3">
-				<div class="input-group p-0">
-				  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1">댓글작성</button>
-				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-				  <input type="hidden" id="writer" value="${userVO.email }">
-				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
-				</div>
-			</form>
-			<div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-				    <div class="vr p-0"></div>
-		        <div class="col-9">
-		        	<span>훌륭하고 감동적인 지도였어요.....................................................................................................,...................................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ..................................................................
-		        	</span>
-		        </div>
-			</div>
-			<div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-			    <div class="vr p-0"></div>
-		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
-			</div>
-		</c:if>
-			<div class="col-11 py-3 pb-0">
+		<div class="col-11 py-3 pb-0">
 		<!-- 커스텀맵 비공개 중일 경우 : 비공개 문구 출력 -->
-		<%-- <c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'> --%> 
+		<c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'>
 				<h5>&nbsp;&nbsp;&nbsp;&nbsp;※ 비공개 된 커스텀 맵입니다</h5>
 				<hr>
-		<%-- </c:if> --%>
+		</c:if>
+		</div>
+			<div class="btn-group" role="group" aria-label="Basic outlined example">
+			  <button type="button" class="btn btn-outline-success" onclick="goOneCustomMap()">수정</button>
+			  <button type="button" class="btn btn-outline-danger" onclick="deleteMap()">삭제</button>
 			</div>
-			<button type="button" class="btn btn-outline-success">수정하기</button>
-			<!-- 비공개 + 댓글 0개면 버튼 미생성 -->
+			<!-- 공개중에만 댓글 출력 -->
+		<%-- <c:if test='${mapVO.openYn }.equals("0") '> --%>
 			<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
-				<!-- 공개/비공개 출력 문구 다름 -->
-				<%-- <c:if test='${mapVO.openYn }.equals("0") '> --%>
-				비공개 전환 전
-				<%-- </c:if> --%>
 				댓글 보기(1)
 		    </button>
-			<button type="button" class="btn btn-outline-danger">삭제하기</button>
 		    <hr>
 		  	<!--  커스텀맵 공개중일 때만 댓글입력창 생성 -->
-		    <c:if test='${mapVO.openYn }.equals("0") '>
-		    <form class="row mx-2 my-3">
-				<div class="input-group p-0">
-				  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1">댓글작성</button>
-				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-				  <input type="hidden" id="writer" value="${userVO.email }">
-				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
-				</div>
-			</form>
-			</c:if>
 		    <div class="collapse" id="commentsList">
+			    <form class="row mx-2">
+					<div class="input-group p-0">
+					  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment(this.form)">댓글작성</button>
+					  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
+					  <input type="hidden" id="writer" value="${userVO.email }">
+					  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
+					</div>
+				</form>
+				<!-- 예시댓글 -->
+				<div class="row m-2">
+					<div class="col-2">
+		            	<img src="#" alt="사진" id="writer-info-profile-img">
+		            	<a href="#">킴모씨</a>
+		            	<br>
+		            	2024.06.26
+				    </div>
+				    <div class="vr p-0"></div>
+			        <div class="col-9">지도 잘 봤습니다</div>
+			    </div>
+		  <%-- <c:forEach items="mapCommentsList" var="vo">
 		      <div class="row m-2">
 				<div class="col-2">
 	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
+	            	<a href="#">${vo.writer }</a>
 	            	<br>
-	            	모월모일모시
+	            	${vo.writeDate }
 			    </div>
 			    <div class="vr p-0"></div>
-		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
+		        <div class="col-9">${vo.content }</div>
 			  </div>
+		  </c:forEach> --%>
 			</div>
+		<%-- </c:if> --%>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>

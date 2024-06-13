@@ -9,6 +9,16 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
+<script>
+	function updateMap(frm){
+		alert("게시글을 수정합니다");
+	}
+</script>
+<!-- 
+커스텀 맵 VO : mapVO
+마커타입 종류 : markerTypeList
+마커리스트 : markerList 
+-->
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
@@ -42,14 +52,13 @@ crossorigin="anonymous"></script>
   </div>
 </nav>
 <hr>
-<!-- 
-커스텀 맵 VO : mapVO
-마커타입 종류 : markerTypeList
-마커리스트 : markerList -->
+
+
 	<div class="container">
 		<div class="row p-3 text-center">
-			<h3>제목 : 커스텀맵 1</h3>
+			<h3>커스텀 맵 편집 : 커스텀맵 1</h3>
 		</div>
+		<!-- 커스텀 맵 수정 창 -->
 		<div class="row gy-2">
 			<!-- 만들어진 지도 표시 -->
 			<div class="col-6 border" style="height: 500px;">
@@ -72,9 +81,31 @@ crossorigin="anonymous"></script>
 			</ul>
 			<div class="tab-content p-2" id="myTabContent">
 			  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-			    <pre class="p-3">강남역 주면 김치찌개집
-먹어본곳 표시함
-			    </pre>
+			    <!-- 맵 설정 편집 -->
+			    <form class="p-2">
+				  <div class="mb-3">
+				    <label for="title" class="form-label">제목</label>
+				    <input type="text" class="form-control" id="title">
+				  </div>
+				  <div class="mb-3">
+				    <label for="center" class="form-label">중심좌표</label>
+				    <input type="text" class="form-control" id="center">
+				  </div>
+				  <div class="mb-3">
+				    <label for="viewLevel" class="form-label">확대배율</label>
+				    <input type="range" class="form-range" min="0" max="14" id="viewLevel">
+				  </div>
+				  <div class="form-check form-switch mb-3">
+				    <input class="form-check-input" type="checkbox" role="switch" id="opneYn">
+				    <label class="form-check-label" for="opneYn">공개여부</label>
+				  </div>
+				  <div class="mb-3">
+				    <label for="content" class="form-label">지도 설명</label>
+				    <textarea class="form-control" id="content"></textarea>
+				  </div>
+				  <button type="submit" class="btn btn-success" onclick="updateMap(this.form)">수정완료</button>
+				</form>
+
 			  </div>
 			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
 			  <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
@@ -113,105 +144,101 @@ crossorigin="anonymous"></script>
 			</div>
 		</div> 
 		
-		<!-- 커스텀맵 공개중일 경우 댓글&댓글입력창 표시 -->
-		<c:if test='${mapVO.openYn }.equals("1")'> 
-		<!-- 댓글창 -->
-			<div class="row">
-				<div class="col-11 py-3">
-					<h5>&nbsp;&nbsp;&nbsp;&nbsp;댓글보기(0개)</h5>
-					<div class="col btn-group" role="group" aria-label="Basic radio toggle button group">
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-					  <label class="btn btn-outline-secondary" for="btnradio1">최신순</label>
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-					  <label class="btn btn-outline-secondary" for="btnradio3">작성순</label>
-					</div>
-					<hr>
-				</div>
+		<!-- 기존지도 비교용 출력 -->
+		<div class="row gy-2 collapse" id="pre-map">
+			<!-- 만들어진 지도 표시 -->
+			<div class="col-12 p-2"></div>
+			<div class="col-6 border" style="height: 500px;">
+				<!-- 지도를 표시할 div 입니다 -->
+				<div id="map" style="width:100%;height:70vh;"></div>
 			</div>
-			<form class="row mx-2 my-3">
-				<div class="input-group p-0">
-				  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1">댓글작성</button>
-				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-				  <input type="hidden" id="writer" value="${userVO.email }">
-				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
-				</div>
-			</form>
-			<div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-				    <div class="vr p-0"></div>
-		        <div class="col-9">
-		        	<span>훌륭하고 감동적인 지도였어요.....................................................................................................,...................................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ...........................................................................
-		        ..................................................................
-		        	</span>
-		        </div>
-			</div>
-			<div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-			    <div class="vr p-0"></div>
-		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
-			</div>
-		</c:if>
-		<!-- 커스텀맵 비공개 중일 경우 : 비공개 문구 출력 -->
-		<%-- <c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'> --%> 
-			<div class="col-11 py-3 pb-0">
-				<h5>&nbsp;&nbsp;&nbsp;&nbsp;※ 비공개 된 커스텀 맵입니다</h5>
-				<hr>
-			</div>
-			<button type="button" class="btn btn-success">수정완료</button>
-			<!-- 댓글 갯수가 0이 아닐경우만 목록 출력 -->
-			<%-- <c:if test='${commentsList.size } != 0 '> --%>
-			<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
-				비공개 전환 전 작성된 댓글 보기(1)
-		    </button>
-		    <div class="collapse" id="commentsList">
-		      <div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">킴모씨</a>
-	            	<br>
-	            	모월모일모시
-			    </div>
-			    <div class="vr p-0"></div>
-		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
+
+			<!-- 커스텀맵 설명칸 -->
+			<div class="col-6 border overflow-y-scroll p-0" style="height: 500px;">
+			
+			<ul class="nav nav-tabs" id="pre-myTab" role="tablist">
+			  <li class="nav-item" role="presentation">
+			    <button class="nav-link active" id="pre-home-tab" data-bs-toggle="tab" data-bs-target="#pre-home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">맵 설명</button>
+			  </li>
+			  <li class="nav-item" role="presentation">
+			    <button class="nav-link" id="pre-profile-tab" data-bs-toggle="tab" data-bs-target="#pre-profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">마커 종류</button>
+			  </li>
+			  <li class="nav-item" role="presentation">
+			    <button class="nav-link" id="pre-contact-tab" data-bs-toggle="tab" data-bs-target="#pre-contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">표시된 마커 보기</button>
+			</ul>
+			<div class="tab-content p-2" id="pre-myTabContent">
+			  <div class="tab-pane fade show active" id="pre-home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+			    <!-- 맵 설정 편집 -->
+			    <form class="p-2">
+				  <div class="mb-3">
+				    <label for="pre-title" class="form-label">제목</label>
+				    <input type="text" class="form-control" id="pre-title" disabled="disabled">
+				  </div>
+				  <div class="mb-3">
+				    <label for="pre-center" class="form-label">중심좌표</label>
+				    <input type="text" class="form-control" id="pre-center" disabled="disabled">
+				  </div>
+				  <div class="mb-3">
+				    <label for="pre-viewLevel" class="form-label">확대배율</label>
+				    <input type="range" class="form-range" min="0" max="14" id="pre-viewLevel" disabled="disabled">
+				  </div>
+				  <div class="form-check form-switch mb-3">
+				    <input class="form-check-input" type="checkbox" role="switch" id="pre-opneYn" disabled="disabled">
+				    <label class="form-check-label" for="pre-opneYn">공개여부</label>
+				  </div>
+				  <div class="mb-3">
+				    <label for="pre-content" class="form-label">지도 설명</label>
+				    <textarea class="form-control" id="pre-content" disabled="disabled"></textarea>
+				  </div>
+				  <button type="submit" class="btn btn-success" disabled="disabled">수정 전 지도</button>
+				</form>
+
+			  </div>
+			  <div class="tab-pane fade" id="pre-profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
+			  <div class="tab-pane fade" id="pre-contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+			  	<table class="table table-sm table-hover">
+				  <colgroup>
+				  	<col style="width:3em;">
+				  	<col style="width:20%;">
+				  </colgroup>
+				  <thead>
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Marker</th>
+				      <th scope="col">About</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				      <th scope="row">1</th>
+				      <td>Mark</td>
+				      <td>삼원타워 지하 : 고기가 이상함 별점2점</td>
+				    </tr>
+				    <tr>
+				      <th scope="row">2</th>
+				      <td>Jacob</td>
+				      <td>두껍삼 : 묵은지찌개 맛있다 별점4점</td>
+				    </tr>
+				    <tr>
+				      <th scope="row">3</th>
+				      <td>Larry the Bird</td>
+				      <td>육전식당 : 무난평범 별점3점</td>
+				    </tr>
+				  </tbody>
+				</table>
 			  </div>
 			</div>
-			<%-- </c:if> --%>
-		<%-- </c:if> --%>
+			</div>
+		</div> 
+		<!-- <div class="row">
+			<div class="col"></div>
+			<div class="col-2 border border-top-0 text-center rounded-bottom shadow-sm" >
+				<button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#pre-map" aria-expanded="false" aria-controls="multiCollapseExample2">수정 전 지도 보기</button>
+			</div>
+			<div class="col"></div>
+		</div> -->
+	<button class="btn border-top-0 btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#pre-map" 
+	aria-expanded="false" aria-controls="multiCollapseExample2">수정 전 지도 보기</button>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
