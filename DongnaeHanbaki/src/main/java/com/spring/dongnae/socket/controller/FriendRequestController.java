@@ -1,5 +1,7 @@
 package com.spring.dongnae.socket.controller;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,4 +44,17 @@ public class FriendRequestController {
         return ResponseEntity.ok("친구 요청이 성공적으로 전송되었습니다!"); // 모든 작업이 성공적으로 완료되면, 성공 메시지를 반환합니다.
     }
 
+    //친구요청 받아온걸 화면에 띄워주는 코드
+    @PostMapping("/api/receiveFriendRequest")
+    public ResponseEntity<List<FriendRoom>> receiveFriendRequest(@RequestBody FriendRequest friendRequest) {
+        Optional<FriendRoom> optionalReceiveFriend = friendRoomRepository.findByEmail(friendRequest.getRequestEmail()); // 친구요청 받는 사용자 이메일로 찾기
+        if (optionalReceiveFriend.isPresent()) { // 있으면
+            FriendRoom friendRoom = optionalReceiveFriend.get();
+            // 필요한 로직 수행 후 친구 요청 목록 반환 
+            List<FriendRoom> friendRequests = Arrays.asList(friendRoom); 
+            return ResponseEntity.ok(friendRequests);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
 }

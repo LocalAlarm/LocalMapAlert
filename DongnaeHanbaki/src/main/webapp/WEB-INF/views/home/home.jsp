@@ -79,21 +79,19 @@
                         <span class="nav_name">홈페이지</span>
                     </a>
                     <div class="nav__link collapse__nav">
-                        <ion-icon name="person-add-outline" class="nav__icon"></ion-icon>
-                        <span class="nav_name">친구요청</span>
-                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-						<ul class="collapse__menu">
-						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Data')">Data</a></li>
-						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Group')">Group</a></li>
-						    <li><a href="#" class="collapse__sublink" onclick="showAlert('Members')">Members</a></li>
-						</ul>
-                    </div>
+			            <ion-icon name="person-add-outline" class="nav__icon"></ion-icon>
+			            <span class="nav_name">친구요청</span>
+			            <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+			            <ul class="collapse__menu" id="friend-requests">
+			                <!-- 친구 목록 여기에 뜸. -->
+			            </ul>
+			        </div>
 
                     <div class="nav__link collapse__nav">
                         <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
                         <span class="nav_name">친구목록</span>
                         <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-                        <ul class="collapse__menu" id="friendList">
+                        <ul class="collapse__menu" id="friendList" style="overflow: visible;">
                         </ul>
                     </div>
                     <div class="nav__link collapse__nav">

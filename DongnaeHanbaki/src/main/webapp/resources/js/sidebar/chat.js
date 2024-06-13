@@ -132,14 +132,18 @@ function initializeChatToast() {
             success: async function(response) {
                 if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
                     for (const element of response.messages) {
-                        // 닉네임 가져오기
-                        const nickname = await getNickname(element.senderToken); 
-                        // 가져온 닉네임을 사용하여 메시지 표시
-                        if (token === element.senderToken) {
-                            displayMessage(nickname, element.content, 'sent');
-                        } else {
-                            displayMessage(nickname, element.content, 'received');
-                        }
+                        getNickname(element.senderToken)
+                            .then(nickname => {
+                            console.log(nickname);
+                                if (token === element.senderToken) {
+                                    displayMessage(nickname, element.content, 'sent');
+                                } else {
+                                    displayMessage(nickname, element.content, 'received');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error occurred:', error);
+                            });
                     }
                 } else {
                     console.error("chatRoom.messages is not an array");
@@ -159,7 +163,7 @@ function initializeChatToast() {
 function handleMessageEnterPress() {
     document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            handleEnterPress(); // 엔터 키 누를 시 메시지 전송
+            sendMessage(); // 엔터 키 누를 시 메시지 전송
             event.preventDefault(); // 엔터 키의 기본 동작 막기
         }
     });

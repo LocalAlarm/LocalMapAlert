@@ -1,5 +1,5 @@
 @charset "UTF-8";
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+/*         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"); */
         /* VARIABLES CSS */
 :root {
     --nav--width: 92px;
@@ -140,6 +140,7 @@ nav.sidebar {
       .collapse__sublink {
           color: var(--sub-color);
           font-size: var(--small-font-size);
+  		  white-space: nowrap;
       }
 
       .collapse__sublink:hover {

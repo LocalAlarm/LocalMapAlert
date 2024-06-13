@@ -184,3 +184,37 @@ function hideSearchResults() {
     // 검색 결과 창을 숨깁니다.
     $('#searchResults').hide();
 }
+
+// 받은 친구요청 데이터 불러오기 함수
+function recieveFriendRequests(email) {
+    $.ajax({
+        url: '/dongnae/api/receiveFriendRequest',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ requestEmail: email }),
+        success: function(response) {
+            console.log('Received data:', response);
+            displayFriendRequests(response);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching friend requests:', errorThrown);
+        }
+    });
+}
+
+// 친구 요청 목록 표시 함수
+function displayFriendRequests(friendRequests) {
+    const container = $('#friend-requests');
+    container.empty();
+    friendRequests.forEach(request => {
+        const requestElement = $('<li></li>').append(
+            $('<a></a>')
+                .attr('href', '#')
+                .addClass('collapse__sublink')
+                .text(`Friend Request from: ${request.email}`)
+        );
+        container.append(requestElement);
+    });
+
+    receiveFriendRequests('example@example.com');
+}

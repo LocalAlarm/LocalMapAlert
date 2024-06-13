@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.socket.scheme.TokenRequest;
 import com.spring.dongnae.user.service.UserService;
 
+@Component
 @RestController
 public class NicknameRestController {
 	@Autowired
@@ -28,6 +30,7 @@ public class NicknameRestController {
     public ResponseEntity<String> getNickname(@RequestBody TokenRequest tokenRequest) {
         System.out.println(tokenRequest.getToken());
         String nickname = userService.getUserByToken(tokenRequest.getToken()).getNickname();
+        System.out.println(nickname);
 
         try {
             Map<String, String> jsonResponse = new HashMap<>();

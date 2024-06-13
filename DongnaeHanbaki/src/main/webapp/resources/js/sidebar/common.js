@@ -11,25 +11,24 @@ function getIdByClass(className) {
 }
 
 // 비동기로 토큰에 대한 닉네임을 가져오는 함수
-async function getNickname(token) {
-    console.log(token);
-    try {
-        const response = await fetch('/dongnae/api/getNickname', { // 서버에서 토큰에 대한 닉네임을 가져오는 API 엔드포인트
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
+function getNickname(token) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/dongnae/api/getNickname',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ token: token }),
+            success: function(response) {
+                console.log('Received data:', response);
+                resolve(response.nickname);
             },
-            body: JSON.stringify({ token: token }) // 토큰을 서버로 전달
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching nickname:', errorThrown);
+                reject(null);
+            }
         });
-        console.log(response);
-        const data = await response.json();
-        console.log('data :' + data);
-        return data.nickname; // 서버에서 받은 닉네임 반환
-    } catch (error) {
-        console.error('Error fetching nickname:', error);
-        return null; // 오류 발생 시 null 반환
-    }
-};
+    });
+}
 
 // 알람창을 띄워주는 함수
 function showAlert(message) {
