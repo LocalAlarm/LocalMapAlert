@@ -8,7 +8,7 @@ public class BbsVO {
 	String title;
 	String content;
 	String writeDate;
-	String image;
+	String imageIdx;
 	String hit;
 	double latitude;
 	double longitude;
@@ -57,11 +57,11 @@ public class BbsVO {
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
-	public String getImage() {
-		return image;
+	public String getImageIdx() {
+		return imageIdx;
 	}
-	public void setImage(String image) {
-		this.image = image;
+	public void setImageIdx(String imageIdx) {
+		this.imageIdx = imageIdx;
 	}
 	public String getHit() {
 		return hit;
@@ -96,7 +96,7 @@ public class BbsVO {
 	@Override
 	public String toString() {
 		return "BbsVO [bbsIdx=" + bbsIdx + ", markerIdx=" + markerIdx + ", writer=" + writer + ", mapIdx=" + mapIdx
-				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", image=" + image
+				+ ", title=" + title + ", content=" + content + ", writeDate=" + writeDate + ", imageIdx=" + imageIdx
 				+ ", imagePi=" + ", hit=" + hit + ", latitude=" + latitude + ", longitude=" + longitude
 				+ ", delYn=" + delYn + "]";
 	}

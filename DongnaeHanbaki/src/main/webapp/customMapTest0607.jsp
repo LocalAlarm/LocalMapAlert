@@ -9,8 +9,16 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
+<script>
+	function goCreateCustomMap(){
+		alert("새 커스텀맵 생성 페이지로 이동합니다");
+	}
+</script>
 </head>
-
+<!-- 
+공개된 커스텀맵 목록 : openCustomMapList
+내 커스텀맵 목록 : myCustomMapLIst
+ -->
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
@@ -49,55 +57,69 @@ crossorigin="anonymous"></script>
 <div class="row gy-2">
       <div class="col-6 border" style="height: 600px;">
         <div class="text-center p-1"><h3>다른 커스텀맵 보기</h3></div>
-	    <div class="row g-1 p-2 border rounded">
+        <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>커스텀맵1</h5>
-		    <h6>제작자 : 둥둥</h6>
+		    <h5>제목</h5>
+		    <h6>제작자 : 제작자</h6>
 		  </div>
 		  <div class="col-8">
-		  	<p>천방지축 어리둥절 빙글빙글 돌아가는 짱구의 하루 우리의 짱구는 정말 못말려</p>
+		  	<pre>내용</pre>
 		  </div>
 		  <div>
 		    <a href="#" class="card-link">자세히보기</a>
-		    <a href="#" class="card-link">편집하기</a>
 		  </div>
         </div>
-        
-	    <div class="row g-1 p-2 border rounded">
+    <%-- <c:forEach items="openCustomMapList" var="vo">
+	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>커스텀맵1</h5>
-		    <h6>제작자 : 둥둥</h6>
+		    <h5>${vo.title }</h5>
+		    <h6>제작자 : ${vo.userEmail }</h6>
 		  </div>
 		  <div class="col-8">
-		  	<p>천방지축 어리둥절 빙글빙글 돌아가는 짱구의 하루 우리의 짱구는 정말 못말려</p>
+		  	<pre>${vo.content }</pre>
 		  </div>
-		    <div>
-		    <a href="#" class="card-link">자세히보기</a>
-		    <a href="#" class="card-link">편집하기</a>
+		  <div>
+		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		  </div>
         </div>
-      </div>
+    </c:forEach> --%>
+    </div>
       
 	  <div class="col-6 border" style="height: 600px;">
 	  
         <div class="text-center p-1"><h3>나의 커스텀맵</h3></div>
-        <div class="row g-1 p-2 border rounded">
+        
+        <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>대동여지도</h5>
-		    <h6>제작자 : 김정호</h6>
+		    <h5>제목</h5>
+		    <h6>제작자 : 제작자</h6>
 		  </div>
-		  
 		  <div class="col-8">
-		  	<p>고산자(古山子) 김정호가 1861년 제작한 한반도의 지도이며, 지도첩이다. 3건이 대한민국의 보물로 지정되어 있으며...</p>
+		  	<pre>내용</pre>
 		  </div>
 		  <div>
 		    <a href="#" class="card-link">자세히보기</a>
 		    <a href="#" class="card-link">편집하기</a>
 		  </div>
         </div>
+    <%-- <c:forEach items="myCustomMapList" var="vo">
+	    <div class="row g-1 p-2 border rounded mb-2">
+		  <div class="col-3">
+		    <h5>${vo.title }</h5>
+		    <h6>제작자 : ${vo.userEmail }</h6>
+		  </div>
+		  <div class="col-8">
+		  	<pre>${vo.content }</pre>
+		  </div>
+		  <div>
+		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+		    <a href="updateCustomMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
+		  </div>
+        </div>
+    </c:forEach> --%>
         
         <div class="d-grid gap-2 py-2">
-		  <button class="btn btn-outline-primary py-3" type="button">새 커스텀맵 만들기</button>
+		  <button class="btn btn-outline-primary py-3" type="button" onclick="goCreateCustomMap()">새 커스텀맵 만들기</button>
 		</div>
 		
 	  </div>
