@@ -44,6 +44,18 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+#markerPopup {
+       position: fixed;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+       padding: 20px;
+       background: white;
+       border: 1px solid #ccc;
+       box-shadow: 0 0 10px rgba(0,0,0,0.5);
+       z-index: 1000;
+   }
 </style>
 </head>
 
@@ -119,6 +131,8 @@
 			</div>
 			<span class="card" id="address"></span>
 			<br>
+			<span class="card" id="coords"></span>
+			<br>
 			<label for="customRange3" class="form-label">지도 크기</label>
 			<input type="range" class="form-range" min="0" max="14" id="customRange3">
 			<div class="form-floating py-2">
@@ -190,6 +204,9 @@
 	var ployList = [];
 	var circleList = [];
 	
+	//마커 인포 리스트
+	var markerInfoList = [];
+	
 	mapContainer = document.getElementById('map'); // 지도를 표시할 div 
 	
 	mapOption = {
@@ -217,7 +234,7 @@
 		    guideTooltip: ['draw', 'drag', 'edit'], 
 		    markerOptions: { // 마커 옵션입니다 
 		        draggable: true, // 마커를 그리고 나서 드래그 가능하게 합니다 
-		        removable: true // 마커를 삭제 할 수 있도록 x 버튼이 표시됩니다  
+		        removable: false // 마커를 삭제 할 수 있도록 x 버튼이 표시됩니다  
 		    },
 		    polylineOptions: { // 선 옵션입니다
 		        draggable: true, // 그린 후 드래그가 가능하도록 설정합니다
@@ -256,7 +273,64 @@
 	};
 
 	var manager = new kakao.maps.drawing.DrawingManager(options);
+// 	var info = new daum.maps.CustomOverlay({
+// 	    xAnchor: 0.2,
+// 	    yAnchor: 1.5,
+// 	    content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+//         '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+//         '<button onclick="alert(\'Button clicked!\')">내용쓰기</button>' +
+//         '</div>'
+// 	});
 	
+	manager.addListener('drawend', function (e) {
+	    if (e.overlayType === daum.maps.drawing.OverlayType.MARKER) {
+	        var marker = e.target;
+	        markerInfoList = [];
+	        //마커마다 info 유지
+	        var info = new daum.maps.CustomOverlay({
+	    	    xAnchor: 0.2,
+	    	    yAnchor: 1.5,
+	    	    content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+	            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+	            '<p></p>' +
+	            '<button onclick="markerContent()">내용쓰기</button>' +
+	            '</div>'
+	    	});
+	        console.log("마커인포값!");
+	        markerInfoList.push({
+	        	path: marker.getPosition(),
+	        	info: info
+	        });
+	        console.log(markerInfoList);
+	        daum.maps.event.addListener(marker, 'mouseover', function () {
+	            info.setMap(map);
+	            info.setPosition(marker.getPosition());
+	        });
+// 	        daum.maps.event.addListener(marker, 'mouseout', function () {
+// 	            info.setMap(null);
+// 	        });
+// 	        daum.maps.event.addListener(marker, 'mousedown', function () {
+// 	            info.setMap(null);
+// 	        });
+// 	        daum.maps.event.addListener(marker, 'mouseup', function () {
+// 	            info.setMap(map);
+// 	            info.setPosition(marker.getPosition());
+// 	        });
+			//클릭시 info닫기
+	        daum.maps.event.addListener(marker, 'click', function () {
+	        	info.setMap(null);
+	        });
+	     	// 마커가 제거될 때 info도 제거되도록 설정
+	        kakao.maps.event.addListener(marker, 'rightclick', function () {
+	            // 마커를 우클릭하면 해당 마커와 info를 제거
+	            marker.setMap(null); // 마커를 지도에서 제거
+	            info.setMap(null);   // info를 지도에서 제거
+	            markerInfoList = markerInfoList.filter(function(item) {
+	                return item.marker !== marker;
+	            });
+	        });
+	    }
+	});
 	function openMap() {
 		console.log(map.getLevel());
 		geocoder = new daum.maps.services.Geocoder();
@@ -297,7 +371,8 @@
 	    // 지도에 그려진 도형이 있다면 모두 지웁니다
 // 	    removeOverlays();
 	    
-	    // 지도에 가져온 데이터로 도형들을 그립니다
+	    
+	    // 지도에 가져온 데이터로 도형들을 그립니다 -> 데이터 뽑는 역할
 	    drawMarker(data[kakao.maps.drawing.OverlayType.MARKER]);
 	    drawPolyline(data[kakao.maps.drawing.OverlayType.POLYLINE]);
 	    drawRectangle(data[kakao.maps.drawing.OverlayType.RECTANGLE]);
@@ -306,7 +381,6 @@
 	    
 	    saveMap();
 	}
-	
 	// Drawing Manager에서 가져온 데이터 중 마커를 아래 지도에 표시하는 함수입니다
 	function drawMarker(markers) {
 	    var len = markers.length, i = 0;
@@ -517,6 +591,8 @@
 					places[i].x), marker = addMarker(placePosition, i), itemEl = getListItem(
 					i, places[i], placePosition); // 검색 결과 항목 Element를 생성합니다
 
+			console.log("장소:::");
+			console.log(placePosition);
 			// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
 			// LatLngBounds 객체에 좌표를 추가합니다
 			bounds.extend(placePosition);
@@ -557,7 +633,6 @@
 			})(marker, places[i].place_name);
 			fragment.appendChild(itemEl);
 		}
-		//listEl.appendChild('<li><ion-icon name="close-outline"></ion-icon></li>');
 		// 검색결과 항목들을 검색결과 목록 Element에 추가합니다
 		listEl.appendChild(fragment);
 		menuEl.scrollTop = 0;
@@ -568,12 +643,14 @@
 
 	//검색결과 항목을 Element로 반환하는 함수입니다
 	function getListItem(index, places, placePosition) {
-		
+		console.log("장소 엘리먼트!!");
+		console.log(places);
 		var el = document.createElement('li'), itemStr = '<span class="markerbg marker_'
 				+ (index + 1)
 				+ '"></span>'
 				+ '<div class="info">'
 				+ '   <h5>' + places.place_name + '</h5>';
+// 				+ '   <span class="coords">(' + places.x + ', ' + places.y + ')</span>';
 
 		if (places.road_address_name) {
 			itemStr += '    <span>' + places.road_address_name + '</span>'
@@ -590,17 +667,15 @@
 		el.className = 'item';
 
 		// 'info' div를 클릭할 때마다 마커의 위치를 업데이트합니다
-		el
-				.querySelector('.info')
-				.addEventListener(
-						'click',
-						function() {
+		el.querySelector('.info').addEventListener('click', function() {
 							// 기존 마커의 위치를 업데이트합니다
 							marker.setPosition(placePosition);
 							// 지도의 중심을 새로운 위치로 설정합니다
 							map.setCenter(placePosition);
 							// 주소업데이트
 							document.getElementById('address').textContent = places.address_name;
+							 // 좌표 업데이트
+					        document.getElementById('coords').textContent = '(' + places.x + ', ' + places.y + ')';
 						});
 
 		return el;
@@ -671,7 +746,6 @@
 	function displayInfowindow(marker, title) {
 		var content = '<div style="padding:5px;z-index:1;">' + title
 				+ '</div>';
-
 		infowindow.setContent(content);
 		infowindow.open(map, marker);
 	}
@@ -692,15 +766,21 @@
 		console.log("지도생성!!!");
 		console.log(markerList); // 예시로 콘솔에 출력
 		console.log(rectList);
+		var center = document.getElementById("coords");
+		rangeInput = document.getElementById('customRange3');
+		console.log('지도생성 Range 값:', rangeInput.value);
+		console.log(center.textContent);
 		if (check == "1") {
 			console.log("커스텀 맵 저장!!!");
 			$.ajax({
 				type: 'POST',
                 url: 'saveMap',
                 data: JSON.stringify({markers: markerList, lines: lineList
-                					, rects: rectList, circles: circelList
-                					, polys: polyList}),
-                contentType: 'application/json; charset=UTF-8',
+                					, rects: rectList, circles: circleList
+                					, polys: ployList
+                					, center: center.textContent
+                					, level: rangeInput.value}),
+                contentType: 'application/json; charset=UTF-8', 
                 success: function(response) {
                     console.log('Data saved successfully:', response);
                 },
@@ -711,6 +791,47 @@
 		}
 	}
 	
+	
+	//마커 현재 정보 
+	var currentInfo = null;
+	//마커 내용 쓰기
+	function markerContent(button) {
+		alert("임건희 병신아");
+		// 현재 클릭된 마커의 info 객체를 저장
+	    // 버튼이 속한 CustomOverlay 객체 찾기
+    	var currentInfo = markerInfoList.find(item => item.info.cc === button.parentNode);
+	    // 팝업을 표시
+	    document.getElementById('markerPopup').style.display = 'block';
+	}
+	// 팝업 창 닫기
+	function closePopup() {
+	    document.getElementById('markerPopup').style.display = 'none';
+	}
+
+	// 팝업 창에서 내용을 저장
+	function saveMarkerContent() {
+	    var content = document.getElementById('markerInfoDetail').value;
+	    if (currentInfo) {
+	        // 기존 info content 업데이트
+	        currentInfo.setContent('<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+	                               '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+	                               '<p>' + content + '</p>' +
+	                               '<button onclick="markerContent(this)">내용쓰기</button>' +
+	                               '</div>');
+	    }
+	    closePopup();
+	}
+	
+	
+	
 </script>
+<div id="markerPopup" style="display: none;">
+    <h1>마커 내용 쓰기</h1>
+    <textarea id="markerInfoDetail" rows="4" cols="50"></textarea>
+    <br/>
+    <button onclick="saveMarkerContent()">저장</button>
+    <button onclick="closePopup()">닫기</button>
+</div>
+
 </body>
 </html>
