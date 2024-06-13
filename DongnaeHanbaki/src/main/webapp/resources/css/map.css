@@ -69,3 +69,23 @@
 		    color: #333; /* 텍스트 색상 */
 		    line-height: 1.5; /* 텍스트 줄 간격 */
 		}
+		/* 인포윈도우의 내용에 대한 스타일 설정 */
+		.kakao-infowindow div {
+		    white-space: nowrap; /* 줄 바꿈 방지 */
+		    maxWidth: 1000;
+		}
+ 		#markerlist {
+            position: fixed;
+            top: 0;
+            left: 200px; /* 사이드바 옆에 위치 */
+            width: 350px; /* 마커리스트 너비 */
+            height: 70%;
+            background-color: rgba(248, 249, 250, 0.9);
+            z-index: 1000;
+            display: block; /* 초기 표시 */
+            overflow-y: auto;
+            margin-left: -13px;
+        }
+        .marker-item {
+            margin-bottom: 15px;
+        }
