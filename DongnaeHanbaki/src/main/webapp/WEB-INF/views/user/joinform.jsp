@@ -354,6 +354,7 @@
 			$("#recoverEmail").focus();
 			return false;
 		}
+		//회원가입 ajax로 성공 실패 확인
 		alert("회원가입이 완료되었습니다.");
 	}
 </script>
