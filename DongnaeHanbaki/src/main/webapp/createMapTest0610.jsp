@@ -293,7 +293,7 @@
 	    	    content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
 	            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
 	            '<p></p>' +
-	            '<button onclick="markerContent()">내용쓰기</button>' +
+	            '<button onclick="markerContent(this)">내용쓰기</button>' +
 	            '</div>'
 	    	});
 	        console.log("마커인포값!");
@@ -796,10 +796,13 @@
 	var currentInfo = null;
 	//마커 내용 쓰기
 	function markerContent(button) {
-		alert("임건희 병신아");
+// 		alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
+		alert("내용쓰기!!ㅋㅋㅎㅎ");
 		// 현재 클릭된 마커의 info 객체를 저장
 	    // 버튼이 속한 CustomOverlay 객체 찾기
+	    var parentNode = "";
     	var currentInfo = markerInfoList.find(item => item.info.cc === button.parentNode);
+		console.log(currentInfo);	
 	    // 팝업을 표시
 	    document.getElementById('markerPopup').style.display = 'block';
 	}
