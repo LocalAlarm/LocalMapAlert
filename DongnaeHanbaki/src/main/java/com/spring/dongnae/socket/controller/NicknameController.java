@@ -20,6 +20,7 @@ public class NicknameController {
 	
 	@PostMapping(value = "/api/getNickname", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> getNickname(@RequestBody TokenRequest tokenRequest) {
+		System.out.println(tokenRequest.getToken());
         String nickname = userService.getUserByToken(tokenRequest.getToken()).getNickname();
         String jsonResponse = "{\"nickname\": \"" + nickname + "\"}";
         // ResponseEntity로 JSON 형식의 데이터 응답

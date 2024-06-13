@@ -70,7 +70,7 @@
         <nav class="nav sidebar">
             <div>
                 <div class="nav__brand">
-                    <ion-icon name="menu-outline" class="nav__toggle" id="nav-toggle"></ion-icon>
+					<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"/>
                     <a href="#" class="nav__logo">유저이름</a>
                 </div>
                 <div class="nav__list">
@@ -127,13 +127,10 @@
 		<div class="toast" id="chatToast" role="alert" aria-live="assertive"
 			aria-atomic="true" data-bs-autohide="false">
 			<div class="toast-header">
-				<img
-					src="${pageContext.request.contextPath}/resources/img/chat-dots.svg"
-					class="rounded me-2" alt="ChatIcon">
+				<img src="${pageContext.request.contextPath}/resources/svg/chat-dots.svg" class="rounded me-2" alt="ChatIcon">
 				<!-- 아이콘 이미지 -->
 				<strong class="me-auto">Chat</strong> <small>채팅방 이름</small>
-				<button type="button" class="btn-close" data-bs-dismiss="toast"
-					aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 				<!-- 닫기 버튼 -->
 			</div>
 
@@ -143,6 +140,7 @@
 			<!-- 채팅 메시지 표시 영역 -->
 			<input type="text" id="message" placeholder="Enter your message" />
 			<!-- 메시지 입력 필드 -->
+			<img src="${pageContext.request.contextPath}/resources/svg/paper-plane-outline.svg" class="rounded me-2" style="height: 50px; width: 50px;" alt="ChatIcon">
 			<button onclick="sendMessage()">Send</button>
 			<!-- 전송 버튼 -->
 		</div>

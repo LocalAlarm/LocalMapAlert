@@ -31,6 +31,7 @@ async function handleFriendRoom(friendRoom) {
 	
 	if(Array.isArray(friendRoom.friendIds)) {
 		for (const element of friendRoom.friendIds) {
+            console.log(element);
 			const nickname = await getNickname(element.token);
 			console.log(nickname);
 			friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';

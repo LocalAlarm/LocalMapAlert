@@ -20,7 +20,7 @@ async function getNickname(token) {
             },
             body: JSON.stringify({ token: token }) // 토큰을 서버로 전달
         });
-
+        console.log(response);
         const data = await response.json();
         return data.nickname; // 서버에서 받은 닉네임 반환
     } catch (error) {
@@ -79,6 +79,8 @@ function initializeSidebarToggle() {
     // 사이드바를 확장하는 클릭 이벤트 리스너
     $('#nav-toggle').on('click', function(){
         $('#side-navbar').toggleClass('expander');
+        $(this).toggleClass('rotate');
+        console.log("회전회오리");
         $('#body-pd').toggleClass('body-pd');
         
         // 모든 collapse__menu에서 showCollapse 클래스 제거
