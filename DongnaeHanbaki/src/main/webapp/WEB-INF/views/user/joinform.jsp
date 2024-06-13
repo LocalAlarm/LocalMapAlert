@@ -303,14 +303,20 @@
 
 	function nicknameOk(frm) {
 		var nickname = frm.nickname.value;
-
+		
+		// 욕설 언어 필터링을 위한 정규 표현식
+	    var profanityPattern = /ㅆㅂ|ㅅㅂ|ㄲㅈ|ㄳ|ㅅㄱ|ㅇㅁ|ㅅㄲ|ㄳㄲ|ㅈㄹ|ㅈㄴ|존나|졸라|씨발|죽어|뒤져|꺼져|지랄|가슴|슴가|유방|유두|꼭지|젖|엉디|엉덩이|궁디|염병|아가리|개새끼|새끼|시발|니애미|애미|엄마|섹스|야스|자지|보지|포르노|노|무현|일베|ㅇㅂ|년|tlqkf|toRL|fuck|shit|hell|mom|mother|sex|suck|shut|ass|pennis|pussy|nipple|faggot|bastard|idiot|whore|bitch|freak|gay|lesbian|av|porn/gi;
+		
 		// 닉네임 형식 검증을 위한 정규 표현식
 		var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
 
 		if (!nicknamePattern.test(nickname)) {
 			$("#nicknameWord").text("닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.").css("color", "red");
 			nicknameSurvey = false; 
-		} else {
+		}  else if (profanityPattern.test(nickname)) {
+	        $("#nicknameWord").text("욕설(패드립/섹드립) 및 비방을 포함한 닉네임은 사용할 수 없습니다.").css("color", "red");
+	        nicknameSurvey = false;
+	    }  else {
 			$("#nicknameWord").text("사용가능한 닉네임입니다.").css("color", "#0404B4");
 			nicknameSurvey = true;
 		}
@@ -354,7 +360,32 @@
 			$("#recoverEmail").focus();
 			return false;
 		}
-		alert("회원가입이 완료되었습니다.");
+		
+		var formData = new FormData($("#joinForm")[0]);
+
+	    $.ajax({
+	        type: "POST",
+	        url: "join",
+	        data: formData,
+	        contentType: false,
+	        processData: false,
+	        success: function(response) {
+	            console.log("response : " + response);
+	            if (response === "pass") {
+	                alert("회원가입이 완료되었습니다.");
+	                window.location.href = 'login'; // 회원가입 후 로그인 페이지로 이동
+	            } else {
+	                alert(response);
+	            }
+	        },
+	        error: function(request, status, error) {
+	            alert("회원가입에 실패했습니다.");
+	            console.error("code: " + request.status + "\n" + "error: " + error);
+	        }
+	    });
+
+	    return false; 
+		
 	}
 </script>
 </head>
@@ -365,7 +396,7 @@
         <img src="https://res.cloudinary.com/dyjklyydu/image/upload/v1717463449/%EB%8F%99%EB%84%A4%ED%95%9C%EB%B0%94%ED%80%B4__1_-removebg-preview_cgjoy5.png" alt="로고 이미지">
     </div>
      <h2>회원가입</h2>
-    <form action="join" method="post" enctype="multipart/form-data" onsubmit="return joinValidate()">
+    <form action="join" id="joinForm" method="post" enctype="multipart/form-data" onsubmit="return joinValidate()">
         <div class="mb-3">
             <input type="email" class="form-control" id="email" name="email" title="이메일" placeholder="이메일 입력" style="margin-bottom: 10px;">
             <input type="button" class="btn btn-outline-info" id="emailDuplicate" value="이메일 중복 체크" onclick="checkEmail(this.form)" style="margin-top: auto;" />

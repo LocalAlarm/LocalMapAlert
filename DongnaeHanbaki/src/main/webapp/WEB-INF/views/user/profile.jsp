@@ -6,19 +6,6 @@
 <title>프로필페이지</title>
 <jsp:include page="../../patials/commonHead.jsp"></jsp:include>
 <style>
-    table {
-        width: 50%;
-        border-collapse: collapse;
-        margin: 20px 0;
-    }
-    th, td {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-    th {
-        background-color: #f2f2f2;
-    }
     .popup {
         display: none;
         position: fixed;
@@ -27,25 +14,45 @@
         transform: translate(-50%, -50%);
         padding: 20px;
         background-color: white;
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
         z-index: 1000;
+        width: 80%;
+        max-width: 400px;
     }
-    .popup input[type="text"] {
-        width: 90%;
+
+    .popup input[type="text"],
+    .popup input[type="email"],
+    .popup input[type="file"] {
+        width: calc(100% - 20px);
         padding: 10px;
         margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
     }
+
     .popup button {
         padding: 10px 20px;
         background-color: #4CAF50;
         color: white;
         border: none;
+        border-radius: 4px;
         cursor: pointer;
+        transition: background-color 0.3s;
     }
+
     .popup button.close {
         background-color: #f44336;
     }
+
+    .popup button:hover {
+        background-color: #45a049;
+    }
+
+    .popup button.close:hover {
+        background-color: #e53935;
+    }
+
     .overlay {
         display: none;
         position: fixed;
@@ -56,8 +63,113 @@
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 500;
     }
-</style>
 
+    #map {
+        width: 100%;
+        height: 350px;
+        margin-top: 10px;
+        display: none;
+        border-radius: 4px;
+    }
+
+    #nicknameCheckWord,
+    #recoverEmailCheckWord {
+        font-size: 0.9em;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .btn.btn-outline-warning {
+        border: 1px solid #FFC107;
+        background-color: transparent;
+        color: #FFC107;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn.btn-outline-warning:hover {
+        background-color: #FFC107;
+        color: white;
+    }
+    
+</style>
+<!-- 테이블 스타일 - 건희  -->
+<style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .profile-table {
+            width: 600px;
+            margin: 20px auto;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .profile-table th, .profile-table td {
+            padding: 10px;
+            border: none;
+        }
+        .profile-table th {
+            background-color: #f7f7f7;
+            font-size: 20px;
+            font-weight: 500;
+            text-align: left;
+            padding-left: 20px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .profile-table td {
+            text-align: left;
+            font-size: 16px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .profile-table tr:last-child td {
+		    border-bottom: none;
+		}
+        .profile-table a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .profile-table .profile-photo {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-table .profile-row {
+            display: flex;
+            align-items: center;
+        }
+        .profile-table .profile-icon {
+            margin-right: 10px;
+        }
+        .profile-table .profile-value {
+            flex: 1;
+            font-size: 13px;
+        }
+        .profile-table .profile-value2 {
+	        flex: 1;
+	        font-size: 16px;
+	    }
+        .profile-table .profile-link {
+            text-align: right;
+            font-size: 14px;
+            color: #1a73e8;
+        }
+        .clickable-row {
+            cursor: pointer;
+        }
+        .clickable-row:hover {
+            background-color: #f0f0f0;
+        }
+        .clickable-row:active {
+            background-color: #e0e0e0;
+        }
+</style>
 <script>
 	//주소찾기
    var mapContainer, mapOption, map, geocoder, marker;
@@ -312,6 +424,8 @@
 	function nicknameOk() {
 		var nicknameCheck = $("#nickname-text").val();
 		console.log(nicknameCheck);
+		// 욕설 언어 필터링을 위한 정규 표현식
+	    var profanityPattern = /ㅆㅂ|ㅅㅂ|ㄲㅈ|ㄳ|ㅅㄱ|ㅇㅁ|ㅅㄲ|ㄳㄲ|ㅈㄹ|ㅈㄴ|존나|졸라|씨발|죽어|뒤져|꺼져|지랄|가슴|슴가|유방|유두|꼭지|젖|엉디|엉덩이|궁디|염병|아가리|개새끼|새끼|시발|니애미|애미|엄마|섹스|야스|자지|보지|포르노|노|무현|일베|ㅇㅂ|년|tlqkf|toRL|fuck|shit|hell|mom|mother|sex|suck|shut|ass|pennis|pussy|nipple|faggot|bastard|idiot|whore|bitch|freak|gay|lesbian|av|porn/gi;
 		// 닉네임 형식 검증을 위한 정규 표현식
 		var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
 		console.log(nicknamePattern);
@@ -319,6 +433,13 @@
 			console.log("ttttttt");
 			$("#nicknameCheckWord").text(
 					"닉네임은 영어로 이루어진 8글자 이하의 형식이거나 한글로 이루어진 8글자 이하의 형식이어야 합니다.")
+					.css("color", "red");
+			$("#nickname-text").val('');
+			$("#nickname-text").focus();
+			$("#saveUpdate").attr("disabled", true);
+		} else if (profanityPattern.test(nicknameCheck)) {
+			$("#nicknameCheckWord").text(
+					"욕설(패드립/섹드립) 및 비방을 포함한 닉네임은 사용할 수 없습니다.")
 					.css("color", "red");
 			$("#nickname-text").val('');
 			$("#nickname-text").focus();
@@ -355,43 +476,95 @@
 </head>
 <body>
 <jsp:include page="../../patials/commonBody.jsp"></jsp:include>
-    <h1>프로필 정보</h1>
-    <table>
-        <tr>
-            <td>이메일</td>
-            <td id="email" colspan="2">${user.email}</td>
-        </tr>
-        <tr>
-            <td>주소</td>
-            <td>${user.address}</td>
-            <td><input type="button" id="fixAddress" value="주소수정" onclick="popup(1)"></td>
-        </tr>
-        <tr>
-            <td>상세주소</td>
-            <td>${user.detailAddress}</td>
-            <td><input type="button" id="fixDetailAddress" value="상세주소수정" onclick="popup(2)"></td>
-        </tr>
-        <tr>
-            <td>닉네임</td>
-            <td id="nickname">${user.nickname}</td>
-            <td><input type="button" id="fixNickname" value="닉네임수정" onclick="popup(3)"></td>
-        </tr>
-        <tr>
-            <td>복구 이메일</td>
-            <td>${user.recoverEmail}</td>
-            <td><input type="button" id="fixRecoverEmail" value="복구이메일수정" onclick="popup(4)"></td>
-        </tr>
-        <tr>
-            <td>프로필 이미지</td>
-            <td>
-                <img src="${user.image}" alt="프로필 이미지" style="max-width: 100px;">
-            </td>
-            <td><input type="button" id="fixImage" value="프로필이미지수정" onclick="popup(5)"></td>
-        </tr>
-        <tr>
-            <td>비밀번호 수정</td>
-            <td colspan="2"><input type="button" id="fixPassword" value="비밀번호수정" onclick="popup(6)"></td>
-        </tr>
+    <table class="profile-table">
+        <thead>
+            <tr>
+                <th colspan="2">기본 정보</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row" id="fixImage" onclick="popup(5)">
+                <td class="profile-row">
+                	<div class="profile-value">프로필 이미지</div>
+                    <div class="profile-icon">
+                        <img src="${user.image}" alt="프로필 사진" class="profile-photo">
+                    </div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+            <tr class="clickable-row" id="fixNickname" onclick="popup(3)">
+                <td class="profile-row">
+                    <div class="profile-value">닉네임</div>
+                    <div class="profile-value2" id="nickname">${user.nickname}</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="profile-table">
+        <thead>
+            <tr>
+                <th colspan="2">연락처 정보</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row">
+                <td class="profile-row">
+                	<div class="profile-value">이메일</div>
+                    <div class="profile-value2" id="email">${user.email}</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+            <tr class="clickable-row" id="fixRecoverEmail" onclick="popup(4)">
+                <td class="profile-row">
+                    <div class="profile-value">복구 이메일</div>
+                    <div class="profile-value2">${user.recoverEmail}</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="profile-table">
+        <thead>
+            <tr>
+                <th colspan="2">주소</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row" id="fixAddress" onclick="popup(1)">
+                <td class="profile-row">
+                	<div class="profile-value">주소</div>
+                   <div class="profile-value2">${user.address}</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+            <tr class="clickable-row" id="fixDetailAddress" onclick="popup(2)">
+                <td class="profile-row">
+                    <div class="profile-value">상세주소</div>
+                    <div class="profile-value2">${user.detailAddress}</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="profile-table">
+        <thead>
+            <tr>
+                <th colspan="2">비밀번호</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row" id="fixPassword" onclick="popup(6)">
+                <td class="profile-row">
+                    <div class="profile-value">비밀번호</div>
+                    <div class="profile-value2">안전한 비밀번호를 사용하세요.</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+        </tbody>
     </table>
     
     <div class="popup">
