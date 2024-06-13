@@ -18,13 +18,12 @@
 	</select>
 
 	<insert id="insertUser" parameterType="userVO">
-		INSERT INTO USERS (EMAIL, PASSWORD, NICKNAME, ADDRESS, DETAILADDRESS, RECOVEREMAIL, IMAGE, IMAGE_PI,
-											   KAKAOCHECK, TOKEN, ROLE )
+		INSERT INTO USERS (EMAIL, PASSWORD, NICKNAME, ADDRESS, DETAILADDRESS, RECOVEREMAIL, IMAGE, KAKAOCHECK, TOKEN, ROLE, IMAGE_PI )
 		VALUES
 		(#{email}, #{password}, #{nickname}, #{address}, #{detailAddress},
-		#{recoverEmail}, #{image}, #{imagePi},
+		#{recoverEmail}, #{image}, 
 		#{kakaoCheck}, #{token},
-		#{role})
+		#{role}, #{imagePi})
 	</insert>
 
 

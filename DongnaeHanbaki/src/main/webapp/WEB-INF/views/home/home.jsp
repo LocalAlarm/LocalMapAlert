@@ -165,6 +165,7 @@ $(document).ready(function() {
     initializeCollapseMenu();
     initializeSidebarToggle();
     initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
+    handleMessageEnterPress();
 });
 </script>
 </html>
