@@ -5,7 +5,8 @@ public class MarkerVO {
 	String userEmail;
 	String limitRole;
 	String type;
-	String image;
+	String content;
+	String imageIdx;
 	String delYn;
 	public String getMarkerIdx() {
 		return markerIdx;
@@ -31,11 +32,11 @@ public class MarkerVO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getImage() {
-		return image;
+	public String getImageIdx() {
+		return imageIdx;
 	}
-	public void setImage(String image) {
-		this.image = image;
+	public void setImageIdx(String imageIdx) {
+		this.imageIdx = imageIdx;
 	}
 	public String getDelYn() {
 		return delYn;
@@ -43,10 +44,22 @@ public class MarkerVO {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
+	
+	public String getLimitRole() {
+		return limitRole;
+	}
+	public void setLimitRole(String limitRole) {
+		this.limitRole = limitRole;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 	@Override
 	public String toString() {
-		return "MakerVO [markerIdx=" + markerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type=" + type
-				+ ", image=" + image + ", imagePi=" + ", delYn=" + delYn + "]";
+		return "MarkerVO [markerIdx=" + markerIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", type="
+				+ type + ", content=" + content + ", imageIdx=" + imageIdx + ", delYn=" + delYn + "]";
 	}
-	
 }
