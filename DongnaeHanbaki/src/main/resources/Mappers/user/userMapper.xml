@@ -21,7 +21,7 @@
 		INSERT INTO USERS (EMAIL, PASSWORD, NICKNAME, ADDRESS, DETAILADDRESS, RECOVEREMAIL, IMAGE, KAKAOCHECK, TOKEN, ROLE, IMAGE_PI )
 		VALUES
 		(#{email}, #{password}, #{nickname}, #{address}, #{detailAddress},
-		#{recoverEmail}, #{image}, 
+		#{recoverEmail}, #{image},
 		#{kakaoCheck}, #{token},
 		#{role}, #{imagePi})
 	</insert>

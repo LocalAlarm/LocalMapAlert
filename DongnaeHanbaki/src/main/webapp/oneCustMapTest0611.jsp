@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
@@ -27,11 +28,40 @@
 맵 VO : mapVO
 댓글목록 : commentsList 
 -->
+
+<jsp:include page="WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
+<script type="text/javascript">
+	$('document').ready(function() {
+	    $("#commentForm").submit(function(event) {
+	        event.preventDefault(); // 기본 form submit 동작 막기
+	
+	        var formData = {
+	            bbsIdx: $("#bbsIdx").val(),
+	            writer: $("#writer").val(),
+	            content: $("#content").val()
+	        };
+	
+	        $.ajax({
+	            type: "POST",
+	            url: "/dongnae/insertComment",
+	            data: formData,
+	            success: function(response) {
+	            	console.log("response : " + response);
+	                alert(response); // 성공 시 알림 창에 메시지 표시
+	            },
+	            error: function(xhr, status, error) {
+	            	console.log(xhr);
+	            	console.log(status);
+	            	console.log(error);
+	                alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+	            }
+	        });
+	    });
+	});
+</script>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-crossorigin="anonymous"></script>
+<jsp:include page="WEB-INF/patials/commonBody.jsp"></jsp:include>
 
 <hr>
 <!-- 페이지 위 -->
@@ -201,6 +231,14 @@ crossorigin="anonymous"></script>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
+		<form id="commentForm">
+		    <input type="hidden" id="bbsIdx" value="9"> 
+		    <label for="writer">작성자:</label>
+		    <input type="text" id="writer" name="writer" required><br><br>
+		    <label for="content">내용:</label><br>
+		    <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
+		    <button type="submit">댓글 등록</button>
+		</form>
 	</div>
 	
 	
