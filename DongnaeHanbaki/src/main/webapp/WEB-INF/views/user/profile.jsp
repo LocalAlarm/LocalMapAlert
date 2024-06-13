@@ -577,7 +577,6 @@
             <tr class="clickable-row" onclick="location.href='map'">
                 <td class="profile-row">
                     <div class="profile-value">지도 바로가기</div>
-                    <div class="profile-value2">날 눌러줘</div>
                 </td>
                 <td class="profile-link">></td>
             </tr>
