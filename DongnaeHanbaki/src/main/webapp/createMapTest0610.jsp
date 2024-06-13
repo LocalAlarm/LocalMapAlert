@@ -186,7 +186,7 @@ function sample6_execDaumPostcode() {
                 }
             });
         }
-    }).open();
+    }).open();}
 
 </script>
 </body>

@@ -94,17 +94,17 @@ crossorigin="anonymous"></script>
 				    <tr>
 				      <th scope="row">1</th>
 				      <td>Mark</td>
-				      <td>Otto</td>
+				      <td>삼원타워 지하 : 고기가 이상함 별점2점</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">2</th>
 				      <td>Jacob</td>
-				      <td>Thornton</td>
+				      <td>두껍삼 : 묵은지찌개 맛있다 별점4점</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">3</th>
 				      <td>Larry the Bird</td>
-				      <td>twitter</td>
+				      <td>육전식당 : 무난평범 별점3점</td>
 				    </tr>
 				  </tbody>
 				</table>
@@ -186,35 +186,18 @@ crossorigin="anonymous"></script>
 		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
 			</div>
 		</c:if>
-			<div class="col-11 py-3 pb-0">
 		<!-- 커스텀맵 비공개 중일 경우 : 비공개 문구 출력 -->
 		<%-- <c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'> --%> 
+			<div class="col-11 py-3 pb-0">
 				<h5>&nbsp;&nbsp;&nbsp;&nbsp;※ 비공개 된 커스텀 맵입니다</h5>
 				<hr>
-		<%-- </c:if> --%>
 			</div>
-			<button type="button" class="btn btn-outline-success">수정하기</button>
-			<!-- 비공개 + 댓글 0개면 버튼 미생성 -->
+			<button type="button" class="btn btn-success">수정완료</button>
+			<!-- 댓글 갯수가 0이 아닐경우만 목록 출력 -->
+			<%-- <c:if test='${commentsList.size } != 0 '> --%>
 			<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
-				<!-- 공개/비공개 출력 문구 다름 -->
-				<%-- <c:if test='${mapVO.openYn }.equals("0") '> --%>
-				비공개 전환 전
-				<%-- </c:if> --%>
-				댓글 보기(1)
+				비공개 전환 전 작성된 댓글 보기(1)
 		    </button>
-			<button type="button" class="btn btn-outline-danger">삭제하기</button>
-		    <hr>
-		  	<!--  커스텀맵 공개중일 때만 댓글입력창 생성 -->
-		    <c:if test='${mapVO.openYn }.equals("0") '>
-		    <form class="row mx-2 my-3">
-				<div class="input-group p-0">
-				  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1">댓글작성</button>
-				  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-				  <input type="hidden" id="writer" value="${userVO.email }">
-				  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
-				</div>
-			</form>
-			</c:if>
 		    <div class="collapse" id="commentsList">
 		      <div class="row m-2">
 				<div class="col-2">
@@ -227,6 +210,8 @@ crossorigin="anonymous"></script>
 		        <div class="col-9">훌륭하고 감동적인 지도였어요</div>
 			  </div>
 			</div>
+			<%-- </c:if> --%>
+		<%-- </c:if> --%>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
