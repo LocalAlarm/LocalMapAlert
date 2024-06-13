@@ -1,4 +1,4 @@
-/build/
+6/build/
 
 ### Example user template template
 ### Example user template
@@ -56,6 +56,7 @@ tmp/
 
 # STS (Spring Tool Suite)
 .springBeans
+MANIFEST.MF
 
 # Code Recommenders
 .recommenders/
