@@ -46,9 +46,9 @@
 	<insert id="insertBbs" parameterType="bbsVO">
 		INSERT INTO BBS
 		(BBS_IDX, MAKER_IDX, WRITER, MAP_IDX, TITLE, CONTENT, 
-			WRITE_DATE, IMAGE, HIT, LATITUDE, LOGITUDE, DEL_YN)
+			WRITE_DATE, IMAGE_IDX, HIT, LATITUDE, LOGITUDE, DEL_YN)
 		VALUES (#{bbsIdx},#{makerIdx},#{writer},#{mapIdx},
-				#{title},#{content},#{writeDate},#{image},
+				#{title},#{content},#{writeDate},#{imageIdx},
 				#{hit},#{latitude},#{longitude},0)
 	</insert>
 	
@@ -70,8 +70,8 @@
 		<if test="#{longitude} != null">
 			LONGITUDE = #{longitude},
 		</if>
-		<if test="#{image} != null">
-			IMAGE = #{image},
+		<if test="#{imageIdx} != null">
+			IMAGE_IDX = #{imageIdx},
 		</if>
 			BBS_IDX = #{bbsIdx}
 		<!-- 삭제되지 않은 글만 조회 -->

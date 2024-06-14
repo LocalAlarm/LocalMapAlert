@@ -165,6 +165,7 @@ $(document).ready(function() {
     initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
     handleMessageEnterPress();
     receiveFriendRequests('example@example.com'); // 친구 요청란에 받은 데이터값을 보여주는 코드
+
 });
 </script>
 </html>

@@ -9,7 +9,7 @@ public interface UserDAO {
 	UserVO getUser(UserVO vo);
 	UserVO getUserByEmail(String email);
 	void insertKakaoUser(UserVO vo);
-	void insertUser(UserVO vo);
+	int insertUser(UserVO vo);
 	UserVO getIdUser(String email);
 	// 이메일 중복 체크 - 건희
 	int doubleCheckEmail(String email);
