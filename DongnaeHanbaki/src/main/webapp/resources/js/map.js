@@ -188,18 +188,24 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
         infowindow.close();
     });
 
-    // 마커에 click 이벤트 등록
-    kakao.maps.event.addListener(marker, 'click', function () {
-        // 지도 중심을 마커 위치로 이동하고 레벨을 1로 설정
-        map.setCenter(marker.getPosition());
-        map.setLevel(1);
+    // 마커에 click 이벤트를 등록하여 팝업 창을 표시
+            kakao.maps.event.addListener(marker, 'click', function () {
+                // 지도 중심을 마커 위치로 이동하고 레벨을 1로 설정
+                map.setCenter(marker.getPosition());
+                map.setLevel(1);
 
-        // 팝업 창 내용 설정 및 표시
-        var detailedContent = `${generateInfoContent(markerType, title)}<br>자세한 내용 : ${content}`;
-        document.getElementById('popupContent').innerHTML = detailedContent;
-        document.getElementById('popup').style.display = 'block';
-    });
-}
+                // 팝업 창 내용 설정 및 표시
+                var detailedContent = `${generateInfoContent(markerType, title)}<br>자세한 내용 : ${content}`;
+                document.getElementById('popupTitle').innerText = title; // 제목 설정
+                document.getElementById('popupContent').innerHTML = detailedContent; // 내용 설정
+                document.getElementById('popup').style.display = 'block';
+            });
+        }
+
+        // 팝업 닫기 함수
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
 
 var markersVisible = true; // 마커 표시 상태를 저장하는 변수
 
@@ -274,10 +280,44 @@ function Events() {
     });
 }
 
-// 사건사고 클릭
+// 전체 사건사고 클릭
 function EventAccidents() {
     $.ajax({
         url: "EventAccidents",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            // 기존 마커 제거
+            hideMarkers();
+            markers = [];
+
+            // 가져온 데이터로 마커 생성
+            data.forEach(function (event) {
+                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                var title = event.title;
+                var content = event.content;
+                var markerType = event.markerIdx;
+                addMarker(position, markerType, title, content);
+            });
+
+            // 마커 보이기
+            closePopup();
+            map.setLevel(2);
+            showMarkers();
+            updateSidebar(data);  
+
+            // 네비게이션 바 탭 활성화
+            $('#v-pills-profile-tab').tab('show');
+        },
+        error: function (xhr, status, error) {
+            console.error("데이터를 가져오는 중 오류 발생: " + error);
+        }
+    });
+}
+// 실시간 사건사고 클릭
+function RealTimeEvents() {
+    $.ajax({
+        url: "RealTimeEvents",
         method: "GET",
         dataType: "json",
         success: function (data) {

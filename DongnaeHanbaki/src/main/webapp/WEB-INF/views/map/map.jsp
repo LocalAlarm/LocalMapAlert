@@ -21,9 +21,21 @@
     <div class="row">
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <!-- 전체 목록 버튼 -->
                 <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="EventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
-                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="Events()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
+                
+                <!-- 사건 사고 메뉴 -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        사건 사고
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
+                        <li><a class="dropdown-item" href="#" onclick="EventAccidents()">전체 사건사고</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="RealTimeEvents()">실시간 사건사고</a></li>
+                    </ul>
+                </div>
+
+                <button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
                 <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
             </div>
         </div>       
@@ -71,8 +83,13 @@
 
 <!-- 팝업 창 -->
 <div id="popup">
-    <button id="popupClose" onclick="closePopup()">닫기</button>
-    <div id="popupContent"></div>
+        <div class="popup-header">
+            <span class="popup-title" id="popupTitle"></span>
+        </div>
+        <div class="popup-body" id="popupContent"></div>
+        <div class="popup-footer">
+            <button onclick="closePopup()">Close</button>
+        </div>
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
