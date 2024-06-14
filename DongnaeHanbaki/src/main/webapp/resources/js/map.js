@@ -252,12 +252,14 @@ function Events() {
             // 가져온 데이터로 마커 생성
             data.forEach(function (event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                 var title = event.title;
+                var title = event.title;
                 var content = event.content;
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
 
+            closePopup();
+            map.setLevel(2);
             // 마커 보이기
             showMarkers();
             updateSidebar(data);  
@@ -293,6 +295,8 @@ function EventAccidents() {
             });
 
             // 마커 보이기
+            closePopup();
+            map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
 
@@ -327,6 +331,8 @@ function All() {
             });
 
             // 마커 보이기
+            closePopup();
+   			map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
 
@@ -371,8 +377,8 @@ function updateSidebar(data) {
         $('#markerList').append(`
             <div class="card marker-item" id="markerItem_${index}">
                 <div class="card-body">
-                    <p class="card-text">${event.title}</p>
-                    <p class="card-text">${event.content}</p>
+					<p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>                    
+					<p class="card-text">${event.content}</p>
                     <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
                 </div>
             </div>
