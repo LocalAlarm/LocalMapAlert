@@ -23,7 +23,6 @@ public class UserVO {
 
 	// 상세주소, 복구이메일 추가 - 건희
 	public UserVO() {
-		System.out.println(">> UserVO() 객체생성");
 	}
 
 	public String getEmail() {
