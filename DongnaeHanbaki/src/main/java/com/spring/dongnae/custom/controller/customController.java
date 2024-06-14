@@ -1,5 +1,8 @@
 package com.spring.dongnae.custom.controller;
 
+import java.io.IOException;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -16,8 +19,10 @@ public class customController {
 	
 	@PostMapping("/saveMap")
 	@ResponseBody
-	public boolean saveMap(HttpServletRequest request) {
+	public boolean saveMap(HttpServletRequest request) throws IOException {
 		boolean check = false;
+		String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
 		return check;
 	}
 }

@@ -8,4 +8,5 @@ import com.spring.dongnae.socket.scheme.FriendRoom;
 
 public interface FriendRoomRepository extends MongoRepository<FriendRoom, String>{
 	Optional<FriendRoom> findByToken(String token);
+	Optional<FriendRoom> findByEmail(String email);
 }
