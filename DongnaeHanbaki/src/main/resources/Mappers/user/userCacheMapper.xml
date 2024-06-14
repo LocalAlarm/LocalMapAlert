@@ -5,12 +5,12 @@
 <mapper namespace="com.spring.dongnae.user.dao.UserCacheDAO">
 
     <!-- 토큰으로 유저 정보 조회 -->
-    <select id="getUserByToken" resultType="com.spring.dongnae.user.dto.UserCacheDTO">
+    <select id="getUserByTokenFromDatabase" resultType="com.spring.dongnae.user.dto.UserCacheDTO">
         SELECT TOKEN, EMAIL, IMAGE, NICKNAME FROM USERS WHERE token = #{token}
     </select>
     
     <!-- 이메일로 유저 정보 조회 -->
-    <select id="getUserByEmail" resultType="com.spring.dongnae.user.dto.UserCacheDTO">
+    <select id="getUserByEmailFromDatabase" resultType="com.spring.dongnae.user.dto.UserCacheDTO">
         SELECT token, email, image, nickname FROM users WHERE email = #{email}
     </select>
     
