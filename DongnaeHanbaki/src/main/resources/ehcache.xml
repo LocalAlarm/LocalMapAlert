@@ -1,0 +1,9 @@
+<ehcache>
+    <cache name="users"
+           maxEntriesLocalHeap="1000"
+           timeToLiveSeconds="3600"
+           timeToIdleSeconds="3600"
+           eternal="false"
+           overflowToDisk="false">
+    </cache>
+</ehcache>

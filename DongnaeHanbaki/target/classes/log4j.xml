@@ -32,11 +32,11 @@
 		<level value="info" />
 	</logger>
 	
-	<!-- Spring Security Logger -->
-<!--     <logger name="org.springframework.security">
-        <level value="DEBUG" />
-    </logger>
- -->
+	<!-- MongoDB Logger -->
+	<logger name="org.mongodb.driver.cluster">
+		<level value="error" />
+	</logger>
+	
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
