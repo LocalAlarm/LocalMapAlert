@@ -1,13 +1,13 @@
 // 친구 추가, 제거, 요청 기능과 관련된 js파일
 
 function connectFriend() {
-	friendSocket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
+    friendSocket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
 
-	friendSocket.onopen = function(event) {
+    friendSocket.onopen = function (event) {
         console.log('Connected to FriendWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    friendSocket.onmessage = function(event) {
+    friendSocket.onmessage = function (event) {
         try {
             var friendJsonData = JSON.parse(event.data);
             // 추후 if문으로 json데이터의 형태를 구별해야 한다.
@@ -17,27 +17,27 @@ function connectFriend() {
             console.error("Error processing WebSocket message: ", e);
         }
     };
-    
-    friendSocket.onclose = function(event) {
+
+    friendSocket.onclose = function (event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
-    friendSocket.onerror = function(error) {
+    friendSocket.onerror = function (error) {
         console.log("WebSocket error: " + error);
     };
 }
 
 async function handleFriendRoom(friendRoom) {
-	var friendListHtml = '';
-	
-	if(Array.isArray(friendRoom.friendIds)) {
-		for (const element of friendRoom.friendIds) {
+    var friendListHtml = '';
+
+    if (Array.isArray(friendRoom.friendIds)) {
+        for (const element of friendRoom.friendIds) {
             console.log(element);
-			const nickname = await getNickname(element.token);
-			console.log(nickname);
-			friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';
-			$('#friendList').html(friendListHtml);
-		}
-	}
+            const nickname = await getNickname(element.token);
+            console.log(nickname);
+            friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';
+            $('#friendList').html(friendListHtml);
+        }
+    }
 }
 
 // 친구 요청 버튼을 비활성화하는 함수
@@ -63,7 +63,7 @@ function showFriendRequestNotification(senderName) {
         });
     } else if (Notification.permission !== "denied") {
         // 사용자에게 알림 표시 권한을 요청
-        Notification.requestPermission().then(function(permission) {
+        Notification.requestPermission().then(function (permission) {
             if (permission === "granted") {
                 // JSON 형식의 알림 메시지 생성
                 var notificationMessage = {
@@ -80,15 +80,15 @@ function showFriendRequestNotification(senderName) {
 
 function initializeSearchEvents() {
     // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
-    $(document).on('mouseenter', '.searchResultsElement', function() {
+    $(document).on('mouseenter', '.searchResultsElement', function () {
         $(this).addClass('active');
     });
 
-    $(document).on('mouseleave', '.searchResultsElement', function() {
+    $(document).on('mouseleave', '.searchResultsElement', function () {
         $(this).removeClass('active');
     });
-    
-    $(document).on('click', '.searchResultsElement', function() {
+
+    $(document).on('click', '.searchResultsElement', function () {
         const clickText = $(this).text();
         $('#searchFriend').val(clickText);
         hideSearchResults();
@@ -96,7 +96,7 @@ function initializeSearchEvents() {
     });
 
     // 검색창 입력 시 이벤트 처리
-    $('#searchFriend').on('input', function() {
+    $('#searchFriend').on('input', function () {
         var searchString = $(this).val(); // 검색어 가져오기
         if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
             searchUserByEmail(searchString);
@@ -110,9 +110,9 @@ function initializeSearchEvents() {
 
 async function initializeFriendRequest() {
     // 친구 요청 버튼 클릭 시 이벤트 처리
-    $('#request-friend-button').on('click', async function(event) {
+    $('#request-friend-button').on('click', async function (event) {
         const searchString = $('#searchFriend').val();
-        const matchingResult = $('#searchResults').children().filter(function() {
+        const matchingResult = $('#searchResults').children().filter(function () {
             return $(this).text() === searchString;
         });
         if (matchingResult.length === 1) {
@@ -121,10 +121,10 @@ async function initializeFriendRequest() {
                 // 확인 버튼을 눌렀을 때의 동작
                 const requestEmail = matchingResult.text();
                 const requestData = {
-                    request : "REQUEST",
-                    requestEmail : requestEmail
+                    request: "REQUEST",
+                    requestEmail: requestEmail
                 };
-                
+
                 try {
                     const response = await fetch('/dongnae/api/sendFriendRequest', {
                         method: 'POST',
@@ -133,7 +133,7 @@ async function initializeFriendRequest() {
                         },
                         body: JSON.stringify(requestData)
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -158,9 +158,9 @@ function displaySearchResults(results, searchString) {
     // 검색 결과를 표시할 HTML 문자열을 생성합니다.
     var html = '';
     var matchFound = false;
-    results.forEach(function(result) {
+    results.forEach(function (result) {
         // 각 결과를 리스트 아이템으로 표시합니다.
-        html += '<li class="list-group-item searchResultsElement">' + result.email + '</li>'; 
+        html += '<li class="list-group-item searchResultsElement">' + result.email + '</li>';
         if (result.email === searchString) {
             matchFound = true;
         }
@@ -185,25 +185,40 @@ function hideSearchResults() {
     $('#searchResults').hide();
 }
 
-// 받은 친구요청 데이터 불러오기 함수
-function recieveFriendRequests(email) {
+// 친구 요청 받은 데이터를 불러오기 함수
+function receiveFriendRequests(email) {
     $.ajax({
-        url: '/dongnae/api/receiveFriendRequest',
+        url: '/dongnae/api/receiveFriendRequest', // 서버의 URL 경로가 정확한지 확인하세요.
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({ requestEmail: email }),
-        success: function(response) {
+        success: function (response) {
             console.log('Received data:', response);
-            displayFriendRequests(response);
+            try {
+                const friendRequests = JSON.parse(response); // JSON 형식으로 파싱
+                displayFriendRequests(friendRequests);
+            } catch (error) {
+                console.error('Error parsing response JSON:', error);
+            }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             console.error('Error fetching friend requests:', errorThrown);
+            console.error('Status:', textStatus);
+            console.error('Response:', jqXHR.responseText);
+            // 추가 로그
+            console.error('Full error details:', jqXHR);
         }
     });
 }
 
 // 친구 요청 목록 표시 함수
 function displayFriendRequests(friendRequests) {
+    // 응답 데이터 검증
+    if (!Array.isArray(friendRequests)) {
+        console.error('Invalid data format:', friendRequests);
+        return;
+    }
+
     const container = $('#friend-requests');
     container.empty();
     friendRequests.forEach(request => {
@@ -215,6 +230,4 @@ function displayFriendRequests(friendRequests) {
         );
         container.append(requestElement);
     });
-
-    receiveFriendRequests('example@example.com');
 }

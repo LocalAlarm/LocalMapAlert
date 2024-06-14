@@ -74,7 +74,7 @@
                     <a href="#" class="nav__logo">유저이름</a>
                 </div>
                 <div class="nav__list">
-                    <a href="#" class="nav__link active">
+                    <a href="/dongnae/map" class="nav__link active">
                         <ion-icon name="home-outline" class="nav__icon"></ion-icon>
                         <span class="nav_name">홈페이지</span>
                     </a>
@@ -102,7 +102,7 @@
                         </ul>
                     </div>
                 </div>
-                <a href="#" class="nav__link">
+                <a href="/dongnae/login?logout class="nav__link">
                     <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
                     <span class="nav_name">Log out</span>
                 </a>
@@ -164,6 +164,7 @@ $(document).ready(function() {
     initializeSidebarToggle();
     initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
     handleMessageEnterPress();
+    receiveFriendRequests('example@example.com'); // 친구 요청란에 받은 데이터값을 보여주는 코드
 });
 </script>
 </html>
