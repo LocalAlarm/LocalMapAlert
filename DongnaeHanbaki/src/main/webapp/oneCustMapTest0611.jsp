@@ -36,26 +36,26 @@
 	        event.preventDefault(); // 기본 form submit 동작 막기
 	
 	        var formData = {
-	            bbsIdx: $("#bbsIdx").val(),
-	            writer: $("#writer").val(),
-	            content: $("#content").val()
-	        };
-	
-	        $.ajax({
-	            type: "POST",
-	            url: "/dongnae/insertComment",
-	            data: formData,
-	            success: function(response) {
-	            	console.log("response : " + response);
-	                alert(response); // 성공 시 알림 창에 메시지 표시
-	            },
-	            error: function(xhr, status, error) {
-	            	console.log(xhr);
-	            	console.log(status);
-	            	console.log(error);
-	                alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
-	            }
-	        });
+	        	    mapIdx: $("#mapIdx").val(),
+	        	    writer: $("#writer").val(),
+	        	    content: $("#content").val()
+	        	};
+
+	        	$.ajax({
+	        	    type: "POST",
+	        	    url: "/dongnae/insertComment",
+	        	    data: formData,
+	        	    success: function(response) {
+	        	        console.log("response : " + response);
+	        	        alert(response); // 성공 시 알림 창에 메시지 표시
+	        	    },
+	        	    error: function(xhr, status, error) {
+	        	        console.log(xhr);
+	        	        console.log(status);
+	        	        console.log(error);
+	        	        alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+	        	    }
+	        	});
 	    });
 	});
 </script>
@@ -232,7 +232,7 @@
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
 		<form id="commentForm">
-		    <input type="hidden" id="bbsIdx" value="9"> 
+		    <input type="hidden" id="mapIdx" value="1"> 
 		    <input type="hidden" id="writer" value="test18@naver.com"><br><br>
 		    <label for="content">내용:</label><br>
 		    <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
