@@ -33,6 +33,14 @@ public class MarkerDataController {
         return markerdataService.getMenu(marker_idx);
     }
     
+    @RequestMapping("/RealTimeEvents")
+    @ResponseBody
+    public List<MarkerDataVO> RealTimeEvents() {
+    	System.out.println("1");
+    	int marker_idx = 2;
+        return markerdataService.getRealTimeEvents(marker_idx);
+    }
+    
     @RequestMapping("/all")
     @ResponseBody
     public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
