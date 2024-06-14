@@ -134,8 +134,7 @@
 		</div>
 		<form id="commentForm">
 		    <input type="hidden" id="bbsIdx" value="9"> 
-		    <label for="writer">작성자:</label>
-		    <input type="text" id="writer" name="writer" required><br><br>
+		    <input type="hidden" id="writer" value="test18@naver.com"><br><br>
 		    <label for="content">내용:</label><br>
 		    <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
 		    <button type="submit">댓글 등록</button>
