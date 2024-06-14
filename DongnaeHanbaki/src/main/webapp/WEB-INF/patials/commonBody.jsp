@@ -91,8 +91,8 @@ $(document).ready(function(){
 
     // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
     $(document).on('click', '.nav__link', function(){
-        $('.nav__link').removeClass('active');
-        $(this).addClass('active');
+        $('.nav__link').removeClass('active-side');
+        $(this).addClass('active-side');
     });
 });
 </script>

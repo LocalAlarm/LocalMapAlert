@@ -30,7 +30,7 @@
 댓글목록 : commentsList 
 -->
 
-<jsp:include page="WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
+<jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
 <script type="text/javascript">
 	$('document').ready(function() {
 	    $("#commentForm").submit(function(event) {
@@ -62,7 +62,7 @@
 </script>
 </head>
 <body>
-<jsp:include page="WEB-INF/patials/commonBody.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/patials/commonBody.jsp"></jsp:include>
 
 <hr>
 <!-- 페이지 위 -->
@@ -139,9 +139,11 @@
 				    </tr>
 				  </tbody>
 				</table>
+				<div>
 			    <pre class="p-3">강남역 주면 음식점
 먹어본곳 표시함
 			    </pre>
+				</div>
 			  </div>
 			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
 			  

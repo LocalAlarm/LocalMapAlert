@@ -18,11 +18,11 @@ public class MapServiceImpl implements MapService{
 	public List<MapVO> getMapList(MapVO vo) {
 		return mapDAO.getMapList(vo);
 	}
-	public List<MapVO> getMapListByEmail(String userEmail) {
-		MapVO vo = new MapVO();
-		vo.setUserEmail(userEmail);
-		return getMapList(vo);
-	}
+//	public List<MapVO> getMapListByEmail(String userEmail) {
+//		MapVO vo = new MapVO();
+//		vo.setUserEmail(userEmail);
+//		return getMapList(vo);
+//	}
 	
 	//이하 mapIdx 필요
 	@Override
