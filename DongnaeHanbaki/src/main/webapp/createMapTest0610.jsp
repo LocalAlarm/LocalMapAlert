@@ -299,7 +299,7 @@
 	    	    content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
 	            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
 	            '<p id="marker-info-"' + markerId + '></p>' +
-	            '<button onclick="markerContent(this)">내용쓰기</button>' +
+	            '<button onclick="markerContent(\'' + markerId + '\')">내용쓰기</button>' +
 	            '</div>'
 	    	});
 	        console.log("마커인포값!");
@@ -334,7 +334,7 @@
 	            info.setMap(null);   // info를 지도에서 제거
 	            console.log(marker._index);
 	            markerInfoList = markerInfoList.filter(function(item) {
-	                return item.marker.id != marker._index;
+	                return item.id !== marker._index;
 	            });
 	            console.log("마커제거!");
 	            console.log(markerInfoList);
@@ -774,6 +774,7 @@
 	
 	function saveMap(check) {
 		console.log("지도생성!!!");
+		markerList = markerInfoList; // 중복이긴함 두개가 일단 markerlist에 복사 추후 markerinfolist로 받을예쩡 (선, 원 등 다른것도 적용예정)
 		console.log(markerList); // 예시로 콘솔에 출력
 		console.log(rectList);
 		var center = document.getElementById("coords");
@@ -803,18 +804,24 @@
 	
 	
 	//마커 내용 쓰기
-	function markerContent(button) {
+	function markerContent(markerId) {
 		alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
 // 		alert("내용쓰기!!ㅋㅋㅎㅎ");
-		var markerDiv = button.parentNode.parentNode;  // 버튼의 부모 요소
-    	var markerId = markerDiv.id;  // 고유 ID 추출
 		// 현재 클릭된 마커의 info 객체를 저장
-	    // 버튼이 속한 CustomOverlay 객체 찾기
-     	// 현재 클릭된 마커의 info 객체를 저장
-        currentInfo = markerInfoList.find(item => item.info.a.id === markerId);
+		console.log("마커받았음!");
+		console.log(markerId);
+		console.log(markerInfoList);
+	    currentInfo = markerInfoList.find(function(item) {
+	        return item.id == markerId;
+	    });
+    	console.log("현재 마커!!!");
         console.log(currentInfo);
-	    // 팝업을 표시
-	    document.getElementById('markerPopup').style.display = 'block';
+        if (currentInfo) {
+            // 팝업을 표시
+            document.getElementById('markerPopup').style.display = 'block';
+        } else {
+            console.log("해당하는 마커를 찾을 수 없습니다.");
+        }
 	}
 	// 팝업 창 닫기
 	function closePopup() {
@@ -824,6 +831,7 @@
 	// 팝업 창에서 내용을 저장
 	function saveMarkerContent() {
 	    var content = document.getElementById('markerInfoDetail').value;
+	    console.log(content);
 	    if (currentInfo) {
 	    	console.log("save!!!!!!!!!");
 	        // 기존 info content 업데이트
@@ -832,6 +840,11 @@
 	                               '<p>' + content + '</p>' +
 	                               '<button onclick="markerContent(this)">내용쓰기</button>' +
 	                               '</div>');
+	        content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+            '<p id="marker-info-"' + markerId + '></p>' +
+            '<button onclick="markerContent(this)">내용쓰기</button>' +
+            '</div>'
 	        console.log(currentInfo);
 	    }
 	    closePopup();

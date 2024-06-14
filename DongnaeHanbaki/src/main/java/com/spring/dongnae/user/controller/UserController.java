@@ -144,7 +144,6 @@ public class UserController {
           userVO.setPassword("");
           System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
           session.setAttribute("user", userVO);
-          
       }
       return "user/profile";
    }
