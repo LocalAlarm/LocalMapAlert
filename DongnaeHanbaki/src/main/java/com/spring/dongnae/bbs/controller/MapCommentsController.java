@@ -1,10 +1,17 @@
 package com.spring.dongnae.bbs.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +28,23 @@ public class MapCommentsController {
         this.mapCommentsService = mapCommentsService;
         System.out.println("====== MapCommentsController() 객체 생성 ======");
     }
-
+    
+    @RequestMapping(value = "/getCommentList", method = RequestMethod.GET)
+    public String getCommentList(MapCommentsVO vo, Model model) {
+        // 서비스로부터 댓글 목록을 가져옵니다.
+        List<MapCommentsVO> commentList = mapCommentsService.getCommentList(vo);
+        
+        // 모델에 댓글 목록을 추가합니다.
+        model.addAttribute("commentList", commentList);
+        
+        // 렌더링할 JSP 파일 이름을 반환합니다.
+        return "oneCustMapTest0611";
+    }
+    
     @PostMapping(value = "/insertComment", produces = "text/plain; charset=UTF-8")
     @ResponseBody
     public ResponseEntity<String> insertComment(@ModelAttribute MapCommentsVO mapCommentsVO) {
+    	System.out.println("mapCommentsVO : " + mapCommentsVO.toString());
         try {
             int insertCount = mapCommentsService.insertComment(mapCommentsVO);
             if (insertCount > 0) {
