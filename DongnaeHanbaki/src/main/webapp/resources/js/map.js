@@ -1,6 +1,6 @@
 var container = document.getElementById('map');
 var options = {
-    center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
+    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644),
     level: 2
 };
 var map = new kakao.maps.Map(container, options);
@@ -37,6 +37,13 @@ kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
     });
     
 });
+
+ // 중앙값으로 이동시키는 함수
+function setMapCenter() {
+    var centerPosition = new kakao.maps.LatLng(37.49948516874355, 127.03314633997644);
+    map.setCenter(centerPosition);
+    map.setLevel(2);
+}
 
 // 폼 제출 시 마커 정보를 서버로 전송
 document.getElementById('markerForm').addEventListener('submit', function(event) {
@@ -266,6 +273,7 @@ function Events() {
 
             closePopup();
             map.setLevel(2);
+			setMapCenter();         
             // 마커 보이기
             showMarkers();
             updateSidebar(data);  
@@ -305,7 +313,7 @@ function EventAccidents() {
             map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-
+			setMapCenter();
             // 네비게이션 바 탭 활성화
             $('#v-pills-profile-tab').tab('show');
         },
@@ -339,7 +347,7 @@ function RealTimeEvents() {
             map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-
+			setMapCenter();
             // 네비게이션 바 탭 활성화
             $('#v-pills-profile-tab').tab('show');
         },
@@ -375,7 +383,7 @@ function All() {
    			map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-
+			setMapCenter();         
             // 네비게이션 바 탭 활성화
             $('#v-pills-home-tab').tab('show');
 
@@ -437,15 +445,16 @@ function handleMarkerClick(index) {
     kakao.maps.event.trigger(markers[index], 'click');
 }
 
-     $(document).ready(function() {
+$(document).ready(function() {
         All();
-        $('#v-pills-home-tab').on('click', function() {
+        $('#v-pills-home-tab').on('click', function() {        
             updateHeader('전체 마커 목록');
         });
-        $('#v-pills-profile-tab').on('click', function() {
+        $('#eventAccidentsDropdown').on('click', function() {
             updateHeader('사건사고 마커 목록');
         });
-        $('#v-pills-messages-tab').on('click', function() {
+        $('#v-pills-events-tab').on('click', function() {
+        
             updateHeader('이벤트 마커 목록');
         });
-    });
+});
