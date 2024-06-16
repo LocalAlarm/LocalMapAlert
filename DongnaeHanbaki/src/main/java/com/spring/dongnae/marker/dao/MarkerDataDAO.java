@@ -9,6 +9,8 @@ public interface MarkerDataDAO {
 
 	List<MarkerDataVO> getMenu(int marker_idx);
 	List<MarkerDataVO> allMenu(MarkerDataVO vo);
+    List<MarkerDataVO> getRealTimeEvents(int marker_idx);
+
 	void insertMarker(MarkerDataVO vo);
 
 }
