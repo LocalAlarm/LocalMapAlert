@@ -1,21 +1,21 @@
 package com.spring.dongnae.map.vo;
 
 public class MapVO {
-	private String mapIdx;
+	private int mapIdx;
 	private String userEmail;
 	private String title;
 	private String content;
 	private String viewLevel;
-	private Double centerIatitude;
-	private Double centerIogitude;
+	private Double centerLatitude;
+	private Double centerLongitude;
 	private String createDate;
 	private String openYn;
 	private String delYn;
 	
-	public String getMapIdx() {
+	public int getMapIdx() {
 		return mapIdx;
 	}
-	public void setMapIdx(String mapIdx) {
+	public void setMapIdx(int mapIdx) {
 		this.mapIdx = mapIdx;
 	}
 	public String getUserEmail() {
@@ -31,16 +31,16 @@ public class MapVO {
 		this.title = title;
 	}
 	public Double getCenterIatitude() {
-		return centerIatitude;
+		return centerLatitude;
 	}
-	public void setCenterIatitude(Double centerIatitude) {
-		this.centerIatitude = centerIatitude;
+	public void setCenterIatitude(Double centerLatitude) {
+		this.centerLatitude = centerLatitude;
 	}
 	public Double getCenterIogitude() {
-		return centerIogitude;
+		return centerLongitude;
 	}
-	public void setCenterIogitude(Double centerIogitude) {
-		this.centerIogitude = centerIogitude;
+	public void setCenterIogitude(Double centerLongitude) {
+		this.centerLongitude = centerLongitude;
 	}
 	public String getDelYn() {
 		return delYn;
@@ -72,12 +72,13 @@ public class MapVO {
 	public void setOpenYn(String openYn) {
 		this.openYn = openYn;
 	}
-	
 	@Override
 	public String toString() {
 		return "MapVO [mapIdx=" + mapIdx + ", userEmail=" + userEmail + ", title=" + title + ", content=" + content
-				+ ", viewLevel=" + viewLevel + ", centerIatitude=" + centerIatitude + ", centerIogitude="
-				+ centerIogitude + ", createDate=" + createDate + ", openYn=" + openYn + ", delYn=" + delYn + "]";
+				+ ", viewLevel=" + viewLevel + ", centerLatitude=" + centerLatitude + ", centerLongitude="
+				+ centerLongitude + ", createDate=" + createDate + ", openYn=" + openYn + ", delYn=" + delYn + "]";
 	}
+	
+	
 	
 }

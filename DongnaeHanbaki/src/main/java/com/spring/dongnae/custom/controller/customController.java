@@ -54,10 +54,12 @@ public class customController {
             double ma = Double.parseDouble(parts[1]);
 
             // 변수에 저장
-            double centerLongitude = ma;
-            double centerLatitude = la;
+            double centerLongitude = la;
+            double centerLatitude = ma;
             // level 필드 추출
             String level = jsonNode.get("level").asText();
+            String title = jsonNode.get("title").asText();
+            String content = jsonNode.get("content").asText();
 
             // 추출한 필드 값 출력
             System.out.println("centerLongitude: " + centerLongitude);
@@ -68,11 +70,13 @@ public class customController {
             vo.setCenterIatitude(centerLatitude);
             vo.setCenterIogitude(centerLongitude);
             vo.setViewLevel(level);
+            vo.setTitle(title);
+            vo.setContent(content);
             System.out.println("삽입할 map : " + vo);
             
-//            if( mapService.insertMap(vo) > 0) {
-//            	check = true;
-//            }
+            if( mapService.insertMap(vo) > 0) {
+            	check = true;
+            }
             
             
 

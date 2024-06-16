@@ -30,15 +30,9 @@
 	
 		<!-- 맵 삽입 -->
 	<insert id="insertMap" parameterType="mapVO">
-	    <!-- 시퀀스를 사용하여 mapIdx 설정 -->
-	    <selectKey keyProperty="mapIdx" resultType="int" order="BEFORE">
-	        SELECT SEQ_MAP_IDX.NEXTVAL AS mapIdx FROM DUAL
-	    </selectKey>
-	    
-	    <!-- 맵 삽입 -->
 	    INSERT INTO MAP (MAP_IDX, USER_EMAIL, TITLE, CONTENT,
 	        VIEW_LEVEL, CENTER_LATITUDE, CENTER_LONGITUDE, CREATE_DATE, OPEN_YN, DEL_YN)
-	    VALUES (#{mapIdx}, #{userEmail}, #{title}, #{content},
+	    VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{title}, #{content},
 	        #{viewLevel}, #{centerLatitude}, #{centerLongitude}, SYSTIMESTAMP, 0, 0)
 	</insert>
 	
