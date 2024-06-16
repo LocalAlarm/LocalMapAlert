@@ -36,7 +36,6 @@ public class MarkerDataController {
     @RequestMapping("/RealTimeEvents")
     @ResponseBody
     public List<MarkerDataVO> RealTimeEvents() {
-    	System.out.println("1");
     	int marker_idx = 2;
         return markerdataService.getRealTimeEvents(marker_idx);
     }
@@ -49,7 +48,6 @@ public class MarkerDataController {
     
     @PostMapping("/saveM")
     public ResponseEntity<String> saveMarker(@RequestBody MarkerDataVO vo) {
-        System.out.println("세이브 마커 컨트롤러");
         markerdataService.saveMarker(vo);
         return ResponseEntity.ok("마커 저장.");
     }
