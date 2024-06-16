@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.spring.dongnae.user.vo.UserVO;
@@ -24,4 +25,6 @@ public interface UserDAO {
 	void updatePassowrd(UserVO vo);
 	//프로필 수정
 	void updateProfile(Map<String, Object> map);
+	//친구 아이디 찾아서 데이터 가져오기
+	List<UserVO> searchFriendByEmail(String email);
 }

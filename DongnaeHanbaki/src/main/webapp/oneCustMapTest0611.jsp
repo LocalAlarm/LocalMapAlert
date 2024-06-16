@@ -20,9 +20,40 @@
 		alert("지도를  삭제합니다");
 	}
 	/* 댓글작성하기 */
-	function insertComment(frm){
-		alert("댓글을 작성합니다");
-	}
+	function insertComment(frm) {
+            alert("댓글을 작성합니다");
+
+            var formData = {
+                mapIdx: $("#mapIdx").val(),
+                writer: $("#writer").val(),
+                content: $("#content").val()
+            };
+            
+            console.log(formData);
+        
+            $.ajax({
+                type: "POST",
+                url: "/dongnae/insertComment",
+                data: formData,
+                success: function(response) {
+                    console.log("response : " + response);
+                    alert(response); // 성공 시 알림 창에 메시지 표시
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
+                    alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $("#commentForm").submit(function(event) {
+                event.preventDefault();
+                insertComment(this);
+            });
+        });
 </script>
 <!-- 
 맵 VO : mapVO
@@ -30,35 +61,6 @@
 -->
 
 <jsp:include page="WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
-<script type="text/javascript">
-	$('document').ready(function() {
-	    $("#commentForm").submit(function(event) {
-	        event.preventDefault(); // 기본 form submit 동작 막기
-	
-	        var formData = {
-	            bbsIdx: $("#bbsIdx").val(),
-	            writer: $("#writer").val(),
-	            content: $("#content").val()
-	        };
-	
-	        $.ajax({
-	            type: "POST",
-	            url: "/dongnae/insertComment",
-	            data: formData,
-	            success: function(response) {
-	            	console.log("response : " + response);
-	                alert(response); // 성공 시 알림 창에 메시지 표시
-	            },
-	            error: function(xhr, status, error) {
-	            	console.log(xhr);
-	            	console.log(status);
-	            	console.log(error);
-	                alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
-	            }
-	        });
-	    });
-	});
-</script>
 </head>
 <body>
 <jsp:include page="WEB-INF/patials/commonBody.jsp"></jsp:include>
@@ -195,51 +197,67 @@
 		    <hr>
 		  	<!--  커스텀맵 공개중일 때만 댓글입력창 생성 -->
 		    <div class="collapse" id="commentsList">
-			    <form class="row mx-2">
-					<div class="input-group p-0">
-					  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment(this.form)">댓글작성</button>
-					  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-					  <input type="hidden" id="writer" value="${userVO.email }">
-					  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
-					</div>
+			    <form class="row mx-2" id="commentForm">
+				    <div class="input-group p-0">
+				        <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment(this.form)">댓글작성</button>
+				        <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
+				        <input type="hidden" id="writer" value="test18@naver.com">
+				        <input type="hidden" id="mapIdx" value="1">
+				    </div>
 				</form>
 				<!-- 예시댓글 -->
-				<div class="row m-2">
-					<div class="col-2">
-		            	<img src="#" alt="사진" id="writer-info-profile-img">
-		            	<a href="#">킴모씨</a>
-		            	<br>
-		            	2024.06.26
+				<c:forEach items="${commentList}" var="comment">
+					<div class="row m-2">
+						<div class="col-2">
+			            	<img src="#" alt="사진" id="writer-info-profile-img">
+			            	<a href="#">${comment.writer}</a>
+			            	<br>
+			            	${comment.writeDate}
+					    </div>
+					    <div class="vr p-0"></div>
+				        <div class="col-9">${comment.content}</div>
 				    </div>
-				    <div class="vr p-0"></div>
-			        <div class="col-9">지도 잘 봤습니다</div>
-			    </div>
-		  <%-- <c:forEach items="mapCommentsList" var="vo">
-		      <div class="row m-2">
-				<div class="col-2">
-	            	<img src="#" alt="사진" id="writer-info-profile-img">
-	            	<a href="#">${vo.writer }</a>
-	            	<br>
-	            	${vo.writeDate }
-			    </div>
-			    <div class="vr p-0"></div>
-		        <div class="col-9">${vo.content }</div>
-			  </div>
-		  </c:forEach> --%>
+			    </c:forEach>
+<%-- 		  <c:forEach items="mapCommentsList" var="vo">
+<%-- 		      <div class="row m-2"> --%>
+<%-- 				<div class="col-2"> --%>
+<%-- 	            	<img src="#" alt="사진" id="writer-info-profile-img"> --%>
+<%-- 	            	<a href="#">${vo.writer }</a> --%>
+<%-- 	            	<br> --%>
+<%-- 	            	${vo.writeDate } --%>
+<%-- 			    </div> --%>
+<%-- 			    <div class="vr p-0"></div> --%>
+<%-- 		        <div class="col-9">${vo.content }</div> --%>
+<%-- 			  </div> --%>
+<%-- 		  </c:forEach> --%> 
 			</div>
 		<%-- </c:if> --%>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
-		<form id="commentForm">
-		    <input type="hidden" id="bbsIdx" value="9"> 
-		    <label for="writer">작성자:</label>
-		    <input type="text" id="writer" name="writer" required><br><br>
-		    <label for="content">내용:</label><br>
-		    <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
-		    <button type="submit">댓글 등록</button>
-		</form>
 	</div>
+	<table>
+        <thead>
+            <tr>
+                <th>댓글 번호</th>
+                <th>맵 번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성 날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="comment" items="${commentList}">
+                <tr>
+                    <td>${comment.mapCommentIdx}</td>
+                    <td>${comment.mapIdx}</td>
+                    <td>${comment.writer}</td>
+                    <td>${comment.content}</td>
+                    <td>${comment.writeDate}</td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 	
 	
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>

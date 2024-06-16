@@ -8,36 +8,35 @@
  	<select id="getCommentList" parameterType="mapCommentsVO" resultType="mapCommentsVO">
 		SELECT * FROM MAP_COMMENTS
 		WHERE DEL_YN = 0
-		AND MAP_IDX = #{mapIdx}
+		AND MAP_IDX = 1
 		ORDER BY MAP_COMMENT_IDX DESC
 	</select>
 	
  	<select id="getComment" parameterType="mapCommentsVO" resultType="mapCommentsVO">
 		SELECT * FROM MAP_COMMENTS
 		WHERE DEL_YN = 0
-		AND COMMENT_IDX = #{commentIdx}
+		AND MAP_COMMENT_IDX = #{mapCommentIdx}
 	</select>
 	
-	<insert id="insertComment" parameterType="mapCommentsVO">
-		INSERT INTO MAP_COMMENTS
-				(COMMENT_IDX, MAP_IDX, WRITER, CONTENT,
-				WRITE_DATE, DEL_YN)
-		VALUES (SEQ_COMMENT_IDX.NEXTVAL, #{mapIdx}, #{writer}, #{content}, 
-				SYSDATE, 0)
+	<insert id="insertComment" parameterType="com.spring.dongnae.bbs.MapCommentsVO">
+	    INSERT INTO MAP_COMMENTS
+	        (MAP_COMMENT_IDX, MAP_IDX, WRITER, CONTENT, WRITE_DATE, DEL_YN)
+	    VALUES 
+	        (SEQ_MAP_COMMENT_IDX.NEXTVAL, #{mapIdx}, #{writer}, #{content}, SYSDATE, 0)
 	</insert>
 	
 	<update id="updateComment" parameterType="mapCommentsVO">
 		UPDATE MAP_COMMENTS
 		SET CONTENT = #{content}
 		WHERE DEL_YN = 0
-		AND COMMENT_IDX = #{commentIdx}
+		AND MAP_COMMENT_IDX = #{mapCommentIdx}
 	</update>
 	
 	<update id="deleteComment" parameterType="mapCommentsVO">
 		UPDATE MAP_COMMENTS
 		SET DEL_YN = 1
 		WHERE DEL_YN = 0
-		AND COMMENT_IDX = #{commentIdx}
+		AND MAP_COMMENT_IDX = #{mapCommentIdx}
 	</update>
 	<!-- <delete id="deleteComment" parameterType="commentVO">
 	</delete>
