@@ -1,8 +1,8 @@
-package com.spring.dongnae.bbs.dao;
+package com.spring.dongnae.map.dao;
 
 import java.util.List;
 
-import com.spring.dongnae.bbs.MapVO;
+import com.spring.dongnae.map.vo.MapVO;
 
 public interface MapDAO {
 	//WHERE DEL_YN = 0 적용중

@@ -1,17 +1,17 @@
-package com.spring.dongnae.bbs;
+package com.spring.dongnae.map.vo;
 
 public class MapVO {
-	String mapIdx;
-	String userEmail;
-	String limitRole;
-	String title;
-	String content;
-	String viewLevel;
-	String centerIatitude;
-	String centerIogitude;
-	String createDate;
-	String openYn;
-	String delYn;
+	private String mapIdx;
+	private String userEmail;
+	private String title;
+	private String content;
+	private String viewLevel;
+	private Double centerIatitude;
+	private Double centerIogitude;
+	private String createDate;
+	private String openYn;
+	private String delYn;
+	
 	public String getMapIdx() {
 		return mapIdx;
 	}
@@ -24,28 +24,22 @@ public class MapVO {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	public String getLimitRole() {
-		return limitRole;
-	}
-	public void setLimitRole(String limitRole) {
-		this.limitRole = limitRole;
-	}
 	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getCenterIatitude() {
+	public Double getCenterIatitude() {
 		return centerIatitude;
 	}
-	public void setCenterIatitude(String centerIatitude) {
+	public void setCenterIatitude(Double centerIatitude) {
 		this.centerIatitude = centerIatitude;
 	}
-	public String getCenterIogitude() {
+	public Double getCenterIogitude() {
 		return centerIogitude;
 	}
-	public void setCenterIogitude(String centerIogitude) {
+	public void setCenterIogitude(Double centerIogitude) {
 		this.centerIogitude = centerIogitude;
 	}
 	public String getDelYn() {
@@ -78,11 +72,12 @@ public class MapVO {
 	public void setOpenYn(String openYn) {
 		this.openYn = openYn;
 	}
+	
 	@Override
 	public String toString() {
-		return "MapVO [mapIdx=" + mapIdx + ", userEmail=" + userEmail + ", limitRole=" + limitRole + ", title=" + title
-				+ ", content=" + content + ", viewLevel=" + viewLevel + ", centerIatitude=" + centerIatitude
-				+ ", centerIogitude=" + centerIogitude + ", createDate=" + createDate + ", openYn=" + openYn
-				+ ", delYn=" + delYn + "]";
+		return "MapVO [mapIdx=" + mapIdx + ", userEmail=" + userEmail + ", title=" + title + ", content=" + content
+				+ ", viewLevel=" + viewLevel + ", centerIatitude=" + centerIatitude + ", centerIogitude="
+				+ centerIogitude + ", createDate=" + createDate + ", openYn=" + openYn + ", delYn=" + delYn + "]";
 	}
+	
 }
