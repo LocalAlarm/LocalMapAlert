@@ -23,7 +23,12 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	
 	@Override
 	public List<MarkerDataVO> getRealTimeEvents(int marker_idx) {
-		return markerdataDAO.getRealTimeEvents(marker_idx);
+		return markerdataDAO.getRealTimeAccidents(marker_idx);
+	}
+	
+	@Override
+	public List<MarkerDataVO> getAllAccidents(int marker_idx) {
+		return markerdataDAO.getAllAccidents(marker_idx);
 	}
 	
 	@Override
@@ -34,6 +39,7 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	public void saveMarker(MarkerDataVO vo) {
 	    markerdataDAO.insertMarker(vo);
 	}
+
 
 
 

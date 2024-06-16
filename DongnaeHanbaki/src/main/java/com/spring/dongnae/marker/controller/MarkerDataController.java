@@ -26,20 +26,26 @@ public class MarkerDataController {
     	return markerdataService.getMenu(marker_idx);
     }
     
-    @RequestMapping("/EventAccidents")
+    @RequestMapping("/AllAccidents")
     @ResponseBody
-    public List<MarkerDataVO> getEventAccidents() {
+    public List<MarkerDataVO> getAllAccidents() {
         int marker_idx = 2;
         return markerdataService.getMenu(marker_idx);
     }
     
-    @RequestMapping("/RealTimeEvents")
+    @RequestMapping("/RealTimeAccidents")
     @ResponseBody
     public List<MarkerDataVO> RealTimeEvents() {
     	int marker_idx = 2;
         return markerdataService.getRealTimeEvents(marker_idx);
     }
     
+	/*
+	 * @RequestMapping("/AllAccidents")
+	 * 
+	 * @ResponseBody public List<MarkerDataVO> AllAccidents() { int marker_idx = 2;
+	 * return markerdataService.getAllAccidents(marker_idx); }
+	 */
     @RequestMapping("/all")
     @ResponseBody
     public List<MarkerDataVO> allMenu(MarkerDataVO vo) {

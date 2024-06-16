@@ -289,9 +289,9 @@ function Events() {
 }
 
 // 전체 사건사고 클릭
-function EventAccidents() {
+function AllAccidents() {
     $.ajax({
-        url: "EventAccidents",
+        url: "AllAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -323,9 +323,9 @@ function EventAccidents() {
     });
 }
 // 실시간 사건사고 클릭
-function RealTimeEvents() {
+function RealTimeAccidents() {
     $.ajax({
-        url: "RealTimeEvents",
+        url: "RealTimeAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -356,6 +356,59 @@ function RealTimeEvents() {
         }
     });
 }
+
+function NearAccidents() {
+    console.log("1");
+    var center = map.getCenter();
+
+    // Geometry 라이브러리 로드
+    //kakao.maps.load(function () {
+        //var geometryService = new kakao.maps.services.Geometry(); // 
+
+        $.ajax({
+            url: "AllAccidents",
+            method: "GET",
+            dataType: "json",
+            data: {
+                latitude: center.getLat(),  
+                longitude: center.getLng()  
+            },
+            success: function (data) {
+                // 기존 마커 숨기기
+                hideMarkers();
+                markers = [];
+                
+                // 가져온 데이터로 마커 생성
+                data.forEach(function (event) {
+                    var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                    var title = event.title;
+                    var content = event.content;
+                    var markerType = event.markerIdx;
+                    var radius = 3000; 
+                    
+                    // 반경 내에 있는 데이터만 마커로 표시
+                    //var distance = geometryService.distance(position, center);
+                    //if (distance <= radius) {
+                        //addMarker(position, markerType, title, content);
+                   // }
+                });
+                
+                // 마커 보이기
+                closePopup();
+                map.setLevel(2);
+                showMarkers();
+                updateSidebar(data);
+                setMapCenter();  // 중앙값으로 이동
+                
+                // 네비게이션 바 탭 활성화
+                $('#v-pills-profile-tab').tab('show');
+            },
+            error: function (xhr, status, error) {
+                console.error("데이터를 가져오는 중 오류 발생: " + error);
+            }
+        });
+}
+
 
 //전체목록 클릭
 function All() {
