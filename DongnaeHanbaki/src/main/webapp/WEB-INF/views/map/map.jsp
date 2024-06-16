@@ -14,8 +14,7 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
 <div class="container-fluid">
     <div class="row">
@@ -30,8 +29,9 @@
                         사건 사고
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
-                        <li><a class="dropdown-item" href="#" onclick="EventAccidents()">전체 사건사고</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="RealTimeEvents()">실시간 사건사고</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="AllAccidents()">전체 사건사고</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="RealTimeAccidents()">실시간 사건사고</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="NearAccidents()">내 주변 사건사고</a></li>
                     </ul>
                 </div>
 
@@ -93,7 +93,7 @@
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services,geometry"></script>
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
