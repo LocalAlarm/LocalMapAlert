@@ -129,7 +129,7 @@
         }
 
         /* Active links menu */
-        .active {
+        .active-side {
             background-color: var(--first-color);
         }
 
