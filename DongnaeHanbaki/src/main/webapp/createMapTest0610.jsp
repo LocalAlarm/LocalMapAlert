@@ -136,12 +136,16 @@
 			<label for="customRange3" class="form-label">지도 크기</label>
 			<input type="range" class="form-range" min="0" max="14" id="customRange3">
 			<div class="form-floating py-2">
-			  <input type="text" class="form-control" id="title" placeholder="Password">
-			  <label for="title">제목</label>
+			 <div class="form-group">
+		        <label for="title">제목</label>
+		        <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요">
+		    </div>
 			</div>
 			<div class="form-floating py-2">
-			  <input type="text" class="form-control" id="content" placeholder="Password">
-			  <label for="content">내용</label>
+				 <div class="form-group">
+				  <label for="content">내용</label>
+				  <input type="text" class="form-control" id="content" placeholder="설명을 입력해주세요">
+				</div>
 			</div>
 			<!-- 저장/초기화 버튼 -->
 	 <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)">지도 생성</button>
@@ -779,8 +783,13 @@
 		console.log(rectList);
 		var center = document.getElementById("coords");
 		rangeInput = document.getElementById('customRange3');
+		var title = document.getElementById("title");
+		var content = document.getElementById("content");
 		console.log('지도생성 Range 값:', rangeInput.value);
 		console.log(center.textContent);
+		console.log(title.value);
+		console.log(content.value);
+		
 		if (check == "1") {
 			console.log("커스텀 맵 저장!!!");
 			$.ajax({
@@ -790,7 +799,9 @@
                 					, rects: rectList, circles: circleList
                 					, polys: ployList
                 					, center: center.textContent
-                					, level: rangeInput.value}),
+                					, level: rangeInput.value
+                					, title: title.value
+                					, content: content.value}),
                 contentType: 'application/json; charset=UTF-8', 
                 success: function(response) {
                     console.log('Data saved successfully:', response);

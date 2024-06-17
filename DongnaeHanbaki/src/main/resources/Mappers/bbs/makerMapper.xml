@@ -22,10 +22,10 @@
 	</select>
 	
 	<insert id="insertMarker" parameterType="markerVO">
-		INSERT INTO MARKER (MARKER_IDX, USER_EMAIL, LIMIT_ROLE, TYPE,
-			IMAGE, DEL_YN)
-		VALUES (SEQ_MARKER_IDX.NEXTVAL, #{userEmail}, #{limitRole}, #{type},
-			#{image}, 0)
+		INSERT INTO MARKER (MARKER_IDX, USER_EMAIL, LIMIT_ROLE, TYPE, CONTENT,
+			IMAGE_IDX, DEL_YN)
+		VALUES (SEQ_MARKER_IDX.NEXTVAL, #{userEmail}, #{limitRole}, #{type}, #{content},
+			#{imageIdx}, 0)
 	</insert>
 	
 	<update id="updateMarker" parameterType="markerVO">
@@ -34,8 +34,8 @@
 		<if test="#{type} != null">
 			TYPE = #{type}
 		</if>
-		<if test="#{image} != null">
-			IMAGE = #{image}
+		<if test="#{imageIdx} != null">
+			IMAGE_IDX = #{imageIdx}
 		</if>
 	</update>
 	

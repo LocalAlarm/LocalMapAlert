@@ -19,6 +19,12 @@
 	    VALUES (SEQ_MARKERDATA_IDX.NEXTVAL, #{markerIdx}, #{title}, #{content}, #{latitude}, #{longitude})
 	</insert>
 	
+	 <select id="getRealTimeEvents" resultType="MarkerDataVO">
+        SELECT *
+        FROM MARKERDATA
+        WHERE MARKER_IDX = #{marker_idx} AND WRITE_DATE >= SYSTIMESTAMP - INTERVAL '10' MINUTE
+        ORDER BY WRITE_DATE DESC
+    </select>
 </mapper>
 
 

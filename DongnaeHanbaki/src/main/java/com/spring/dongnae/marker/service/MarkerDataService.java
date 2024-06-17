@@ -8,6 +8,7 @@ public interface MarkerDataService {
 		List<MarkerDataVO> getMenu(int marker_idx);
 		List<MarkerDataVO> allMenu(MarkerDataVO vo);
 		void saveMarker(MarkerDataVO vo);
+		List<MarkerDataVO> getRealTimeEvents(int marker_idx);
 	
 
 }

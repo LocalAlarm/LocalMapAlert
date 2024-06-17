@@ -12,6 +12,7 @@
         <typeAlias alias="bbsVO" type="com.spring.dongnae.bbs.BbsVO" />
         <typeAlias alias="markerVO" type="com.spring.dongnae.bbs.MarkerVO" />
         <typeAlias alias="commentVO" type="com.spring.dongnae.bbs.CommentVO" />
+        <typeAlias alias="mapCommentsVO" type="com.spring.dongnae.bbs.MapCommentsVO" />
     </typeAliases>
 </configuration>
 
