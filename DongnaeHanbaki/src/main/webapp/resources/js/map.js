@@ -280,12 +280,28 @@ function Events() {
             document.getElementById('markerlist').style.display = 'visible';
 
             // 네비게이션 바 탭 활성화
-            $('#v-pills-messages-tab').tab('show');
+   			toggleEventAccidentsTab(false);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
         }
     });
+}
+
+// 사건 사고 메뉴 활성화/비활성화 함수
+function toggleEventAccidentsTab(activate) {
+    if (activate) {
+        // 모든 nav-link에서 'active' 클래스 제거
+        document.querySelectorAll('.nav-link').forEach(function (el) {
+            el.classList.remove('active');
+        });
+
+        // 사건 사고 메뉴 활성화
+        document.getElementById('eventAccidentsDropdown').classList.add('active');
+    } else {
+        // 사건 사고 메뉴 비활성화
+        document.getElementById('eventAccidentsDropdown').classList.remove('active');
+    }
 }
 
 // 전체 사건사고 클릭
@@ -315,7 +331,7 @@ function AllAccidents() {
             updateSidebar(data);  
 			setMapCenter();
             // 네비게이션 바 탭 활성화
-            $('#v-pills-profile-tab').tab('show');
+            toggleEventAccidentsTab(true);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -349,7 +365,7 @@ function RealTimeAccidents() {
             updateSidebar(data);  
 			setMapCenter();
             // 네비게이션 바 탭 활성화
-            $('#v-pills-profile-tab').tab('show');
+            toggleEventAccidentsTab(true);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -357,56 +373,62 @@ function RealTimeAccidents() {
     });
 }
 
+// 근처 사건사고 찾기
 function NearAccidents() {
-    console.log("1");
-    var center = map.getCenter();
+    var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
+    var radius = 1; // 반경 설정 km단위로함
+    var nearbyAccidents = [];
 
-    // Geometry 라이브러리 로드
-    //kakao.maps.load(function () {
-        //var geometryService = new kakao.maps.services.Geometry(); // 
+    $.ajax({
+        url: "AllAccidents",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+        
+            hideMarkers();
+            data.forEach(function (accident) {
+                var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
+                var distance = getDistance(center.getLat(), center.getLng(), accident.latitude, accident.longitude);
 
-        $.ajax({
-            url: "AllAccidents",
-            method: "GET",
-            dataType: "json",
-            data: {
-                latitude: center.getLat(),  
-                longitude: center.getLng()  
-            },
-            success: function (data) {
-                // 기존 마커 숨기기
-                hideMarkers();
-                markers = [];
-                
-                // 가져온 데이터로 마커 생성
-                data.forEach(function (event) {
-                    var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                    var title = event.title;
-                    var content = event.content;
-                    var markerType = event.markerIdx;
-                    var radius = 3000; 
+                if (distance <= radius) {
+                    nearbyAccidents.push(accident);
+                    addMarker(position, '2', accident.title, accident.content);
+                }
+            });
+			closePopup();
+            map.setLevel(2);
+            updateSidebar(data);  
+			setMapCenter();
+            // 네비게이션 바 탭 활성화
+            toggleEventAccidentsTab(true);
                     
-                    // 반경 내에 있는 데이터만 마커로 표시
-                    //var distance = geometryService.distance(position, center);
-                    //if (distance <= radius) {
-                        //addMarker(position, markerType, title, content);
-                   // }
-                });
-                
-                // 마커 보이기
-                closePopup();
-                map.setLevel(2);
-                showMarkers();
-                updateSidebar(data);
-                setMapCenter();  // 중앙값으로 이동
-                
-                // 네비게이션 바 탭 활성화
-                $('#v-pills-profile-tab').tab('show');
-            },
-            error: function (xhr, status, error) {
-                console.error("데이터를 가져오는 중 오류 발생: " + error);
+			if (nearbyAccidents.length > 0) {
+                console.log('근처 사건사고:', nearbyAccidents);
+            } else {
+                console.log('근처에 사건사고가 없습니다.');
             }
-        });
+        },
+        error: function (error) {
+            console.error("사건사고 정보를 불러오는 도중 오류가 발생했습니다:", error);
+        }
+    });
+}
+
+// 두 좌표 사이의 거리를 계산하는 함수 km단위
+function getDistance(lat1, lng1, lat2, lng2) {
+    function toRad(value) {
+        return value * Math.PI / 180;
+    }
+
+    var R = 6371; // 지구 반경 km단위
+    var dLat = toRad(lat2 - lat1);
+    var dLng = toRad(lng2 - lng1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    return distance;
 }
 
 
@@ -438,7 +460,7 @@ function All() {
             updateSidebar(data);  
 			setMapCenter();         
             // 네비게이션 바 탭 활성화
-            $('#v-pills-home-tab').tab('show');
+   			toggleEventAccidentsTab(false);
 
         },
         error: function(xhr, status, error) {

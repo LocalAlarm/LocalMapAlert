@@ -21,22 +21,23 @@
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <!-- 전체 목록 버튼 -->
-                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                
-                <!-- 사건 사고 메뉴 -->
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        사건 사고
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
-                        <li><a class="dropdown-item" href="#" onclick="AllAccidents()">전체 사건사고</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="RealTimeAccidents()">실시간 사건사고</a></li>
-                        <li><a class="dropdown-item" href="#" onclick="NearAccidents()">내 주변 사건사고</a></li>
-                    </ul>
-                </div>
+<button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
 
-                <button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
-                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+<!-- 사건 사고 메뉴 -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        사건 사고
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
+        <li><a class="dropdown-item" href="#" onclick="AllAccidents()">전체 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealTimeAccidents()">실시간 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="NearAccidents()">내 주변 사건사고</a></li>
+    </ul>
+</div>
+
+<button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
+<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+
             </div>
         </div>       
         <div id="map"></div> 
@@ -93,7 +94,7 @@
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services,geometry"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
