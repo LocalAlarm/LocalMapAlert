@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.user.dao.UserDAO">
+
+	<select id="getUser" parameterType="userVO" resultType="userVO">
+		SELECT *
+		FROM USERS
+		WHERE EMAIL = #{email}
+		<if test="kakaoCheck == 0">
+			AND PASSWORD = #{password}
+		</if>
+	</select>
+
+	<select id="getUserByEmail" parameterType="string" resultType="userVO">
+		SELECT * FROM USERS WHERE EMAIL = #{email}
+	</select>
+
+	<insert id="insertUser" parameterType="userVO">
+		INSERT INTO USERS (EMAIL, PASSWORD, NICKNAME, ADDRESS, DETAILADDRESS, RECOVEREMAIL, IMAGE, KAKAOCHECK, TOKEN, ROLE, IMAGE_PI )
+		VALUES
+		(#{email}, #{password}, #{nickname}, #{address}, #{detailAddress},
+		#{recoverEmail}, #{image},
+		#{kakaoCheck}, #{token},
+		#{role}, #{imagePi})
+	</insert>
+
+
+	<insert id="insertKakaoUser" parameterType="userVO">
+		INSERT INTO USERS
+		(EMAIL, NICKNAME, IMAGE, KAKAOCHECK)
+		VALUES (#{email}, #{nickname},
+		#{image}, #{kakaoCheck})
+	</insert>
+	
+	<select id="getIdUser" parameterType="String" resultType="userVO">
+		SELECT * 
+		FROM USERS
+		WHERE EMAIL = #{email}
+	</select>
+
+	<!-- 이메일 중복체크 - 건희 -->
+	<select id="doubleCheckEmail" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM USERS
+		WHERE EMAIL = #{email}
+	</select>
+
+	<!-- 복구 이메일과 닉네임으로 이메일 찾기 - 건희 -->
+	<select id="findUserEmail" parameterType="userVO" resultType="String">
+		SELECT EMAIL
+		FROM USERS
+		WHERE NICKNAME = #{nickname}
+		AND
+		RECOVEREMAIL = #{recoverEmail}
+	</select>
+
+	<select id="getUserByToken" parameterType="string" resultType="userVO">
+		SELECT EMAIL, NICKNAME, TOKEN, IMAGE
+		FROM USERS
+		WHERE TOKEN =
+		#{token}
+	</select>
+
+	<select id="searchFriendByEmail" parameterType="string"
+		resultType="userVO">
+		   <![CDATA[
+		    SELECT EMAIL, IMAGE, NICKNAME
+		    FROM (
+		        SELECT *
+		        FROM USERS
+		        WHERE EMAIL LIKE '%' || #{email} || '%'
+		        ORDER BY EMAIL
+		    )
+		    WHERE ROWNUM <= 5
+		    ]]>
+	</select>
+	
+	<!-- 비번 찾기 (이메일찾기) -->
+	<select id="findPasswordByEmail" parameterType="String" resultType="String">
+		SELECT EMAIL
+		FROM USERS
+		WHERE EMAIL = #{email}
+	</select>
+	
+	<!-- 비번 바꾸기 -->
+	<update id="updatePassowrd" parameterType="userVO">
+		UPDATE USERS
+		SET PASSWORD = #{password}
+		WHERE EMAIL = #{email}
+	</update>
+	
+	<!-- 프로필 정보 수정 -->
+	<update id="updateProfile" parameterType="Map">
+    	UPDATE USERS
+	    <set>
+	        <choose>
+	            <when test="idx == 1">
+	                <if test="detailAddress != null">
+	                    ADDRESS = #{address},
+	                    DETAILADDRESS = #{detailAddress}
+	                </if>
+	                <if test="detailAddress == null">
+	                    ADDRESS = #{address}
+	                </if>
+	            </when>
+	            <when test="idx == 2">
+	                DETAILADDRESS = #{newValue}
+	            </when>
+	            <when test="idx == 3">
+	                NICKNAME = #{newValue}
+	            </when>
+	            <when test="idx == 4">
+	                RECOVEREMAIL = #{newValue}
+	            </when>
+	            <when test="idx == 5">
+	                IMAGE = #{image},
+	                IMAGE_PI = #{imagePi}
+	            </when>
+	        </choose>
+	    </set>
+	    WHERE EMAIL = #{email}
+	</update>
+	
+</mapper>
