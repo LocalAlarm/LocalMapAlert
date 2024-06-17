@@ -262,6 +262,7 @@ function displayFriendRequests(friendRequests) {
     }
 }
 
+// 친구 요청 모달을 띄우는 코드
 function friendRequestModal(){
     var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
     $('#nav__friend-request').on('click', function() {

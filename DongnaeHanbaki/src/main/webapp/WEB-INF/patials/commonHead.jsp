@@ -13,5 +13,6 @@
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/common.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/chat.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/friend.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/moim.js"></script>
 <link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/resources/css/message.css" rel="stylesheet">
