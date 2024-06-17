@@ -15,6 +15,39 @@
 		location.href="createMap";
 	}
 </script>
+<style>
+.mapTitle {
+/*   width: 200px; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* 말줄임 적용 */
+}
+.mapContent {
+  overflow: hidden;
+  position: relative;
+  line-height: 1.5em;
+  max-height: 4.5em;
+  margin-right: -1em;
+  padding-right: 1em;
+}
+
+.mapContent:before {
+  content: '...';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.mapContent:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  background: white;
+}
+</style>
 </head>
 <!-- 
 공개된 커스텀맵 목록 : openCustomMapList
@@ -61,29 +94,25 @@ crossorigin="anonymous"></script>
         <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5>제목</h5>
-		    <h6>제작자 : 제작자</h6>
+		    <h6 class="text-body-secondary">제작자</h6>
+		    <a href="oneCustMap?" class="card-link">자세히보기</a>
 		  </div>
 		  <div class="col-8">
 		  	<pre>내용</pre>
 		  </div>
-		  <div>
-		    <a href="oneCustMap?" class="card-link">자세히보기</a>
-		  </div>
         </div>
-    <%-- <c:forEach items="openCustomMapList" var="vo">
+    <c:forEach items="${openCustomMapList}" var="vo">
 	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>${vo.title }</h5>
-		    <h6>제작자 : ${vo.userEmail }</h6>
-		  </div>
-		  <div class="col-8">
-		  	<pre>${vo.content }</pre>
-		  </div>
-		  <div>
+		    <h5 class="mapTitle">${vo.title }</h5>
+		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
 		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		  </div>
+		  <div class="col-8">
+		  	<p class="px-2 mapContent">${vo.content }</p>
+		  </div>
         </div>
-    </c:forEach> --%>
+    </c:forEach>
     </div>
       
 	  <div class="col-6 border" style="height: 600px;">
@@ -92,32 +121,32 @@ crossorigin="anonymous"></script>
         
         <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>제목</h5>
-		    <h6>제작자 : 제작자</h6>
+		    <h5 class="mapTitle">제목</h5>
+		    <h6 class="text-body-secondary">제작자</h6>
+		    <a href="oneCustMap?" class="card-link">자세히보기</a>
+		    <a href="updateCustMap?" class="card-link">편집하기</a>
 		  </div>
 		  <div class="col-8">
 		  	<pre>내용</pre>
 		  </div>
 		  <div>
-		    <a href="oneCustMap?" class="card-link">자세히보기</a>
-		    <a href="updateCustMap?" class="card-link">편집하기</a>
 		  </div>
         </div>
-    <%-- <c:forEach items="myCustomMapList" var="vo">
+    <c:forEach items="${myCustomMapList}" var="vo">
 	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
-		    <h5>${vo.title }</h5>
-		    <h6>제작자 : ${vo.userEmail }</h6>
-		  </div>
-		  <div class="col-8">
-		  	<pre>${vo.content }</pre>
-		  </div>
-		  <div>
+		    <h5 class="mapTitle">${vo.title }</h5>
+		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
 		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		    <a href="updateCustomMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
 		  </div>
+		  <div class="col-8">
+		  	<p class="px-2 mapContent">${vo.content }</p>
+		  </div>
+		  <div>
+		  </div>
         </div>
-    </c:forEach> --%>
+    </c:forEach>
         
         <div class="d-grid gap-2 py-2">
 		  <button class="btn btn-outline-primary py-3" type="button" onclick="goCreateCustomMap()">새 커스텀맵 만들기</button>

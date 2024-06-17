@@ -122,13 +122,14 @@
         <button class="btn btn-outline-dark py-3" type="button" data-bs-toggle="collapse" 
         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">커스텀맵 설정하기</button>
       </div>
-      <form class="collapse show" id="collapseExample">
-         <div class="input-group mb-3  py-2">
-            <form onsubmit="searchPlaces(); return false;">
-              <input type="text" class="form-control" id="keyword" placeholder="중심 주소를 입력해 주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-outline-secondary" onclick="openMap()" type="button" id="button-addon2">검색</button>
-            </form>
-         </div>
+      <div class="collapse show" id="collapseExample">
+         <form onsubmit="searchPlaces(); return false;" >
+           <div class="input-group mb-3">
+             <input type="text" class="form-control p-2" id="keyword" placeholder="중심이 될 주소를 입력해 주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
+             <button class="btn btn-outline-secondary" onclick="openMap()" type="button" id="button-addon2">검색</button>
+		   </div>
+         </form>
+         <form>
          <span class="card" id="address"></span>
          <br>
          <span class="card" id="coords"></span>
@@ -143,11 +144,12 @@
            <input type="text" class="form-control" id="content" placeholder="Password">
            <label for="content">내용</label>
          </div>
+         </form>
          <!-- 저장/초기화 버튼 -->
     <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)">지도 생성</button>
     <button type="button" class="btn btn-outline-danger">취소</button>
     <button type="button" class="btn btn-outline-danger">마커 지우기</button>
-      </form>
+      </div>
       </div>
       
       
