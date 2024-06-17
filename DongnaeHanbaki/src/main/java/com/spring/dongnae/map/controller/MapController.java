@@ -1,12 +1,18 @@
 package com.spring.dongnae.map.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.spring.dongnae.user.vo.UserVO;
 
 @Controller
 public class MapController {
 	@RequestMapping("/map")
-    public String map() {
+    public String map(HttpSession session) {
+		UserVO userVO = (UserVO) session.getAttribute("user");
+		System.out.println(userVO.getAddress());
         return "map/map"; 
     }
 	
