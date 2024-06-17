@@ -1,8 +1,8 @@
-package com.spring.dongnae.bbs;
+package com.spring.dongnae.map.service;
 
 import java.util.List;
 
-import com.spring.dongnae.bbs.MapVO;
+import com.spring.dongnae.map.vo.MapVO;
 
 public interface MapService {
 	//WHERE DEL_YN = 0 적용중

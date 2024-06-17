@@ -136,12 +136,16 @@
 			<label for="customRange3" class="form-label">지도 크기</label>
 			<input type="range" class="form-range" min="0" max="14" id="customRange3">
 			<div class="form-floating py-2">
-			  <input type="text" class="form-control" id="title" placeholder="Password">
-			  <label for="title">제목</label>
+			 <div class="form-group">
+		        <label for="title">제목</label>
+		        <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요">
+		    </div>
 			</div>
 			<div class="form-floating py-2">
-			  <input type="text" class="form-control" id="content" placeholder="Password">
-			  <label for="content">내용</label>
+				 <div class="form-group">
+				  <label for="content">내용</label>
+				  <input type="text" class="form-control" id="content" placeholder="설명을 입력해주세요">
+				</div>
 			</div>
 			<!-- 저장/초기화 버튼 -->
 	 <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)">지도 생성</button>
@@ -206,6 +210,10 @@
 	
 	//마커 인포 리스트
 	var markerInfoList = [];
+	//마커 고유 아이디
+	var markerIdCounter = 0; 
+	//마커 현재 정보 
+	var currentInfo = null;
 	
 	mapContainer = document.getElementById('map'); // 지도를 표시할 div 
 	
@@ -285,19 +293,22 @@
 	manager.addListener('drawend', function (e) {
 	    if (e.overlayType === daum.maps.drawing.OverlayType.MARKER) {
 	        var marker = e.target;
-	        markerInfoList = [];
+	        var markerId = markerIdCounter++; //마커 아이디 생성
+	        
+// 	        markerInfoList = [];
 	        //마커마다 info 유지
 	        var info = new daum.maps.CustomOverlay({
 	    	    xAnchor: 0.2,
 	    	    yAnchor: 1.5,
-	    	    content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+	    	    content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
 	            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-	            '<p></p>' +
-	            '<button onclick="markerContent(this)">내용쓰기</button>' +
+	            '<p id="marker-info-"' + markerId + '></p>' +
+	            '<button onclick="markerContent(\'' + markerId + '\')">내용쓰기</button>' +
 	            '</div>'
 	    	});
 	        console.log("마커인포값!");
 	        markerInfoList.push({
+	        	id: markerId,
 	        	path: marker.getPosition(),
 	        	info: info
 	        });
@@ -325,9 +336,12 @@
 	            // 마커를 우클릭하면 해당 마커와 info를 제거
 	            marker.setMap(null); // 마커를 지도에서 제거
 	            info.setMap(null);   // info를 지도에서 제거
+	            console.log(marker._index);
 	            markerInfoList = markerInfoList.filter(function(item) {
-	                return item.marker !== marker;
+	                return item.id !== marker._index;
 	            });
+	            console.log("마커제거!");
+	            console.log(markerInfoList);
 	        });
 	    }
 	});
@@ -764,12 +778,18 @@
 	
 	function saveMap(check) {
 		console.log("지도생성!!!");
+		markerList = markerInfoList; // 중복이긴함 두개가 일단 markerlist에 복사 추후 markerinfolist로 받을예쩡 (선, 원 등 다른것도 적용예정)
 		console.log(markerList); // 예시로 콘솔에 출력
 		console.log(rectList);
 		var center = document.getElementById("coords");
 		rangeInput = document.getElementById('customRange3');
+		var title = document.getElementById("title");
+		var content = document.getElementById("content");
 		console.log('지도생성 Range 값:', rangeInput.value);
 		console.log(center.textContent);
+		console.log(title.value);
+		console.log(content.value);
+		
 		if (check == "1") {
 			console.log("커스텀 맵 저장!!!");
 			$.ajax({
@@ -779,7 +799,9 @@
                 					, rects: rectList, circles: circleList
                 					, polys: ployList
                 					, center: center.textContent
-                					, level: rangeInput.value}),
+                					, level: rangeInput.value
+                					, title: title.value
+                					, content: content.value}),
                 contentType: 'application/json; charset=UTF-8', 
                 success: function(response) {
                     console.log('Data saved successfully:', response);
@@ -792,35 +814,50 @@
 	}
 	
 	
-	//마커 현재 정보 
-	var currentInfo = null;
 	//마커 내용 쓰기
-	function markerContent(button) {
-// 		alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
-		alert("내용쓰기!!ㅋㅋㅎㅎ");
+	function markerContent(markerId) {
+		alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
+// 		alert("내용쓰기!!ㅋㅋㅎㅎ");
 		// 현재 클릭된 마커의 info 객체를 저장
-	    // 버튼이 속한 CustomOverlay 객체 찾기
-	    var parentNode = "";
-    	var currentInfo = markerInfoList.find(item => item.info.cc === button.parentNode);
-		console.log(currentInfo);	
-	    // 팝업을 표시
-	    document.getElementById('markerPopup').style.display = 'block';
+		console.log("마커받았음!");
+		console.log(markerId);
+		console.log(markerInfoList);
+	    currentInfo = markerInfoList.find(function(item) {
+	        return item.id == markerId;
+	    });
+    	console.log("현재 마커!!!");
+        console.log(currentInfo);
+        if (currentInfo) {
+            // 팝업을 표시
+            document.getElementById('markerPopup').style.display = 'block';
+        } else {
+            console.log("해당하는 마커를 찾을 수 없습니다.");
+        }
 	}
 	// 팝업 창 닫기
 	function closePopup() {
 	    document.getElementById('markerPopup').style.display = 'none';
 	}
 
+	
 	// 팝업 창에서 내용을 저장
 	function saveMarkerContent() {
 	    var content = document.getElementById('markerInfoDetail').value;
+	    console.log(content);
 	    if (currentInfo) {
+	    	console.log("save!!!!!!!!!");
 	        // 기존 info content 업데이트
 	        currentInfo.setContent('<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
 	                               '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
 	                               '<p>' + content + '</p>' +
 	                               '<button onclick="markerContent(this)">내용쓰기</button>' +
 	                               '</div>');
+	        content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+            '<p id="marker-info-"' + markerId + '></p>' +
+            '<button onclick="markerContent(this)">내용쓰기</button>' +
+            '</div>'
+	        console.log(currentInfo);
 	    }
 	    closePopup();
 	}
