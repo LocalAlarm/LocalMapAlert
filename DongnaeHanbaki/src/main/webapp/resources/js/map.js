@@ -1,9 +1,24 @@
 var container = document.getElementById('map');
+var geocoder = new kakao.maps.services.Geocoder();
 var options = {
-    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644),
+    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644), // 기본 중심 좌표
     level: 2
 };
+
 var map = new kakao.maps.Map(container, options);
+
+// 세션에서 가져오기
+//var userAddress = '<%= session.getAttribute("address") %>'; 
+//console.log(userAddress);
+// 주소로 좌표를 변환하여 지도의 중심으로 설정
+//geocoder.addressSearch(userAddress, function(result, status) {
+//    if (status === kakao.maps.services.Status.OK) {
+//        var coords = new kakao.maps.LatLng(result[0].y, result[0].x); // 변환된 좌표
+//        map.setCenter(coords); 
+//    } else {
+//        console.error('주소를 변환x.');
+//    }
+//});
 
 // 마커를 저장하는 배열
 var markers = [];
@@ -78,6 +93,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
     };
 
+	
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -546,18 +562,46 @@ function updateSidebar(data) {
     })(index));
 }
 }
+var map;
+//사용자 주소가져옴
+function getUserAddress() {
+    $.ajax({
+        url: 'userAddress', 
+        method: 'GET',  
+        success: function(response) {  
+            console.log('사용자 주소:', response);
+
+            // response가 이미 객체일 경우 처리
+            var address = response.address;
+
+            // 카카오맵 API를 이용한 지오코딩 및 지도 초기화
+            var geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(address, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                    // 지도 중앙 좌표 설정
+                    var mapOptions = {
+                        center: coords,
+                        level: 3  // 초기 확대 수준 설정
+                    };
+
+                    // 지도 생성
+                    map = new kakao.maps.Map(document.getElementById('map'), mapOptions);
+                } else {
+                    console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('사용자 주소를 가져오는 중 오류 발생:', error);
+        }
+    });
+}
 
 
 $(document).ready(function() {
         All();
-        $('#v-pills-home-tab').on('click', function() {        
-            updateHeader('전체 마커 목록');
-        });
-        $('#eventAccidentsDropdown').on('click', function() {
-            updateHeader('사건사고 마커 목록');
-        });
-        $('#v-pills-events-tab').on('click', function() {
+        getUserAddress();
         
-            updateHeader('이벤트 마커 목록');
-        });
 });
