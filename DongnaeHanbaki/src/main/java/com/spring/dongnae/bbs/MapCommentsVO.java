@@ -1,12 +1,14 @@
 package com.spring.dongnae.bbs;
 
 public class MapCommentsVO {
+	
 	String mapCommentIdx;
 	String mapIdx;
 	String writer;
 	String content;
 	String writeDate;
 	String delYn;
+	
 	public String getMapCommentIdx() {
 		return mapCommentIdx;
 	}
@@ -43,6 +45,7 @@ public class MapCommentsVO {
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
 	}
+	
 	@Override
 	public String toString() {
 		return "MapCommentsVO [mapCommentIdx=" + mapCommentIdx + ", mapIdx=" + mapIdx + ", writer=" + writer

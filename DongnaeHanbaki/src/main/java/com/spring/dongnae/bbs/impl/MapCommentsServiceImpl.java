@@ -2,12 +2,19 @@ package com.spring.dongnae.bbs.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.spring.dongnae.bbs.MapCommentsService;
 import com.spring.dongnae.bbs.MapCommentsVO;
 import com.spring.dongnae.bbs.dao.MapCommentsDAO;
 
+@Service("mapCommentsService")
 public class MapCommentsServiceImpl implements MapCommentsService {
-	MapCommentsDAO mapCommentsDAO;
+	
+	@Autowired
+	private MapCommentsDAO mapCommentsDAO;
+	
 	@Override
 	public List<MapCommentsVO> getCommentList(MapCommentsVO vo) {
 		return mapCommentsDAO.getCommentList(vo);
