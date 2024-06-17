@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.spring.dongnae.map.dao.MapDAO;
 import com.spring.dongnae.map.vo.MapVO;
 
-@Service
+@Service("mapService")
 public class MapServiceImpl implements MapService {
 	
 	@Autowired
@@ -18,16 +18,14 @@ public class MapServiceImpl implements MapService {
 		System.out.println(">> MapServiceImpl() 객체생성");
 	}
 
-	@Override
+	@Override//유저이메일(제작자) 또는 등급으로 리스트얻기, 값이 있으면 조건 검색
 	public List<MapVO> getMapList(MapVO vo) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapDAO.getMapList(vo);
 	}
 
-	@Override
+	@Override //mapIdx 필요
 	public MapVO getMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapDAO.getMap(vo);
 	}
 
 	@Override
@@ -35,15 +33,13 @@ public class MapServiceImpl implements MapService {
 		return mapDAO.insertMap(vo);
 	}
 
-	@Override
+	@Override //mapIdx 필요
 	public int updateMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapDAO.updateMap(vo);
 	}
 
-	@Override
+	@Override //mapIdx 필요
 	public int deleteMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapDAO.deleteMap(vo);
 	}
 }

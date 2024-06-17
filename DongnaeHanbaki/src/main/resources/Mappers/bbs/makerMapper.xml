@@ -7,10 +7,10 @@
  	<select id="getMarkerList" parameterType="markerVO" resultType="markerVO">
 		SELECT * FROM MARKER
 		WHERE DEL_YN = 0
-		<if test="#{userEmail} != null">
+		<if test="userEmail != null">
 		AND USER_EMAIL = #{userEmail}
 		</if>
-		<if test="#{limitRole} != null">
+		<if test="limitRole != null">
 		AND LIMIT_ROLE = #{limitRole}
 		</if>
 	</select>
@@ -31,10 +31,10 @@
 	<update id="updateMarker" parameterType="markerVO">
 		UPDATE MARKER
 		SET 
-		<if test="#{type} != null">
+		<if test="type != null">
 			TYPE = #{type}
 		</if>
-		<if test="#{imageIdx} != null">
+		<if test="imageIdx != null">
 			IMAGE_IDX = #{imageIdx}
 		</if>
 	</update>
