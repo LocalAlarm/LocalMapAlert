@@ -81,6 +81,7 @@ request.setAttribute("userDetails", userDetails);
 var chatSocket = null;
 var friendSocket = null;
 var token = null;
+var isLogin = <%= isLogin%>;
 const chatToast = document.getElementById('chatToast');
 </script>
 <body id="body-pd">
@@ -99,7 +100,7 @@ const chatToast = document.getElementById('chatToast');
 	                    </a>
 	                </div>
 	                <div class="nav__list">
-	                    <a href="/dongnae/map" class="nav__link active">
+	                    <a href="/dongnae/map" class="nav__link">
 	                        <ion-icon name="home-outline" class="nav__icon"></ion-icon>
 	                        <span class="nav_name">홈페이지</span>
 	                    </a>
@@ -178,15 +179,18 @@ const chatToast = document.getElementById('chatToast');
 </body>
 <script>
 $(document).ready(function() {
-    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-    initializeChatToast();
-    initializeSearchEvents();
-    initializeFriendRequest();
+	// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
+	if (isLogin) {
+	    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+	    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
+	    initializeChatToast();
+	    initializeSearchEvents();
+	    initializeFriendRequest();
+	    handleMessageEnterPress();
+	}
     initializeCollapseMenu();
     initializeSidebarToggle();
     initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
-    handleMessageEnterPress();
     //receiveFriendRequests(); // 친구 요청란에 받은 데이터값을 보여주는 코드
 });
 </script>

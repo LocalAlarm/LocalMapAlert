@@ -118,7 +118,7 @@ nav.sidebar {
 }
 
 /* Active links menu */
-.active {
+.side__active {
     background-color: var(--first-color);
 }
 

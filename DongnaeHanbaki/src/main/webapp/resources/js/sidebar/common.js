@@ -91,8 +91,8 @@ function initializeSidebarToggle() {
 
 function initializeMenuActivation() {
     $(document).on('click', '.nav__link', function () {
-        $('.nav__link').removeClass('active');
-        $(this).addClass('active');
+        $('.nav__link').removeClass('side__active');
+        $(this).addClass('side__active');
     });
 }
 
