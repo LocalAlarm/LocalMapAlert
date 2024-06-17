@@ -17,12 +17,12 @@ import com.spring.dongnae.map.service.MapService;
 import com.spring.dongnae.map.vo.MapVO;
 
 @Controller
-public class customController {
+public class CustomController {
 	
 	private final MapService mapService;
 
 	@Autowired
-	public customController(MapService mapService) {
+	public CustomController(MapService mapService) {
 		this.mapService = mapService;
 		System.out.println("========= customController() 객체생성");
 	}
