@@ -36,7 +36,7 @@ var isLogin = <%= isLogin%>;
 const chatToast = document.getElementById('chatToast');
 </script>
 <div class="l-navbar" id="side-navbar">
-	<nav class="nav sidebar">
+	<nav class="nav sidebar" style="height: 100vh; overflow-y: auto;">
 		<c:choose>
 			<c:when test="${isLogin}">
 				<!-- 로그인 상태일 때 표시할 사이드바 -->
@@ -78,11 +78,19 @@ const chatToast = document.getElementById('chatToast');
 						</div>
 						<div class="nav__link collapse__nav">
 							<ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
-							<span class="nav_name">채팅방</span>
+							<span class="nav_name">모임</span>
 							<ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
 							<ul class="collapse__menu" id="chatList">
 								<!-- 모임 리스트가 들어올 자리 -->
 							</ul>
+						</div>
+						<div class="nav__link collapse__nav" id="nav__create-moim">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-add-fill" viewBox="0 0 16 16">
+								<path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 1 1-1 0v-1h-1a.5.5 0 1 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
+								<path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+								<path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+							</svg>
+							<span class="nav_name">모임 만들기</span>
 						</div>
 					</div>
 					<a href="/dongnae/login?logout" class="nav__link">
@@ -151,6 +159,34 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </div>
 
+<!-- 모임 모집 모달창 -->
+<div class="modal fade" id="createMoimModal" tabindex="-1" aria-labelledby="createMoimModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="createMoimModalLabel">모임 만들기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form enctype="multipart/form-data">
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="createMoimModal-title" name="title">
+						<label for="createMoimModal-title">모임 이름을 입력해주세요!</label>
+					</div>
+					<div class="form-floating mb-3">
+						<textarea class="form-control" placeholder="모임을 소개해주세요!" id="createMoimModal-introduce" name="introduce" style="height: 150px;"></textarea>
+						<label for="floatingTextarea">모임을 소개해주세요!</label>
+					</div>
+					<input type="file" class="form-control mb-3" id="createMoimModal-profilePic" name="profilePic" accept="image/*">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" onclick="submitCreateMoimForm()">만들기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
@@ -162,6 +198,7 @@ const chatToast = document.getElementById('chatToast');
 			initializeFriendRequest();
 			handleMessageEnterPress();
 			friendRequestModal();
+			moimModalFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
