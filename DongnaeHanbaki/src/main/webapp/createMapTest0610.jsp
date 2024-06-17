@@ -302,21 +302,23 @@
 	    	    yAnchor: 1.5,
 	    	    content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
 	            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-	            '<p id="marker-info-"' + markerId + '></p>' +
+	            '<p id="marker-info-"' + markerId + '>123</p>' +
 	            '<button onclick="markerContent(\'' + markerId + '\')">내용쓰기</button>' +
 	            '</div>'
 	    	});
+	    	 // 여기서 <p> 태그의 내용을 가져옵니다.
+	        var markerInfoElement = document.getElementById('marker-info-' + markerId);
+	        if (markerInfoElement) {
+	            var markerInfoContent = markerInfoElement.innerHTML; // 또는 .textContent
+	            console.log("Marker Info Content:", markerInfoContent);
+	        }
 	        console.log("마커인포값!");
 	        markerInfoList.push({
 	        	id: markerId,
 	        	path: marker.getPosition(),
-	        	info: info
+	        	info: "1123"
 	        });
 	        console.log(markerInfoList);
-	        daum.maps.event.addListener(marker, 'mouseover', function () {
-	            info.setMap(map);
-	            info.setPosition(marker.getPosition());
-	        });
 // 	        daum.maps.event.addListener(marker, 'mouseout', function () {
 // 	            info.setMap(null);
 // 	        });

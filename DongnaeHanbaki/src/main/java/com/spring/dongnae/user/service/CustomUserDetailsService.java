@@ -27,11 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 		if (userVO == null) {
 		    throw new UsernameNotFoundException("사용자가 입력한 아이디에 해당하는 사용자를 찾을 수 없습니다.");
 		}
-		
-		CustomUserDetails cud = new CustomUserDetails();
-		cud.setUsername(userVO.getEmail());
-		cud.setPassword(userVO.getPassword());
-		cud.setToken(userVO.getToken());
+		CustomUserDetails cud = new CustomUserDetails(userVO);
 //		List<>
 		
 		//역할

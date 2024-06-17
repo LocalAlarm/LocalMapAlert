@@ -35,8 +35,8 @@ async function handleFriendRoom(friendRoom) {
             const nickname = await getNickname(element.token);
             console.log(nickname);
             friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';
-            $('#friendList').html(friendListHtml);
         }
+        $('#friendList').html(friendListHtml);
     }
 }
 
@@ -186,17 +186,15 @@ function hideSearchResults() {
 }
 
 // 친구 요청 받은 데이터를 불러오기 함수
-function receiveFriendRequests(email) {
+function receiveFriendRequests() {
     $.ajax({
         url: '/dongnae/api/receiveFriendRequest', // 서버의 URL 경로가 정확한지 확인하세요.
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({ requestEmail: email }),
         success: function (response) {
             console.log('Received data:', response);
             try {
-                const friendRequests = JSON.parse(response); // JSON 형식으로 파싱
-                displayFriendRequests(friendRequests);
+                displayFriendRequests(response);
             } catch (error) {
                 console.error('Error parsing response JSON:', error);
             }
@@ -211,9 +209,11 @@ function receiveFriendRequests(email) {
     });
 }
 
+
 // 친구 요청 목록 표시 함수
 function displayFriendRequests(friendRequests) {
     // 응답 데이터 검증
+    console.log(friendRequests);
     if (!Array.isArray(friendRequests)) {
         console.error('Invalid data format:', friendRequests);
         return;
@@ -221,13 +221,39 @@ function displayFriendRequests(friendRequests) {
 
     const container = $('#friend-requests');
     container.empty();
+    var friendRequestListHtml = '';
     friendRequests.forEach(request => {
-        const requestElement = $('<li></li>').append(
-            $('<a></a>')
-                .attr('href', '#')
-                .addClass('collapse__sublink')
-                .text(`Friend Request from: ${request.email}`)
-        );
-        container.append(requestElement);
+        friendRequestListHtml += `<li class="mb-1 mt-1 collapse__sublink" id="${request}">
+                                    <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
+                                    <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
+                                    ${request}
+                                </li>`;
     });
+    $('#friend-requests').html(friendRequestListHtml);
+
+    $(document).on('click', '.friendApprove', function () {
+        var requestId = $(this).parent().attr('id');
+        approveFriendRequest(requestId);
+    });
+
+    // 요청을 수락하는 함수
+    function approveFriendRequest(requestId) {
+        $.ajax({
+            url: '/dongnae/api/approveFriendRequest', // 요청을 처리할 서버의 URL 경로
+            type: 'POST', // POST 방식으로 요청
+            contentType: 'application/json', // 요청의 Content-Type 설정
+            data: JSON.stringify({ requestId: requestId }), // 요청 본문에 요청 ID를 포함하여 전송
+            success: function (response) {
+                console.log('Success:', response);
+                // 성공적으로 요청을 수락한 경우, 화면 갱신 또는 사용자에게 알림 처리 등을 수행할 수 있습니다.
+                // 예를 들어, 요청을 수락한 목록을 새로고침하는 등의 작업을 수행할 수 있습니다.
+                receiveFriendRequests(); // 친구 요청 목록을 갱신하는 함수 호출
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                // 요청 처리 중 에러가 발생한 경우, 적절한 에러 처리 로직을 구현할 수 있습니다.
+                alert('친구 요청 수락 중 오류가 발생하였습니다. 다시 시도해주세요.');
+            }
+        });
+    }
 }

@@ -11,19 +11,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.custom.scheme.CustomMarker;
+import com.spring.dongnae.custom.service.CustomService;
 import com.spring.dongnae.map.service.MapService;
 import com.spring.dongnae.map.vo.MapVO;
 
 @Controller
-public class customController {
+public class CustomController {
 	
 	private final MapService mapService;
+	private final CustomService customService;
+//	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public customController(MapService mapService) {
+	public CustomController(MapService mapService, CustomService customService) {
 		this.mapService = mapService;
+		this.customService = customService;
 		System.out.println("========= customController() 객체생성");
 	}
 	
@@ -34,11 +40,11 @@ public class customController {
 		String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //		session.getAttribute("user");
 		System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-		String email = "test18@naver.com";
+		String email = "test5@naver.com";
 		try {
-            // ObjectMapper 생성
-            ObjectMapper objectMapper = new ObjectMapper();
-
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			
             // JSON 문자열을 JsonNode 객체로 변환
             JsonNode jsonNode = objectMapper.readTree(jsonString);
 
@@ -62,9 +68,9 @@ public class customController {
             String content = jsonNode.get("content").asText();
 
             // 추출한 필드 값 출력
-            System.out.println("centerLongitude: " + centerLongitude);
-            System.out.println("centerLatitude: " + centerLatitude);
-            System.out.println("Level: " + level);
+//            System.out.println("centerLongitude: " + centerLongitude);
+//            System.out.println("centerLatitude: " + centerLatitude);
+//            System.out.println("Level: " + level);
             MapVO vo = new MapVO();
             vo.setUserEmail(email);
             vo.setCenterIatitude(centerLatitude);
@@ -72,10 +78,17 @@ public class customController {
             vo.setViewLevel(level);
             vo.setTitle(title);
             vo.setContent(content);
-            System.out.println("삽입할 map : " + vo);
+//            System.out.println("삽입할 map : " + vo);
             
             if( mapService.insertMap(vo) > 0) {
             	check = true;
+            	ObjectMapper mapper = new ObjectMapper()
+            							.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            	CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
+            	customMarker.setMapIdx(12);
+            	System.out.println("커스텀 스키마로 변경! : " + customMarker);
+            	customService.saveMarker(customMarker);
+            	
             }
             
             
