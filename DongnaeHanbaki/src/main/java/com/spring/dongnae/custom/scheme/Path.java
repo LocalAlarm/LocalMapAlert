@@ -1,32 +1,31 @@
 package com.spring.dongnae.custom.scheme;
 
-public class Path {
-    private double La;
-    private double Ma;
-    
-    public Path() {
-    }
-    
-    public Path(double la, double ma) {
-    	this.setLa(la);
-    	this.setMa(ma);
-    }
-    
-    public double getLa() {
-    	return La;
-    }
-    public void setLa(double la) {
-    	La = la;
-    }
-	public double getMa() {
-		return Ma;
-	}
-	public void setMa(double ma) {
-		Ma = ma;
-	}
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	@Override
-	public String toString() {
-		return "PathScheme [La=" + La + ", Ma=" + Ma + "]";
-	}
+public class Path {
+	@JsonProperty("La")
+    private double La;
+	@JsonProperty("Ma")
+    private double Ma;
+
+    public double getLa() {
+        return La;
+    }
+
+    public void setLa(double La) {
+        this.La = La;
+    }
+
+    public double getMa() {
+        return Ma;
+    }
+
+    public void setMa(double Ma) {
+        this.Ma = Ma;
+    }
+
+    @Override
+    public String toString() {
+        return "Path [La=" + La + ", Ma=" + Ma + "]";
+    }
 }

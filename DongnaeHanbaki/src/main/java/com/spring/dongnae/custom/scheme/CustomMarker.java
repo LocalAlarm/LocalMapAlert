@@ -5,89 +5,119 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
 @Document(collection = "customMarkers")
-@JsonIgnoreProperties(ignoreUnknown = true) //알수없는 값 무시
 public class CustomMarker {
+	
 	@Id
 	private int mapIdx;
-	private List<Marker> markers;
-	
-	// 기본 생성자 추가
-    public CustomMarker() {
+    private List<Marker> markers;
+    private List<Line> lines;
+    private List<Rect> rects;
+    private List<Circle> circles;
+    private List<Poly> polys;
+    private String center;
+    private String level;
+    private String title;
+    private String content;
+    
+    // 아이디 리턴
+    public int getMapIdx() {
+    	return mapIdx;
     }
 	
-	public CustomMarker (int mapIdx, List<Marker> markers){
-		System.out.println(">> custommarker 객체 생성!");
+    public void setMapIdx(int mapIdx) {
 		this.mapIdx = mapIdx;
-		this.markers = markers;
-	}
-	
-	
-	public int getMapIdx() {
-		return mapIdx;
-	}
-	public void setMapIdx(int mapIdx) {
-		this.mapIdx = mapIdx;
-	}
-	public List<Marker> getMarkers() {
+    	
+    }
+    
+    // 마커에 관한 메서드
+    public List<Marker> getMarkers() {
 		return markers;
 	}
 	public void setMarkers(List<Marker> markers) {
 		this.markers = markers;
 	}
-
-
-	public static class Marker {
-		private int id;
-		private MarkerPath path;
-		private String info; // content 안에 p태그 안에 내용가져와야됨 임시로 String
-		
-		public Marker() {
-			
-		}
+	public void addMarker(Marker marker) {
+		this.markers.add(marker);
 	}
 	
-	public static class MarkerPath {
-		private double la;
-		private double ma;
-		
-		public MarkerPath() {
-			
-		}
-		
-		public MarkerPath(double la, double ma) {
-			 this.la = la;
-		     this.ma = ma;
-		}
-
-		public double getLa() {
-			return la;
-		}
-
-		public void setLa(double la) {
-			this.la = la;
-		}
-
-		public double getMa() {
-			return ma;
-		}
-
-		public void setMa(double ma) {
-			this.ma = ma;
-		}
+	// 라인에 관한 메서드
+	public List<Line> getLines() {
+		return lines;
 	}
-//	class MarkerInfo {
-//	
-//}
+	public void setLines(List<Line> lines) {
+		this.lines = lines;
+	}
+	public void addLine(Line line) {
+		this.lines.add(line);
+	}
+	
+	// 사각형에 관한 메서드
+	public List<Rect> getRects() {
+		return rects;
+	}
+	public void setRects(List<Rect> rects) {
+		this.rects = rects;
+	}
+	public void addRects(Rect rect) {
+		this.rects.add(rect);
+	}
+	
+	// 원에 관한 메서드
+	public List<Circle> getCircles() {
+		return circles;
+	}
+	public void setCircles(List<Circle> circles) {
+		this.circles = circles;
+	}
+	public void addCircle(Circle circle) {
+		this.circles.add(circle);
+	}
+	
+	// 다각형에 관한 메서드
+	public List<Poly> getPolys() {
+		return polys;
+	}
+	public void setPolys(List<Poly> polys) {
+		this.polys = polys;
+	}
+	public void addPoly(Poly poly) {
+		this.polys.add(poly);
+	}
+	
+	
+	public String getCenter() {
+		return center;
+	}
+	public void setCenter(String center) {
+		this.center = center;
+	}
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 	@Override
 	public String toString() {
-		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + "]";
+		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + ", lines=" + lines + ", rects=" + rects
+				+ ", circles=" + circles + ", polys=" + polys + ", center=" + center + ", level=" + level + ", title="
+				+ title + ", content=" + content + "]";
 	}
-	
-	
-	
+
+
 	
 }

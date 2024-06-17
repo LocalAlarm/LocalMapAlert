@@ -3,6 +3,7 @@ package com.spring.dongnae.custom.scheme;
 public class Point {
     private double x;
     private double y;
+    
 	public double getX() {
 		return x;
 	}

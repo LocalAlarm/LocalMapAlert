@@ -9,5 +9,5 @@ import com.spring.dongnae.custom.scheme.CustomMarker;
 
 @Repository
 public interface CustomRepository extends MongoRepository<CustomMarker, String>{
-	Optional<CustomMarker> findByMapIdx(int MapIdx);
+//	Optional<CustomMarker> findByMapIdx(int MapIdx);
 }

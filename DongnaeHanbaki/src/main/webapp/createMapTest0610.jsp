@@ -316,7 +316,7 @@
 	        markerInfoList.push({
 	        	id: markerId,
 	        	path: marker.getPosition(),
-	        	info: "1123"
+	        	info: markerInfoElement
 	        });
 	        console.log(markerInfoList);
 // 	        daum.maps.event.addListener(marker, 'mouseout', function () {
@@ -325,10 +325,10 @@
 // 	        daum.maps.event.addListener(marker, 'mousedown', function () {
 // 	            info.setMap(null);
 // 	        });
-// 	        daum.maps.event.addListener(marker, 'mouseup', function () {
-// 	            info.setMap(map);
-// 	            info.setPosition(marker.getPosition());
-// 	        });
+	        daum.maps.event.addListener(marker, 'mouseover', function () {
+	            info.setMap(map);
+	            info.setPosition(marker.getPosition());
+	        });
 			//클릭시 info닫기
 	        daum.maps.event.addListener(marker, 'click', function () {
 	        	info.setMap(null);
@@ -846,7 +846,7 @@
 	function saveMarkerContent() {
 	    var content = document.getElementById('markerInfoDetail').value;
 	    console.log(content);
-	    if (currentInfo) {
+	    if (!currentInfo) {
 	    	console.log("save!!!!!!!!!");
 	        // 기존 info content 업데이트
 	        currentInfo.setContent('<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
@@ -854,11 +854,11 @@
 	                               '<p>' + content + '</p>' +
 	                               '<button onclick="markerContent(this)">내용쓰기</button>' +
 	                               '</div>');
-	        content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
-            '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-            '<p id="marker-info-"' + markerId + '></p>' +
-            '<button onclick="markerContent(this)">내용쓰기</button>' +
-            '</div>'
+// 	        content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+//             '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+//             '<p id="marker-info-"' + markerId + '></p>' +
+//             '<button onclick="markerContent(this)">내용쓰기</button>' +
+//             '</div>'
 	        console.log(currentInfo);
 	    }
 	    closePopup();

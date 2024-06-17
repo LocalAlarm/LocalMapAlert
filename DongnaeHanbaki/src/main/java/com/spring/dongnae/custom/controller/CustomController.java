@@ -82,8 +82,7 @@ public class CustomController {
             
             if( mapService.insertMap(vo) > 0) {
             	check = true;
-            	ObjectMapper mapper = new ObjectMapper()
-            							.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            	ObjectMapper mapper = new ObjectMapper();
             	CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
             	customMarker.setMapIdx(12);
             	System.out.println("커스텀 스키마로 변경! : " + customMarker);
