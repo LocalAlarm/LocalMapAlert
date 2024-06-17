@@ -40,7 +40,9 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	    markerdataDAO.insertMarker(vo);
 	}
 
-
-
+	@Override
+	public List<MarkerDataVO> getNearAccidents(int marker_idx) {
+		return markerdataDAO.getNearAccidents(marker_idx);
+	}
 
 }

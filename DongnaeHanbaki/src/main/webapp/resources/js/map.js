@@ -91,6 +91,8 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
             document.getElementById('inputForm').style.display = 'none';
             // 폼 초기화
             document.getElementById('markerForm').reset();
+             // 임시 마커 제거
+            resetTempMarker();
              // 마커 생성 및 지도에 표시
             addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerContent, markerDetails);
         },
@@ -209,11 +211,7 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
             });
         }
 
-        // 팝업 닫기 함수
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-
+        
 var markersVisible = true; // 마커 표시 상태를 저장하는 변수
 
     function toggleMarkers() {
@@ -229,17 +227,28 @@ var markersVisible = true; // 마커 표시 상태를 저장하는 변수
     
 // 마커를 모두 숨기는 함수
 function hideMarkers() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }        
+    if (markers) {
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]) {
+                markers[i].setMap(null);
+            }
+        }
+         markers = [];
+    }
 }
+
 
 // 마커를 모두 보이는 함수
 function showMarkers() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-    }        
+    if (map && markers) {
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]) {
+                markers[i].setMap(map);
+            }
+        }
+    }
 }
+
 
 // 팝업 창 닫기
 function closePopup() {
@@ -258,6 +267,7 @@ function Events() {
         method: "GET",
         dataType: "json",
         success: function (data) {
+        
             // 기존 마커 제거
             hideMarkers();
             markers = [];
@@ -373,42 +383,60 @@ function RealTimeAccidents() {
     });
 }
 
-// 근처 사건사고 찾기
 function NearAccidents() {
     var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
-    var radius = 1; // 반경 설정 km단위로함
+    var radius = 1; // 반경 설정 km단위로 함
     var nearbyAccidents = [];
+    var nearestMarkerPosition = null; // 가장 가까운 마커의 위치
 
     $.ajax({
-        url: "AllAccidents",
+        url: "NearAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
-        
-            hideMarkers();
+            hideMarkers(); // 기존 마커 숨기기
+            markers = []; // 마커 배열 초기화
+
             data.forEach(function (accident) {
                 var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
                 var distance = getDistance(center.getLat(), center.getLng(), accident.latitude, accident.longitude);
+                var title = accident.title; // 사건사고 제목
+                var content = accident.content; // 사건사고 내용
+                var markerType = accident.markerIdx; // 마커 타입
 
+                // 사건사고 위치에 마커 추가
+                var marker = addMarker(position, markerType, title, content);
+                markers.push(marker); // 마커 배열에 추가
+
+                // 가장 가까운 마커의 위치 업데이트
+                if (nearestMarkerPosition === null || distance < getDistance(center.getLat(), center.getLng(), nearestMarkerPosition.getLat(), nearestMarkerPosition.getLng())) {
+                    nearestMarkerPosition = position;
+                }
+
+                // 반경 내 사건사고 배열에 추가
                 if (distance <= radius) {
                     nearbyAccidents.push(accident);
-                    addMarker(position, '2', accident.title, accident.content);
                 }
             });
-			closePopup();
-            map.setLevel(2);
-            updateSidebar(data);  
-			setMapCenter();
-            // 네비게이션 바 탭 활성화
-            toggleEventAccidentsTab(true);
-                    
-			if (nearbyAccidents.length > 0) {
+
+            closePopup(); // 팝업 닫기
+            map.setLevel(2); // 지도 레벨 설정
+
+            // 가장 가까운 마커 위치로 지도 중심 설정
+            if (nearestMarkerPosition) {
+                map.setCenter(nearestMarkerPosition);
+            }
+
+            toggleEventAccidentsTab(true); // 이벤트 사건사고 탭 활성화
+            updateSidebar(nearbyAccidents); // 사이드바 업데이트
+
+            if (nearbyAccidents.length > 0) {
                 console.log('근처 사건사고:', nearbyAccidents);
             } else {
                 console.log('근처에 사건사고가 없습니다.');
             }
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
             console.error("사건사고 정보를 불러오는 도중 오류가 발생했습니다:", error);
         }
     });
@@ -431,7 +459,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return distance;
 }
 
-
 //전체목록 클릭
 function All() {
     $.ajax({
@@ -445,6 +472,7 @@ function All() {
 
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
+            	console.log("eee : "+event.markerIdx);
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
                 var title = event.title;
                 var content = event.content;
@@ -469,7 +497,6 @@ function All() {
    });
 }
 
-var markerListVisible = true; // 게시판 상태를 저장하는 변수
 
 function toggleMarkerList() {
         var markerList = document.getElementById('markerlist');
@@ -483,42 +510,43 @@ function toggleMarkerList() {
         markerListVisible = !markerListVisible;
     }
 
-// 게시판 업데이트 함수
+// 게시판  상단 제목 업데이트 함수
  function updateHeader(title) {
         $('#markerListHeader').text(title);
     }
 
 function updateSidebar(data) {
-    $('#markerList').empty();
+            $('#markerList').empty();
 
-    data.forEach(function(event, index) {
-        // 시간 데이터 포맷팅
-        var writeDate = new Date(event.writeDate);
-        var formattedDate = writeDate.toLocaleString(); 
+            data.forEach(function (event, index) {
+                var writeDate = new Date(event.writeDate);
+                var formattedDate = writeDate.toLocaleString();
 
-        // 게시판 데이터에 대한 클릭 이벤트 핸들러 추가
-        $('#markerList').append(`
-            <div class="card marker-item" id="markerItem_${index}">
-                <div class="card-body">
-					<p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>                    
-					<p class="card-text">${event.content}</p>
-                    <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
-                </div>
-            </div>
-        `);
+                $('#markerList').append(`
+                    <div class="card marker-item" id="markerItem_${index}">
+                        <div class="card-body">
+                            <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
+                            <p class="card-text">${event.content}</p>
+                            <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
+                        </div>
+                    </div>
+                `);
+            });
 
-        // 각 항목에 대한 클릭 이벤트 핸들러 추가
-        $(`#markerItem_${index}`).on('click', function() {
-            // 인덱스 통해서 가져오
-            kakao.maps.event.trigger(markers[index], 'click');
-        });
-    });
+            for (var index = 0; index < markers.length; index++) {
+    $(`#markerItem_${index}`).on('click', (function (idx) {
+        return function () {
+            if (markers[idx]) {
+                kakao.maps.event.trigger(markers[idx], 'click');
+                console.log(idx); // 클릭된 마커의 인덱스 출력
+            } else {
+                console.error(`마커 ${idx} 존재하지 않음.`);
+            }
+        };
+    })(index));
+}
 }
 
-// 게시판 데이터 클릭 시 해당 마커에 대한 클릭 이벤트를 발생시키는 함수
-function handleMarkerClick(index) {
-    kakao.maps.event.trigger(markers[index], 'click');
-}
 
 $(document).ready(function() {
         All();
