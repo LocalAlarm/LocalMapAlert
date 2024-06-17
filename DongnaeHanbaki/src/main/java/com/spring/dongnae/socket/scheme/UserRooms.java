@@ -1,9 +1,12 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.spring.dongnae.user.vo.UserVO;
 
 @Document(collection = "userRooms")
 public class UserRooms {
@@ -17,9 +20,16 @@ public class UserRooms {
 	public UserRooms() {
 	}
 	
+	public UserRooms(UserVO vo) {
+		this.email = vo.getEmail();
+		this.token = vo.getToken();
+		this.chatRoomIds = new ArrayList<String>();
+	}
+	
 	public UserRooms(String email, String token) {
 		this.email = email;
 		this.token = token;
+		this.chatRoomIds = new ArrayList<String>();
 	}
 	
 	public String getId() {

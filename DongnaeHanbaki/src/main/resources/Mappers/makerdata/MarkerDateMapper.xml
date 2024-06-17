@@ -26,8 +26,3 @@
         ORDER BY WRITE_DATE DESC
     </select>
 </mapper>
-
-
-
-
-

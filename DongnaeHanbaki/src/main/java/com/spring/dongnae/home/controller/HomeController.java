@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.spring.dongnae.user.vo.CustomUserDetails;
 
 @Controller
 public class HomeController {
@@ -17,8 +16,6 @@ public class HomeController {
     	if(authentication == null) {
     		System.out.println("authentication is null1");
     	};
-    	CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-    	System.out.println("Usertoken" + userDetails.getToken());
         return "home/home";
     }
 }
