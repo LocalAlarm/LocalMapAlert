@@ -1,0 +1,46 @@
+@charset "UTF-8";
+/* 메시지 스타일 정의 */
+.message {
+	margin: 5px;
+	padding: 10px;
+	border-radius: 10px;
+	max-width: 60%;
+	clear: both;
+}
+
+.sent {
+	background-color: #dcf8c6; /* 보낸 메시지 배경색 */
+	float: right;
+	text-align: right;
+}
+
+.received {
+	background-color: yellow; /* 받은 메시지 배경색 */
+	float: left;
+	text-align: left;
+}
+
+.chat-toast-container {
+    position: fixed; /* 위치를 고정 */
+    resize: vertical; /* 수평으로만 크기 조절 가능 */
+	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
+}
+#chatBox {
+	width: 100%;
+	height: 150px;
+	overflow-y: scroll; /* 수직 스크롤바 */
+	padding : 10px;
+	border: 1px solid #ccc;
+    bottom: 10px; /* 하단 여백 */
+    right: 10px; /* 우측 여백 */
+}
+
+.resize-handle {
+	position: absolute;
+	bottom: 0; /* 아래쪽에 위치하도록 설정 */
+	left: 0;
+	width: 100%;
+	height: 10px;
+	background: #ccc;
+	cursor: ns-resize;
+}

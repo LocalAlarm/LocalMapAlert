@@ -160,8 +160,12 @@ function displaySearchResults(results, searchString) {
     var matchFound = false;
     results.forEach(function (result) {
         // 각 결과를 리스트 아이템으로 표시합니다.
-        html += '<li class="list-group-item searchResultsElement">' + result.email + '</li>';
+        html += '<li class="list-group-item searchResultsElement">';
+        html += '<img src="' + result.image + '" alt="Profile Image" class="rounded-circle" style="width: 35px; height: 35px; margin-right: 10px;">';
+        html += result.email;
+        html += '</li>';
         if (result.email === searchString) {
+        	// 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
             matchFound = true;
         }
     });
@@ -257,3 +261,10 @@ function displayFriendRequests(friendRequests) {
         });
     }
 }
+
+function friendRequestModal(){
+    var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
+    $('#nav__friend-request').on('click', function() {
+        friendRequestModal.show();
+    });
+};

@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page
-	import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
 <%@ page import="org.springframework.security.core.Authentication" %>
 <!DOCTYPE html>
@@ -10,59 +9,11 @@
 <head>
 <meta charset="UTF-8">
 <title>WebSocket Chat</title>
-<script src="${pageContext.request.contextPath}/resources/js/sidebar/common.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/sidebar/chat.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/sidebar/friend.js"></script>
-<jsp:include page="../../patials/commonHead.jsp"></jsp:include>
-<link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
 <!-- 공통 헤더 파일 포함 -->
 
 <style>
 /* 메시지 스타일 정의 */
-.message {
-	margin: 5px;
-	padding: 10px;
-	border-radius: 10px;
-	max-width: 60%;
-	clear: both;
-}
 
-.sent {
-	background-color: #dcf8c6; /* 보낸 메시지 배경색 */
-	float: right;
-	text-align: right;
-}
-
-.received {
-	background-color: yellow; /* 받은 메시지 배경색 */
-	float: left;
-	text-align: left;
-}
-
-.chat-toast-container {
-    position: fixed; /* 위치를 고정 */
-    resize: vertical; /* 수평으로만 크기 조절 가능 */
-	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
-}
-#chatBox {
-	width: 100%;
-	height: 150px;
-	overflow-y: scroll; /* 수직 스크롤바 */
-	padding : 10px;
-	border: 1px solid #ccc;
-    bottom: 10px; /* 하단 여백 */
-    right: 10px; /* 우측 여백 */
-}
-
-.resize-handle {
-	position: absolute;
-	bottom: 0; /* 아래쪽에 위치하도록 설정 */
-	left: 0;
-	width: 100%;
-	height: 10px;
-	background: #ccc;
-	cursor: ns-resize;
-}
 </style>
 </head>
 <%
@@ -112,7 +63,6 @@ const chatToast = document.getElementById('chatToast');
 				                <!-- 친구 목록 여기에 뜸. -->
 				            </ul>
 				        </div>
-	
 	                    <div class="nav__link collapse__nav">
 	                        <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
 	                        <span class="nav_name">친구목록</span>
