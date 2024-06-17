@@ -77,11 +77,8 @@ public class FriendRequestController {
             Optional<FriendRoom> optionalFriendRoom = friendRoomRepository.findByEmail(requestId);
             Optional<FriendRoom> optionalMyFriendRoom = friendRoomRepository.findByEmail(getAuthenticInfo.GetEmail());
             ChatRoom chatRoom = new ChatRoom();
-            
-            List<String> list = new ArrayList<String>();
-            list.add(userService.getUserByEmail(requestId).getToken());
-            list.add(getAuthenticInfo.GetToken());
-            chatRoom.setUserIds(list);
+            chatRoom.addUser(userService.getUserByEmail(requestId).getToken());
+            chatRoom.addUser(getAuthenticInfo.GetToken());
             chatRoomRepository.save(chatRoom);
             
             System.out.println(chatRoom.toString());

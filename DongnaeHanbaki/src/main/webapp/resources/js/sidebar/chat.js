@@ -1,5 +1,4 @@
 // 채팅창에 관련된 js 코드.
-
 function connectChat() {
     chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
@@ -56,6 +55,7 @@ async function handleUserRooms(userRooms) {
 async function handleMessage(message) {
     // 닉네임 가져오기
     const nickname = await getNickname(message.senderToken);
+    var token = '<%=userDetails.getToken()%>';
     // 가져온 닉네임을 사용하여 메시지 표시
     if (token === message.senderToken) {
         displayMessage(nickname, message.content, 'sent');
@@ -138,6 +138,7 @@ function initializeChatToast() {
                         getNickname(element.senderToken)
                             .then(nickname => {
                                 console.log(nickname);
+                                var token = '<%=userDetails.getToken()%>';
                                 if (token === element.senderToken) {
                                     displayMessage(nickname, element.content, 'sent');
                                 } else {

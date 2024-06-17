@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,11 @@ public class ChatRoom {
 	private List<String> userIds;
 	private List<Message> messages;
 	private String roomName; //채팅방이름
+
+	public ChatRoom() {
+		this.userIds = new ArrayList<String>();
+		this.messages = new ArrayList<Message>();
+	}
 
 	// id는 채팅방 고유 번호를 뜻한다.
 	public String getId() {
