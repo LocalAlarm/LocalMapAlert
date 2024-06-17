@@ -1,6 +1,6 @@
 var container = document.getElementById('map');
 var options = {
-    center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
+    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644),
     level: 2
 };
 var map = new kakao.maps.Map(container, options);
@@ -37,6 +37,13 @@ kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
     });
     
 });
+
+ // 중앙값으로 이동시키는 함수
+function setMapCenter() {
+    var centerPosition = new kakao.maps.LatLng(37.49948516874355, 127.03314633997644);
+    map.setCenter(centerPosition);
+    map.setLevel(2);
+}
 
 // 폼 제출 시 마커 정보를 서버로 전송
 document.getElementById('markerForm').addEventListener('submit', function(event) {
@@ -188,18 +195,24 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
         infowindow.close();
     });
 
-    // 마커에 click 이벤트 등록
-    kakao.maps.event.addListener(marker, 'click', function () {
-        // 지도 중심을 마커 위치로 이동하고 레벨을 1로 설정
-        map.setCenter(marker.getPosition());
-        map.setLevel(1);
+    // 마커에 click 이벤트를 등록하여 팝업 창을 표시
+            kakao.maps.event.addListener(marker, 'click', function () {
+                // 지도 중심을 마커 위치로 이동하고 레벨을 1로 설정
+                map.setCenter(marker.getPosition());
+                map.setLevel(1);
 
-        // 팝업 창 내용 설정 및 표시
-        var detailedContent = `${generateInfoContent(markerType, title)}<br>자세한 내용 : ${content}`;
-        document.getElementById('popupContent').innerHTML = detailedContent;
-        document.getElementById('popup').style.display = 'block';
-    });
-}
+                // 팝업 창 내용 설정 및 표시
+                var detailedContent = `${generateInfoContent(markerType, title)}<br>자세한 내용 : ${content}`;
+                document.getElementById('popupTitle').innerText = title; // 제목 설정
+                document.getElementById('popupContent').innerHTML = detailedContent; // 내용 설정
+                document.getElementById('popup').style.display = 'block';
+            });
+        }
+
+        // 팝업 닫기 함수
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
 
 var markersVisible = true; // 마커 표시 상태를 저장하는 변수
 
@@ -252,19 +265,22 @@ function Events() {
             // 가져온 데이터로 마커 생성
             data.forEach(function (event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                 var title = event.title;
+                var title = event.title;
                 var content = event.content;
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
 
+            closePopup();
+            map.setLevel(2);
+			setMapCenter();         
             // 마커 보이기
             showMarkers();
             updateSidebar(data);  
             document.getElementById('markerlist').style.display = 'visible';
 
             // 네비게이션 바 탭 활성화
-            $('#v-pills-messages-tab').tab('show');
+   			toggleEventAccidentsTab(false);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -272,10 +288,26 @@ function Events() {
     });
 }
 
-// 사건사고 클릭
-function EventAccidents() {
+// 사건 사고 메뉴 활성화/비활성화 함수
+function toggleEventAccidentsTab(activate) {
+    if (activate) {
+        // 모든 nav-link에서 'active' 클래스 제거
+        document.querySelectorAll('.nav-link').forEach(function (el) {
+            el.classList.remove('active');
+        });
+
+        // 사건 사고 메뉴 활성화
+        document.getElementById('eventAccidentsDropdown').classList.add('active');
+    } else {
+        // 사건 사고 메뉴 비활성화
+        document.getElementById('eventAccidentsDropdown').classList.remove('active');
+    }
+}
+
+// 전체 사건사고 클릭
+function AllAccidents() {
     $.ajax({
-        url: "EventAccidents",
+        url: "AllAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -293,17 +325,112 @@ function EventAccidents() {
             });
 
             // 마커 보이기
+            closePopup();
+            map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-
+			setMapCenter();
             // 네비게이션 바 탭 활성화
-            $('#v-pills-profile-tab').tab('show');
+            toggleEventAccidentsTab(true);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
         }
     });
 }
+// 실시간 사건사고 클릭
+function RealTimeAccidents() {
+    $.ajax({
+        url: "RealTimeAccidents",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            // 기존 마커 제거
+            hideMarkers();
+            markers = [];
+
+            // 가져온 데이터로 마커 생성
+            data.forEach(function (event) {
+                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                var title = event.title;
+                var content = event.content;
+                var markerType = event.markerIdx;
+                addMarker(position, markerType, title, content);
+            });
+
+            // 마커 보이기
+            closePopup();
+            map.setLevel(2);
+            showMarkers();
+            updateSidebar(data);  
+			setMapCenter();
+            // 네비게이션 바 탭 활성화
+            toggleEventAccidentsTab(true);
+        },
+        error: function (xhr, status, error) {
+            console.error("데이터를 가져오는 중 오류 발생: " + error);
+        }
+    });
+}
+
+// 근처 사건사고 찾기
+function NearAccidents() {
+    var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
+    var radius = 1; // 반경 설정 km단위로함
+    var nearbyAccidents = [];
+
+    $.ajax({
+        url: "AllAccidents",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+        
+            hideMarkers();
+            data.forEach(function (accident) {
+                var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
+                var distance = getDistance(center.getLat(), center.getLng(), accident.latitude, accident.longitude);
+
+                if (distance <= radius) {
+                    nearbyAccidents.push(accident);
+                    addMarker(position, '2', accident.title, accident.content);
+                }
+            });
+			closePopup();
+            map.setLevel(2);
+            updateSidebar(data);  
+			setMapCenter();
+            // 네비게이션 바 탭 활성화
+            toggleEventAccidentsTab(true);
+                    
+			if (nearbyAccidents.length > 0) {
+                console.log('근처 사건사고:', nearbyAccidents);
+            } else {
+                console.log('근처에 사건사고가 없습니다.');
+            }
+        },
+        error: function (error) {
+            console.error("사건사고 정보를 불러오는 도중 오류가 발생했습니다:", error);
+        }
+    });
+}
+
+// 두 좌표 사이의 거리를 계산하는 함수 km단위
+function getDistance(lat1, lng1, lat2, lng2) {
+    function toRad(value) {
+        return value * Math.PI / 180;
+    }
+
+    var R = 6371; // 지구 반경 km단위
+    var dLat = toRad(lat2 - lat1);
+    var dLng = toRad(lng2 - lng1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    return distance;
+}
+
 
 //전체목록 클릭
 function All() {
@@ -327,11 +454,13 @@ function All() {
             });
 
             // 마커 보이기
+            closePopup();
+   			map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-
+			setMapCenter();         
             // 네비게이션 바 탭 활성화
-            $('#v-pills-home-tab').tab('show');
+   			toggleEventAccidentsTab(false);
 
         },
         error: function(xhr, status, error) {
@@ -371,8 +500,8 @@ function updateSidebar(data) {
         $('#markerList').append(`
             <div class="card marker-item" id="markerItem_${index}">
                 <div class="card-body">
-                    <p class="card-text">${event.title}</p>
-                    <p class="card-text">${event.content}</p>
+					<p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>                    
+					<p class="card-text">${event.content}</p>
                     <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
                 </div>
             </div>
@@ -391,15 +520,16 @@ function handleMarkerClick(index) {
     kakao.maps.event.trigger(markers[index], 'click');
 }
 
-     $(document).ready(function() {
+$(document).ready(function() {
         All();
-        $('#v-pills-home-tab').on('click', function() {
+        $('#v-pills-home-tab').on('click', function() {        
             updateHeader('전체 마커 목록');
         });
-        $('#v-pills-profile-tab').on('click', function() {
+        $('#eventAccidentsDropdown').on('click', function() {
             updateHeader('사건사고 마커 목록');
         });
-        $('#v-pills-messages-tab').on('click', function() {
+        $('#v-pills-events-tab').on('click', function() {
+        
             updateHeader('이벤트 마커 목록');
         });
-    });
+});

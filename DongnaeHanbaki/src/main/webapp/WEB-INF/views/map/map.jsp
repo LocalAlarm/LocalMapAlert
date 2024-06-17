@@ -14,17 +14,30 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="EventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
-                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="Events()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
-                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+                <!-- 전체 목록 버튼 -->
+<button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
+
+<!-- 사건 사고 메뉴 -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        사건 사고
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
+        <li><a class="dropdown-item" href="#" onclick="AllAccidents()">전체 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealTimeAccidents()">실시간 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="NearAccidents()">내 주변 사건사고</a></li>
+    </ul>
+</div>
+
+<button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
+<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+
             </div>
         </div>       
         <div id="map"></div> 
@@ -71,12 +84,17 @@
 
 <!-- 팝업 창 -->
 <div id="popup">
-    <button id="popupClose" onclick="closePopup()">닫기</button>
-    <div id="popupContent"></div>
+        <div class="popup-header">
+            <span class="popup-title" id="popupTitle"></span>
+        </div>
+        <div class="popup-body" id="popupContent"></div>
+        <div class="popup-footer">
+            <button onclick="closePopup()">Close</button>
+        </div>
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
