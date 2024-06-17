@@ -94,7 +94,8 @@
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
+
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
