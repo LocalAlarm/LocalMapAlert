@@ -582,6 +582,9 @@
             </tr>
         </tbody>
 	</table> 
+	<form action="logout" method="post">
+        <button type="submit">로그아웃</button>
+    </form>
 	
     <div class="popup">
      <p id="popupLabel"></p>
