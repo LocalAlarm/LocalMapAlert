@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -25,6 +26,8 @@ public class FriendRoom {
 	public FriendRoom(UserVO userVO) {
 		this.email = userVO.getEmail();
 		this.token = userVO.getToken();
+		this.requestIds = new ArrayList<String>();
+		this.friendIds = new ArrayList<FriendInfo>();
 	}
 
 	public String getId() {

@@ -3,7 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.dongnae.marker.dao.MarkerDataDAO">
-
 	<select id ="allMenu" resultType="MarkerDataVO">
 		SELECT * FROM MARKERDATA 
 		ORDER BY WRITE_DATE
@@ -27,8 +26,3 @@
         ORDER BY WRITE_DATE DESC
     </select>
 </mapper>
-
-
-
-
-
