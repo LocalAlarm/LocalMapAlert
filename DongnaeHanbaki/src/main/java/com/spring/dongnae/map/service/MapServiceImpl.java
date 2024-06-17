@@ -18,32 +18,29 @@ public class MapServiceImpl implements MapService {
 		System.out.println(">> MapServiceImpl() 객체생성");
 	}
 
-	@Override
+	@Override //openYn 또는 userEmail 필요
 	public List<MapVO> getMapList(MapVO vo) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapDAO.getMapList(vo);
 	}
-
-	@Override
+	
+	@Override //mapIdx 필요
 	public MapVO getMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return null;
+		return mapDAO.getMap(vo);
 	}
 
-	@Override
+	@Override //MapVO 필요
 	public int insertMap(MapVO vo) {
 		return mapDAO.insertMap(vo);
 	}
 
-	@Override
+	@Override //mapIdx 필요
 	public int updateMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapDAO.updateMap(vo);
 	}
 
-	@Override
+	@Override //mapIdx 필요
 	public int deleteMap(MapVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapDAO.deleteMap(vo);
 	}
+
 }

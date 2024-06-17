@@ -10,9 +10,6 @@
 		<if test='userEmail != null and userEmail != ""'>
 		AND USER_EMAIL = #{userEmail }
 		</if>
-		<if test='limitRole != null and limitRole != ""'>
-		AND LIMIT_ROLE = #{limitRole }
-		</if>
 		<if test='openYn != null and openYn != ""'>
 		AND OPEN_YN = #{openYn }
 		</if>
@@ -43,16 +40,16 @@
 	<update id="updateMap" parameterType="mapVO">
 		UPDATE MAKER
 		SET 
-		<if test="#{title} != null">
+		<if test="title != null">
 			TITLE= #{title}
 		</if>
-		<if test="#{content} != null">
+		<if test="content != null">
 			CONTENT = #{content}
 		</if>
-		<if test="#{centerLatitude} != null">
+		<if test="centerLatitude != null">
 			CENTER_LATITUDE = #{centerLatitude}
 		</if>
-		<if test="#{centerLogitude} != null">
+		<if test="centerLogitude != null">
 			CENTER_LOGITUDE = #{centerLogitude}
 		</if>
 		WHERE DEL_YN = 0
