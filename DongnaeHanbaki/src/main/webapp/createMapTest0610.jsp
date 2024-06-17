@@ -828,6 +828,7 @@
 	    document.getElementById('markerPopup').style.display = 'none';
 	}
 
+	
 	// 팝업 창에서 내용을 저장
 	function saveMarkerContent() {
 	    var content = document.getElementById('markerInfoDetail').value;
