@@ -15,7 +15,6 @@ public class UserRooms {
 	@Id
 	private String id;
 	private String email;
-	private String token;
 	@DBRef
     private List<Moim> moims;
 
@@ -24,13 +23,11 @@ public class UserRooms {
 	
 	public UserRooms(UserVO vo) {
 		this.email = vo.getEmail();
-		this.token = vo.getToken();
 		this.moims = new ArrayList<Moim>();
 	}
 	
 	public UserRooms(String email, String token) {
 		this.email = email;
-		this.token = token;
 		this.moims = new ArrayList<Moim>();
 	}
 	
@@ -50,19 +47,11 @@ public class UserRooms {
 		this.email = email;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public List<Moim> getChatRoomIds() {
+	public List<Moim> getMoims() {
 		return moims;
 	}
 
-	public void setChatRoomIds(List<Moim> moims) {
+	public void setMoims(List<Moim> moims) {
 		this.moims = moims;
 	}
 
@@ -72,7 +61,7 @@ public class UserRooms {
 
 	@Override
 	public String toString() {
-		return "UserRooms [id=" + id + ", email=" + email + ", token=" + token + ", moims=" + moims + "]";
+		return "UserRooms [id=" + id + ", email=" + email + ", moims=" + moims + "]";
 	}
 	
 	

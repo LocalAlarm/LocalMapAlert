@@ -72,6 +72,10 @@ public class Board {
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
+    
+    public boolean deleteComment(String commentId) {
+    	return this.comments.removeIf(comment -> comment.getId().equals(commentId));
+    }
 
     public List<String> getLikes() {
         return likes;
@@ -81,12 +85,18 @@ public class Board {
         this.likes = likes;
     }
     
-    public boolean addLike(String userEmail) {
+    public boolean toggleLike(String userEmail) {
         if (likes.contains(userEmail)) {
-            return false; // User has already liked this post
+            likes.remove(userEmail);
+            return false;
+        } else {        	
+        	likes.add(userEmail);
+        	return true;
         }
-        likes.add(userEmail);
-        return true; // Like added successfully
+    }
+
+    public int getLikesCount() {
+    	return likes.size();
     }
     
     public Moim getMoim() {

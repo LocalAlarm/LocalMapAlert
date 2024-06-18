@@ -50,7 +50,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		if (token != null) {
 			sessions.put(token, session);
 			// 사용자 ID로 기존 메시지 문서 검색
-			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findByToken(token);
+			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(token);
 			UserRooms userRooms = new UserRooms();
 			// 기존 채팅방이 있으면 해당 데이터를 가져옴
 			if (optionalUserRooms.isPresent()) {

@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,7 @@ public class Moim {
     private String name;
     private String description;
     private String profilePic;
+    private String profilePicPI;
     @DBRef
     private String leader;
     @DBRef
@@ -22,7 +24,12 @@ public class Moim {
     private List<UserRooms> participants;
     @DBRef
     private List<Board> boards;
-
+    public Moim() {
+    	this.setSubLeader(new ArrayList<UserRooms>());
+    	this.setParticipants(new ArrayList<UserRooms>());
+    	this.setBoards(new ArrayList<Board>());
+    	this.setProfilePicPI(null);
+    }
     // Getters and Setters
     public String getId() {
         return id;
@@ -56,6 +63,14 @@ public class Moim {
 		this.profilePic = profilePic;
 	}
     
+	public String getProfilePicPI() {
+		return profilePicPI;
+	}
+
+	public void setProfilePicPI(String profilePicPI) {
+		this.profilePicPI = profilePicPI;
+	}
+	
     public String getLeader() {
 		return leader;
 	}
@@ -103,8 +118,8 @@ public class Moim {
 	@Override
 	public String toString() {
 		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
-				+ ", leader=" + leader + ", subLeader=" + subLeader + ", participants=" + participants + ", boards="
-				+ boards + "]";
+				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", subLeader=" + subLeader
+				+ ", participants=" + participants + ", boards=" + boards + "]";
 	}
-    
+
 }
