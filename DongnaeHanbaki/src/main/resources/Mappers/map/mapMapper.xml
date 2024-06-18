@@ -7,11 +7,14 @@
  	<select id="getMapList" parameterType="mapVO" resultType="mapVO">
 		SELECT * FROM MAP
 		WHERE DEL_YN = 0
-		<if test="${userEmail} != null">
-		AND USER_EMAIL = ${userEmail}
+		<if test='userEmail != null and userEmail != ""'>
+		AND USER_EMAIL = #{userEmail }
 		</if>
-		<if test="${limitRole} != null">
-		AND LIMIT_ROLE = ${limitRole}
+		<if test='limitRole != null and limitRole != ""'>
+		AND LIMIT_ROLE = #{limitRole }
+		</if>
+		<if test='openYn != null and openYn != ""'>
+		AND OPEN_YN = #{openYn }
 		</if>
 	</select>
 	

@@ -21,30 +21,30 @@ import com.spring.dongnae.map.vo.MapVO;
 
 @Controller
 public class CustomController {
-	
-	private final MapService mapService;
-	private final CustomService customService;
-//	private final ObjectMapper objectMapper;
+   
+   private final MapService mapService;
+   private final CustomService customService;
+//   private final ObjectMapper objectMapper;
 
-	@Autowired
-	public CustomController(MapService mapService, CustomService customService) {
-		this.mapService = mapService;
-		this.customService = customService;
-		System.out.println("========= customController() 객체생성");
-	}
-	
-	@PostMapping("/saveMap")
-	@ResponseBody
-	public boolean saveMap(HttpServletRequest request, HttpSession session) throws IOException {
-		boolean check = false;
-		String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-//		session.getAttribute("user");
-		System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-		String email = "test5@naver.com";
-		try {
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			
+   @Autowired
+   public CustomController(MapService mapService, CustomService customService) {
+      this.mapService = mapService;
+      this.customService = customService;
+      System.out.println("========= customController() 객체생성");
+   }
+   
+   @PostMapping("/saveMap")
+   @ResponseBody
+   public boolean saveMap(HttpServletRequest request, HttpSession session) throws IOException {
+      boolean check = false;
+      String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//      session.getAttribute("user");
+      System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
+      String email = "test5@naver.com";
+      try {
+         
+         ObjectMapper objectMapper = new ObjectMapper();
+         
             // JSON 문자열을 JsonNode 객체로 변환
             JsonNode jsonNode = objectMapper.readTree(jsonString);
 
@@ -81,13 +81,13 @@ public class CustomController {
 //            System.out.println("삽입할 map : " + vo);
             
             if( mapService.insertMap(vo) > 0) {
-            	check = true;
-            	ObjectMapper mapper = new ObjectMapper();
-            	CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
-            	customMarker.setMapIdx(12);
-            	System.out.println("커스텀 스키마로 변경! : " + customMarker);
-            	customService.saveMarker(customMarker);
-            	
+               check = true;
+               ObjectMapper mapper = new ObjectMapper();
+               CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
+               customMarker.setMapIdx(12);
+               System.out.println("커스텀 스키마로 변경! : " + customMarker);
+               customService.saveMarker(customMarker);
+               
             }
             
             
@@ -95,6 +95,6 @@ public class CustomController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-		return check;
-	}
+      return check;
+   }
 }
