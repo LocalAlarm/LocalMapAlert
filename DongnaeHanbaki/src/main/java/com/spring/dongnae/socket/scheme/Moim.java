@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.spring.dongnae.user.vo.UserVO;
+
 @Document(collection = "moims")
 public class Moim {
 
@@ -25,10 +27,7 @@ public class Moim {
     @DBRef
     private List<Board> boards;
     public Moim() {
-    	this.setSubLeader(new ArrayList<UserRooms>());
-    	this.setParticipants(new ArrayList<UserRooms>());
-    	this.setBoards(new ArrayList<Board>());
-    	this.setProfilePicPI(null);
+    	setInitValue();
     }
     // Getters and Setters
     public String getId() {
@@ -82,10 +81,6 @@ public class Moim {
 	public List<UserRooms> getSubLeader() {
 		return subLeader;
 	}
-
-	public void setSubLeader(List<UserRooms> subLeader) {
-		this.subLeader = subLeader;
-	}
 	
 	public void addSubLeader(UserRooms userRoom) {
 		this.subLeader.add(userRoom);
@@ -95,24 +90,28 @@ public class Moim {
         return participants;
     }
 
-    public void setParticipants(List<UserRooms> participants) {
-        this.participants = participants;
-    }
-
     public void addParticipant(UserRooms userRoom) {
         this.participants.add(userRoom);
+    }
+    
+    public void removeParticipant(UserRooms participant) {
+        this.participants.remove(participant);
+        participant.removeMoim(this);
     }
 
     public List<Board> getBoards() {
         return boards;
     }
 
-    public void setBoards(List<Board> boards) {
-        this.boards = boards;
-    }
-
-    public void addPost(Board board) {
+    public void addBoard(Board board) {
         this.boards.add(board);
+    }
+    
+    private void setInitValue() {
+    	this.subLeader = new ArrayList<UserRooms>();
+    	this.participants = new ArrayList<UserRooms>();
+    	this.boards = new ArrayList<Board>();
+    	this.setProfilePicPI(null);
     }
 
 	@Override

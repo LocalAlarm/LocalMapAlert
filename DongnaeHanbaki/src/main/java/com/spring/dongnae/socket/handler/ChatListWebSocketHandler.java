@@ -59,7 +59,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 				session.sendMessage(new TextMessage(json));
 			} else {
 				// 새로운 메시지 문서 생성
-				userRooms = new UserRooms(userService.getUserByToken(token).getEmail(), token);
+				userRooms = new UserRooms(userService.getUserByToken(token));
 				userRoomsRepository.save(userRooms);
 			}
 		} else {

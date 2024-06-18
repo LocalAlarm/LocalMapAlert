@@ -24,8 +24,6 @@ public class MoimService {
     private UserRoomsRepository userRoomsRepository;
     @Autowired
     private BoardRepository boardRepository;
-    @Autowired
-    private GetAuthenticInfo getAuthenticInfo;
     
     public Moim createMoim(Moim moim) {
     	return moimRepository.save(moim);
@@ -38,7 +36,7 @@ public class MoimService {
     		Moim moim = moimOptional.get();
     		UserRooms userRooms = userRoomsOptional.get();
     		moim.addParticipant(userRooms);
-    		userRooms.addChatRoom(moim);
+    		userRooms.addMoim(moim);
     		userRoomsRepository.save(userRooms);
     		return moimRepository.save(moim);
     	}
@@ -51,7 +49,7 @@ public class MoimService {
     		Moim moim = moimOptional.get();
     		board.setMoim(moim);
     		Board savedBoard = boardRepository.save(board);
-    		moim.addPost(savedBoard);
+    		moim.addBoard(savedBoard);
     		moimRepository.save(moim);
     		return savedBoard;
     	}

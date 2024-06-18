@@ -28,15 +28,13 @@ public class JoinController {
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final ImageUploadController imageUploadController;
-	private final FriendRoomRepository friendRoomRepository;
 	private final UserRoomsRepository userRoomsRepository;
 	
 	@Autowired
-	public JoinController(UserService userService, PasswordEncoder passwordEncoder, ImageUploadController imageUploadController, FriendRoomRepository friendRoomRepository, UserRoomsRepository userRoomsRepository) {
+	public JoinController(UserService userService, PasswordEncoder passwordEncoder, ImageUploadController imageUploadController, UserRoomsRepository userRoomsRepository) {
 		this.userService = userService;
 	    this.passwordEncoder = passwordEncoder;
 	    this.imageUploadController = imageUploadController;
-		this.friendRoomRepository = friendRoomRepository;
 		this.userRoomsRepository = userRoomsRepository;
 	    System.out.println("========= JoinController() 객체생성");
 	 }
@@ -70,7 +68,6 @@ public class JoinController {
 	       int insertCheck = userService.insertUser(userVO);
 	       System.out.println("insertCheck : " + insertCheck);
 	       if (insertCheck > 0) {
-	    	   friendRoomRepository.save(new FriendRoom(userRooms)); // 몽고DB 친구추가 스키마 저장
 	           return ResponseEntity.ok("pass");
 	       } else {
 	    	   userRoomsRepository.delete(userRooms);
