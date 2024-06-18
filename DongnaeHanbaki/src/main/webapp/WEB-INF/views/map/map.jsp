@@ -11,41 +11,33 @@
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
     <link href="${pageContext.request.contextPath}/resources/css/map.css" rel="stylesheet">
-    <style>
-    #markerlist {
-        position: absolute; /* 수정된 부분 */
-        top: 0; /* 수정된 부분 */
-        right: 0; /* 수정된 부분 */
-        width: 30%;
-        height: 100%;
-        overflow-y: auto;
-        padding: 10px;
-        background-color: #f7f7f7;
-        border-left: 1px solid #ccc;
-    }
-    .marker-item {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-    .marker-item:last-child {
-        border-bottom: none;
-    }
-</style>
-
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
-                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" onclick="EventAccidents()" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">사건 사고</button>
-                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" onclick="Events()" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">이벤트</button>
-                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+                <!-- 전체 목록 버튼 -->
+<button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
+
+<!-- 사건 사고 메뉴 -->
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        사건 사고
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
+        <li><a class="dropdown-item" href="#" onclick="AllAccidents()">전체 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealTimeAccidents()">실시간 사건사고</a></li>
+        <li><a class="dropdown-item" href="#" onclick="NearAccidents()">내 주변 사건사고</a></li>
+    </ul>
+</div>
+
+<button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
+<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+
             </div>
         </div>       
         <div id="map"></div> 
@@ -54,15 +46,14 @@
     
 <!-- 마커 리스트 -->
 <div id="markerlist">
- <button id="closeMarkerListBtn" class="btn-close" aria-label="Close"></button>
-    <h2>Marker List</h2>
-    <div id="markerList"></div>
+    <h2 class="p-3" id="markerListHeader">마커 목록</h2>
+    <div id="markerList" class="p-3"></div>
 </div>
     
 <!-- 마커 보이기 감추기 버튼 -->
 <div class="overlay-button">
-    <button onclick="hideMarkers()" class="btn btn-secondary btn-sm">마커 감추기</button>
-    <button onclick="showMarkers()" class="btn btn-secondary btn-sm">마커 보이기</button>
+    <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 on/off</button>
+    <button id="toggleMarkerListBtn" onclick="toggleMarkerList()" class="btn btn-secondary btn-sm">게시판 on/off</button>
 </div>
 
 <!-- 사용자 입력 폼 -->
@@ -93,17 +84,23 @@
 
 <!-- 팝업 창 -->
 <div id="popup">
-    <button id="popupClose" onclick="closePopup()">닫기</button>
-    <div id="popupContent"></div>
+        <div class="popup-header">
+            <span class="popup-title" id="popupTitle"></span>
+        </div>
+        <div class="popup-body" id="popupContent"></div>
+        <div class="popup-footer">
+            <button onclick="closePopup()">Close</button>
+        </div>
 </div>
 
 <!-- Kakao 지도 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e&libraries=services"></script>
+
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/map.js"></script>
 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
