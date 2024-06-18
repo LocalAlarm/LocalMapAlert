@@ -106,7 +106,7 @@ crossorigin="anonymous"></script>
 		  <div class="col-3">
 		    <h5 class="mapTitle">${vo.title }</h5>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
-		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		  </div>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>

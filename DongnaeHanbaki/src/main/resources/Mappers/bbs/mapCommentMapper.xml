@@ -8,7 +8,7 @@
  	<select id="getCommentList" parameterType="mapCommentsVO" resultType="mapCommentsVO">
 		SELECT * FROM MAP_COMMENTS
 		WHERE DEL_YN = 0
-		AND MAP_IDX = 1
+		AND MAP_IDX = #{mapIdx}
 		ORDER BY MAP_COMMENT_IDX DESC
 	</select>
 	

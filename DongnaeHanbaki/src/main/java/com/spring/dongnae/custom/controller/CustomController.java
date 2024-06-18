@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.bbs.MapCommentsService;
+import com.spring.dongnae.bbs.MapCommentsVO;
 import com.spring.dongnae.custom.scheme.CustomMarker;
 import com.spring.dongnae.custom.service.CustomService;
 import com.spring.dongnae.map.service.MapService;
@@ -29,13 +31,15 @@ public class CustomController {
    private final MapService mapService;
    private final CustomService customService;
    private UserVO loginUserVO;
+   private final MapCommentsService mapCommentsService;
 //   private final ObjectMapper objectMapper;
 
    @Autowired
-   public CustomController(MapService mapService, CustomService customService, UserVO loginUserVO) {
+   public CustomController(MapService mapService, CustomService customService, MapCommentsService mapCommentsService) {
+	  this.mapCommentsService = mapCommentsService;
       this.mapService = mapService;
       this.customService = customService;
-      this.loginUserVO = loginUserVO;
+      this.loginUserVO = new UserVO();
       System.out.println("========= customController() 객체생성");
    }
 	
@@ -79,8 +83,8 @@ public class CustomController {
 //	            System.out.println("Level: " + level);
 			MapVO vo = new MapVO();
 			vo.setUserEmail(email);
-			vo.setCenterIatitude(centerLatitude);
-			vo.setCenterIogitude(centerLongitude);
+			vo.setCenterLatitude(centerLatitude);
+			vo.setCenterLongitude(centerLongitude);
 			vo.setViewLevel(level);
 			vo.setTitle(title);
 			vo.setContent(content);
@@ -144,7 +148,7 @@ public class CustomController {
 	}
 	
 	@RequestMapping("/oneCustMap")
-	public String oneCustMap(MapVO mapVO, Model model) {
+	public String oneCustMap(MapVO mapVO, MapCommentsVO mapCommentsVO, Model model) {
 		//커스텀맵 하나 상세보기창 이동
 		//mapIdx로 불러온 customMapVO 필요
 		System.out.println("mapVO : " + mapVO);//----------------test code---------------------------
@@ -154,6 +158,12 @@ public class CustomController {
 		//커스텀맵에서 사용한 마커종류 리스트 필요
 		//표시한 마커목록 리스트 필요
 		//댓글리스트 필요
+		System.out.println("mapCommentsVO : " + mapCommentsVO);//----------------test code---------------------------
+		mapCommentsVO.setMapIdx(String.valueOf(mapVO.getMapIdx()));
+		List<MapCommentsVO> mapCommentsList = mapCommentsService.getCommentList(mapCommentsVO);
+		System.out.println("mapCommentsList : " + mapCommentsList);//----------------test code---------------------------
+        // 모델에 댓글 목록을 추가합니다.
+        model.addAttribute("mapCommentsList", mapCommentsList);
 		return "map/oneCustMap"; 
 	}
 	
