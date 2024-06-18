@@ -162,13 +162,13 @@
       var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
       if (checkEmail.trim().length == 0) {
-         alert("이메일을 입력해주세요!");
+    	  showDangerAlert('오류', '이메일을 입력해주세요.', '');
          $("#email").focus();
          return false;
       }
-
+      
       if (!emailPattern.test(checkEmail)) {
-         alert("잘못된 이메일 형식입니다. 올바른 이메일을 입력해주세요.");
+    	  showDangerAlert('오류', '올바른 이메일 형식을 입력해주세요', '');
          frm.email.value = '';
          return false;
       }
@@ -181,7 +181,7 @@
          },
          success: function(response) {
             if (response === "duplicate") {
-               alert("이미 사용중인 이메일입니다.");
+            	showDangerAlert('오류', '이미 사용중인 이메일입니다.', '');
                $("#email").focus();
             } else {
                if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {

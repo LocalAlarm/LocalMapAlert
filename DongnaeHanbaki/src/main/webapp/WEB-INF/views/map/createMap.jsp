@@ -44,6 +44,7 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+
 #markerPopup {
        position: fixed;
        top: 50%;
@@ -132,7 +133,7 @@
          <span class="card" id="coords"></span>
          <br>
          <label for="customRange3" class="form-label">지도 크기</label>
-         <input type="range" class="form-range" min="0" max="14" id="customRange3">
+         <input type="range" class="form-range" min="0" max="14" id="customRange3" disabled>
          <div class="form-floating py-2">
            <input type="text" class="form-control" id="title" placeholder="Password">
            <label for="title">제목</label>
@@ -143,7 +144,7 @@
          </div>
          </form>
          <!-- 저장/초기화 버튼 -->
-    <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)">지도 생성</button>
+    <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)" id="saveMap" disabled>지도 생성</button>
     <button type="button" class="btn btn-outline-danger" onclick="removeAllMarker()">마커 전체 지우기</button>
       </div>
       </div>
@@ -393,28 +394,59 @@
 		}
 	});
 
-	function openMap() {
-		console.log(map.getLevel());
-		geocoder = new daum.maps.services.Geocoder();
-		ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성합니다
-		marker = new daum.maps.Marker({
-			position : new daum.maps.LatLng(37.537187, 127.005476),
-			map : map
-		});
-		document.getElementById('menu_wrap').style.display = "block";
+   function openMap() {
+       console.log(map.getLevel());
+       geocoder = new daum.maps.services.Geocoder();
+       ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성합니다
+       marker = new daum.maps.Marker({
+           position : new daum.maps.LatLng(37.537187, 127.005476),
+           map : map
+       });
+       document.getElementById('menu_wrap').style.display = "block";
 
-		// 키워드로 장소를 검색합니다
-		searchPlaces();
+       // 키워드로 장소를 검색합니다
+       searchPlaces();
 
-		// 지도 크기 조절
-		var rangeInput = document.getElementById('customRange3');
-		rangeInput.addEventListener('input', function() {
-			const value = this.value;
-			console.log('Range 값:', value);
-			map.setLevel(value);
-		});
+       // 지도 크기 조절
+       var rangeInput = document.getElementById('customRange3');
+       var saveButton = document.getElementById('saveMap');
+       rangeInput.disabled = true; // openMap 호출 시 초기 상태로 비활성화
+       saveButton.disabled = true;
 
-	}
+       rangeInput.addEventListener('input', function() {
+           const value = this.value;
+           console.log('Range 값:', value);
+           map.setLevel(value);
+       });
+
+       // 중심 주소 입력 여부와 주소, 좌표 표시 여부에 따라 지도 크기 조절 input 활성화/비활성화 처리
+       function toggleRangeInput() {
+           var keyword = document.getElementById('keyword').value.trim();
+           var addressText = document.getElementById('address').textContent.trim();
+           var coordsText = document.getElementById('coords').textContent.trim();
+
+           console.log('keyword:', keyword);
+           console.log('addressText:', addressText);
+           console.log('coordsText:', coordsText);
+
+           // keyword가 비어있지 않거나 (addressText와 coordsText가 모두 채워져 있을 경우)
+           // keyword가 비어있고 addressText와 coordsText가 모두 채워져 있을 경우
+           if ((keyword !== '' || (addressText !== '' && coordsText !== ''))) {
+               rangeInput.disabled = false;
+               saveButton.disabled = false;
+           } else {
+               rangeInput.disabled = true;
+           }
+       }
+
+       // 페이지 로드시 한 번 실행
+       toggleRangeInput();
+
+       // 중심 주소 입력이 변경될 때마다 실행
+       document.getElementById('keyword').addEventListener('input', function() {
+           toggleRangeInput();
+       });
+   }
 
 	// 버튼 클릭 시 호출되는 핸들러 입니다
 	function selectOverlay(type) {
