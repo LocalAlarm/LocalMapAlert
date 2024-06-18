@@ -15,6 +15,7 @@ public class MoimController {
 			@RequestParam("title") String title,
             @RequestParam("introduce") String introduce,
             @RequestPart(value = "profilePic", required = false) MultipartFile profilePic) {
+		
 		return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
 	}
 }

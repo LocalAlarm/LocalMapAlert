@@ -13,6 +13,11 @@ public class Moim {
     private String id;
     private String name;
     private String description;
+    private String profilePic;
+    @DBRef
+    private String leader;
+    @DBRef
+    private List<UserRooms> subLeader;
     @DBRef
     private List<UserRooms> participants;
     @DBRef
@@ -43,7 +48,35 @@ public class Moim {
         this.description = description;
     }
     
-    public List<UserRooms> getParticipants() {
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+    
+    public String getLeader() {
+		return leader;
+	}
+
+	public void setLeader(String leader) {
+		this.leader = leader;
+	}
+
+	public List<UserRooms> getSubLeader() {
+		return subLeader;
+	}
+
+	public void setSubLeader(List<UserRooms> subLeader) {
+		this.subLeader = subLeader;
+	}
+	
+	public void addSubLeader(UserRooms userRoom) {
+		this.subLeader.add(userRoom);
+	}
+
+	public List<UserRooms> getParticipants() {
         return participants;
     }
 
@@ -69,7 +102,9 @@ public class Moim {
 
 	@Override
 	public String toString() {
-		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", participants=" + participants
-				+ ", boards=" + boards + "]";
+		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
+				+ ", leader=" + leader + ", subLeader=" + subLeader + ", participants=" + participants + ", boards="
+				+ boards + "]";
 	}
+    
 }
