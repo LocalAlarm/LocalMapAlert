@@ -61,9 +61,7 @@
 
 
 <body id="body-pd">
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <jsp:include page="/WEB-INF/patials/commonBody.jsp"></jsp:include>
-
 <hr>
 <!-- 페이지 위 -->
 <div class="p-3 text-center">
@@ -99,15 +97,15 @@
       <div class="col-6 border" style="height: 800px;">      
          <!-- 지도를 표시할 div 입니다 -->
       <div class="col-auto" style="height: 100%;">
-      <div class="map_wrap p-2">
-          <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-         <!-- 마커 표시는 지우고 리스트에 선택하면 마커이동(중앙이동) 마커컨트로롤러 -->
-          <div id="menu_wrap" class="bg_white" style="display: none;">
-              <ul id="placesList">
-              </ul>
-              <div id="pagination"></div>
-          </div>
-      </div>
+	      <div class="map_wrap p-2">
+	          <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+	         <!-- 마커 표시는 지우고 리스트에 선택하면 마커이동(중앙이동) 마커컨트로롤러 -->
+	          <div id="menu_wrap" class="bg_white" style="display: none;">
+	              <ul id="placesList">
+	              </ul>
+	              <div id="pagination"></div>
+	          </div>
+	      </div>
       </div>
       </div>
       
@@ -122,13 +120,14 @@
         <button class="btn btn-outline-dark py-3" type="button" data-bs-toggle="collapse" 
         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">커스텀맵 설정하기</button>
       </div>
-      <form class="collapse show" id="collapseExample">
-         <div class="input-group mb-3  py-2">
-            <form onsubmit="searchPlaces(); return false;">
-              <input type="text" class="form-control" id="keyword" placeholder="중심 주소를 입력해 주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-outline-secondary" onclick="openMap()" type="button" id="button-addon2">검색</button>
-            </form>
-         </div>
+      <div class="collapse show" id="collapseExample">
+         <form onsubmit="searchPlaces(); return false;" >
+           <div class="input-group mb-3">
+             <input type="text" class="form-control p-2" id="keyword" placeholder="중심이 될 주소를 입력해 주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
+             <button class="btn btn-outline-secondary" onclick="openMap()" type="button" id="button-addon2">검색</button>
+		   </div>
+         </form>
+         <form>
          <span class="card" id="address"></span>
          <br>
          <span class="card" id="coords"></span>
@@ -143,11 +142,12 @@
            <input type="text" class="form-control" id="content" placeholder="Password">
            <label for="content">내용</label>
          </div>
+         </form>
          <!-- 저장/초기화 버튼 -->
     <button type="button" class="btn btn-outline-primary" onclick="saveMap(1)">지도 생성</button>
     <button type="button" class="btn btn-outline-danger">취소</button>
     <button type="button" class="btn btn-outline-danger">마커 지우기</button>
-      </form>
+      </div>
       </div>
       
       
@@ -206,6 +206,15 @@
    
    //마커 인포 리스트
    var markerInfoList = [];
+   //마커 고유 아이디
+   var markerIdCounter = 0; 
+   //마커 현재 정보 
+   var currentInfo = null;
+   
+   //선 
+   var lineInfoList = [];
+   var lineIdCounter = 0;
+   var currentLineInfo = null;
    
    mapContainer = document.getElementById('map'); // 지도를 표시할 div 
    
@@ -273,50 +282,42 @@
    };
 
    var manager = new kakao.maps.drawing.DrawingManager(options);
-//    var info = new daum.maps.CustomOverlay({
-//        xAnchor: 0.2,
-//        yAnchor: 1.5,
-//        content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
-//         '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-//         '<button onclick="alert(\'Button clicked!\')">내용쓰기</button>' +
-//         '</div>'
-//    });
    
+   //지도 리스너 등록
    manager.addListener('drawend', function (e) {
        if (e.overlayType === daum.maps.drawing.OverlayType.MARKER) {
            var marker = e.target;
-           markerInfoList = [];
+           var markerId = markerIdCounter++; //마커 아이디 생성
+           
            //마커마다 info 유지
+           //info 초기값
+           var infoContent = updateInfo(markerId, "이원성");
            var info = new daum.maps.CustomOverlay({
               xAnchor: 0.2,
               yAnchor: 1.5,
-              content: '<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
-               '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-               '<p></p>' +
-               '<button onclick="markerContent()">내용쓰기</button>' +
-               '</div>'
+              content: infoContent
           });
-           console.log("마커인포값!");
+           console.log("마커인포값");
            markerInfoList.push({
-              path: marker.getPosition(),
-              info: info
-           });
+               id: markerId,
+               path: marker.getPosition(),
+               info: info,
+               content: "이원성"
+            });
            console.log(markerInfoList);
-           daum.maps.event.addListener(marker, 'mouseover', function () {
-               info.setMap(map);
-               info.setPosition(marker.getPosition());
-           });
+           
 //            daum.maps.event.addListener(marker, 'mouseout', function () {
 //                info.setMap(null);
 //            });
 //            daum.maps.event.addListener(marker, 'mousedown', function () {
 //                info.setMap(null);
 //            });
-//            daum.maps.event.addListener(marker, 'mouseup', function () {
-//                info.setMap(map);
-//                info.setPosition(marker.getPosition());
-//            });
-         //클릭시 info닫기
+           daum.maps.event.addListener(marker, 'mouseover', function () {
+       		  	  console.log("dwwwwwwwwwwwww");
+                  info.setMap(map);
+                  info.setPosition(marker.getPosition());
+           });
+           //클릭시 info닫기
            daum.maps.event.addListener(marker, 'click', function () {
               info.setMap(null);
            });
@@ -325,12 +326,53 @@
                // 마커를 우클릭하면 해당 마커와 info를 제거
                marker.setMap(null); // 마커를 지도에서 제거
                info.setMap(null);   // info를 지도에서 제거
+               console.log(marker._index);
                markerInfoList = markerInfoList.filter(function(item) {
-                   return item.marker !== marker;
+                   return item.id !== marker._index;
                });
+               console.log("마커제거!");
+               console.log(markerInfoList);
            });
+           
+   
+       }
+       
+       if (e.overlayType === daum.maps.drawing.OverlayType.POLYLINE) {
+    	   var line = e.target;
+    	   var lineId = lineIdCounter++;
+           var path = [];
+           var style = line.options;
+//            var latlng = new kakao.maps.LatLng(points[i].y, points[i].x);
+//            path.push(latlng)
+    	   console.log("라인!!!!");
+    	   console.log(line.getPath());	
+    	   var points = line.getPath();
+    	   for (var i=0; i < points.length; i++) {
+    		   var latlng = new kakao.maps.LatLng(points[i].getLat(), points[i].getLng());
+    		   path.push(latlng);
+    	   }
+    	   console.log(path);
+           //info 초기값
+           var infoContent = updateInfo(lineId, "이원성");
+           var info = new daum.maps.CustomOverlay({
+              xAnchor: 0.2,
+              yAnchor: 1.5,
+              content: infoContent
+          });
+           console.log(lineList);
+           console.log("라인인포값");
+           lineList.push({
+               id: lineId,
+               path: line.path,
+               info: info,
+               content: "이원성"
+            });
+           console.log(lineList);
+    	   
+    	   
        }
    });
+   
    function openMap() {
       console.log(map.getLevel());
       geocoder = new daum.maps.services.Geocoder();
@@ -351,7 +393,6 @@
          console.log('Range 값:', value);
          map.setLevel(value);
       });
-   
       
    }
    
@@ -372,7 +413,6 @@
 //        removeOverlays();
        
        
-       // 지도에 가져온 데이터로 도형들을 그립니다 -> 데이터 뽑는 역할
        drawMarker(data[kakao.maps.drawing.OverlayType.MARKER]);
        drawPolyline(data[kakao.maps.drawing.OverlayType.POLYLINE]);
        drawRectangle(data[kakao.maps.drawing.OverlayType.RECTANGLE]);
@@ -421,6 +461,31 @@
                style: style
            });
        }
+       
+//        manager.addListener('drawend', function (e) {
+//     	   if (e.overlayType === daum.maps.drawing.OverlayType.POLYLINE) {
+//         	   var line = e.target;
+//         	   var lineId = lineIdCounter++;
+        	   
+//                //info 초기값
+//                var infoContent = updateInfo(lineId, "이원성");
+//                var info = new daum.maps.CustomOverlay({
+//                   xAnchor: 0.2,
+//                   yAnchor: 1.5,
+//                   content: infoContent
+//               });
+//                console.log(lineList);
+//                console.log("라인인포값");
+//                lineList.push({
+//                    id: lineId,
+//                    info: info,
+//                    content: "이원성"
+//                 });
+//                console.log(lineList);
+        	   
+        	   
+//            }
+//        });
        console.log(lineList);
    }
 
@@ -762,14 +827,61 @@
       document.getElementById("menu_wrap").style.display = "none";
    }
    
+	//페이지 로드 시 실행되는 함수
+   window.onload = function() {
+       // 초기에는 지도 크기 조절 input 비활성화
+       var rangeInput = document.getElementById('customRange3');
+       rangeInput.disabled = true;
+       
+       // 중심 주소 입력 필드 감지
+       document.getElementById('keyword').addEventListener('input', function() {
+           checkInputs();
+       });
+       
+       // 페이지 로드 시 한 번 호출하여 초기 상태 확인
+       checkInputs();
+       
+       // 입력값 검사
+       function checkInputs() {
+           var keyword = document.getElementById('keyword').value.trim();
+           var addressText = document.getElementById('address').innerText.trim();
+           var coordsText = document.getElementById('coords').innerText.trim();
+           
+           if ((keyword === '' && addressText !== '' && coordsText !== '') || (keyword !== '' && addressText !== '' && coordsText !== '')) {
+               console.log('중심 주소:', keyword);
+               console.log('주소:', addressText);
+               console.log('좌표:', coordsText);
+               
+               rangeInput.disabled = false;
+           } else {
+               rangeInput.disabled = true;
+           }
+       }
+   };
+   
    function saveMap(check) {
       console.log("지도생성!!!");
+      markerList = extractMarkerList();
+//       markerList = markerInfoList; // 중복이긴함 두개가 일단 markerlist에 복사 추후 markerinfolist로 받을예쩡 (선, 원 등 다른것도 적용예정)
       console.log(markerList); // 예시로 콘솔에 출력
+      console.log(lineList); // 예시로 콘솔에 출력
       console.log(rectList);
       var center = document.getElementById("coords");
       rangeInput = document.getElementById('customRange3');
+      var title = document.getElementById("title");
+      var content = document.getElementById("content");
       console.log('지도생성 Range 값:', rangeInput.value);
       console.log(center.textContent);
+      console.log(title.value);
+      console.log(content.value);
+      
+      var keyword = document.getElementById('keyword').value;
+      if (keyword.trim() === '') {
+          // 중심 주소가 입력되지 않은 경우 실행 방지
+          alert("중심 주소가 입력되지 않았습니다!");
+          return;
+      }
+      
       if (check == "1") {
          console.log("커스텀 맵 저장!!!");
          $.ajax({
@@ -779,7 +891,9 @@
                                , rects: rectList, circles: circleList
                                , polys: ployList
                                , center: center.textContent
-                               , level: rangeInput.value}),
+                               , level: rangeInput.value
+                               , title: title.value
+                               , content: content.value}),
                 contentType: 'application/json; charset=UTF-8', 
                 success: function(response) {
                     console.log('Data saved successfully:', response);
@@ -791,38 +905,73 @@
       }
    }
    
-   
-   //마커 현재 정보 
-   var currentInfo = null;
-   //마커 내용 쓰기
-   function markerContent(button) {
-      alert("임건희 병신아");
-      // 현재 클릭된 마커의 info 객체를 저장
-       // 버튼이 속한 CustomOverlay 객체 찾기
-       var currentInfo = markerInfoList.find(item => item.info.cc === button.parentNode);
-       // 팝업을 표시
-       document.getElementById('markerPopup').style.display = 'block';
+   //customOverlay떄문에 순환참조 오류나므로 markerList를 
+   function extractMarkerList() {
+	   return markerInfoList.map(function(marker) {
+		   return {
+			   id: marker.id,
+			   path: {
+				   La: marker.path.getLat(),
+				   Ma: marker.path.getLng()
+			   },
+			   content: marker.content
+		   }
+	   });
    }
+   
+   
+   
+   //마커 내용 쓰기
+   function markerContent(markerId) {
+       alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
+//        alert("내용쓰기!!ㅋㅋㅎㅎ");
+       // 현재 클릭된 마커의 info 객체를 저장
+       console.log("마커받았음!");
+       console.log(markerId);
+       console.log(markerInfoList);
+       currentInfo = markerInfoList.find(function(item) {
+           return item.id == markerId;
+       });
+       console.log("현재 마커!!!");
+       console.log(currentInfo);
+       if (currentInfo) {
+           // 팝업을 표시
+           document.getElementById('markerPopup').style.display = 'block';
+       } else {
+           console.log("해당하는 마커를 찾을 수 없습니다.");
+       }
+   }
+   
    // 팝업 창 닫기
    function closePopup() {
        document.getElementById('markerPopup').style.display = 'none';
    }
 
+   
    // 팝업 창에서 내용을 저장
    function saveMarkerContent() {
        var content = document.getElementById('markerInfoDetail').value;
+       console.log(content);
+       console.log(currentInfo.info);
        if (currentInfo) {
+           console.log("save!!!!!!!!!");
            // 기존 info content 업데이트
-           currentInfo.setContent('<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
-                                  '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-                                  '<p>' + content + '</p>' +
-                                  '<button onclick="markerContent(this)">내용쓰기</button>' +
-                                  '</div>');
+           currentInfo.content = content;
+           var updateContent = updateInfo(currentInfo.id, content);
+           currentInfo.info.setMap(null);
+           currentInfo.info.setContent(updateContent);
+           document.getElementById('markerInfoDetail').value = "";
        }
        closePopup();
    }
    
-   
+   function updateInfo(id, content) {
+	   return '<div id="' + id + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+       '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
+       '<p id="marker-info-' + id + '">' + content + '</p>' +
+       '<button onclick="markerContent(\'' + id + '\')">내용쓰기</button>' +
+       '</div>';
+   }
    
 </script>
 <div id="markerPopup" style="display: none;">

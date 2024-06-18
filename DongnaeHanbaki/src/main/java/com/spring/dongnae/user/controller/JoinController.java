@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dongnae.cloudinary.ImageUploadController;
-import com.spring.dongnae.socket.repo.FriendRoomRepository;
-import com.spring.dongnae.socket.repo.UserRoomsRepository;
-import com.spring.dongnae.socket.scheme.FriendRoom;
-import com.spring.dongnae.socket.scheme.UserRooms;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
 
@@ -28,16 +24,12 @@ public class JoinController {
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final ImageUploadController imageUploadController;
-	private final FriendRoomRepository friendRoomRepository;
-	private final UserRoomsRepository userRoomsRepository;
 	
 	@Autowired
-	public JoinController(UserService userService, PasswordEncoder passwordEncoder, ImageUploadController imageUploadController, FriendRoomRepository friendRoomRepository, UserRoomsRepository userRoomsRepository) {
+	public JoinController(UserService userService, PasswordEncoder passwordEncoder, ImageUploadController imageUploadController) {
 		this.userService = userService;
 	    this.passwordEncoder = passwordEncoder;
 	    this.imageUploadController = imageUploadController;
-		this.friendRoomRepository = friendRoomRepository;
-		this.userRoomsRepository = userRoomsRepository;
 	    System.out.println("========= JoinController() 객체생성");
 	 }
 	
@@ -65,8 +57,6 @@ public class JoinController {
 	       int insertCheck = userService.insertUser(userVO);
 	       System.out.println("insertCheck : " + insertCheck);
 	       if (insertCheck > 0) {
-	    	   friendRoomRepository.save(new FriendRoom(userVO)); // 몽고DB 친구추가 스키마 저장
-	    	   userRoomsRepository.save(new UserRooms(userVO));
 	           return ResponseEntity.ok("pass");
 	       } else {
 	           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입에 실패했습니다.");

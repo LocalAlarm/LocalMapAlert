@@ -1,6 +1,5 @@
 package com.spring.dongnae.socket.handler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,6 +56,14 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 				userRooms = optionalUserRooms.get();
 				String json = objectMapper.writeValueAsString(userRooms);
 				session.sendMessage(new TextMessage(json));
+//				for (String chatRoomId : userRooms.getChatRoomIds()) {
+//					Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findById(chatRoomId);
+//					if (chatRoomOptional.isPresent()) {
+//						ChatRoom chatRoom = chatRoomOptional.get();
+//						String json = objectMapper.writeValueAsString(chatRoom);
+//						session.sendMessage(new TextMessage(json));
+//					}
+//				}
 			} else {
 				// 새로운 메시지 문서 생성
 				userRooms = new UserRooms(userService.getUserByToken(token).getEmail(), token);
@@ -79,14 +86,9 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());
 		if (optionalChatRoom.isPresent()) {
 			ChatRoom chatRoom = optionalChatRoom.get();
-			try {
-			    chatRoom.addMessage(newMessage);
-			} catch (NullPointerException e) {
-				chatRoom.setMessages(new ArrayList<Message>());
-				chatRoom.addMessage(newMessage);
-			}
+			chatRoom.addMessage(newMessage);
 			chatRoomRepository.save(chatRoom);
-			
+
 			// JSON 메시지 생성
 			String jsonMessage = objectMapper.writeValueAsString(newMessage);
 
