@@ -1,15 +1,24 @@
 package com.spring.dongnae.custom.service;
 
-import java.util.List;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
+import com.spring.dongnae.custom.repo.CustomRepository;
+import com.spring.dongnae.custom.scheme.CustomMarker;
 
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.spring.dongnae.user.vo.UserVO;
-
-public interface CustomService {
+@Service
+public class CustomService {
 	
+	private final CustomRepository customRepository;
+	
+	@Autowired
+	public CustomService(CustomRepository customRepository) {
+		this.customRepository = customRepository;
+		System.out.println(">> CustomService() 객체생성");
+	}
+	
+	public CustomMarker saveMarker(CustomMarker customMarker) {
+		return customRepository.save(customMarker);
+	}
 }
-
