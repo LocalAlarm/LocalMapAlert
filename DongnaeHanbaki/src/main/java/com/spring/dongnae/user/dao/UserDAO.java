@@ -1,5 +1,6 @@
 package com.spring.dongnae.user.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.spring.dongnae.user.vo.UserVO;
@@ -8,7 +9,7 @@ public interface UserDAO {
 	UserVO getUser(UserVO vo);
 	UserVO getUserByEmail(String email);
 	void insertKakaoUser(UserVO vo);
-	void insertUser(UserVO vo);
+	int insertUser(UserVO vo);
 	UserVO getIdUser(String email);
 	// 이메일 중복 체크 - 건희
 	int doubleCheckEmail(String email);
@@ -24,4 +25,6 @@ public interface UserDAO {
 	void updatePassowrd(UserVO vo);
 	//프로필 수정
 	void updateProfile(Map<String, Object> map);
+	//친구 아이디 찾아서 데이터 가져오기
+	List<UserVO> searchFriendByEmail(String email);
 }

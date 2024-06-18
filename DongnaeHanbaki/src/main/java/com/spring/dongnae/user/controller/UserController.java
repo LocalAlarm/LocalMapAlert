@@ -150,28 +150,28 @@ public class UserController {
    }
 
    // 회원가입 페이지로 이동
-   @GetMapping("/joinform")
-   public String joinForm() {
-      System.out.println(">> 회원가입 화면 이동 - joinForm()");
-      return "user/joinform";
-   }
-   
-   @PostMapping("/join")
-   public String join(@ModelAttribute UserVO userVO, 
-		   	@RequestParam(value = "image", required = false) MultipartFile image) {
-       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
-       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
-       System.out.println(">> 회원가입 처리");
-       if (image != null && !image.isEmpty()) { // null 체크 - && !image.isEmpty()
-           Map<String, String> imageMap = imageUploadController.uploadImage(image);
-           userVO.setImagePi(imageMap.get("public_id"));
-           userVO.setImage(imageMap.get("url"));
-       }
-       userVO.setRole("USER");
-       System.out.println(userVO);
-       userService.insertUser(userVO);
-       return "redirect:login";
-   }
+//   @GetMapping("/joinform")
+//   public String joinForm() {
+//      System.out.println(">> 회원가입 화면 이동 - joinForm()");
+//      return "user/joinform";
+//   }
+//   
+//   @PostMapping("/join")
+//   public String join(@ModelAttribute UserVO userVO, 
+//		   	@RequestParam(value = "image", required = false) MultipartFile image) {
+//       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+//       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
+//       System.out.println(">> 회원가입 처리");
+//       if (image != null && !image.isEmpty()) { // null 체크 - && !image.isEmpty()
+//           Map<String, String> imageMap = imageUploadController.uploadImage(image);
+//           userVO.setImagePi(imageMap.get("public_id"));
+//           userVO.setImage(imageMap.get("url"));
+//       }
+//       userVO.setRole("USER");
+//       System.out.println(userVO);
+//       userService.insertUser(userVO);
+//       return "redirect:login";
+//   }
    
    // 이메일 중복체크 
    @PostMapping("/checkEmail")

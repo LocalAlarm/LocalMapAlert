@@ -11,12 +11,25 @@ public class CustomUserDetails implements UserDetails {
 	private String username;
     private String password;
     private String token;
+    private String image;
+    private String nickname;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private Collection<? extends GrantedAuthority> authorities ;
-	    
+	
+    public CustomUserDetails() {
+    }
+    
+    public CustomUserDetails(UserVO userVO) {
+    	this.setUsername(userVO.getEmail());
+    	this.setPassword(userVO.getPassword());
+    	this.setToken(userVO.getToken());
+    	this.setImage(userVO.getImage());
+    	this.setNickname(userVO.getNickname());
+    }
+    
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -87,6 +100,21 @@ public class CustomUserDetails implements UserDetails {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
+	
+	public String getImage() {
+		return image;
+	}
+	
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
 	@Override
 	public String toString() {
@@ -95,6 +123,5 @@ public class CustomUserDetails implements UserDetails {
 				+ isAccountNonLocked + ", isCredentialsNonExpired=" + isCredentialsNonExpired + ", authorities="
 				+ authorities + "]";
 	}
-	
 
 }

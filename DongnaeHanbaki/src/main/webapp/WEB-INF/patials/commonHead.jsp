@@ -9,3 +9,10 @@
 <!--  팝업창 오픈소스  -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
  
+<!-- 사이드바 스크립트, css -->
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/common.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/chat.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/friend.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/moim.js"></script>
+<link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/message.css" rel="stylesheet">

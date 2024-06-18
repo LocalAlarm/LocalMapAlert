@@ -22,10 +22,10 @@
 	</select>
 	
 	<insert id="insertMap" parameterType="mapVO">
-		INSERT INTO MAP (MAP_IDX, USER_EMAIL, LIMIT_ROLE, TITLE,
-			CENTER_LATITUDE, CENTER_LOGITUDE, DEL_YN)
-		VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{limitRole}, #{title},
-			#{centerLatitude}, #{centerLogitude}, 0)
+		INSERT INTO MAP (MAP_IDX, USER_EMAIL, LIMIT_ROLE, TITLE, CONTENT,
+			VIEW_LEVEL, CENTER_LATITUDE, CENTER_LOGITUDE, CREATE_DATE, OPEN_YN, DEL_YN)
+		VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{limitRole}, #{title}, #{content},
+			#{viewLevel}, #{centerLatitude}, #{centerLogitude}, SYSDATE, 0, 0)
 	</insert>
 	
 	<update id="updateMap" parameterType="mapVO">
@@ -33,6 +33,9 @@
 		SET 
 		<if test="#{title} != null">
 			TITLE= #{title}
+		</if>
+		<if test="#{content} != null">
+			CONTENT = #{content}
 		</if>
 		<if test="#{centerLatitude} != null">
 			CENTER_LATITUDE = #{centerLatitude}
