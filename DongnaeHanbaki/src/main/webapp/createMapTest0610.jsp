@@ -803,8 +803,8 @@
       }
    }
    
-   //customOverlay떄문에 순환참조 오류나므로 markerList를 
-   function extractMarkerList();
+//    //customOverlay떄문에 순환참조 오류나므로 markerList를 
+//    function extractMarkerList();
    
    
    

@@ -32,13 +32,6 @@ public class MapController {
         }
     }
 	
-	@RequestMapping("/customMap")
-	public String customMap() {
-		//커스텀 맵 불러오는 창
-		//커스텀맵 +제작자 나 리스트로 불러옴
-		//다른사람이 만든 커스텀 맵 불러옴 필요한가?
-		return "map/customMap"; 
-	}
 	
 	
 }

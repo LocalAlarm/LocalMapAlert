@@ -3,7 +3,7 @@ package com.spring.dongnae.custom.scheme;
 public class Marker {
     private int id;
     private Path path;
-    private String info;
+    private String content;
 	public int getId() {
 		return id;
 	}
@@ -16,16 +16,16 @@ public class Marker {
 	public void setPath(Path path) {
 		this.path = path;
 	}
-	public String getInfo() {
-		return info;
+	public String getContent() {
+		return content;
 	}
-	public void setInfo(String info) {
-		this.info = info;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	@Override
 	public String toString() {
-		return "MarkerScheme [id=" + id + ", path=" + path + ", info=" + info + "]";
+		return "Marker [id=" + id + ", path=" + path + ", content=" + content + "]";
 	}
-    
+
     
 }
