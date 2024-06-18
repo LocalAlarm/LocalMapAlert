@@ -40,7 +40,7 @@ public class CustomController {
       String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-      String email = "test5@naver.com";
+      String email = "test18@naver.com";
       try {
          
          ObjectMapper objectMapper = new ObjectMapper();

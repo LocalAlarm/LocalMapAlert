@@ -134,7 +134,7 @@
          <span class="card" id="coords"></span>
          <br>
          <label for="customRange3" class="form-label">지도 크기</label>
-         <input type="range" class="form-range" min="0" max="14" id="customRange3">
+         <input type="range" class="form-range" min="0" max="14" id="customRange3" disabled>
          <div class="form-floating py-2">
           <div class="form-group">
               <label for="title">제목</label>
@@ -302,23 +302,19 @@
               yAnchor: 1.5,
               content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
                '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-               '<p id="marker-info-"' + markerId + '>123</p>' +
+               '<p id="marker-info-"' + markerId + '></p>' +
                '<button onclick="markerContent(\'' + markerId + '\')">내용쓰기</button>' +
                '</div>'
           });
-           // 여기서 <p> 태그의 내용을 가져옵니다.
-           var markerInfoElement = document.getElementById('marker-info-' + markerId);
-           if (markerInfoElement) {
-               var markerInfoContent = markerInfoElement.innerHTML; // 또는 .textContent
-               console.log("Marker Info Content:", markerInfoContent);
-           }
-           console.log("마커인포값!");
+           console.log("마커인포값");
            markerInfoList.push({
-              id: markerId,
-              path: marker.getPosition(),
-              info: markerInfoElement
-           });
+               id: markerId,
+               path: marker.getPosition(),
+               info: info
+            });
            console.log(markerInfoList);
+           updateMapWithMarkers(); // 새로운 마커를 지도에 추가
+           
 //            daum.maps.event.addListener(marker, 'mouseout', function () {
 //                info.setMap(null);
 //            });
@@ -344,7 +340,9 @@
                });
                console.log("마커제거!");
                console.log(markerInfoList);
+               updateMapWithMarkers(); // 마커를 지도에서 제거 후 업데이트
            });
+           
        }
    });
    function openMap() {
@@ -778,6 +776,38 @@
       document.getElementById("menu_wrap").style.display = "none";
    }
    
+	//페이지 로드 시 실행되는 함수
+   window.onload = function() {
+       // 초기에는 지도 크기 조절 input 비활성화
+       var rangeInput = document.getElementById('customRange3');
+       rangeInput.disabled = true;
+       
+       // 중심 주소 입력 필드 감지
+       document.getElementById('keyword').addEventListener('input', function() {
+           checkInputs();
+       });
+       
+       // 페이지 로드 시 한 번 호출하여 초기 상태 확인
+       checkInputs();
+       
+       // 입력값 검사
+       function checkInputs() {
+           var keyword = document.getElementById('keyword').value.trim();
+           var addressText = document.getElementById('address').innerText.trim();
+           var coordsText = document.getElementById('coords').innerText.trim();
+           
+           if ((keyword === '' && addressText !== '' && coordsText !== '') || (keyword !== '' && addressText !== '' && coordsText !== '')) {
+               console.log('중심 주소:', keyword);
+               console.log('주소:', addressText);
+               console.log('좌표:', coordsText);
+               
+               rangeInput.disabled = false;
+           } else {
+               rangeInput.disabled = true;
+           }
+       }
+   };
+   
    function saveMap(check) {
       console.log("지도생성!!!");
       markerList = markerInfoList; // 중복이긴함 두개가 일단 markerlist에 복사 추후 markerinfolist로 받을예쩡 (선, 원 등 다른것도 적용예정)
@@ -791,7 +821,12 @@
       console.log(center.textContent);
       console.log(title.value);
       console.log(content.value);
-      
+      var keyword = document.getElementById('keyword').value;
+      if (keyword.trim() === '') {
+          // 중심 주소가 입력되지 않은 경우 실행 방지
+          alert("중심 주소가 입력되지 않았습니다!");
+          return;
+      }
       if (check == "1") {
          console.log("커스텀 맵 저장!!!");
          $.ajax({
@@ -846,24 +881,33 @@
    function saveMarkerContent() {
        var content = document.getElementById('markerInfoDetail').value;
        console.log(content);
-       if (!currentInfo) {
+       console.log(currentInfo.info);
+       if (currentInfo) {
           console.log("save!!!!!!!!!");
            // 기존 info content 업데이트
-           currentInfo.setContent('<div style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
+           currentInfo.info.cc = '<div' + currentInfo.id + 'style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
                                   '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-                                  '<p>' + content + '</p>' +
-                                  '<button onclick="markerContent(this)">내용쓰기</button>' +
-                                  '</div>');
-//            content: '<div id="' + markerId + '" style="padding:10px; background-color:white; border:1px solid #ccc; border-radius:5px; width:200px;">' +
-//             '<h4 style="margin:0; padding:0 0 10px 0; border-bottom:1px solid #ccc;">Marker Info</h4>' +
-//             '<p id="marker-info-"' + markerId + '></p>' +
-//             '<button onclick="markerContent(this)">내용쓰기</button>' +
-//             '</div>'
+                                  '<p id="marker-info-"' + currentInfo.id + '>' + content + '</p>' +
+                                  '<button onclick="markerContent(\'' + currentInfo.id + '\')">내용쓰기</button>' +
+                                  '</div>';
            console.log(currentInfo);
        }
        closePopup();
    }
    
+   function updateMapWithMarkers() {
+	   console.log("씨발넘아00");
+	   // 기존 마커들을 모두 지도에서 제거
+	    markerInfoList.forEach(function(markerInfo) {
+	        markerInfo.info.setMap(null);
+	    });
+
+	    // markerInfoList에 있는 각 마커 정보를 다시 지도에 추가
+	    markerInfoList.forEach(function(markerInfo) {
+	        markerInfo.info.setMap(map); // map은 지도 객체입니다. 필요에 따라 적절히 변경해야 합니다.
+	        markerInfo.info.setPosition(markerInfo.path); // 마커 위치 설정
+	    });
+   }
    
    
 </script>
