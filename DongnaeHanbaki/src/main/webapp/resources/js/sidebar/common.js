@@ -95,4 +95,33 @@ function initializeMenuActivation() {
         $('.nav__link').removeClass('active');
         $(this).addClass('active');
     });
+<<<<<<< HEAD
+=======
+}
+
+var isEmpty = function (value) {
+    if (value == "" || value == null || value == undefined || (value != null && typeof value == "object" && !Object.keys(value).length)) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+function showDangerAlert(title, text, footerText) {
+	Swal.fire({
+		  icon: "error",
+		  title: title,
+		  text: text,
+		  footer: '<span style="color:indianred">' + footerText + '</span>'
+		});
+}
+
+function showSuccessAlert(title, text, footerText) {
+	Swal.fire({
+		  icon: "success",
+		  title: title,
+		  text: text,
+		  footer: '<span style="color:indianred">' + footerText + '</span>'
+		});
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
 }

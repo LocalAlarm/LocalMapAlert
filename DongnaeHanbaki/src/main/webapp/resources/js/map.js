@@ -1,9 +1,28 @@
 var container = document.getElementById('map');
+var geocoder = new kakao.maps.services.Geocoder();
 var options = {
+<<<<<<< HEAD
     center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
+=======
+    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644), // 기본 중심 좌표
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
     level: 2
 };
+
 var map = new kakao.maps.Map(container, options);
+
+// 세션에서 가져오기
+//var userAddress = '<%= session.getAttribute("address") %>'; 
+//console.log(userAddress);
+// 주소로 좌표를 변환하여 지도의 중심으로 설정
+//geocoder.addressSearch(userAddress, function(result, status) {
+//    if (status === kakao.maps.services.Status.OK) {
+//        var coords = new kakao.maps.LatLng(result[0].y, result[0].x); // 변환된 좌표
+//        map.setCenter(coords); 
+//    } else {
+//        console.error('주소를 변환x.');
+//    }
+//});
 
 // 마커를 저장하는 배열
 var markers = [];
@@ -71,6 +90,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
     };
 
+	
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -349,6 +369,69 @@ function RealTimeEvents() {
     });
 }
 
+<<<<<<< HEAD
+=======
+// 근처 사건사고 찾기
+function NearAccidents() {
+    var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
+    var radius = 1; // 반경 설정 km단위로함
+    var nearbyAccidents = [];
+
+    $.ajax({
+        url: "AllAccidents",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+        
+            hideMarkers();
+            data.forEach(function (accident) {
+                var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
+                var distance = getDistance(center.getLat(), center.getLng(), accident.latitude, accident.longitude);
+
+                if (distance <= radius) {
+                    nearbyAccidents.push(accident);
+                    addMarker(position, '2', accident.title, accident.content);
+                }
+            });
+            closePopup();
+            map.setLevel(2);
+            setMapCenter();
+            // 네비게이션 바 탭 활성화
+            toggleEventAccidentsTab(true);
+            
+            // 필터링된 반경 데이터를 사이드바에 표시
+            updateSidebar(nearbyAccidents);
+
+            if (nearbyAccidents.length > 0) {
+                console.log('근처 사건사고:', nearbyAccidents);
+            } else {
+                console.log('근처에 사건사고가 없습니다.');
+            }
+        },
+        error: function (error) {
+            console.error("사건사고 정보를 불러오는 도중 오류가 발생했습니다:", error);
+        }
+    });
+}
+
+// 두 좌표 사이의 거리를 계산하는 함수 km단위
+function getDistance(lat1, lng1, lat2, lng2) {
+    function toRad(value) {
+        return value * Math.PI / 180;
+    }
+
+    var R = 6371; // 지구 반경 km단위
+    var dLat = toRad(lat2 - lat1);
+    var dLng = toRad(lng2 - lng1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c;
+    return distance;
+}
+
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
 //전체목록 클릭
 function All() {
     $.ajax({
@@ -431,14 +514,79 @@ function updateSidebar(data) {
         });
     });
 }
+var map;
+//사용자 주소가져옴
+function getUserAddress() {
+    $.ajax({
+        url: 'userAddress', 
+        method: 'GET',  
+        success: function(response) {  
+            console.log('사용자 주소:', response);
 
+<<<<<<< HEAD
 // 게시판 데이터 클릭 시 해당 마커에 대한 클릭 이벤트를 발생시키는 함수
 function handleMarkerClick(index) {
     kakao.maps.event.trigger(markers[index], 'click');
 }
+=======
+            // response가 이미 객체일 경우 처리
+            var address = response.address;
+
+            // 카카오맵 API를 이용한 지오코딩 및 지도 초기화
+            var geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(address, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+					initializeMap(coords);
+                } else {
+                    console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('사용자 주소를 가져오는 중 오류 발생:', error);
+        }
+    });
+}
+        // 지도를 초기화하는 함수
+        function initializeMap(centerCoords) {
+            var container = document.getElementById('map');
+            var options = {
+                center: centerCoords,
+                level: 2
+            };
+            map = new kakao.maps.Map(container, options);
+
+            // 오른쪽 클릭 이벤트 설정
+            kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
+                var latLng = mouseEvent.latLng;
+                console.log('위도:', latLng.getLat(), '경도:', latLng.getLng());
+
+                map.setLevel(2);
+                map.setCenter(latLng);
+
+                document.getElementById('markerLat').value = latLng.getLat();
+                document.getElementById('markerLng').value = latLng.getLng();
+                document.getElementById('inputForm').style.display = 'block';
+
+                if (tempMarker) {
+                    tempMarker.setMap(null);
+                }
+                tempMarker = new kakao.maps.Marker({
+                    position: latLng,
+                    map: map
+                });
+            });
+
+            All(); // 전체 마커 불러오기
+        }
+// 페이지 로드 시 사용자 주소로 좌표 설정
+window.onload = getUserAddress;
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
 
      $(document).ready(function() {
         All();
+<<<<<<< HEAD
         $('#v-pills-home-tab').on('click', function() {
             updateHeader('전체 마커 목록');
         });
@@ -449,3 +597,7 @@ function handleMarkerClick(index) {
             updateHeader('이벤트 마커 목록');
         });
     });
+=======
+        getUserAddress();    
+});
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git

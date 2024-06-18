@@ -230,4 +230,43 @@ function displayFriendRequests(friendRequests) {
         );
         container.append(requestElement);
     });
+<<<<<<< HEAD
 }
+=======
+    $('#friend-requests').html(friendRequestListHtml);
+
+    $(document).on('click', '.friendApprove', function () {
+        var requestId = $(this).parent().attr('id');
+        approveFriendRequest(requestId);
+    });
+
+    // 요청을 수락하는 함수
+    function approveFriendRequest(requestId) {
+        $.ajax({
+            url: '/dongnae/api/approveFriendRequest', // 요청을 처리할 서버의 URL 경로
+            type: 'POST', // POST 방식으로 요청
+            contentType: 'application/json', // 요청의 Content-Type 설정
+            data: JSON.stringify({ requestId: requestId }), // 요청 본문에 요청 ID를 포함하여 전송
+            success: function (response) {
+                console.log('Success:', response);
+                // 성공적으로 요청을 수락한 경우, 화면 갱신 또는 사용자에게 알림 처리 등을 수행할 수 있습니다.
+                // 예를 들어, 요청을 수락한 목록을 새로고침하는 등의 작업을 수행할 수 있습니다.
+                receiveFriendRequests(); // 친구 요청 목록을 갱신하는 함수 호출
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                // 요청 처리 중 에러가 발생한 경우, 적절한 에러 처리 로직을 구현할 수 있습니다.
+                alert('친구 요청 수락 중 오류가 발생하였습니다. 다시 시도해주세요.');
+            }
+        });
+    }
+}
+
+// 친구 요청 모달을 띄우는 코드
+function friendRequestModal(){
+    var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
+    $('#nav__friend-request').on('click', function() {
+        friendRequestModal.show();
+    });
+};
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
