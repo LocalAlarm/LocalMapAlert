@@ -21,7 +21,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 CustomUserDetails userDetails = null;
 boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
 if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
 	userDetails = new CustomUserDetails();	
 }
