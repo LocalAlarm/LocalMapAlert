@@ -99,15 +99,15 @@
       <div class="col-6 border" style="height: 800px;">      
          <!-- 지도를 표시할 div 입니다 -->
       <div class="col-auto" style="height: 100%;">
-      <div class="map_wrap p-2">
-          <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-         <!-- 마커 표시는 지우고 리스트에 선택하면 마커이동(중앙이동) 마커컨트로롤러 -->
-          <div id="menu_wrap" class="bg_white" style="display: none;">
-              <ul id="placesList">
-              </ul>
-              <div id="pagination"></div>
-          </div>
-      </div>
+	      <div class="map_wrap p-2">
+	          <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+	         <!-- 마커 표시는 지우고 리스트에 선택하면 마커이동(중앙이동) 마커컨트로롤러 -->
+	          <div id="menu_wrap" class="bg_white" style="display: none;">
+	              <ul id="placesList">
+	              </ul>
+	              <div id="pagination"></div>
+	          </div>
+	      </div>
       </div>
       </div>
       
