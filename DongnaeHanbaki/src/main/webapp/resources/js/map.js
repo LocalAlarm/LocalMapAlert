@@ -1,11 +1,13 @@
+var map;
+var markers = [];
+var coords;
+// 마커 추가를 위한 임시 위치 저장
+var tempLatLng;
+var tempMarker = null;
+var markersVisible = true;
+var markerListVisible = true;
 var container = document.getElementById('map');
 var geocoder = new kakao.maps.services.Geocoder();
-var options = {
-    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644), // 기본 중심 좌표
-    level: 2
-};
-
-var map = new kakao.maps.Map(container, options);
 
 // 세션에서 가져오기
 //var userAddress = '<%= session.getAttribute("address") %>'; 
@@ -20,44 +22,12 @@ var map = new kakao.maps.Map(container, options);
 //    }
 //});
 
-// 마커를 저장하는 배열
-var markers = [];
-
-// 마커 추가를 위한 임시 위치 저장
-var tempLatLng;
-var tempMarker = null;
-
-// 마우스 우클릭 이벤트 발생 시 마커 추가
-kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-    tempLatLng = mouseEvent.latLng;
-    var lat = tempLatLng.getLat();
-    var lng = tempLatLng.getLng();
-    console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
-
-    // 지도의 중심을 클릭된 위치로 이동
-    map.setLevel(2);
-    map.setCenter(tempLatLng);
-
-    document.getElementById('markerLat').value = lat;
-    document.getElementById('markerLng').value = lng;
-    document.getElementById('inputForm').style.display = 'block';
-
-    // 임시 마커 생성
-    if (tempMarker) {
-        tempMarker.setMap(null);
+ function setMapCenter(centerCoords) {
+    if (centerCoords) {
+        map.setCenter(centerCoords);
+    } else {
+        console.error('coords가 설정되지 않았습니다.');
     }
-    tempMarker = new kakao.maps.Marker({
-        position: tempLatLng,
-        map: map
-    });
-    
-});
-
- // 중앙값으로 이동시키는 함수
-function setMapCenter() {
-    var centerPosition = new kakao.maps.LatLng(37.49948516874355, 127.03314633997644);
-    map.setCenter(centerPosition);
-    map.setLevel(2);
 }
 
 // 폼 제출 시 마커 정보를 서버로 전송
@@ -227,20 +197,6 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
             });
         }
 
-        
-var markersVisible = true; // 마커 표시 상태를 저장하는 변수
-
-    function toggleMarkers() {
-        if (markersVisible) {
-            hideMarkers();
-            document.getElementById('toggleMarkersBtn').innerText = '마커 on';
-        } else {
-            showMarkers();
-            document.getElementById('toggleMarkersBtn').innerText = '마커 off';
-        }
-        markersVisible = !markersVisible;
-    }
-    
 // 마커를 모두 숨기는 함수
 function hideMarkers() {
     if (markers) {
@@ -249,10 +205,34 @@ function hideMarkers() {
                 markers[i].setMap(null);
             }
         }
-         markers = [];
     }
 }
 
+// 마커를 모두 보이게 하는 함수
+function showMarkers() {
+    if (markers) {
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]) {
+                markers[i].setMap(map); 
+            }
+        }
+    }
+}
+
+// 마커를 토글하는 함수
+function toggleMarkers() {
+    if (markersVisible) {
+        // 현재 마커가 보이는 상태라면 숨김
+        hideMarkers();
+        document.getElementById('toggleMarkersBtn').innerText = '마커 on'; 
+    } else {
+        // 현재 마커가 숨겨진 상태라면 보임.
+        showMarkers();
+        document.getElementById('toggleMarkersBtn').innerText = '마커 off'; 
+    }
+    
+    markersVisible = !markersVisible; 
+}
 
 // 마커를 모두 보이는 함수
 function showMarkers() {
@@ -422,7 +402,7 @@ function NearAccidents() {
                 }
             });
             closePopup();
-            map.setLevel(2);
+            map.setLevel(3);
             setMapCenter();
             // 네비게이션 바 탭 활성화
             toggleEventAccidentsTab(true);
@@ -432,8 +412,9 @@ function NearAccidents() {
 
             if (nearbyAccidents.length > 0) {
                 console.log('근처 사건사고:', nearbyAccidents);
+                alert('근처에 사건사고가 ' + nearbyAccidents.length + '개 있습니다.');
             } else {
-                console.log('근처에 사건사고가 없습니다.');
+                alert('근처에 사건사고가 없습니다.');
             }
         },
         error: function (error) {
@@ -466,13 +447,13 @@ function All() {
         method: "GET",
         dataType: "json",
         success: function(data) {
+        	console.log("1");
             // 기존 마커 숨기기
             hideMarkers();
             console.log(data); // 데이터 확인용 로그
 
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
-            	console.log("eee : "+event.markerIdx);
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
                 var title = event.title;
                 var content = event.content;
@@ -486,17 +467,38 @@ function All() {
    			map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-			setMapCenter();         
-            // 네비게이션 바 탭 활성화
-   			toggleEventAccidentsTab(false);
-
-        },
-        error: function(xhr, status, error) {
-            console.error("데이터를 가져오는 중 오류 발생: " + error);
-       }
-   });
-}
-
+            setMapCenter(coords);
+			// 마우스 우클릭 이벤트 발생 시 마커 추가
+			kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
+			    tempLatLng = mouseEvent.latLng;
+			    var lat = tempLatLng.getLat();
+			    var lng = tempLatLng.getLng();
+			    console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
+			
+			    // 지도의 중심을 클릭된 위치로 이동
+			    map.setLevel(2);
+			    map.setCenter(tempLatLng);
+			
+			    document.getElementById('markerLat').value = lat;
+			    document.getElementById('markerLng').value = lng;
+			    document.getElementById('inputForm').style.display = 'block';
+			
+			    // 임시 마커 생성
+			    if (tempMarker) {
+			        tempMarker.setMap(null);
+			    }
+			    tempMarker = new kakao.maps.Marker({
+			        position: tempLatLng,
+			        map: map
+			    });
+			    
+			});
+			        },
+			        error: function(xhr, status, error) {
+			            console.error("데이터를 가져오는 중 오류 발생: " + error);
+			       }
+			   });
+			}
 
 function toggleMarkerList() {
         var markerList = document.getElementById('markerlist');
@@ -533,21 +535,46 @@ function updateSidebar(data) {
                 `);
             });
 
-            for (var index = 0; index < markers.length; index++) {
-    $(`#markerItem_${index}`).on('click', (function (idx) {
-        return function () {
-            if (markers[idx]) {
-                kakao.maps.event.trigger(markers[idx], 'click');
-                console.log(idx); // 클릭된 마커의 인덱스 출력
-            } else {
-                console.error(`마커 ${idx} 존재하지 않음.`);
-            }
-        };
-    })(index));
+// 전역 변수로 현재 선택된 인덱스 선언
+var currentSelectedIndex = null;
+
+// 새로운 마커 리스트 아이템 클릭 이벤트 리스너 등록
+$('#markerList').on('click', '.marker-item', function() {
+    var index = $(this).attr('id').split('_')[1]; // 클릭된 마커 리스트 아이템의 인덱스 가져오기
+    if (markers[index]) {
+        kakao.maps.event.trigger(markers[index], 'click'); // 해당 인덱스의 마커를 클릭한 것처럼 트리거
+        console.log(index); // 클릭된 마커의 인덱스 출력
+        currentSelectedIndex = index; // 현재 선택된 인덱스 업데이트
+    } else {
+        console.error(`마커 ${index} 존재하지 않음.`);
+    }
+});
+
+// 네비게이션 버튼 클릭 시 현재 선택된 인덱스 및 마커 초기화
+function resetMarkersAndIndex() {
+    currentSelectedIndex = null;
+    markers = []; // 마커 배열 초기화
+    $('#markerList').empty(); // 마커 리스트 초기화
+    console.log('Markers and index reset.');
 }
+
+// 네비게이션 버튼 클릭 시 초기화하고 데이터 갱신
+$('#v-pills-home-tab').click(function() {
+    resetMarkersAndIndex();
+    console.log('전체 목록 버튼 클릭');
+});
+
+$('#v-pills-events-tab').click(function() {
+    resetMarkersAndIndex();
+    console.log('이벤트 버튼 클릭');
+});
+
+$('#eventAccidentsDropdown').click(function() {
+    resetMarkersAndIndex();
+    console.log('사건 사고 드롭다운 클릭');
+});
+
 }
-var map;
-//사용자 주소가져옴
 function getUserAddress() {
     $.ajax({
         url: 'userAddress', 
@@ -555,15 +582,16 @@ function getUserAddress() {
         success: function(response) {  
             console.log('사용자 주소:', response);
 
-            // response가 이미 객체일 경우 처리
             var address = response.address;
 
-            // 카카오맵 API를 이용한 지오코딩 및 지도 초기화
             var geocoder = new kakao.maps.services.Geocoder();
             geocoder.addressSearch(address, function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-					initializeMap(coords);
+                    coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    console.log(coords);
+                    
+                    // 좌표를 얻은 후에 지도를 초기화합니다.
+                    initializeMap(coords);
                 } else {
                     console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
                 }
@@ -574,42 +602,21 @@ function getUserAddress() {
         }
     });
 }
-        // 지도를 초기화하는 함수
-        function initializeMap(centerCoords) {
-            var container = document.getElementById('map');
-            var options = {
-                center: centerCoords,
-                level: 2
-            };
-            map = new kakao.maps.Map(container, options);
 
-            // 오른쪽 클릭 이벤트 설정
-            kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
-                var latLng = mouseEvent.latLng;
-                console.log('위도:', latLng.getLat(), '경도:', latLng.getLng());
+function initializeMap(centerCoords) {
+    var mapOptions = {
+        center: centerCoords,
+        level: 3
+    };
 
-                map.setLevel(2);
-                map.setCenter(latLng);
+    // 지도를 생성합니다.
+    map = new kakao.maps.Map(document.getElementById('map'), mapOptions);
 
-                document.getElementById('markerLat').value = latLng.getLat();
-                document.getElementById('markerLng').value = latLng.getLng();
-                document.getElementById('inputForm').style.display = 'block';
-
-                if (tempMarker) {
-                    tempMarker.setMap(null);
-                }
-                tempMarker = new kakao.maps.Marker({
-                    position: latLng,
-                    map: map
-                });
-            });
-
-            All(); // 전체 마커 불러오기
-        }
-// 페이지 로드 시 사용자 주소로 좌표 설정
-window.onload = getUserAddress;
+    // 지도 중심을 설정합니다.
+    setMapCenter(centerCoords);
+}
 
 $(document).ready(function() {
-        All();
-        getUserAddress();    
+        getUserAddress();
 });
+
