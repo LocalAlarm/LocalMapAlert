@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.spring.dongnae.custom.repo.CustomRepository;
 import com.spring.dongnae.custom.scheme.CustomMarker;
 
-@Service
+@Service("customService")
 public class CustomService {
 	
 	private final CustomRepository customRepository;
