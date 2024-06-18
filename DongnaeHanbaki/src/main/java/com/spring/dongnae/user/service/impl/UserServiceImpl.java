@@ -84,8 +84,8 @@ public class UserServiceImpl implements UserService {
 
 	//프로필 수정
 	@Override
-	public void updateProfile(Map<String, Object> map) {
-		userDAO.updateProfile(map);
+	public int updateProfile(Map<String, Object> map) {
+		return userDAO.updateProfile(map);
 	}
 	
 	@Override

@@ -17,23 +17,25 @@ public class UserRooms {
 	private String email;
 	private String token;
 	@DBRef
-    private List<Moim> moims;
+	private List<Moim> moims;
+
+	private List<String> chatRoomIds;
 
 	public UserRooms() {
 	}
-	
+
 	public UserRooms(UserVO vo) {
 		this.email = vo.getEmail();
 		this.token = vo.getToken();
 		this.moims = new ArrayList<Moim>();
 	}
-	
+
 	public UserRooms(String email, String token) {
 		this.email = email;
 		this.token = token;
 		this.moims = new ArrayList<Moim>();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -58,16 +60,28 @@ public class UserRooms {
 		this.token = token;
 	}
 
-	public List<Moim> getChatRoomIds() {
+	public List<Moim> getMoims() {
 		return moims;
 	}
 
-	public void setChatRoomIds(List<Moim> moims) {
+	public void setMoims(List<Moim> moims) {
 		this.moims = moims;
 	}
 
-	public void addChatRoom(Moim moim) {
+	public void addMoim(Moim moim) {
 		this.moims.add(moim);
+	}
+
+	public List<String> getChatRoomIds() {
+		return chatRoomIds;
+	}
+
+	public void setChatRoomIds(List<String> chatRoomIds) {
+		this.chatRoomIds = chatRoomIds;
+	}
+	
+	public void addChatRoomId(String chatRoom) {
+		this.chatRoomIds.add(chatRoom);
 	}
 
 	@Override

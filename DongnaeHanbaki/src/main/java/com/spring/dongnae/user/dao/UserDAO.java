@@ -24,7 +24,7 @@ public interface UserDAO {
 	//비번바꾸기
 	void updatePassowrd(UserVO vo);
 	//프로필 수정
-	void updateProfile(Map<String, Object> map);
+	int updateProfile(Map<String, Object> map);
 	//친구 아이디 찾아서 데이터 가져오기
 	List<UserVO> searchFriendByEmail(String email);
 }

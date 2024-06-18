@@ -40,6 +40,7 @@ function isUserRooms(data) {
 }
 
 async function handleUserRooms(userRooms) {
+    console.log(JSON.stringify(userRooms));
     if (Array.isArray(userRooms.chatRoomIds)) { // 메시지가 배열인지 확인
         for (const element of userRooms.chatRoomIds) {
             var buttonHtml = '';

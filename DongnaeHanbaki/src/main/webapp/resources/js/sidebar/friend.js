@@ -28,7 +28,7 @@ function connectFriend() {
 
 async function handleFriendRoom(friendRoom) {
     var friendListHtml = '';
-
+    console.log(friendRoom);
     if (Array.isArray(friendRoom.friendIds)) {
         for (const element of friendRoom.friendIds) {
             console.log(element);
@@ -154,32 +154,88 @@ async function initializeFriendRequest() {
 }
 
 // 검색한 유저에 대한 정보를 보여주는 함수
-function displaySearchResults(results, searchString) {
-    // 검색 결과를 표시할 HTML 문자열을 생성합니다.
-    var html = '';
-    var matchFound = false;
-    results.forEach(function (result) {
-        // 각 결과를 리스트 아이템으로 표시합니다.
-        html += '<li class="list-group-item searchResultsElement">';
-        html += '<img src="' + result.image + '" alt="Profile Image" class="rounded-circle" style="width: 35px; height: 35px; margin-right: 10px;">';
-        html += result.email;
-        html += '</li>';
-        if (result.email === searchString) {
-        	// 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
-            matchFound = true;
+async function displaySearchResults(results, searchString) {
+    try {
+        var html = '';
+        var matchFound = false;
+
+        const userEmail = await getUserEmail(); // 현재 사용자의 이메일을 가져오는 함수
+
+        for (const result of results) {
+            // 자기 자신인지 또는 이미 친구 목록에 있는지 확인
+            if (result === userEmail || await checkIfAlreadyFriend(result.email)) {
+                continue; // 결과에서 제외
+            }
+
+            // 각 결과를 리스트 아이템으로 표시합니다.
+            html += '<li class="list-group-item searchResultsElement">';
+            html += '<img src="' + result.image + '" alt="Profile Image" class="rounded-circle" style="width: 35px; height: 35px; margin-right: 10px;">';
+            html += result.email;
+            html += '</li>';
+
+            if (result.email === searchString) {
+                matchFound = true; // 검색어와 일치하는 결과가 있을 경우
+            }
         }
-    });
 
-    // 생성된 HTML을 검색 결과 창에 넣어줍니다.
-    $('#searchResults').html(html);
+        // 생성된 HTML을 검색 결과 창에 넣어줍니다.
+        $('#searchResults').html(html);
 
-    // 검색 결과 창을 보이게 합니다.
-    $('#searchResults').show();
+        // 검색 결과 창을 보이게 합니다.
+        $('#searchResults').show();
 
-    if (matchFound) {
-        enableFriendRequestButton(); // 일치하는 검색 결과가 있을 때만 버튼 활성화
-    } else {
-        disableFriendRequestButton(); // 일치하는 검색 결과가 없으면 버튼 비활성화
+        if (matchFound) {
+            enableFriendRequestButton(); // 일치하는 검색 결과가 있을 때만 버튼 활성화
+        } else {
+            disableFriendRequestButton(); // 일치하는 검색 결과가 없으면 버튼 비활성화
+        }
+    } catch (error) {
+        console.error('Error displaying search results:', error);
+    }
+}
+
+// 현재 사용자의 이메일을 가져오는 함수
+async function getUserEmail() {
+    try {
+        const response = await fetch('/dongnae/api/getCurrentUserEmail', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/plain;charset=UTF-8' // text/plain으로 바꿨음
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const userEmail = await response.text(); // text() 메서드로 텍스트 형식의 응답을 가져옴
+        return userEmail.trim(); // 가져온 이메일에서 앞뒤 공백 제거 후 반환
+    } catch (error) {
+        console.error('Error fetching user email:', error);
+        return null; // 에러 발생 시 null 반환
+    }
+}
+
+// 서버에서 이미 친구인지 여부 확인하는 함수
+async function checkIfAlreadyFriend(requestEmail) {
+    try {
+        const response = await fetch('/dongnae/api/checkFriendship', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ requestId: requestEmail })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const isFriend = await response.text(); // text() 메서드로 텍스트 형식의 응답을 가져옴
+        return isFriend === 'true'; // 'true' 문자열을 boolean으로 변환하여 반환
+    } catch (error) {
+        console.error('Error checking friendship:', error);
+        return false; // 에러 발생 시 기본적으로 false 반환
     }
 }
 
@@ -262,10 +318,35 @@ function displayFriendRequests(friendRequests) {
     }
 }
 
+// 요청을 거절하는 함수
+function rejectFriendRequest(requestId) {
+    $.ajax({
+        url: '/dongnae/api/rejectFriendRequest', // 요청을 처리할 서버의 URL 경로
+        type: 'POST', // POST 방식으로 요청
+        contentType: 'application/json', // 요청의 Content-Type 설정
+        data: JSON.stringify({ requestId: requestId }), // 요청 본문에 요청 ID를 포함하여 전송
+        success: function (response) {
+            console.log('Success:', response);
+            receiveFriendRequests(); // 친구 요청 목록을 갱신하는 함수 호출
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+            // 요청 처리 중 에러가 발생한 경우, 적절한 에러 처리 로직을 구현할 수 있습니다.
+            alert('친구 요청 거절 중 오류가 발생하였습니다. 다시 시도해주세요.');
+        }
+    });
+}
+
+// 이벤트 리스너 설정 - 친구요청 거절
+$(document).on('click', '.friendReject', function () {
+    var requestId = $(this).parent().attr('id');
+    rejectFriendRequest(requestId);
+});
+
 // 친구 요청 모달을 띄우는 코드
-function friendRequestModal(){
+function friendRequestModal() {
     var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
-    $('#nav__friend-request').on('click', function() {
+    $('#nav__friend-request').on('click', function () {
         friendRequestModal.show();
     });
 };

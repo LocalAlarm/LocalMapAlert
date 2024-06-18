@@ -94,16 +94,29 @@ const chatToast = document.getElementById('chatToast');
 							<span class="nav_name">모임 만들기</span>
 						</div>
 					</div>
-					<a href="/dongnae/login?logout" class="nav__link">
+					<a href="/dongnae/logout" class="nav__link">
 						<ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
 						<span class="nav_name">로그아웃</span>
 					</a>
 				</div>
 			</c:when>
-			<c:otherwise>
-				<!-- 로그인 상태가 아닐 때 표시할 사이드바 -->
-				<a href="/dongnae/login">Login</a>
-				<a href="/register">Register</a>
+			<c:otherwise>	<!-- 로그인 상태가 아닐 때 표시할 사이드바 -->
+				<div>
+					<div class="nav__brand">
+					<a href="/dongnae/login">
+						<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#ffffff" class="bi bi-person-square" viewBox="0 0 16 16">
+						  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+						  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+						</svg>
+						  <text x="8" y="15" fill="#ffffff" font-size="8" text-anchor="middle">로그인</text>
+					</a>
+					</div>
+					<div class="nav__brand">
+						<ion-icon name="apps-outline" class="nav__toggle" alt="menu-icon"></ion-icon>
+						<a href="/dongnae/joinform" class="nav__logo">
+						</a>
+					</div>
+				</div>
 			</c:otherwise>
 		</c:choose>
 	</nav>
@@ -199,11 +212,11 @@ const chatToast = document.getElementById('chatToast');
 			initializeFriendRequest();
 			handleMessageEnterPress();
 			friendRequestModal();
+			receiveFriendRequests(); // 친구 요청란에 받은 데이터값을 보여주는 코드
 			createMoimModalFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
 		initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
-		//receiveFriendRequests(); // 친구 요청란에 받은 데이터값을 보여주는 코드
 	});
 </script>

@@ -1,34 +1,29 @@
 package com.spring.dongnae.user.controller;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,8 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.cloudinary.ImageUploadController;
-import com.spring.dongnae.user.dao.UserDAO;
 import com.spring.dongnae.user.dto.KakaoDTO;
+import com.spring.dongnae.user.service.CustomUserDetailsService;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
@@ -50,13 +45,15 @@ public class UserController {
    private final PasswordEncoder passwordEncoder;
    private final JavaMailSender mailSender;
    private final ImageUploadController imageUploadController;
+   private final CustomUserDetailsService customUserDetailsService;
 
    @Autowired
-   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController) {
+   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController, CustomUserDetailsService customUserDetailsService) {
       this.userService = userService;
       this.passwordEncoder = passwordEncoder;
       this.mailSender = mailSender;
       this.imageUploadController = imageUploadController;
+      this.customUserDetailsService = customUserDetailsService;
       System.out.println("========= UserController() 객체생성");
    }
 
@@ -67,10 +64,13 @@ public class UserController {
    }
 
    @RequestMapping("/logout")
-   public String logout(HttpSession session) {
+   public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
       System.out.println(">> 로그아웃 처리");
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth != null) {
+          new SecurityContextLogoutHandler().logout(request, response, auth);
+      }
       session.invalidate();
-
       return "user/login";
    }
 
@@ -301,7 +301,7 @@ public class UserController {
    
    @PostMapping("/updateProfile")
    @ResponseBody
-   public void updateProfile(@RequestParam(value = "email", required = false) String email
+   public ResponseEntity<?> updateProfile(@RequestParam(value = "email", required = false) String email
 		   , @RequestParam(value = "idx", required = false) String idxS
 		   , @RequestParam(value = "newValue", required = false) String newValue
 		   , @RequestParam(value = "address", required = false) String address
@@ -326,7 +326,24 @@ public class UserController {
 	   }
 
 	   System.out.println("프로필 수정처리>> : " + map);
-	   userService.updateProfile(map);
+	   if (userService.updateProfile(map) > 0) {
+		    // 기존 인증 객체를 가져옵니다.
+		    UserDetails CustomUserDetails = customUserDetailsService.loadUserByUsername(((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+		    // 사용자 정보를 가져옵니다.
+		    // 새로운 인증 토큰을 생성합니다. 사용자 이름, 비밀번호, 권한을 설정합니다.
+		    Authentication newAuth = new UsernamePasswordAuthenticationToken(
+		    	CustomUserDetails,
+		    	CustomUserDetails.getPassword(),
+		    	CustomUserDetails.getAuthorities() // 기존 권한을 그대로 사용합니다.
+		    );
+		    // 보안 컨텍스트에 새로운 인증 객체를 설정합니다.
+		    SecurityContextHolder.getContext().setAuthentication(newAuth);
+		    
+		    
+		    return ResponseEntity.ok("업데이트 성공~");
+		}
+	   
+	   return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
    }
 }
 

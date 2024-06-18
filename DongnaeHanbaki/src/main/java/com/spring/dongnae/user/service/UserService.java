@@ -38,7 +38,7 @@ public interface UserService {
 	void updatePassowrd(UserVO vo);
 	
 	//프로필 수정
-	void updateProfile(Map<String, Object> map);
+	int updateProfile(Map<String, Object> map);
 	
 	//친구아이디 찾기
 	List<UserVO> searchFriendByEmail(String email);
