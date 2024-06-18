@@ -21,7 +21,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 CustomUserDetails userDetails = null;
 boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
 if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
 	userDetails = new CustomUserDetails();	
 }
@@ -49,7 +49,8 @@ const chatToast = document.getElementById('chatToast');
 						</a>
 					</div>
 					<div class="nav__list">
-						<a href="/dongnae/map" class="nav__link"> <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+						<a href="/dongnae/map" class="nav__link">
+							<ion-icon name="home-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">홈페이지</span>
 						</a>
 						<div class="nav__link collapse__nav" id="nav__friend-request">
@@ -140,7 +141,7 @@ const chatToast = document.getElementById('chatToast');
 
 <!-- 친구 요청 보내는 모달 창 -->
 <div class="modal fade" id="friendRequestModal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="height: 365px;">
 			<div class="modal-header">
 				<h5 class="modal-title" id="friendRequestModalLabel">친구 요청</h5>
@@ -198,7 +199,7 @@ const chatToast = document.getElementById('chatToast');
 			initializeFriendRequest();
 			handleMessageEnterPress();
 			friendRequestModal();
-			moimModalFunction();
+			createMoimModalFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
