@@ -46,11 +46,11 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	// 처음에 Socket 연결시에 실행되는 코드
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		String token = (String) session.getAttributes().get("userToken");
-		if (token != null) {
-			sessions.put(token, session);
+		String id = (String) session.getAttributes().get("id"); // token -> id 로 바
+		if (id != null) {
+			sessions.put(id, session);
 			// 사용자 ID로 기존 메시지 문서 검색
-			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(token);
+			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(id);
 			UserRooms userRooms = new UserRooms();
 			// 기존 채팅방이 있으면 해당 데이터를 가져옴
 			if (optionalUserRooms.isPresent()) {
@@ -59,7 +59,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 				session.sendMessage(new TextMessage(json));
 			} else {
 				// 새로운 메시지 문서 생성
-				userRooms = new UserRooms(userService.getUserByToken(token));
+				userRooms = new UserRooms(userService.getUserByToken(id));
 				userRoomsRepository.save(userRooms);
 			}
 		} else {

@@ -1,10 +1,13 @@
 package com.spring.dongnae.socket.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
@@ -14,6 +17,9 @@ public class ChatRoomService {
 	@Autowired
 	private ChatRoomRepository chatRoomRepository;
 	
+	// In-memory storage for WebSocket sessions and user IDs
+	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+
 	public Optional<ChatRoom> getChatRoomByUserIds(String userId) {
         return chatRoomRepository.findByUserIdsContaining(userId);
     }
@@ -31,4 +37,19 @@ public class ChatRoomService {
     	chatRoom.setUserIds(userIds);
     	return chatRoomRepository.save(chatRoom);
     }
+
+	// 세션 추가 - 연결
+	public void addSession(String id, WebSocketSession session) {
+		sessions.put(id, session);
+	}
+	
+	// 세션삭제
+	public void removeSession(String id) {
+		sessions.remove(id);
+	}
+
+	// id통해서 세션 가져오기
+	public WebSocketSession getSession(String id) {
+		return sessions.get(id);
+	}
 }
