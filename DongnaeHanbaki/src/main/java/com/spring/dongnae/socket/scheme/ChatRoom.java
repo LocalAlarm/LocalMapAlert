@@ -5,15 +5,16 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 // userIds엔 유저의 토큰이 들어간다.
+@Document(collection = "chatRoom")
 public class ChatRoom {
 	@Id
 	private String id;
 	@DBRef
 	private List<UserRooms> userRooms;
 	private List<Message> messages;
-	private String refId;
 	
 	public ChatRoom() {
 		setInitValue();
@@ -54,11 +55,6 @@ public class ChatRoom {
 		this.messages.add(message);
 	}
 	
-	public String getRefId() {
-		return refId;
-	}
-	
-	
 	private void setInitValue() {
 		this.userRooms = new ArrayList<UserRooms>();
 		this.messages = new ArrayList<Message>();
@@ -66,7 +62,7 @@ public class ChatRoom {
 
 	@Override
 	public String toString() {
-		return "ChatRoom [id=" + id + ", userRooms=" + userRooms + ", messages=" + messages + ", refId=" + refId + "]";
+		return "ChatRoom [id=" + id + ", userRooms=" + userRooms + ", messages=" + messages + "]";
 	}
 	
 

@@ -15,14 +15,6 @@ public class ChatRoomService {
 	@Autowired
 	private ChatRoomRepository chatRoomRepository;
 	
-	public Optional<ChatRoom> getChatRoomByUserIds(String userId) {
-        return chatRoomRepository.findByUserIdsContaining(userId);
-    }
-	
-	public Optional<ChatRoom> getChatRoomByUserIds(List<String> userIds) {
-        return chatRoomRepository.findByUserIdsContaining(userIds);
-    }
-	
     public ChatRoom saveChatRoom(ChatRoom chatRoom) {
         return chatRoomRepository.save(chatRoom);
     }

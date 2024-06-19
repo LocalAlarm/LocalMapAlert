@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,8 @@ import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Moim;
 import com.spring.dongnae.socket.service.MoimService;
 
-@RestController("/moim")
+@RestController
+@RequestMapping("/moim")
 public class MoimController {
 	@Autowired
 	private MoimService moimService;
@@ -31,6 +33,7 @@ public class MoimController {
             @RequestParam("introduce") String introduce,
             @RequestPart(value = "profilePic", required = false) MultipartFile profilePic) {
         try {
+        	System.out.println("연결된다");
             moimService.createMoim(title, introduce, profilePic);
             return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
         } catch (Exception e) {

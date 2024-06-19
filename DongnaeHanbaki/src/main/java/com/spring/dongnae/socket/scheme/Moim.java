@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.spring.dongnae.socket.service.ChatRoomService;
-
 @Document(collection = "moims")
 public class Moim {
 
@@ -18,14 +16,11 @@ public class Moim {
     private String description;
     private String profilePic;
     private String profilePicPI;
-    @DBRef
     private String leader;
     @DBRef
     private ChatRoom chatRoom;
-    @DBRef
-    private List<UserRooms> subLeader;
-    @DBRef
-    private List<UserRooms> participants;
+    private List<String> subLeader;
+    private List<String> participants;
     @DBRef
     private List<Board> boards;
     public Moim() {
@@ -89,28 +84,28 @@ public class Moim {
         this.chatRoom = chatRoom;
     }
 	
-	public List<UserRooms> getSubLeader() {
+	public List<String> getSubLeader() {
 		return subLeader;
 	}
 	
 	public void addSubLeader(UserRooms userRoom) {
-		this.subLeader.add(userRoom);
+		this.subLeader.add(userRoom.getId());
 	}
 	
 	public void deleteSubLeader(UserRooms userRoom) {
-		this.subLeader.remove(userRoom);
+		this.subLeader.remove(userRoom.getId());
 	}
 
-	public List<UserRooms> getParticipants() {
+	public List<String> getParticipants() {
         return participants;
     }
 
     public void addParticipant(UserRooms userRoom) {
-        this.participants.add(userRoom);
+        this.participants.add(userRoom.getId());
     }
     
     public void removeParticipant(UserRooms participant) {
-        this.participants.remove(participant);
+        this.participants.remove(participant.getId());
         participant.removeMoim(this);
     }
 
@@ -123,17 +118,16 @@ public class Moim {
     }
     
     private void setInitValue() {
-    	this.subLeader = new ArrayList<UserRooms>();
-    	this.participants = new ArrayList<UserRooms>();
+    	this.subLeader = new ArrayList<String>();
+    	this.participants = new ArrayList<String>();
     	this.boards = new ArrayList<Board>();
     	this.setProfilePicPI(null);
     }
-
 	@Override
 	public String toString() {
 		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
-				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", subLeader=" + subLeader
-				+ ", participants=" + participants + ", boards=" + boards + "]";
+				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoom=" + chatRoom + ", subLeader="
+				+ subLeader + ", participants=" + participants + ", boards=" + boards + "]";
 	}
 
 }

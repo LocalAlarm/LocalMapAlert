@@ -34,10 +34,10 @@ public class MoimService {
 	private GetAuthenticInfo getAuthenticInfo;
     
     public Moim createMoim(String title, String introduce, MultipartFile profilePic) throws Exception {
+    	System.out.println(title);
         Moim moim = new Moim();
         moim.setName(title);
         moim.setDescription(introduce);
-
         if (profilePic != null && !profilePic.isEmpty()) {
             Map<String, String> imageMap = imageUploadController.uploadImage(profilePic);
             moim.setProfilePic(imageMap.get("url"));
@@ -45,12 +45,13 @@ public class MoimService {
         } else {
             moim.setProfilePic("https://res.cloudinary.com/djlee4yl2/image/upload/v1713834954/logo/github_logo_icon_tpisfg.png");
         }
-
         UserRooms userRoom = userRoomsRepository.findById(getAuthenticInfo.GetToken()).orElseThrow(() -> new Exception("User not found"));
         userRoom.addMasterMoims(moim);
         moim.setLeader(userRoom);
         moim.setChatRoom(chatRoomService.createChatRoom());
-        moim = moimRepository.save(moim);
+        System.out.println(moim.toString());
+        moimRepository.save(moim);
+        System.out.println(moim.toString());
         userRoomsRepository.save(userRoom);
         
         return moim;

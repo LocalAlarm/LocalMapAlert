@@ -44,7 +44,7 @@ async function submitCreateMoimForm() {
     try {
         $('#createMoimForm').find('input, textarea, button').prop('disabled', true);
 
-        const response = await fetch('/dongnae/api/createMoim', {
+        const response = await fetch('/dongnae/moim/createMoim', {
             method: 'POST',
             body: formData,
         })
