@@ -115,10 +115,12 @@ function setMapCenter(centerCoords) {
 //메게없이
 // 기존의 setMapCenter 함수를 수정하여 매개변수 없이 사용자 주소 좌표를 사용하도록 설정
 function setMapCenter() {
+    var seoulCityHallCoords = new kakao.maps.LatLng(37.5665, 126.9780);
+
     if (coords) {
         map.setCenter(coords);
     } else {
-        console.error('사용자 주소 좌표가 설정되지 않았습니다.');
+        map.setCenter(seoulCityHallCoords);
     }
 }
 
@@ -219,7 +221,6 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         data: JSON.stringify(markerData), 
         success: function(response) {
             console.log('마커가 저장 성공:', response);
-            console.log(markerData);
             
             // 폼 숨기기
             document.getElementById('inputForm').style.display = 'none';
@@ -603,17 +604,21 @@ function getUserAddress() {
             geocoder.addressSearch(address, function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
                     coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    
-                    // 좌표를 얻은 후에 지도를 초기화합니다.
                     initializeMap(coords);
                     All();
                 } else {
                     console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
+                    // 주소 변환 실패 시 서울시청 중심으로 설정
+                    initializeMap(new kakao.maps.LatLng(37.5665, 126.9780));
+                    All();
                 }
             });
         },
         error: function(xhr, status, error) {
             console.error('사용자 주소를 가져오는 중 오류 발생:', error);
+            // 주소 가져오기 실패 시 서울시청 중심으로 설정
+            initializeMap(new kakao.maps.LatLng(37.5665, 126.9780));
+            All();
         }
     });
 }
@@ -641,9 +646,4 @@ $(document).ready(function() {
         document.getElementById('v-pills-home-tab').classList.add('active');
         
 });
-$.event.special.mousewheel = {
-    setup: function(_, ns, handle) {
-        this.addEventListener('mousewheel', handle, { passive: true });
-    }
-};
 
