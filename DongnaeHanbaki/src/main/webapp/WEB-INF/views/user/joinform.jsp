@@ -228,7 +228,7 @@
 	function authenticEmail() {
 		var email = $("#email").val().trim();
 		if (email.length == 0) {
-			alert("이메일을 입력해주세요!");
+			showDangerAlert('오류', '이메일을 입력해주세요!', '');
 			$("#email").focus();
 			return false;
 		}
@@ -372,14 +372,14 @@
 	        success: function(response) {
 	            console.log("response : " + response);
 	            if (response === "pass") {
-	                alert("회원가입이 완료되었습니다.");
+	            	showSuccessAlert('성공', '회원가입이 완료되었습니다.', '');
 	                window.location.href = 'login'; // 회원가입 후 로그인 페이지로 이동
 	            } else {
 	                alert(response);
 	            }
 	        },
 	        error: function(request, status, error) {
-	            alert("회원가입에 실패했습니다.");
+	        	showDangerAlert('오류', '회원가입이 실패했습니다.', '');
 	            console.error("code: " + request.status + "\n" + "error: " + error);
 	        }
 	    });

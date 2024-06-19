@@ -26,7 +26,7 @@ var geocoder = new kakao.maps.services.Geocoder();
     if (centerCoords) {
         map.setCenter(centerCoords);
     } else {
-        console.error('coords가 설정되지 않았습니다.');
+            console.error('coords가 설정되지 않았습니다.');
     }
 }
 
@@ -245,6 +245,12 @@ function showMarkers() {
     }
 }
 
+// 네비게이션 버튼 클릭 시 현재 선택된 인덱스 및 마커 초기화
+function resetMarkersAndIndex() {
+    currentSelectedIndex = null;
+    markers = []; // 마커 배열 초기화
+    $('#markerList').empty(); // 마커 리스트 초기화
+}
 
 // 팝업 창 닫기
 function closePopup() {
@@ -317,6 +323,7 @@ function AllAccidents() {
         method: "GET",
         dataType: "json",
         success: function (data) {
+        	resetMarkersAndIndex();
             // 기존 마커 제거
             hideMarkers();
             markers = [];
@@ -346,11 +353,13 @@ function AllAccidents() {
 }
 // 실시간 사건사고 클릭
 function RealTimeAccidents() {
+
     $.ajax({
         url: "RealTimeAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
+       	 	resetMarkersAndIndex();
             // 기존 마커 제거
             hideMarkers();
             markers = [];
@@ -363,7 +372,6 @@ function RealTimeAccidents() {
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
-
             // 마커 보이기
             closePopup();
             map.setLevel(2);
@@ -390,7 +398,7 @@ function NearAccidents() {
         method: "GET",
         dataType: "json",
         success: function (data) {
-        
+        resetMarkersAndIndex();
             hideMarkers();
             data.forEach(function (accident) {
                 var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
@@ -401,17 +409,15 @@ function NearAccidents() {
                     addMarker(position, '2', accident.title, accident.content);
                 }
             });
+            
             closePopup();
             map.setLevel(3);
             setMapCenter();
-            // 네비게이션 바 탭 활성화
-            toggleEventAccidentsTab(true);
             
             // 필터링된 반경 데이터를 사이드바에 표시
             updateSidebar(nearbyAccidents);
 
             if (nearbyAccidents.length > 0) {
-                console.log('근처 사건사고:', nearbyAccidents);
                 alert('근처에 사건사고가 ' + nearbyAccidents.length + '개 있습니다.');
             } else {
                 alert('근처에 사건사고가 없습니다.');
@@ -447,11 +453,9 @@ function All() {
         method: "GET",
         dataType: "json",
         success: function(data) {
-        	console.log("1");
             // 기존 마커 숨기기
             hideMarkers();
-            console.log(data); // 데이터 확인용 로그
-
+    		toggleEventAccidentsTab(false); // 사건사고 메뉴 비활성화
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
@@ -543,35 +547,24 @@ $('#markerList').on('click', '.marker-item', function() {
     var index = $(this).attr('id').split('_')[1]; // 클릭된 마커 리스트 아이템의 인덱스 가져오기
     if (markers[index]) {
         kakao.maps.event.trigger(markers[index], 'click'); // 해당 인덱스의 마커를 클릭한 것처럼 트리거
-        console.log(index); // 클릭된 마커의 인덱스 출력
         currentSelectedIndex = index; // 현재 선택된 인덱스 업데이트
     } else {
         console.error(`마커 ${index} 존재하지 않음.`);
     }
 });
 
-// 네비게이션 버튼 클릭 시 현재 선택된 인덱스 및 마커 초기화
-function resetMarkersAndIndex() {
-    currentSelectedIndex = null;
-    markers = []; // 마커 배열 초기화
-    $('#markerList').empty(); // 마커 리스트 초기화
-    console.log('Markers and index reset.');
-}
-
 // 네비게이션 버튼 클릭 시 초기화하고 데이터 갱신
 $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
-    console.log('전체 목록 버튼 클릭');
 });
 
 $('#v-pills-events-tab').click(function() {
     resetMarkersAndIndex();
-    console.log('이벤트 버튼 클릭');
 });
 
 $('#eventAccidentsDropdown').click(function() {
     resetMarkersAndIndex();
-    console.log('사건 사고 드롭다운 클릭');
+    AllAccidents();
 });
 
 }
@@ -588,10 +581,10 @@ function getUserAddress() {
             geocoder.addressSearch(address, function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
                     coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    console.log(coords);
                     
                     // 좌표를 얻은 후에 지도를 초기화합니다.
                     initializeMap(coords);
+                    All();
                 } else {
                     console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
                 }
@@ -618,5 +611,6 @@ function initializeMap(centerCoords) {
 
 $(document).ready(function() {
         getUserAddress();
+        document.getElementById('v-pills-home-tab').classList.add('active');
+        
 });
-

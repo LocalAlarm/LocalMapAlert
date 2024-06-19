@@ -18,7 +18,7 @@
  	<select id="getMap" parameterType="mapVO" resultType="mapVO">
 		SELECT * FROM MAP
 		WHERE DEL_YN = 0
-		AND MAP_IDX = ${maPIdx}
+		AND MAP_IDX = ${mapIdx}
 	</select>
 	
 <!-- 	<insert id="insertMap" parameterType="mapVO"> -->

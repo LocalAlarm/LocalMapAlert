@@ -120,4 +120,9 @@ function showSuccessAlert(title, text, footerText) {
 		text: text,
 		footer: '<span style="color:indianred">' + footerText + '</span>'
 	});
+		  icon: "success",
+		  title: title,
+		  text: text,
+		  footer: '<span style="color:indianred">' + footerText + '</span>'
+		});
 }

@@ -43,7 +43,7 @@ public class MapCommentsController {
     
     @PostMapping(value = "/insertComment", produces = "text/plain; charset=UTF-8")
     @ResponseBody
-    public ResponseEntity<String> insertComment(@ModelAttribute MapCommentsVO mapCommentsVO) {
+    public ResponseEntity<String> insertComment(@ModelAttribute MapCommentsVO mapCommentsVO, Model model) {
     	System.out.println("mapCommentsVO : " + mapCommentsVO.toString());
         try {
             int insertCount = mapCommentsService.insertComment(mapCommentsVO);

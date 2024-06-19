@@ -30,16 +30,16 @@ public class MapVO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Double getCenterIatitude() {
+	public Double getCenterLatitude() {
 		return centerLatitude;
 	}
-	public void setCenterIatitude(Double centerLatitude) {
+	public void setCenterLatitude(Double centerLatitude) {
 		this.centerLatitude = centerLatitude;
 	}
-	public Double getCenterIogitude() {
+	public Double getCenterLongitude() {
 		return centerLongitude;
 	}
-	public void setCenterIogitude(Double centerLongitude) {
+	public void setCenterLongitude(Double centerLongitude) {
 		this.centerLongitude = centerLongitude;
 	}
 	public String getDelYn() {
