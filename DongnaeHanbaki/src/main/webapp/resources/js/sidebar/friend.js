@@ -161,9 +161,13 @@ async function displaySearchResults(results, searchString) {
 
         const userEmail = await getUserEmail(); // 현재 사용자의 이메일을 가져오는 함수
 
-        for (const result of results) {
-            // 자기 자신인지 또는 이미 친구 목록에 있는지 확인
-            if (result === userEmail || await checkIfAlreadyFriend(result.email)) {
+        //자기 자신을 제외하는 코드
+        const filteredResults = results.filter(result => result.email !== userEmail);
+
+        // 각 결과를 처리합니다.
+        for (const result of filteredResults) {
+            // 이미 친구 목록에 있는지 확인
+            if (await checkIfAlreadyFriend(result.email)) {
                 continue; // 결과에서 제외
             }
 
@@ -222,7 +226,7 @@ async function checkIfAlreadyFriend(requestEmail) {
         const response = await fetch('/dongnae/api/checkFriendship', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({ requestId: requestEmail })
         });

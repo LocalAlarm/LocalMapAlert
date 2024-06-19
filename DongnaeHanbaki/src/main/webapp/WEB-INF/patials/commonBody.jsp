@@ -43,9 +43,9 @@ const chatToast = document.getElementById('chatToast');
 				<div>
 					<div class="nav__brand">
 						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-						<a href="/dongnae/main" class="nav__logo">
+						<a href="/dongnae/main" class="nav__logo" style="text-decoration: none;">
 							<img src="<%=userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
-							<%=userDetails.getNickname()%>
+							<span class="nickname" style="font-size: 12px;"><%=userDetails.getNickname()%></span>
 						</a>
 					</div>
 					<div class="nav__list">
@@ -164,7 +164,7 @@ const chatToast = document.getElementById('chatToast');
 				<div class="d-flex" role="search">
 					<input class="form-control me-2" type="search" placeholder="Search"
 						id="searchFriend" aria-label="Search">
-					<button class="btn btn-secondary" id="request-friend-button" type="button">친구요청</button>
+					<button class="btn btn-secondary" id="request-friend-button" type="button" style="min-width: 100px; white-space: nowrap;">친구요청</button>
 				</div>
 				<ul class="list-group" id="searchResults">
 				</ul>

@@ -157,3 +157,11 @@ nav.sidebar {
     transform: rotate(180deg);
     transition: .5s;
 }
+
+.nickname {
+    display: inline-block;
+}
+
+.line {
+    width: 100%;
+}
