@@ -6,6 +6,7 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import com.spring.dongnae.socket.handler.ChatListWebSocketHandler;
+import com.spring.dongnae.socket.handler.FriendWebSocketHandler;
 import com.spring.dongnae.socket.handler.HandlerInterceptor;
 
 @Configuration
@@ -13,12 +14,12 @@ import com.spring.dongnae.socket.handler.HandlerInterceptor;
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ChatListWebSocketHandler chatListWebSocketHandler;
-//    private final FriendWebSocketHandler friendWebSocketHandler;
+    private final FriendWebSocketHandler friendWebSocketHandler;
     private final HandlerInterceptor handlerInterceptor;
 
-    public WebSocketConfig(ChatListWebSocketHandler chatListWebSocketHandler, HandlerInterceptor handlerInterceptor) {
+    public WebSocketConfig(ChatListWebSocketHandler chatListWebSocketHandler, FriendWebSocketHandler friendWebSocketHandler, HandlerInterceptor handlerInterceptor) {
         this.chatListWebSocketHandler = chatListWebSocketHandler;
-//		this.friendWebSocketHandler = friendWebSocketHandler;
+		this.friendWebSocketHandler = friendWebSocketHandler;
         this.handlerInterceptor = handlerInterceptor;
     }
 
@@ -27,8 +28,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(chatListWebSocketHandler, "/chatList")
                 .addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인
                 .setAllowedOrigins("*");
-//        registry.addHandler(friendWebSocketHandler, "/friend")
-//	       		.addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인 / 친구추가
-//	       		.setAllowedOrigins("*");
+        registry.addHandler(friendWebSocketHandler, "/friend")
+	       		.addInterceptors(handlerInterceptor) // 스프링 시큐리티에 토큰이 있는지 확인 / 친구추가
+	       		.setAllowedOrigins("*");
     }
 }

@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
 import com.spring.dongnae.user.vo.UserVO;
 
+@Component
 @Document(collection = "userRooms")
 public class UserRooms {
 

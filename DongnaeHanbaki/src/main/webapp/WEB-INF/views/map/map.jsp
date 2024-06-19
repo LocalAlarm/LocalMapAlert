@@ -52,8 +52,8 @@
     
 <!-- 마커 보이기 감추기 버튼 -->
 <div class="overlay-button">
-    <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 on/off</button>
-    <button id="toggleMarkerListBtn" onclick="toggleMarkerList()" class="btn btn-secondary btn-sm">게시판 on/off</button>
+    <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 off</button>
+    <button id="toggleMarkerListBtn" onclick="toggleMarkerList()" class="btn btn-secondary btn-sm">게시판 off</button>
 </div>
 
 <!-- 사용자 입력 폼 -->
