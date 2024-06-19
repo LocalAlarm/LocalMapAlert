@@ -9,19 +9,6 @@ var markerListVisible = true;
 var container = document.getElementById('map');
 var geocoder = new kakao.maps.services.Geocoder();
 
-// 세션에서 가져오기
-//var userAddress = '<%= session.getAttribute("address") %>'; 
-//console.log(userAddress);
-// 주소로 좌표를 변환하여 지도의 중심으로 설정
-//geocoder.addressSearch(userAddress, function(result, status) {
-//    if (status === kakao.maps.services.Status.OK) {
-//        var coords = new kakao.maps.LatLng(result[0].y, result[0].x); // 변환된 좌표
-//        map.setCenter(coords); 
-//    } else {
-//        console.error('주소를 변환x.');
-//    }
-//});
-
  function setMapCenter(centerCoords) {
     if (centerCoords) {
         map.setCenter(centerCoords);
@@ -522,22 +509,22 @@ function toggleMarkerList() {
     }
 
 function updateSidebar(data) {
-            $('#markerList').empty();
+        $('#markerList').empty();
 
-            data.forEach(function (event, index) {
-                var writeDate = new Date(event.writeDate);
-                var formattedDate = writeDate.toLocaleString();
+        data.forEach(function (event, index) {
+            var writeDate = new Date(event.writeDate);
+            var formattedDate = writeDate.toLocaleString();
 
-                $('#markerList').append(`
-                    <div class="card marker-item" id="markerItem_${index}">
-                        <div class="card-body">
-                            <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
-                            <p class="card-text">${event.content}</p>
-                            <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
-                        </div>
+            $('#markerList').append(`
+                <div class="card marker-item" id="markerItem_${index}">
+                    <div class="card-body">
+                        <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
+                        <p class="card-text">${event.content}</p>
+                        <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
                     </div>
+                </div>
                 `);
-            });
+        });
 
 // 전역 변수로 현재 선택된 인덱스 선언
 var currentSelectedIndex = null;
