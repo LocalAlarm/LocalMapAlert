@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -13,11 +14,21 @@ public class Moim {
     private String id;
     private String name;
     private String description;
+    private String profilePic;
+    private String profilePicPI;
+    @DBRef
+    private String leader;
+    @DBRef
+    private ChatRoom chatRoom;
+    @DBRef
+    private List<UserRooms> subLeader;
     @DBRef
     private List<UserRooms> participants;
     @DBRef
     private List<Board> boards;
-
+    public Moim() {
+    	setInitValue();
+    }
     // Getters and Setters
     public String getId() {
         return id;
@@ -43,33 +54,83 @@ public class Moim {
         this.description = description;
     }
     
-    public List<UserRooms> getParticipants() {
-        return participants;
-    }
+	public String getProfilePic() {
+		return profilePic;
+	}
 
-    public void setParticipants(List<UserRooms> participants) {
-        this.participants = participants;
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+    
+	public String getProfilePicPI() {
+		return profilePicPI;
+	}
+
+	public void setProfilePicPI(String profilePicPI) {
+		this.profilePicPI = profilePicPI;
+	}
+	
+    public String getLeader() {
+		return leader;
+	}
+
+	public void setLeader(UserRooms userRooms) throws Exception {
+		userRooms.addMasterChatRoom(this);
+		this.leader = userRooms.getId();
+	}
+	
+	public ChatRoom getChatRoom() {
+		return chatRoom;
+	}
+	
+	public void setChatRoom(ChatRoom chatRoom) {
+		this.chatRoom = chatRoom;
+	}
+	public List<UserRooms> getSubLeader() {
+		return subLeader;
+	}
+	
+	public void addSubLeader(UserRooms userRoom) {
+		this.subLeader.add(userRoom);
+	}
+	
+	public void deleteSubLeader(UserRooms userRoom) {
+		this.subLeader.remove(userRoom);
+	}
+
+	public List<UserRooms> getParticipants() {
+        return participants;
     }
 
     public void addParticipant(UserRooms userRoom) {
         this.participants.add(userRoom);
+    }
+    
+    public void removeParticipant(UserRooms participant) {
+        this.participants.remove(participant);
+        participant.removeMoim(this);
     }
 
     public List<Board> getBoards() {
         return boards;
     }
 
-    public void setBoards(List<Board> boards) {
-        this.boards = boards;
-    }
-
-    public void addPost(Board board) {
+    public void addBoard(Board board) {
         this.boards.add(board);
+    }
+    
+    private void setInitValue() {
+    	this.subLeader = new ArrayList<UserRooms>();
+    	this.participants = new ArrayList<UserRooms>();
+    	this.boards = new ArrayList<Board>();
+    	this.setProfilePicPI(null);
     }
 
 	@Override
 	public String toString() {
-		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", participants=" + participants
-				+ ", boards=" + boards + "]";
+		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
+				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", subLeader=" + subLeader
+				+ ", participants=" + participants + ", boards=" + boards + "]";
 	}
+
 }

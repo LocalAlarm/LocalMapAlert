@@ -23,7 +23,6 @@ public class FriendInfo {
 		this.roomName = roomName;
 	}
 
-
 	public String getToken() {
 		return token;
 	}
