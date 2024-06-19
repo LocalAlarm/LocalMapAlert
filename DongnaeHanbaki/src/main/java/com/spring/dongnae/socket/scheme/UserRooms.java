@@ -1,12 +1,14 @@
 package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Document(collection = "userRooms")
@@ -51,6 +53,10 @@ public class UserRooms {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public List<Moim> getMoims() {
+		return moims;
+	}
 
 	public void addMoim(Moim moim) {
 		this.moims.add(moim);
@@ -67,8 +73,12 @@ public class UserRooms {
         }
         this.masterMoims.add(moim);
     }
+
+    public List<Moim> getMasterMoims() {
+    	return masterMoims;
+    }
     
-    public void removeMasterChatRoom(Moim moim) {
+    public void removeMasterMoim(Moim moim) {
         this.masterMoims.remove(moim);
     }
 	
@@ -110,5 +120,6 @@ public class UserRooms {
 		return "UserRooms [id=" + id + ", email=" + email + ", moims=" + moims + ", masterMoims=" + masterMoims
 				+ ", requestIds=" + requestIds + ", friendIds=" + friendIds + "]";
 	}
+
 
 }

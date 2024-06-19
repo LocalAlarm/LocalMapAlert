@@ -8,7 +8,6 @@ function connectMoim() {
     moimSocket.onmessage = function (event) {
         try {
             var moimJsonData = JSON.parse(event.data);
-            console.log(moimJsonData);
             if (isMessage(moimJsonData)) {
                 handleMoimMessage(moimJsonData);
             } else if (isUserRooms(moimJsonData)) {
@@ -31,12 +30,10 @@ function connectMoim() {
 }
 
 async function handleMoimUserRooms(userRooms) {
+    var buttonHtml = '';
     if (Array.isArray(userRooms.masterMoims)) {
-        for (const element of userRooms.moims) {
-            var buttonHtml = '';
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
-            console.log(buttonHtml);
-            $('#moimList').html(buttonHtml);
+        for (const element of userRooms.masterMoims) {
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.id + '">' + element.name + '</li>';
         }
     } else {
         console.error("userRooms.masterMoims is not an array");
@@ -44,13 +41,12 @@ async function handleMoimUserRooms(userRooms) {
 
     if (Array.isArray(userRooms.moims)) { // 메시지가 배열인지 확인
         for (const element of userRooms.moims) {
-            var buttonHtml = '';
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
-            $('#moimList').html(buttonHtml);
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.id + '">' + element + '</li>';
         }
     } else {
         console.error("userRooms.moims is not an array");
     }
+    $('#moimList').html(buttonHtml);
 }
 
 function createMoimModalFunction(){

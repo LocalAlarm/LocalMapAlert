@@ -36,7 +36,7 @@ function isMessage(data) {
 }
 
 function isUserRooms(data) {
-    return data.chatRoomIds !== undefined && data.email !== undefined;
+    return data.requestIds !== undefined && data.friendIds !== undefined;
 }
 
 async function handleUserRooms(userRooms) {
