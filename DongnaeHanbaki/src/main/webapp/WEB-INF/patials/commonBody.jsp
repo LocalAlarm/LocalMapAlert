@@ -21,7 +21,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 CustomUserDetails userDetails = null;
 boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
 if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
 	userDetails = new CustomUserDetails();	
 }
@@ -207,7 +207,7 @@ const chatToast = document.getElementById('chatToast');
 		if (isLogin) {
 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
 			connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-			initializeChatToast();
+ 			initializeChatToast();
 			initializeSearchEvents();
 			initializeFriendRequest();
 			handleMessageEnterPress();
