@@ -13,7 +13,7 @@ function connectChat() {
             if (isMessage(chatJsonData)) {
                 handleMessage(chatJsonData);
             } else if (isUserRooms(chatJsonData)) {
-                handleUserRooms(chatJsonData);
+                handleUserRooms(chatJsonData.friendIds);
             } else {
                 console.error("Unknown data type received:", chatJsonData);
             }
@@ -36,15 +36,15 @@ function isMessage(data) {
 }
 
 function isUserRooms(data) {
-    return data.chatRoomIds !== undefined && data.email !== undefined;
+    return data.friendIds !== undefined && data.requestIds !== undefined;
 }
 
-async function handleUserRooms(userRooms) {
-    console.log(JSON.stringify(userRooms));
-    if (Array.isArray(userRooms.chatRoomIds)) { // 메시지가 배열인지 확인
-        for (const element of userRooms.chatRoomIds) {
+async function handleUserRooms(friendIds) {
+    console.log(JSON.stringify(friendIds));
+    if (Array.isArray(friendIds)) { // 메시지가 배열인지 확인
+        for (const element of friendIds) {
             var buttonHtml = '';
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.chatRoom.id + '">' + element.roomName + '</li>';
             $('#chatList').html(buttonHtml);
         }
     } else {
