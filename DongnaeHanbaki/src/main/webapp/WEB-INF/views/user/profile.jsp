@@ -406,11 +406,11 @@
 			contentType : false,
 			success : function(response) {
 				console.log(response);
-				alert("프로필이 업데이트 되었습니다.");
+				showSuccessAlert('성공', '프로필이 업데이트 되었습니다.', '');
 				location.reload();
 			},
 			error : function(request, status, error) {
-				alert("프로필 업데이트에 실패했습니다.");
+				showDangerAlert('오류', '프로필 업데이트에 실패했습니다!', '');
 				console.error("Error:", request.status, error);
 			}
 		});
@@ -582,9 +582,6 @@
             </tr>
         </tbody>
 	</table> 
-	<form action="logout" method="post">
-        <button type="submit">로그아웃</button>
-    </form>
 	
     <div class="popup">
      <p id="popupLabel"></p>
