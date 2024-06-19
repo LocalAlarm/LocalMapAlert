@@ -1,3 +1,58 @@
+function connectMoim() {
+    moimSocket = new WebSocket('ws://localhost:8088/dongnae/moim');
+
+    moimSocket.onopen = function (event) {
+        console.log('Connected to MoimWebSocket');
+    }
+
+    moimSocket.onmessage = function (event) {
+        try {
+            var moimJsonData = JSON.parse(event.data);
+            console.log(moimJsonData);
+            if (isMessage(moimJsonData)) {
+                handleMoimMessage(moimJsonData);
+            } else if (isUserRooms(moimJsonData)) {
+                handleMoimUserRooms(moimJsonData);
+            } else {
+                console.error("Unknown data type received:", moimJsonData);
+            }
+
+        } catch (e) {
+            console.error("Error processing WebSocket message: ", e);
+        }
+    };
+
+    moimSocket.onclose = function (event) {
+        console.log('Disconnected from MoimWebSocket');
+    };
+    moimSocket.onerror = function (error) {
+        console.log("WebSocket error: " + error);
+    };
+}
+
+async function handleMoimUserRooms(userRooms) {
+    if (Array.isArray(userRooms.masterMoims)) {
+        for (const element of userRooms.moims) {
+            var buttonHtml = '';
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
+            console.log(buttonHtml);
+            $('#moimList').html(buttonHtml);
+        }
+    } else {
+        console.error("userRooms.masterMoims is not an array");
+    }
+
+    if (Array.isArray(userRooms.moims)) { // 메시지가 배열인지 확인
+        for (const element of userRooms.moims) {
+            var buttonHtml = '';
+            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
+            $('#moimList').html(buttonHtml);
+        }
+    } else {
+        console.error("userRooms.moims is not an array");
+    }
+}
+
 function createMoimModalFunction(){
     var createMoimModal = new bootstrap.Modal($('#createMoimModal')[0]);
     $('#nav__create-moim').on('click', function() {

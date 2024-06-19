@@ -14,7 +14,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.dongnae.socket.listener.WebSocketSessionManager;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
@@ -33,9 +32,10 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	private final ChatRoomRepository chatRoomRepository;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
+	
+	// In-memory storage for WebSocket sessions and user IDs
+	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
-	@Autowired
-    private WebSocketSessionManager sessionManager;
 
 	public ChatListWebSocketHandler(UserService userService, UserRoomsRepository userRoomsRepository,
 			ChatRoomRepository chatRoomRepository) {
@@ -49,7 +49,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
 		if (token != null) {
-			sessionManager.addSession(token, session);
+			sessions.put(token, session);
 			// 사용자 ID로 기존 메시지 문서 검색
 			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(token);
 			UserRooms userRooms = new UserRooms();
@@ -72,40 +72,41 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
-		String payload = message.getPayload();
-		System.out.println("payload : " + payload);
-		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
-		newMessage.setSenderToken(token);
-
-		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());
-		if (optionalChatRoom.isPresent()) {
-			ChatRoom chatRoom = optionalChatRoom.get();
-			try {
-			    chatRoom.addMessage(newMessage);
-			} catch (NullPointerException e) {
-				chatRoom.setMessages(new ArrayList<Message>());
-				chatRoom.addMessage(newMessage);
-			}
-			chatRoomRepository.save(chatRoom);
-			
-			// JSON 메시지 생성
-			String jsonMessage = objectMapper.writeValueAsString(newMessage);
-
-			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
-			List<String> userTokens = chatRoom.getUserTokens(); // 사용자 토큰들 가져오기
-			for (String userToken : userTokens) {
-				session = sessionManager.getSession(userToken); // 세션 정보 가져오기
-				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
-					session.sendMessage(new TextMessage(jsonMessage));
-				}
-			}
-		} else {
-			session.sendMessage(new TextMessage("Error: Chat room not found"));
-		}
+//		String payload = message.getPayload();
+//		System.out.println("payload : " + payload);
+//		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
+//		newMessage.setSenderToken(token);
+//
+//		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());
+//		if (optionalChatRoom.isPresent()) {
+//			ChatRoom chatRoom = optionalChatRoom.get();
+//			try {
+//			    chatRoom.addMessage(newMessage);
+//			} catch (NullPointerException e) {
+//				chatRoom.setMessages(new ArrayList<Message>());
+//				chatRoom.addMessage(newMessage);
+//			}
+//			chatRoomRepository.save(chatRoom);
+//			
+//			// JSON 메시지 생성
+//			String jsonMessage = objectMapper.writeValueAsString(newMessage);
+//
+//			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
+//			List<String> userTokens = chatRoom.getUserTokens(); // 사용자 토큰들 가져오기
+//			for (String userToken : userTokens) {
+//				session = sessions.get(userToken); // 세션 정보 가져오기
+//				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
+//					session.sendMessage(new TextMessage(jsonMessage));
+//				}
+//			}
+//		} else {
+//			session.sendMessage(new TextMessage("Error: Chat room not found"));
+//		}
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		sessionManager.removeSession();
+		String token = (String) session.getAttributes().get("userToken");
+		sessions.remove(token);
 	}
 }

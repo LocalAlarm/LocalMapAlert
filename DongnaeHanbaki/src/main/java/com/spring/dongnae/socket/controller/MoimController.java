@@ -76,9 +76,9 @@ public class MoimController {
     	return moimService.getBoardByMoimId(moimId);
     }
     
-    @GetMapping("/userRooms/{token}")
-    public List<Moim> getMoimsByUser(@PathVariable String token) {
-    	return moimService.getMoimByToken(token);
-    }
+//    @GetMapping("/userRooms/{token}")
+//    public List<Moim> getMoimsByUser(@PathVariable String token) {
+//    	return moimService.getMoimByToken(token);
+//    }
 	
 }

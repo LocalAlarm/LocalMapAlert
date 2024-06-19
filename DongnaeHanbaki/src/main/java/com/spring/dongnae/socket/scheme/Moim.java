@@ -2,10 +2,11 @@ package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document(collection = "moims")
 public class Moim {
@@ -24,6 +25,19 @@ public class Moim {
     public Moim() {
     	setInitValue();
     }
+    public Moim(String name, String description, Map<String, String> profilePicMap) {
+    	setInitValue();
+        this.setName(name);
+        this.setDescription(description);
+        if (profilePicMap == null) {
+            this.setProfilePic("https://res.cloudinary.com/djlee4yl2/image/upload/v1713834954/logo/github_logo_icon_tpisfg.png");
+            this.setProfilePicPI(null);
+        } else {
+        	this.setProfilePic(profilePicMap.get("url"));
+        	this.setProfilePicPI(profilePicMap.get("public_id"));        	
+        }
+    }
+    
     // Getters and Setters
     public String getId() {
         return id;

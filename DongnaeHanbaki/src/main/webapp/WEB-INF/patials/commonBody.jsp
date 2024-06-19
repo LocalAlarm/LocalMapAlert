@@ -81,7 +81,7 @@ const chatToast = document.getElementById('chatToast');
 							<ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">모임</span>
 							<ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-							<ul class="collapse__menu" id="chatList">
+							<ul class="collapse__menu" id="moimList">
 								<!-- 모임 리스트가 들어올 자리 -->
 							</ul>
 						</div>
@@ -192,14 +192,15 @@ const chatToast = document.getElementById('chatToast');
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
-			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
 			connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-/* 			initializeChatToast();
+			initializeChatToast();
 			initializeSearchEvents();
 			initializeFriendRequest();
 			handleMessageEnterPress();
-			friendRequestModal();
-			createMoimModalFunction(); */
+			friendRequestModal(); */
+			connectMoim();
+			createMoimModalFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();

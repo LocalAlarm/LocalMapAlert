@@ -15,9 +15,9 @@ public class UserRooms {
 	@Id
 	private String id;
 	private String email;
-	@DBRef
+	@DBRef(lazy = true)
     private List<Moim> moims;
-	@DBRef
+	@DBRef(lazy = true)
     private List<Moim> masterMoims; // 유저가 master인 모임 리스트
 	private List<String> requestIds; // 친구추가 요청받은 아이디(목록) 들
 	private List<FriendInfo> friendIds;
@@ -50,11 +50,6 @@ public class UserRooms {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	// 모임에 관한 메서드
-	public List<Moim> getMoims() {
-		return moims;
 	}
 
 	public void addMoim(Moim moim) {
