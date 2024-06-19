@@ -112,6 +112,15 @@ function setMapCenter(centerCoords) {
     }
 }
 
+//메게없이
+// 기존의 setMapCenter 함수를 수정하여 매개변수 없이 사용자 주소 좌표를 사용하도록 설정
+function setMapCenter() {
+    if (coords) {
+        map.setCenter(coords);
+    } else {
+        console.error('사용자 주소 좌표가 설정되지 않았습니다.');
+    }
+}
 
 // 게시판  상단 제목 업데이트 함수
  function updateHeader(title) {
@@ -153,16 +162,16 @@ $('#markerList').on('click', '.marker-item', function() {
 // 네비게이션 버튼 클릭 시 초기화하고 데이터 갱신
 $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
-});
-
-$('#v-pills-events-tab').click(function() {
-    resetMarkersAndIndex();
-});
+	});
 
 $('#eventAccidentsDropdown').click(function() {
-    resetMarkersAndIndex();
-    AllAccidents();
-});
+    	resetMarkersAndIndex();
+    	AllAccidents();
+	});
+
+$('#v-pills-events-tab').click(function() {
+    	resetMarkersAndIndex();
+	});
 
 }
 
@@ -360,7 +369,7 @@ function All() {
 
             // 마커 보이기
             closePopup();
-   			map.setLevel(4);
+   			map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
             setMapCenter(coords);
@@ -420,10 +429,8 @@ function AllAccidents() {
 
             // 마커 보이기
             closePopup();
-            map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-			setMapCenter();
             // 네비게이션 바 탭 활성화
             toggleEventAccidentsTab(true);
         },
@@ -435,13 +442,12 @@ function AllAccidents() {
 
 // 실시간 사건사고 클릭
 function RealTimeAccidents() {
-
     $.ajax({
         url: "RealTimeAccidents",
         method: "GET",
         dataType: "json",
         success: function (data) {
-       	 	resetMarkersAndIndex();
+            resetMarkersAndIndex();
             // 기존 마커 제거
             hideMarkers();
             markers = [];
@@ -454,14 +460,30 @@ function RealTimeAccidents() {
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
-            // 마커 보이기
-            closePopup();
-            map.setLevel(2);
-            showMarkers();
-            updateSidebar(data);  
-			setMapCenter();
-            // 네비게이션 바 탭 활성화
-            toggleEventAccidentsTab(true);
+
+            if (data.length > 0) {
+                // 데이터에서 가장 최근 사건사고 정보 가져오기 (리스트의 첫 번째 요소)
+                var latestEvent = data[0];
+
+                if (latestEvent) {
+                    // 최근 사건사고의 좌표 가져오기
+                    var latestPosition = new kakao.maps.LatLng(latestEvent.latitude, latestEvent.longitude);
+
+                    // 마커 보이기
+                    showMarkers();
+                    closePopup();
+                    updateSidebar(data);
+                    map.setCenter(latestPosition);
+                    map.setLevel(3); // 예시로 레벨 3으로 설정
+
+                    // 네비게이션 바 탭 활성화
+                    toggleEventAccidentsTab(true);
+                } else {
+                    console.error("가장 최근 사건사고를 찾을 수 없습니다.");
+                }
+            } else {
+                console.error("데이터가 없습니다.");
+            }
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -472,7 +494,7 @@ function RealTimeAccidents() {
 // 근처 사건사고 찾기
 function NearAccidents() {
     var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
-    var radius = 1; // 반경 설정 km단위로함
+    var radius = 2; // 반경 설정 km단위로함
     var nearbyAccidents = [];
 
     $.ajax({
@@ -494,7 +516,6 @@ function NearAccidents() {
             
             closePopup();
             map.setLevel(3);
-            setMapCenter();
             
             // 필터링된 반경 데이터를 사이드바에 표시
             updateSidebar(nearbyAccidents);
@@ -550,7 +571,6 @@ function Events() {
             });
 
             closePopup();
-            map.setLevel(2);
 			setMapCenter();         
             // 마커 보이기
             showMarkers();
@@ -567,6 +587,8 @@ function Events() {
 }
 
 //사용자 주소 좌표로 변환하는 함수 -----------------------------------------------------------------------
+
+var coords = null;
 
 function getUserAddress() {
     $.ajax({
@@ -619,3 +641,9 @@ $(document).ready(function() {
         document.getElementById('v-pills-home-tab').classList.add('active');
         
 });
+$.event.special.mousewheel = {
+    setup: function(_, ns, handle) {
+        this.addEventListener('mousewheel', handle, { passive: true });
+    }
+};
+
