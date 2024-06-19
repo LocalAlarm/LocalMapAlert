@@ -43,7 +43,7 @@ const chatToast = document.getElementById('chatToast');
 				<div>
 					<div class="nav__brand">
 						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-						<a href="/dongnae/main" class="nav__logo">
+						<a href="/dongnae/main" class="nav__logo" style="text-decoration: none;">
 							<img src="<%=userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
 							<%=userDetails.getNickname()%>
 						</a>

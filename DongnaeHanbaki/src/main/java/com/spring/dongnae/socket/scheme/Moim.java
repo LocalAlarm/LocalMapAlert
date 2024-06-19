@@ -7,8 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.spring.dongnae.user.vo.UserVO;
-
 @Document(collection = "moims")
 public class Moim {
 
@@ -20,6 +18,8 @@ public class Moim {
     private String profilePicPI;
     @DBRef
     private String leader;
+    @DBRef
+    private ChatRoom chatRoom;
     @DBRef
     private List<UserRooms> subLeader;
     @DBRef
@@ -74,16 +74,28 @@ public class Moim {
 		return leader;
 	}
 
-	public void setLeader(String leader) {
-		this.leader = leader;
+	public void setLeader(UserRooms userRooms) throws Exception {
+		userRooms.addMasterChatRoom(this);
+		this.leader = userRooms.getId();
 	}
-
+	
+	public ChatRoom getChatRoom() {
+		return chatRoom;
+	}
+	
+	public void setChatRoom(ChatRoom chatRoom) {
+		this.chatRoom = chatRoom;
+	}
 	public List<UserRooms> getSubLeader() {
 		return subLeader;
 	}
 	
 	public void addSubLeader(UserRooms userRoom) {
 		this.subLeader.add(userRoom);
+	}
+	
+	public void deleteSubLeader(UserRooms userRoom) {
+		this.subLeader.remove(userRoom);
 	}
 
 	public List<UserRooms> getParticipants() {

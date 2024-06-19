@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Moim;
+import com.spring.dongnae.socket.scheme.UserRooms;
 import com.spring.dongnae.socket.service.MoimService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
@@ -44,9 +46,11 @@ public class MoimController {
             if (profilePic != null && !profilePic.isEmpty()) {
                 imageMap = imageUploadController.uploadImage(profilePic);
             }
-            Moim moim = setMoimValue(title, introduce, imageMap);
-            moimService.createMoim(moim);
-            return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
+            if (setMoimValue(title, introduce, imageMap)) {            	
+            	return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
+            } else {
+            	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("모임 생성에 실패했습니다. 모임의 데이터가 저장되지 않았습니다.");
+            }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("모임 생성에 실패했습니다: " + e.getMessage());
         }
@@ -92,7 +96,7 @@ public class MoimController {
     	return moimService.getMoimByToken(token);
     }
 	
-	private Moim setMoimValue(String title, String introduce, Map<String, String>imageMap) {
+	private boolean setMoimValue(String title, String introduce, Map<String, String>imageMap) {
 		Moim moim = new Moim();
 		moim.setName(title);
 		moim.setDescription(introduce);
@@ -102,9 +106,17 @@ public class MoimController {
 		} else {
 			moim.setProfilePic("https://res.cloudinary.com/djlee4yl2/image/upload/v1713834954/logo/github_logo_icon_tpisfg.png");
 		}
-		moim.setLeader(userRoomsRepository.findById(getAuthenticInfo.GetToken()).get().getId());
-		return moim;
+		try {
+			UserRooms userRoom = userRoomsRepository.findById(getAuthenticInfo.GetToken()).get();
+			moim.setLeader(userRoom);
+			moimService.createMoim(moim);
+			userRoomsRepository.save(userRoom);
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
 	
 }
