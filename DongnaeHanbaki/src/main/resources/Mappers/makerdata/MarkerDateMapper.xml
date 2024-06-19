@@ -5,19 +5,13 @@
 <mapper namespace="com.spring.dongnae.marker.dao.MarkerDataDAO">
 	<select id ="allMenu" resultType="MarkerDataVO">
 		SELECT * FROM MARKERDATA 
-		ORDER BY WRITE_DATE
+		ORDER BY WRITE_DATE DESC
 	</select>
 	
 	<select id ="getMenu" resultType="MarkerDataVO">
 		SELECT * FROM MARKERDATA 
 		WHERE MARKER_IDX = #{marker_idx}
-		ORDER BY WRITE_DATE
-	</select>
-	
-	<select id ="getNearAccidents" resultType="MarkerDataVO">
-		SELECT * FROM MARKERDATA 
-		WHERE MARKER_IDX = #{marker_idx}
-		ORDER BY WRITE_DATE
+		ORDER BY WRITE_DATE DESC
 	</select>
 	
 	 <select id="getRealTimeAccidents" resultType="MarkerDataVO">
@@ -26,6 +20,13 @@
         WHERE MARKER_IDX = #{marker_idx} AND WRITE_DATE >= SYSTIMESTAMP - INTERVAL '10' MINUTE
         ORDER BY WRITE_DATE DESC
     </select>
+    
+	<select id ="getNearAccidents" resultType="MarkerDataVO">
+		SELECT * FROM MARKERDATA 
+		WHERE MARKER_IDX = #{marker_idx}
+		ORDER BY WRITE_DATE DESC
+	</select>
+	
     
 	<insert id="insertMarker" parameterType="MarkerDataVO">
 	    INSERT INTO MARKERDATA (markerdata_idx, marker_idx, title, content, latitude, longitude)
