@@ -12,8 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ChatRoom {
 	@Id
 	private String id;
-	@DBRef
-	private List<UserRooms> userRooms;
+	private List<String> userTokens;
 	private List<Message> messages;
 	
 	public ChatRoom() {
@@ -30,16 +29,20 @@ public class ChatRoom {
 	}
 
 	// 유저 관련 명령어
-	public List<UserRooms> getUserRooms() {
-		return userRooms;
+	public List<String> getUserTokens() {
+		return userTokens;
 	}
 	
-	public void setUserRooms(List<UserRooms> userRooms) {
-		this.userRooms = userRooms;
+	public void setUserTokens(List<String> userTokens) {
+		this.userTokens = userTokens;
 	}
-
+	
 	public void addUser(UserRooms userRooms) {
-		this.userRooms.add(userRooms);
+		this.userTokens.add(userRooms.getId());
+	}
+	
+	public void addUser(String token) {
+		this.userTokens.add(token);
 	}
 
 	// 메세지 관련 명령어
@@ -56,14 +59,15 @@ public class ChatRoom {
 	}
 	
 	private void setInitValue() {
-		this.userRooms = new ArrayList<UserRooms>();
+		this.userTokens = new ArrayList<String>();
 		this.messages = new ArrayList<Message>();
 	}
 
 	@Override
 	public String toString() {
-		return "ChatRoom [id=" + id + ", userRooms=" + userRooms + ", messages=" + messages + "]";
+		return "ChatRoom [id=" + id + ", userTokens=" + userTokens + ", messages=" + messages + "]";
 	}
+	
 	
 
 }

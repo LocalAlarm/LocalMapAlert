@@ -14,6 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.socket.listener.WebSocketSessionManager;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
@@ -33,8 +34,8 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	// In-memory storage for WebSocket sessions and user IDs
-	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+	@Autowired
+    private WebSocketSessionManager sessionManager;
 
 	public ChatListWebSocketHandler(UserService userService, UserRoomsRepository userRoomsRepository,
 			ChatRoomRepository chatRoomRepository) {
@@ -48,7 +49,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
 		if (token != null) {
-			sessions.put(token, session);
+			sessionManager.addSession(token, session);
 			// 사용자 ID로 기존 메시지 문서 검색
 			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(token);
 			UserRooms userRooms = new UserRooms();
@@ -91,9 +92,9 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 			String jsonMessage = objectMapper.writeValueAsString(newMessage);
 
 			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
-			List<UserRooms> userRooms = chatRoom.getUserRooms(); // 사용자 토큰들 가져오기
-			for (UserRooms userRoom : userRooms) {
-				session = sessions.get(userRoom.getId()); // 세션 정보 가져오기
+			List<String> userTokens = chatRoom.getUserTokens(); // 사용자 토큰들 가져오기
+			for (String userToken : userTokens) {
+				session = sessionManager.getSession(userToken); // 세션 정보 가져오기
 				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
 					session.sendMessage(new TextMessage(jsonMessage));
 				}
@@ -105,7 +106,6 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		String token = (String) session.getAttributes().get("userToken");
-		sessions.remove(token);
+		sessionManager.removeSession();
 	}
 }
