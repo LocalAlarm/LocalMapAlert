@@ -77,7 +77,7 @@ public class Moim {
 	}
 
 	public void setLeader(UserRooms userRooms) throws Exception {
-		userRooms.addMasterChatRoom(this);
+		userRooms.addMasterMoims(this);
 		this.leader = userRooms.getId();
 	}
 	

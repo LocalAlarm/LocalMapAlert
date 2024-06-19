@@ -91,9 +91,9 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 			String jsonMessage = objectMapper.writeValueAsString(newMessage);
 
 			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
-			List<String> userTokens = chatRoom.getUserIds(); // 사용자 토큰들 가져오기
-			for (String chatRoomUser : userTokens) {
-				session = sessions.get(chatRoomUser); // 세션 정보 가져오기
+			List<UserRooms> userRooms = chatRoom.getUserRooms(); // 사용자 토큰들 가져오기
+			for (UserRooms userRoom : userRooms) {
+				session = sessions.get(userRoom.getId()); // 세션 정보 가져오기
 				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
 					session.sendMessage(new TextMessage(jsonMessage));
 				}

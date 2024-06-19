@@ -66,7 +66,7 @@ public class UserRooms {
     }
 	
     // 자기가 Master인 모임
-    public void addMasterChatRoom(Moim moim) throws Exception {
+    public void addMasterMoims(Moim moim) throws Exception {
         if (this.masterMoims.size() >= 4) {
             throw new Exception("모임은 3개까지 개설할 수 있어요!");
         }
