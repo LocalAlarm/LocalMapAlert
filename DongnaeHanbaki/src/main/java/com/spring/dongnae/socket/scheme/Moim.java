@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.spring.dongnae.socket.service.ChatRoomService;
+
 @Document(collection = "moims")
 public class Moim {
 
@@ -83,9 +85,10 @@ public class Moim {
 		return chatRoom;
 	}
 	
-	public void setChatRoom(ChatRoom chatRoom) {
-		this.chatRoom = chatRoom;
-	}
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+	
 	public List<UserRooms> getSubLeader() {
 		return subLeader;
 	}

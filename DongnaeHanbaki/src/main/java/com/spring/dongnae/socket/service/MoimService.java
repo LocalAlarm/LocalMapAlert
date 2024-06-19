@@ -10,10 +10,10 @@ import com.spring.dongnae.socket.repo.BoardRepository;
 import com.spring.dongnae.socket.repo.MoimRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.Board;
+import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Moim;
 import com.spring.dongnae.socket.scheme.UserRooms;
-import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Service
 public class MoimService {
@@ -24,8 +24,12 @@ public class MoimService {
     private UserRoomsRepository userRoomsRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private ChatRoomService chatRoomService;
     
     public Moim createMoim(Moim moim) {
+    	ChatRoom chatRoom = chatRoomService.createChatRoom();
+    	moim.setChatRoom(chatRoom);
     	return moimRepository.save(moim);
     }
     

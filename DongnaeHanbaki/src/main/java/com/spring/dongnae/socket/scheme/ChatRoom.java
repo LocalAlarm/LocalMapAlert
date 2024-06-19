@@ -11,11 +11,10 @@ public class ChatRoom {
 	private String id;
 	private List<String> userIds;
 	private List<Message> messages;
-	private String roomName; //채팅방이름
-
+	private String refId;
+	
 	public ChatRoom() {
-		this.userIds = new ArrayList<String>();
-		this.messages = new ArrayList<Message>();
+		setInitValue();
 	}
 
 	// id는 채팅방 고유 번호를 뜻한다.
@@ -52,18 +51,20 @@ public class ChatRoom {
 	public void addMessage(Message message) {
 		this.messages.add(message);
 	}
-
-	public String getRoomName() {
-		return roomName;
+	
+	public String getRefId() {
+		return refId;
 	}
-
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+	
+	
+	private void setInitValue() {
+		this.userIds = new ArrayList<String>();
+		this.messages = new ArrayList<Message>();
 	}
 
 	@Override
 	public String toString() {
-		return "ChatRoom [id=" + id + ", userIds=" + userIds + ", messages=" + messages + ", roomName=" + roomName
+		return "ChatRoom [id=" + id + ", userIds=" + userIds + ", messages=" + messages
 				+ "]";
 	}
 

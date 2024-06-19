@@ -91,7 +91,7 @@ public class FriendRequestController {
                 System.out.println(requestId);
                 friendInfo.setToken(userService.getUserByEmail(getAuthenticInfo.GetEmail()).getToken());
                 friendInfo.setRoomName(getAuthenticInfo.GetEmail());
-                friendInfo.setRoomId(chatRoom.getId());
+                friendInfo.setChatRoom(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가
@@ -107,7 +107,7 @@ public class FriendRequestController {
                 FriendInfo friendInfo = new FriendInfo();
                 friendInfo.setToken(userService.getUserByEmail(requestId).getToken());
                 friendInfo.setRoomName(requestId);
-                friendInfo.setRoomId(chatRoom.getId());
+                friendInfo.setChatRoom(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가

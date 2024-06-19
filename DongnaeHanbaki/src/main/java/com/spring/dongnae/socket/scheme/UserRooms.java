@@ -52,6 +52,7 @@ public class UserRooms {
 		this.email = email;
 	}
 
+	// 모임에 관한 메서드
 	public List<Moim> getMoims() {
 		return moims;
 	}
@@ -64,6 +65,7 @@ public class UserRooms {
         this.moims.remove(moim);
     }
 	
+    // 자기가 Master인 모임
     public void addMasterChatRoom(Moim moim) throws Exception {
         if (this.masterMoims.size() >= 4) {
             throw new Exception("모임은 3개까지 개설할 수 있어요!");
@@ -75,6 +77,7 @@ public class UserRooms {
         this.masterMoims.remove(moim);
     }
 	
+    
 	public List<String> getRequestIds() {
 		return requestIds;
 	}

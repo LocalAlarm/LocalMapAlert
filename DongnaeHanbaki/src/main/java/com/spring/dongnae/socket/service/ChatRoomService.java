@@ -26,6 +26,11 @@ public class ChatRoomService {
         return chatRoomRepository.save(chatRoom);
     }
     
+    public ChatRoom createChatRoom() {
+    	ChatRoom chatRoom = new ChatRoom();
+    	return chatRoomRepository.save(chatRoom);
+    }
+    
     public ChatRoom createChatRoom(List<String> userIds) {
     	ChatRoom chatRoom = new ChatRoom();
     	chatRoom.setUserIds(userIds);
