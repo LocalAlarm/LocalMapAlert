@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 // userIds엔 유저의 토큰이 들어간다.
 public class ChatRoom {
 	@Id
 	private String id;
-	private List<String> userIds;
+	@DBRef
+	private List<UserRooms> userRooms;
 	private List<Message> messages;
-	private String roomName; //채팅방이름
-
+	private String refId;
+	
 	public ChatRoom() {
-		this.userIds = new ArrayList<String>();
-		this.messages = new ArrayList<Message>();
+		setInitValue();
 	}
 
 	// id는 채팅방 고유 번호를 뜻한다.
@@ -28,16 +29,16 @@ public class ChatRoom {
 	}
 
 	// 유저 관련 명령어
-	public List<String> getUserIds() {
-		return userIds;
+	public List<UserRooms> getUserRooms() {
+		return userRooms;
+	}
+	
+	public void setUserRooms(List<UserRooms> userRooms) {
+		this.userRooms = userRooms;
 	}
 
-	public void setUserIds(List<String> userIds) {
-		this.userIds = userIds;
-	}
-
-	public void addUser(String token) {
-		this.userIds.add(token);
+	public void addUser(UserRooms userRooms) {
+		this.userRooms.add(userRooms);
 	}
 
 	// 메세지 관련 명령어
@@ -52,19 +53,21 @@ public class ChatRoom {
 	public void addMessage(Message message) {
 		this.messages.add(message);
 	}
-
-	public String getRoomName() {
-		return roomName;
+	
+	public String getRefId() {
+		return refId;
 	}
-
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+	
+	
+	private void setInitValue() {
+		this.userRooms = new ArrayList<UserRooms>();
+		this.messages = new ArrayList<Message>();
 	}
 
 	@Override
 	public String toString() {
-		return "ChatRoom [id=" + id + ", userIds=" + userIds + ", messages=" + messages + ", roomName=" + roomName
-				+ "]";
+		return "ChatRoom [id=" + id + ", userRooms=" + userRooms + ", messages=" + messages + ", refId=" + refId + "]";
 	}
+	
 
 }

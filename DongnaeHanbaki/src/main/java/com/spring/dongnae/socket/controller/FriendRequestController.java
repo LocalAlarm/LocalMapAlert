@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
+import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.ApproveFriendRequest;
 import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.FriendInfo;
@@ -29,23 +30,17 @@ import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 public class FriendRequestController {
 
     @Autowired
-    private final GetAuthenticInfo getAuthenticInfo;
+    private GetAuthenticInfo getAuthenticInfo;
     @Autowired
-	private final FriendRoomRepository friendRoomRepository;
+	private FriendRoomRepository friendRoomRepository;
     @Autowired
-    private final UserService userService;
+    private UserService userService;
     @Autowired
-    private final ChatRoomRepository chatRoomRepository;
+    private ChatRoomRepository chatRoomRepository;
+    @Autowired
+    private UserRoomsRepository userRoomsRepository;
     
-    private final ApproveFriendRequest approveFriendRequest;
-    
-    public FriendRequestController(FriendRoomRepository friendRoomRepository, GetAuthenticInfo getAuthenticInfo, ApproveFriendRequest approveFriendRequest, UserService userService, ChatRoomRepository chatRoomRepository) {
-		this.getAuthenticInfo = getAuthenticInfo;
-		this.friendRoomRepository = friendRoomRepository;
-		this.userService = userService;
-		this.chatRoomRepository = chatRoomRepository;
-		this.approveFriendRequest = approveFriendRequest;
-    }
+    private ApproveFriendRequest approveFriendRequest;
     
     @PostMapping("/api/sendFriendRequest") // POST 요청을 처리하는 메서드를 정의합니다.
     public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequest friendRequest) { // 요청 본문에 있는 FriendRequest 객체를 인자로 받습니다. 
@@ -80,8 +75,8 @@ public class FriendRequestController {
             Optional<FriendRoom> optionalFriendRoom = friendRoomRepository.findByEmail(requestId);
             Optional<FriendRoom> optionalMyFriendRoom = friendRoomRepository.findByEmail(getAuthenticInfo.GetEmail());
             ChatRoom chatRoom = new ChatRoom();
-            chatRoom.addUser(userService.getUserByEmail(requestId).getToken());
-            chatRoom.addUser(getAuthenticInfo.GetToken());
+            chatRoom.addUser(userRoomsRepository.findById(userService.getUserByEmail(requestId).getToken()).get());
+            chatRoom.addUser(userRoomsRepository.findById(getAuthenticInfo.GetToken()).get());
             chatRoomRepository.save(chatRoom);
             
             System.out.println(chatRoom.toString());
@@ -94,7 +89,7 @@ public class FriendRequestController {
                 System.out.println(requestId);
                 friendInfo.setToken(userService.getUserByEmail(getAuthenticInfo.GetEmail()).getToken());
                 friendInfo.setRoomName(getAuthenticInfo.GetEmail());
-                friendInfo.setRoomId(chatRoom.getId());
+                friendInfo.setChatRoom(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가
@@ -110,7 +105,7 @@ public class FriendRequestController {
                 FriendInfo friendInfo = new FriendInfo();
                 friendInfo.setToken(userService.getUserByEmail(requestId).getToken());
                 friendInfo.setRoomName(requestId);
-                friendInfo.setRoomId(chatRoom.getId());
+                friendInfo.setChatRoom(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가

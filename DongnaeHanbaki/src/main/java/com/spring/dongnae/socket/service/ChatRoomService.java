@@ -11,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
+import com.spring.dongnae.socket.scheme.UserRooms;
 
 @Service
 public class ChatRoomService {
@@ -32,9 +33,14 @@ public class ChatRoomService {
         return chatRoomRepository.save(chatRoom);
     }
     
-    public ChatRoom createChatRoom(List<String> userIds) {
+    public ChatRoom createChatRoom() {
     	ChatRoom chatRoom = new ChatRoom();
-    	chatRoom.setUserIds(userIds);
+    	return chatRoomRepository.save(chatRoom);
+    }
+    
+    public ChatRoom createChatRoom(List<UserRooms> userRooms) {
+    	ChatRoom chatRoom = new ChatRoom();
+    	chatRoom.setUserRooms(userRooms);
     	return chatRoomRepository.save(chatRoom);
     }
 

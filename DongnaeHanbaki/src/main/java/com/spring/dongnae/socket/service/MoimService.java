@@ -1,11 +1,14 @@
 package com.spring.dongnae.socket.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.repo.BoardRepository;
 import com.spring.dongnae.socket.repo.MoimRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
@@ -17,16 +20,40 @@ import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Service
 public class MoimService {
-	
+	@Autowired
+	private ImageUploadController imageUploadController;
     @Autowired
     private MoimRepository moimRepository;
     @Autowired
     private UserRoomsRepository userRoomsRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private ChatRoomService chatRoomService;
+    @Autowired
+	private GetAuthenticInfo getAuthenticInfo;
     
-    public Moim createMoim(Moim moim) {
-    	return moimRepository.save(moim);
+    public Moim createMoim(String title, String introduce, MultipartFile profilePic) throws Exception {
+        Moim moim = new Moim();
+        moim.setName(title);
+        moim.setDescription(introduce);
+
+        if (profilePic != null && !profilePic.isEmpty()) {
+            Map<String, String> imageMap = imageUploadController.uploadImage(profilePic);
+            moim.setProfilePic(imageMap.get("url"));
+            moim.setProfilePicPI(imageMap.get("public_id"));
+        } else {
+            moim.setProfilePic("https://res.cloudinary.com/djlee4yl2/image/upload/v1713834954/logo/github_logo_icon_tpisfg.png");
+        }
+
+        UserRooms userRoom = userRoomsRepository.findById(getAuthenticInfo.GetToken()).orElseThrow(() -> new Exception("User not found"));
+        userRoom.addMasterMoims(moim);
+        moim.setLeader(userRoom);
+        moim.setChatRoom(chatRoomService.createChatRoom());
+        moim = moimRepository.save(moim);
+        userRoomsRepository.save(userRoom);
+        
+        return moim;
     }
     
     public Moim addParticipantToMoim(String moimId, String token) {
