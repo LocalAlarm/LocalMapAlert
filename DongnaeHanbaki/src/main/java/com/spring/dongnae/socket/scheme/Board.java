@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Board {
     @Id
     private String id;
+    private String moimId;
     private String title;
     private String content;
     private String author;
@@ -19,6 +21,12 @@ public class Board {
     
     @DBRef
     private Moim moim;
+    
+    public Board(String moimId, String title, String content, String author) {
+    	this.setImages(new ArrayList<String>());
+    	this.setComments(new ArrayList<Comment>());
+    	this.setLikes(new ArrayList<String>());
+    }
 
     // Getters and Setters
     public String getId() {
@@ -28,6 +36,14 @@ public class Board {
     public void setId(String id) {
         this.id = id;
     }
+    
+	public String getMoimId() {
+		return moimId;
+	}
+
+	public void setMoimId(String moimId) {
+		this.moimId = moimId;
+	}
 
     public String getTitle() {
         return title;
@@ -107,10 +123,12 @@ public class Board {
         this.moim = moim;
     }
 
-
 	@Override
 	public String toString() {
-		return "Board [id=" + id + ", title=" + title + ", content=" + content + ", author=" + author + ", images="
-				+ images + ", comments=" + comments + ", likes=" + likes + ", moim=" + moim + "]";
+		return "Board [id=" + id + ", moimId=" + moimId + ", title=" + title + ", content=" + content + ", author="
+				+ author + ", images=" + images + ", comments=" + comments + ", likes=" + likes + ", moim=" + moim
+				+ "]";
 	}
+    
+    
 }

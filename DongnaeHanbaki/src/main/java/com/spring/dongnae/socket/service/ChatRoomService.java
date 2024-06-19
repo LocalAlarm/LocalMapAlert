@@ -24,9 +24,9 @@ public class ChatRoomService {
     	return chatRoomRepository.save(chatRoom);
     }
     
-    public ChatRoom createChatRoom(List<UserRooms> userRooms) {
-    	ChatRoom chatRoom = new ChatRoom();
-    	chatRoom.setUserRooms(userRooms);
-    	return chatRoomRepository.save(chatRoom);
-    }
+//    public ChatRoom createChatRoom(List<UserRooms> userRooms) {
+//    	ChatRoom chatRoom = new ChatRoom();
+//    	chatRoom.set(userRooms);
+//    	return chatRoomRepository.save(chatRoom);
+//    }
 }

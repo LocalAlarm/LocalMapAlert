@@ -1,21 +1,19 @@
 package com.spring.dongnae.socket.scheme;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 //친구정보
 public class FriendInfo {
 	
+	private ChatRoom chatRoomId;
+	private String friendToken;
 	private String roomName;
-	private String token;
-	@DBRef
-	private ChatRoom chatRoom;
 	
-	public ChatRoom getChatRoom() {
-		return chatRoom;
+	public ChatRoom getChatRoomId() {
+		return chatRoomId;
 	}
-
-	public void setChatRoom(ChatRoom chatRoom) {
-		this.chatRoom = chatRoom;
+	
+	public void setChatRoomId(ChatRoom chatRoomId) {
+		this.chatRoomId = chatRoomId;
 	}
 
 	public String getRoomName() {
@@ -26,19 +24,18 @@ public class FriendInfo {
 		this.roomName = roomName;
 	}
 
-	public String getToken() {
-		return token;
+
+	public String getFriendToken() {
+		return friendToken;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setFriendToken(String friendToken) {
+		this.friendToken = friendToken;
 	}
 
 	@Override
 	public String toString() {
-		return "FriendInfo [roomName=" + roomName + ", token=" + token + ", chatRoom=" + chatRoom + "]";
+		return "FriendInfo [chatRoomId=" + chatRoomId + ", friendToken=" + friendToken + ", roomName=" + roomName + "]";
 	}
-	
-	
 	
 }

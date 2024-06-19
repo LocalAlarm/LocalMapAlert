@@ -83,9 +83,9 @@ public class FriendRequestController {
                 friendRoom.getRequestIds().remove(getAuthenticInfo.GetEmail());
                 FriendInfo friendInfo = new FriendInfo();
                 System.out.println(requestId);
-                friendInfo.setToken(userService.getUserByEmail(getAuthenticInfo.GetEmail()).getToken());
+                friendInfo.setFriendToken(userService.getUserByEmail(getAuthenticInfo.GetEmail()).getToken());
                 friendInfo.setRoomName(getAuthenticInfo.GetEmail());
-                friendInfo.setChatRoom(chatRoom);
+                friendInfo.setChatRoomId(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가
@@ -99,9 +99,9 @@ public class FriendRequestController {
                 // 친구 요청 목록에서 해당 요청 제거
                 friendRoom.getRequestIds().remove(requestId);
                 FriendInfo friendInfo = new FriendInfo();
-                friendInfo.setToken(userService.getUserByEmail(requestId).getToken());
+                friendInfo.setFriendToken(userService.getUserByEmail(requestId).getToken());
                 friendInfo.setRoomName(requestId);
-                friendInfo.setChatRoom(chatRoom);
+                friendInfo.setChatRoomId(chatRoom);
                 friendRoom.getFriendIds().add(friendInfo);
                 friendRoomRepository.save(friendRoom);
                 // 친구 목록에 요청한 이메일 추가

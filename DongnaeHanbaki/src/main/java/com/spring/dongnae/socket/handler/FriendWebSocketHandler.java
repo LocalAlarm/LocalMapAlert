@@ -1,8 +1,6 @@
 package com.spring.dongnae.socket.handler;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.socket.listener.WebSocketSessionManager;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
@@ -36,15 +35,15 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
-	// 사용자 ID를 키로 하고 해당 사용자의 웹소켓 세션을 값으로 가지는 맵을 생성
-	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-
+	@Autowired
+    private WebSocketSessionManager sessionManager;
+	
 	// 처음에 Socket 연결시에 실행되는 코드
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
 		if (token != null) {
-			sessions.put(token, session);
+			sessionManager.addSession(token, session);
 			// 사용자 ID로 기존 메시지 문서 검색
 			Optional<FriendRoom> optionalFriendRoom = friendRoomRepository.findByUserRoomsId(token);
 			FriendRoom friendRoom = new FriendRoom();
@@ -69,9 +68,9 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 	    // 받은 메시지를 FriendInfo 객체로 변환
 	    FriendInfo friendInfo = objectMapper.readValue(message.getPayload(), FriendInfo.class);
 	    // 친구 요청을 보낸 사용자의 토큰 가져오기
-	    String senderToken = friendInfo.getToken();
+	    String senderToken = friendInfo.getFriendToken();
 	    // 토큰을 사용하여 해당 사용자의 WebSocket 세션을 가져옴
-	    WebSocketSession senderSession = sessions.get(senderToken);
+	    WebSocketSession senderSession= sessionManager.getSession(senderToken);
 	    if (senderSession != null) {
 	        // 알림 메시지 생성
 	        String notificationMessage = "친구 요청이 도착했습니다.";
@@ -89,6 +88,6 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
+		sessionManager.removeSession();
 	}
 }

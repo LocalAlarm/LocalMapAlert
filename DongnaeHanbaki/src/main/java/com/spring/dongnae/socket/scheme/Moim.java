@@ -17,12 +17,10 @@ public class Moim {
     private String profilePic;
     private String profilePicPI;
     private String leader;
-    @DBRef
-    private ChatRoom chatRoom;
+    private String chatRoomId;
     private List<String> subLeader;
     private List<String> participants;
-    @DBRef
-    private List<Board> boards;
+    
     public Moim() {
     	setInitValue();
     }
@@ -76,13 +74,17 @@ public class Moim {
 		this.leader = userRooms.getId();
 	}
 	
-	public ChatRoom getChatRoom() {
-		return chatRoom;
+	public String getChatRoomId() {
+		return chatRoomId;
 	}
 	
-    public void setChatRoom(ChatRoom chatRoom) {
-        this.chatRoom = chatRoom;
-    }
+	public void setChatRoomId(ChatRoom chatRoom) {
+		if (chatRoom.getId() != null) {			
+			this.chatRoomId = chatRoom.getId();
+		} else {
+			throw new NullPointerException("ChatRoom ID is null.");
+		}
+	}
 	
 	public List<String> getSubLeader() {
 		return subLeader;
@@ -108,26 +110,19 @@ public class Moim {
         this.participants.remove(participant.getId());
         participant.removeMoim(this);
     }
-
-    public List<Board> getBoards() {
-        return boards;
-    }
-
-    public void addBoard(Board board) {
-        this.boards.add(board);
-    }
     
     private void setInitValue() {
     	this.subLeader = new ArrayList<String>();
     	this.participants = new ArrayList<String>();
-    	this.boards = new ArrayList<Board>();
     	this.setProfilePicPI(null);
     }
 	@Override
 	public String toString() {
 		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
-				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoom=" + chatRoom + ", subLeader="
-				+ subLeader + ", participants=" + participants + ", boards=" + boards + "]";
+				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoomId=" + chatRoomId
+				+ ", subLeader=" + subLeader + ", participants=" + participants + "]";
 	}
+    
+    
 
 }

@@ -48,7 +48,7 @@ public class MoimService {
         UserRooms userRoom = userRoomsRepository.findById(getAuthenticInfo.GetToken()).orElseThrow(() -> new Exception("User not found"));
         userRoom.addMasterMoims(moim);
         moim.setLeader(userRoom);
-        moim.setChatRoom(chatRoomService.createChatRoom());
+        moim.setChatRoomId(chatRoomService.createChatRoom());
         System.out.println(moim.toString());
         moimRepository.save(moim);
         System.out.println(moim.toString());
@@ -77,7 +77,7 @@ public class MoimService {
     		Moim moim = moimOptional.get();
     		board.setMoim(moim);
     		Board savedBoard = boardRepository.save(board);
-    		moim.addBoard(savedBoard);
+//    		moim.addBoard(savedBoard);
     		moimRepository.save(moim);
     		return savedBoard;
     	}
@@ -90,7 +90,7 @@ public class MoimService {
     		Board board = boardOptional.get();
     		Moim moim = board.getMoim();
     		if (moim != null) {
-    			moim.getBoards().remove(board);
+//    			moim.getBoards().remove(board);
     			moimRepository.save(moim);
     		}
     		boardRepository.delete(board);
