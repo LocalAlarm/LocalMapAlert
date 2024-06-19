@@ -118,20 +118,22 @@ public class CustomController {
 		model.addAttribute("openCustomMapList", openCustomMapList);
 		
 		//로그인 여부 확인-> true : 내 커스텀 맵 불러옴
-		if(isLogin(session)) {
-			mapVO.setOpenYn(null);
-			mapVO.setUserEmail(loginUserVO.getEmail());
-			List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
-			System.out.println("myCustomMapList : " + myCustomMapList.toString());//-------------------test code-----------------
-			model.addAttribute("myCustomMapList", myCustomMapList);
-		}
+		
+//		System.out.println("isLogin(session) : "+isLogin(session));
+//		if(isLogin(session)) {
+//			mapVO.setOpenYn(null);
+//			mapVO.setUserEmail(loginUserVO.getEmail());
+//			List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
+//			System.out.println("myCustomMapList : " + myCustomMapList.toString());//-------------------test code-----------------
+//			model.addAttribute("myCustomMapList", myCustomMapList);
+//		}
 		System.out.println("mapVO : " + mapVO);//----------------test code---------------------------
 		return "map/customMap"; 
 	}
 	
 	//세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
 	private boolean isLogin(HttpSession session) {
-		loginUserVO = (UserVO)session.getAttribute("user");
+		loginUserVO = (UserVO) session.getAttribute("user");
 		System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
 		if(loginUserVO != null && loginUserVO.getEmail() != null) {
 			return false;
