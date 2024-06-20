@@ -196,18 +196,24 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
     var lat = document.getElementById('markerLat').value;
     var lng = document.getElementById('markerLng').value;
     var markerType; // markerType 변수 추가
-
-    // markerIdx에 따라 markerType 결정
-    switch (markerIdx) {
-        case '이벤트':
-            markerType = '1';
-            break;
-        case '사건사고':
-            markerType = '2';
-            break;
-        default:
-            console.error('Unknown marker type:', markerIdx);
-            return;
+	console.log("marker : "+markerIdx);
+	
+    // 마커 등록을 갑자기 수정하다보니 정립이 안돼서 두개의 값중 비교함 (추후 값 정리해서 switch문 쓸예정) markerType 결정
+    if (markerContent === '사건사고' || markerIdx === '사건사고') {
+        markerType = '1';
+    } else if (markerContent === '공연' || markerIdx === '공연') {
+        markerType = '2';
+    } else if (markerContent === '팝업 스토어' || markerIdx === '팝업 스토어') {
+        markerType = '3';
+    } else if (markerContent === '일일 장터' || markerIdx === '일일 장터') {
+        markerType = '4';
+    } else if (markerContent === '강연' || markerIdx === '강연') {
+        markerType = '5';
+    } else if (markerContent === '버스킹' || markerIdx === '버스킹') {
+        markerType = '6';
+    } else {
+        console.error('Unknown marker type:', markerIdx);
+        return;
 }
 
 // 서버에 전송할 데이터를 JSON 형식으로 저장
@@ -250,21 +256,41 @@ function addMarker(position, markerType, title, content) {
 
     // 마커 이미지 설정
     switch (markerType) {
-        case '1': // 이벤트
-            imageSrc = 'resources/image/balloons-29920_640.png';
-            imageSize = new kakao.maps.Size(50, 50);
-            imageOption = {offset: new kakao.maps.Point(27, 69)};
-            break;
-        case '2': // 사건사고
+        case '1': // 사건사고
             imageSrc = 'resources/image/ohno.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(25, 50)};
             break;
+        case '2': // 공연
+            imageSrc = 'resources/image/balloons-29920_640.png';
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;
+        case '3': // 팝업스토어
+        	imageSrc = 'resources/image/popup.png';
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;
+        case '4': // 일일 장터
+       		imageSrc = 'resources/image/mart.png';
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;
+        case '5': // 강연
+        	imageSrc = 'resources/image/lec.png';
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;
+        case '6': // 버스킹       
+        	imageSrc = 'resources/image/busking.png';
+            imageSize = new kakao.maps.Size(50, 50);
+            imageOption = {offset: new kakao.maps.Point(27, 69)};
+            break;    
+            break;
         default:
             console.error('Unknown marker type:', markerType);
             return;
-    }
-
+}
 resetTempMarker();
     
 // 마커 이미지 생성
@@ -282,10 +308,22 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
         var type;
         switch (markerType) {
             case '1':
-                type = "이벤트";
+                type = "사건사고";
                 break;
             case '2':
-                type = "사건사고";
+                type = "공연";
+                break;
+            case '3':
+                type = "팝업 스토어";
+                break;
+            case '4':
+                type = "일일 장터";
+                break;
+            case '5':
+                type = "강연";
+                break;
+            case '6':
+                type = "버스킹";
                 break;
             default:
                 type = "알 수 없음";
