@@ -580,6 +580,12 @@
                 </td>
                 <td class="profile-link">></td>
             </tr>
+            <tr class="clickable-row" onclick="location.href='customMap'">
+                <td class="profile-row">
+                    <div class="profile-value">커스텀 지도 바로가기</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
         </tbody>
 	</table> 
 	
