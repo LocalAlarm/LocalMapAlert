@@ -2,6 +2,7 @@ package com.spring.dongnae.custom.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +96,9 @@ public class CustomController {
                check = true;
                ObjectMapper mapper = new ObjectMapper();
                CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
-               customMarker.setMapIdx(12);
+               //어차피 1개나옴
+               MapVO mapVO = mapService.getRecentMap();
+               customMarker.setMapIdx(mapVO.getMapIdx());
                System.out.println("커스텀 스키마로 변경! : " + customMarker);
                customService.saveMarker(customMarker);
                
@@ -119,7 +122,6 @@ public class CustomController {
 		List<MapVO> openCustomMapList = mapService.getMapList(mapVO);
 		System.out.println("openCustomMapList : " + openCustomMapList.toString());//-------------------test code-----------------
 		model.addAttribute("openCustomMapList", openCustomMapList);
-		
 		//로그인 여부 확인-> true : 내 커스텀 맵 불러옴
 		if(isLogin(session)) {
 			mapVO.setOpenYn(null);
@@ -148,7 +150,8 @@ public class CustomController {
 	@RequestMapping("/serchCustomMap")
 	public String serchMap(MapVO mapVO, Model model) {
 		//커스텀맵 검색
-		mapVO.setTitle("관리자");//-------------------test code-----------------
+//		mapVO.setTitle("111");//-------------------test code-----------------
+		System.out.println("map : " + mapVO);
 		List<MapVO> serchMapList = mapService.getSerchMapList(mapVO);//-------------------test code-----------------
 		System.out.println("serchMapList : " + serchMapList.toString());//-------------------test code-----------------
 		model.addAttribute("serchMapList", serchMapList);//-------------------test code-----------------
@@ -183,10 +186,23 @@ public class CustomController {
 	}
 	
 	@RequestMapping("/updateCustMap")
-	public String updateCustMap() {
+	public String updateCustMap(HttpServletRequest request, Model model) {
 		//커스텀맵 편집페이지 이동
+		System.out.println("편집하기!");
 		//로그인여부 확인 필요 , false : 로그인 페이지로 이동
 		//mapIdx로 불러온 customMapVO 필요
+		int MapIdx = Integer.parseInt(request.getParameter("mapIdx"));
+		System.out.println(MapIdx);
+		Optional<CustomMarker> custom = customService.selectMarker(MapIdx);
+		if (custom.isPresent()) {
+			System.out.println(">>>> " + custom);
+			CustomMarker customMarker = custom.get();
+			System.out.println(">>>> " + customMarker);
+			model.addAttribute("customMarker", customMarker);
+		} else {
+			System.out.println("오류!");
+			//페이지처리
+		}
 		//커스텀맵에서 사용한 마커종류 리스트 필요
 		//표시한 마커목록 리스트 필요
 		return "map/updateCustMap"; 

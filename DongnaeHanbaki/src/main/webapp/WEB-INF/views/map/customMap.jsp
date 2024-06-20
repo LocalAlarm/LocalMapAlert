@@ -16,9 +16,11 @@
 	}
 	
 	function goSearch(frm){
+		var search = document.getElementById("search");
 		console.log(frm);
 		console.log(frm);
-		/* location.href="serchCustomMap?title=" + frm.title + "&content=" + frm.content; */
+		alert(search.value);
+		location.href="serchCustomMap?title=" + search.value + "&content=" + search.value; 
 	}
 </script>
 <style>
@@ -85,8 +87,8 @@ crossorigin="anonymous"></script>
       </div>
     </div>
     <form class="d-flex">
-      <input class="form-control me-2" type="serch" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" onclick="goSearch(this.form)">Search</button>
+      <input class="form-control me-2" id="search" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" onclick="goSearch()">Search</button>
     </form>
   </div>
 </nav>
@@ -141,8 +143,8 @@ crossorigin="anonymous"></script>
 		  <div class="col-3">
 		    <h5 class="mapTitle">${vo.title }</h5>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
-		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
-		    <a href="updateCustomMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
+		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+		    <a href="updateCustMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
 		  </div>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>

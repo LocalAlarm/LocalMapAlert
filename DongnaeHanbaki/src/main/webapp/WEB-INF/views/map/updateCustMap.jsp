@@ -6,9 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-    crossorigin="anonymous">
+<jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include>
+ <style>
+    /* 활성화된 탭의 배경색을 하얀색으로 변경 */
+    .active {
+      background-color: white !important;
+    }
+  </style>
 <script>
 	function updateMap(frm){
 		alert("게시글을 수정합니다");
@@ -21,9 +25,7 @@
 -->
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-crossorigin="anonymous"></script>
+<jsp:include page="/WEB-INF/patials/commonBody.jsp"></jsp:include>
 
 <hr>
 <!-- 페이지 위 -->
@@ -63,7 +65,7 @@ crossorigin="anonymous"></script>
 			<!-- 만들어진 지도 표시 -->
 			<div class="col-6 border" style="height: 500px;">
 				<!-- 지도를 표시할 div 입니다 -->
-				<div id="map" style="width:100%;height:70vh;"></div>
+				<div id="map" style="width:100%;height:500px;"></div>
 			</div>
 
 			<!-- 커스텀맵 설명칸 -->
@@ -85,15 +87,15 @@ crossorigin="anonymous"></script>
 			    <form class="p-2">
 				  <div class="mb-3">
 				    <label for="title" class="form-label">제목</label>
-				    <input type="text" class="form-control" id="title">
+				    <input type="text" class="form-control" id="title" value="${customMarker.title }">
 				  </div>
 				  <div class="mb-3">
 				    <label for="center" class="form-label">중심좌표</label>
-				    <input type="text" class="form-control" id="center">
+				    <input type="text" class="form-control" id="center" value="${customMarker.center }">
 				  </div>
 				  <div class="mb-3">
 				    <label for="viewLevel" class="form-label">확대배율</label>
-				    <input type="range" class="form-range" min="0" max="14" id="viewLevel">
+				    <input type="range" class="form-range" min="0" max="14" id="viewLevel" value="${customMarker.level }">
 				  </div>
 				  <div class="form-check form-switch mb-3">
 				    <input class="form-check-input" type="checkbox" role="switch" id="opneYn">
@@ -101,7 +103,7 @@ crossorigin="anonymous"></script>
 				  </div>
 				  <div class="mb-3">
 				    <label for="content" class="form-label">지도 설명</label>
-				    <textarea class="form-control" id="content"></textarea>
+				    <textarea class="form-control" id="content" value="${customMarker.content }"></textarea>
 				  </div>
 				  <button type="submit" class="btn btn-success" onclick="updateMap(this.form)">수정완료</button>
 				</form>
@@ -150,7 +152,7 @@ crossorigin="anonymous"></script>
 			<div class="col-12 p-2"></div>
 			<div class="col-6 border" style="height: 500px;">
 				<!-- 지도를 표시할 div 입니다 -->
-				<div id="map" style="width:100%;height:70vh;"></div>
+				<div id="pre-map" style="width:100%;height:70vh;"></div>
 			</div>
 
 			<!-- 커스텀맵 설명칸 -->
@@ -172,15 +174,15 @@ crossorigin="anonymous"></script>
 			    <form class="p-2">
 				  <div class="mb-3">
 				    <label for="pre-title" class="form-label">제목</label>
-				    <input type="text" class="form-control" id="pre-title" disabled="disabled">
+				    <input type="text" class="form-control" id="pre-title" disabled="disabled" value='${customMarker.title}'>
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-center" class="form-label">중심좌표</label>
-				    <input type="text" class="form-control" id="pre-center" disabled="disabled">
+				    <input type="text" class="form-control" id="pre-center" disabled="disabled" value="${customMarker.center }">
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-viewLevel" class="form-label">확대배율</label>
-				    <input type="range" class="form-range" min="0" max="14" id="pre-viewLevel" disabled="disabled">
+				    <input type="range" class="form-range" min="0" max="14" id="pre-viewLevel" disabled="disabled" value="${customMarker.level }">
 				  </div>
 				  <div class="form-check form-switch mb-3">
 				    <input class="form-check-input" type="checkbox" role="switch" id="pre-opneYn" disabled="disabled">
@@ -188,7 +190,7 @@ crossorigin="anonymous"></script>
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-content" class="form-label">지도 설명</label>
-				    <textarea class="form-control" id="pre-content" disabled="disabled"></textarea>
+				    <textarea class="form-control" id="pre-content" disabled="disabled" value="${customMarker.content }"></textarea>
 				  </div>
 				  <button type="submit" class="btn btn-success" disabled="disabled">수정 전 지도</button>
 				</form>
@@ -245,22 +247,37 @@ crossorigin="anonymous"></script>
 	</div>
 	
 	
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
 <script>
 
 /* 변수선언 *****************************/
-var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
-var myModal = new bootstrap.Modal('#exampleModal');
+// var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
+// var myModal = new bootstrap.Modal('#exampleModal');
 
 /* 지도 표시하기 ************************/
+var level = document.getElementById("viewLevel");
+var center = document.getElementById("center");
+console.log(center.value);
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        level: level.value // 지도의 확대 레벨
     };
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+//수정전 초기 지도
+// var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+// mapOption = { 
+//     center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+//     level: 3 // 지도의 확대 레벨
+// };
+
+// //지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+// var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+
 </script>
 </body>
 </html>

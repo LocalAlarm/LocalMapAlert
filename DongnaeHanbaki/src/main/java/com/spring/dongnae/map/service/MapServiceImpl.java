@@ -47,4 +47,9 @@ public class MapServiceImpl implements MapService {
 	public int deleteMap(MapVO vo) {
 		return mapDAO.deleteMap(vo);
 	}
+
+	@Override
+	public MapVO getRecentMap() {
+		return mapDAO.getRecentMap();
+	}
 }
