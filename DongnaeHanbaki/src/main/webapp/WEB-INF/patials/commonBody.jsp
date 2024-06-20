@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-<%@page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
-<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
-<%@page import="org.springframework.security.core.Authentication"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-=======
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
 <%@ page import="org.springframework.security.core.Authentication" %>
 
->>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!--  팝업창 오픈소스  -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
@@ -51,7 +43,7 @@ const chatToast = document.getElementById('chatToast');
 				<div>
 					<div class="nav__brand">
 						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-						<a href="/dongnae/main" class="nav__logo">
+						<a href="/dongnae/main" class="nav__logo" style="text-decoration: none;">
 							<img src="<%=userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
 							<%=userDetails.getNickname()%>
 						</a>
@@ -89,7 +81,7 @@ const chatToast = document.getElementById('chatToast');
 							<ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">모임</span>
 							<ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-							<ul class="collapse__menu" id="chatList">
+							<ul class="collapse__menu" id="moimList">
 								<!-- 모임 리스트가 들어올 자리 -->
 							</ul>
 						</div>
@@ -196,18 +188,87 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </div>
 
+<!-- 모임 모달 -->
+<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moim-modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 왼쪽 8개 열 -->
+                        <div class="col-md-8" id="left-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 왼쪽 내용이 들어갈 자리 -->
+                            <!-- 게시물 목록이 들어간다 -->
+                            <ul id="boardList">
+                                <li class="board-item" data-id="post1">게시물 1</li>
+                                <li class="board-item" data-id="post2">게시물 2</li>
+                                <li class="board-item" data-id="post3">게시물 3</li>
+                            </ul>
+                        </div>
+                        <!-- 오른쪽 4개 열 -->
+                        <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 오른쪽 내용이 들어갈 자리 -->
+                            <!-- 채팅이 들어간다 -->
+                            <div id="chatArea">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="openMoimPostModal">작성하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모임 게시물 작성 모달 구조 -->
+<div class="modal fade" id="moim-post-modal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postModalLabel">게시물 작성</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="postForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="postMoimTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">내용</label>
+                        <textarea class="form-control" id="postMoimContent" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImages" class="form-label">이미지 파일</label>
+                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
-			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
 			connectFriend(); // 페이지 로드시 Friend WebSocket 연결
 			initializeChatToast();
 			initializeSearchEvents();
 			initializeFriendRequest();
 			handleMessageEnterPress();
-			friendRequestModal();
+			friendRequestModal(); */
+			connectMoim();
 			createMoimModalFunction();
+			initializeMoimModal();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
