@@ -24,8 +24,8 @@ public class MapServiceImpl implements MapService {
 	}
 	
 	@Override //title or content or title+content 필요
-	public List<MapVO> getSerchMapList(MapVO vo) {
-		return mapDAO.getSerchMapList(vo);
+	public List<MapVO> getSearchMapList(MapVO vo) {
+		return mapDAO.getSearchMapList(vo);
 	}
 
 	@Override //mapIdx 필요

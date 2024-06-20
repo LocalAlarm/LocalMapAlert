@@ -50,7 +50,7 @@ public class CustomController {
       String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-      String email = "test5@naver.com";
+      String email = "adminEmail";
       try {
          
          ObjectMapper objectMapper = new ObjectMapper();
@@ -145,14 +145,17 @@ public class CustomController {
 		}
 	}
 	
-	@RequestMapping("/serchCustomMap")
-	public String serchMap(MapVO mapVO, Model model) {
+	@RequestMapping("/searchCustomMap")
+	public String searchMap(MapVO mapVO, Model model) {
 		//커스텀맵 검색
-		mapVO.setTitle("관리자");//-------------------test code-----------------
-		List<MapVO> serchMapList = mapService.getSerchMapList(mapVO);//-------------------test code-----------------
-		System.out.println("serchMapList : " + serchMapList.toString());//-------------------test code-----------------
-		model.addAttribute("serchMapList", serchMapList);//-------------------test code-----------------
-		return "map/serchCustomMap"; 
+		//mapVO.setTitle("관리자");//-------------------test code-----------------
+		System.out.println("mapVO : " + mapVO);//-------------------test code-----------------
+		List<MapVO> searchMapList = mapService.getSearchMapList(mapVO);
+		System.out.println("searchMapList : " + searchMapList.toString());//-------------------test code-----------------
+		mapVO.setMapIdx(-1111);
+		searchMapList.add(mapVO); //검색키워드 출력용
+		model.addAttribute("searchMapList", searchMapList);
+		return "map/searchCustomMap"; 
 	}
 	
 	@RequestMapping("/createMap")

@@ -15,10 +15,28 @@
 		location.href="createMap";
 	}
 	
-	function goSearch(frm){
-		console.log(frm);
-		console.log(frm);
-		/* location.href="serchCustomMap?title=" + frm.title + "&content=" + frm.content; */
+	function goSearch(){
+		let a = document.getElementById("searchType").value;
+		let b = document.getElementById("searchKeyword");
+		
+		console.log(a);
+		console.log(b.value);
+		
+		switch (a) {
+		case 'maptitle' :
+			location.href="searchCustomMap?title=" + b.value;
+			break;
+		case 'mapContent' :
+			location.href="searchCustomMap?content=" + b.value;
+			break;
+		case 'writer' :
+			location.href="searchCustomMap?userEmail=" + b.value;
+			break;
+		default :
+			location.href="searchCustomMap?title=" + b.value + "&content=" + b.value;
+			break;
+		}
+		/* location.href="searchCustomMap?title=" + frm.title + "&content=" + frm.content; */
 	}
 </script>
 <style>
@@ -85,8 +103,16 @@ crossorigin="anonymous"></script>
       </div>
     </div>
     <form class="d-flex">
-      <input class="form-control me-2" type="serch" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" onclick="goSearch(this.form)">Search</button>
+      <div class="input-group">
+	    <select class="border rounded-start px-1" id="searchType">
+	      <option selected>선택</option>
+	      <option value="mapTitle">제목</option>
+	      <option value="mapContent">내용</option>
+	      <option value="writer">작성자</option>
+	    </select>
+        <input id="searchKeyword" class="form-control" type="text" placeholder="Search" aria-label="Search">
+        <button type="button" class="btn btn-outline-success" onclick="goSearch()">Search</button>
+      </div>
     </form>
   </div>
 </nav>
