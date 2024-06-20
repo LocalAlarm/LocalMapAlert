@@ -1,12 +1,13 @@
 // 채팅창에 관련된 js 코드.
-function connectChat() {
-    chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
-    chatSocket.onopen = function (event) {
+function connectChat() {
+	chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
+
+	chatSocket.onopen = function(event) {
         console.log('Connected to ChatWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    chatSocket.onmessage = function (event) {
+    chatSocket.onmessage = function(event) {
         try {
             var chatJsonData = JSON.parse(event.data);
 
@@ -21,11 +22,11 @@ function connectChat() {
             console.error("Error processing WebSocket message: ", e);
         }
     };
-
-    chatSocket.onclose = function (event) {
+    
+    chatSocket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
-    chatSocket.onerror = function (error) {
+    chatSocket.onerror = function(error) {
         console.log("WebSocket error: " + error);
     };
 }
@@ -55,7 +56,6 @@ async function handleUserRooms(userRooms) {
 async function handleMessage(message) {
     // 닉네임 가져오기
     const nickname = await getNickname(message.senderToken);
-    var token = '<%=userDetails.getToken()%>';
     // 가져온 닉네임을 사용하여 메시지 표시
     if (token === message.senderToken) {
         displayMessage(nickname, message.content, 'sent');
@@ -73,7 +73,7 @@ function sendMessage() {
             "content": content,
             "timestamp": Date.now()
         };
-        chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
+     	chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
         messageInput.value = ''; // 입력창 비우기
     }
 }
@@ -129,16 +129,12 @@ function initializeChatToast() {
             url: '/dongnae/api/getChatHistory',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify({ id: buttonId }), // 버튼 ID 전송
-            success: async function (response) {
-                if (isEmpty(response.messages)) {
-                    var chatBox = document.getElementById('chatBox');
-                    chatBox.innerHTML = '';
-                } else if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
+            success: async function(response) {
+                if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
                     for (const element of response.messages) {
                         getNickname(element.senderToken)
                             .then(nickname => {
-                                console.log(nickname);
-                                var token = '<%=userDetails.getToken()%>';
+                            console.log(nickname);
                                 if (token === element.senderToken) {
                                     displayMessage(nickname, element.content, 'sent');
                                 } else {
@@ -156,7 +152,7 @@ function initializeChatToast() {
                 toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
                 scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 // 에러 시 처리
                 console.error('An error occurred while fetching chat info:', error);
             }
@@ -165,7 +161,7 @@ function initializeChatToast() {
 }
 
 function handleMessageEnterPress() {
-    document.getElementById('message').addEventListener('keypress', function (event) {
+    document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             sendMessage(); // 엔터 키 누를 시 메시지 전송
             event.preventDefault(); // 엔터 키의 기본 동작 막기

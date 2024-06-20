@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dongnae.map.dao.MapDAO">
+	
+ 	<select id="getMapList" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		<choose>
+			<!-- 로그인유저 커스텀지도 -->
+			<when test='userEmail != null and userEmail != ""'>
+				AND USER_EMAIL = #{userEmail }
+			</when>
+			<!-- 공개 커스텀지도 -->
+			<when test='openYn != null and openYn != ""'>
+				AND OPEN_YN = #{openYn }
+			</when>
+		</choose>
+	</select>
+	
+ 	<select id="getMap" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		AND MAP_IDX = ${mapIdx}
+	</select>
+	
+	<!-- 검색 구문 -->
+	<select id="getSerchMapList" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		<choose>
+			<!-- 유저 이메일 검색 -->
+			<when test='userEmail != null'>
+				AND USER_EMAIL LIKE '%' || #{userEmail } || '%'
+			</when>
+			<!-- 제목+내용 검색 -->
+			<when test='content != null and title != null'>
+				AND (CONTENT LIKE '%' || #{title  } || '%') OR (TITLE LIKE '%' || #{title } || '%')
+			</when>
+			<!-- 제목검색 -->
+			<when test='title != null'>
+				AND TITLE LIKE '%' || #{title } || '%'
+			</when>
+			<!-- 내용검색 -->
+			<when test='content != null'>
+				AND CONTENT LIKE '%' || #{content } || '%'
+			</when>
+		</choose>
+		AND OPEN_YN = 1
+	</select>
+	
+	<!-- 맵 삽입 -->
+	<insert id="insertMap" parameterType="mapVO">
+	    INSERT INTO MAP (MAP_IDX, USER_EMAIL, TITLE, CONTENT,
+	        VIEW_LEVEL, CENTER_LATITUDE, CENTER_LONGITUDE, CREATE_DATE, OPEN_YN, DEL_YN)
+	    VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{title}, #{content},
+	        #{viewLevel}, #{centerLatitude}, #{centerLongitude}, SYSTIMESTAMP, 0, 0)
+	</insert>
+	
+	<!-- 맵 최근 조회 -->
+	<select id="getRecentMap" resultType="mapVO">
+		SELECT * 
+		FROM (SELECT * FROM MAP ORDER BY MAP_IDX DESC) 
+		WHERE ROWNUM = 1
+	</select>
+	
+	<update id="updateMap" parameterType="mapVO">
+		UPDATE MAKER
+		SET 
+		<if test="title != null">
+			TITLE= #{title}
+		</if>
+		<if test="content != null">
+			CONTENT = #{content}
+		</if>
+		<if test="centerLatitude != null">
+			CENTER_LATITUDE = #{centerLatitude}
+		</if>
+		<if test="centerLogitude != null">
+			CENTER_LOGITUDE = #{centerLogitude}
+		</if>
+		WHERE DEL_YN = 0
+		AND MAP_IDX = #{mapIdx}
+	</update>
+	
+	<update id="deleteMap" parameterType="mapVO">
+		UPDATE MAP
+		SET DEL_YN = 1
+		WHERE DEL_YN = 0
+		AND MAP_IDX = #{mapIdx}
+	</update>
+	
+</mapper>
+
+
+
+
+

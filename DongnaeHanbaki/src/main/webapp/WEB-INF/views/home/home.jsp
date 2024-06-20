@@ -1,95 +1,112 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@ page
+	import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
-<%@ page import="org.springframework.security.core.Authentication" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>WebSocket Chat</title>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/common.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/chat.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sidebar/friend.js"></script>
+<jsp:include page="../../patials/commonHead.jsp"></jsp:include>
+<link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
 <!-- 공통 헤더 파일 포함 -->
 
 <style>
 /* 메시지 스타일 정의 */
+.message {
+	margin: 5px;
+	padding: 10px;
+	border-radius: 10px;
+	max-width: 60%;
+	clear: both;
+}
 
+.sent {
+	background-color: #dcf8c6; /* 보낸 메시지 배경색 */
+	float: right;
+	text-align: right;
+}
+
+.received {
+	background-color: yellow; /* 받은 메시지 배경색 */
+	float: left;
+	text-align: left;
+}
+
+.chat-toast-container {
+    position: fixed; /* 위치를 고정 */
+    resize: vertical; /* 수평으로만 크기 조절 가능 */
+	transition: height 0.1s ease; /* 채팅방 사이즈 크기 조절 감도 설정 */
+}
+#chatBox {
+	width: 100%;
+	height: 150px;
+	overflow-y: scroll; /* 수직 스크롤바 */
+	padding : 10px;
+	border: 1px solid #ccc;
+    bottom: 10px; /* 하단 여백 */
+    right: 10px; /* 우측 여백 */
+}
+
+.resize-handle {
+	position: absolute;
+	bottom: 0; /* 아래쪽에 위치하도록 설정 */
+	left: 0;
+	width: 100%;
+	height: 10px;
+	background: #ccc;
+	cursor: ns-resize;
+}
 </style>
 </head>
-<%
-Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-CustomUserDetails userDetails = null;
-boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
-if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-} else {
-	userDetails = new CustomUserDetails();	
-}
-request.setAttribute("isLogin", isLogin);
-request.setAttribute("userDetails", userDetails);
-%>
-<script>
-var chatSocket = null;
-var friendSocket = null;
-var token = null;
-var isLogin = <%= isLogin%>;
-const chatToast = document.getElementById('chatToast');
-</script>
 <body id="body-pd">
 <jsp:include page="../../patials/commonBody.jsp"></jsp:include>
     <div class="l-navbar" id="side-navbar">
         <nav class="nav sidebar">
-        <c:choose>
-            <c:when test="${isLogin}">
-                <!-- 로그인 상태일 때 표시할 사이드바 -->
-                <div>
-	                <div class="nav__brand">
-						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-	                    <a href="/dongnae/main" class="nav__logo">
-	                    <img src="<%= userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
-	                    <%= userDetails.getNickname()%>
-	                    </a>
-	                </div>
-	                <div class="nav__list">
-	                    <a href="/dongnae/map" class="nav__link">
-	                        <ion-icon name="home-outline" class="nav__icon"></ion-icon>
-	                        <span class="nav_name">홈페이지</span>
-	                    </a>
-	                    <div class="nav__link collapse__nav">
-				            <ion-icon name="person-add-outline" class="nav__icon"></ion-icon>
-				            <span class="nav_name">친구요청</span>
-				            <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-				            <ul class="collapse__menu" id="friend-requests">
-				                <!-- 친구 목록 여기에 뜸. -->
-				            </ul>
-				        </div>
-	                    <div class="nav__link collapse__nav">
-	                        <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
-	                        <span class="nav_name">친구목록</span>
-	                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-	                        <ul class="collapse__menu" id="friendList" style="overflow: visible;">
-	                        </ul>
-	                    </div>
-	                    <div class="nav__link collapse__nav">
-	                        <ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
-	                        <span class="nav_name">채팅방</span>
-	                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-	                        <ul class="collapse__menu" id="chatList">
-	                        </ul>
-	                    </div>
-	                </div>
-	                <a href="/dongnae/login?logout class="nav__link">
-	                    <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
-	                    <span class="nav_name">Log out</span>
-	                </a>
-            	</div>
-            </c:when>
-            <c:otherwise>
-                <!-- 로그인 상태가 아닐 때 표시할 사이드바 -->
-                <a href="/dongnae/login">Login</a>
-                <a href="/register">Register</a>
-            </c:otherwise>
-        </c:choose>
+            <div>
+                <div class="nav__brand">
+					<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"/>
+                    <a href="#" class="nav__logo">유저이름</a>
+                </div>
+                <div class="nav__list">
+                    <a href="/dongnae/map" class="nav__link active">
+                        <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">홈페이지</span>
+                    </a>
+                    <div class="nav__link collapse__nav">
+			            <ion-icon name="person-add-outline" class="nav__icon"></ion-icon>
+			            <span class="nav_name">친구요청</span>
+			            <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+			            <ul class="collapse__menu" id="friend-requests">
+			                <!-- 친구 목록 여기에 뜸. -->
+			            </ul>
+			        </div>
+
+                    <div class="nav__link collapse__nav">
+                        <ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">친구목록</span>
+                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+                        <ul class="collapse__menu" id="friendList" style="overflow: visible;">
+                        </ul>
+                    </div>
+                    <div class="nav__link collapse__nav">
+                        <ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
+                        <span class="nav_name">채팅방</span>
+                        <ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
+                        <ul class="collapse__menu" id="chatList">
+                        </ul>
+                    </div>
+                </div>
+                <a href="/dongnae/login?logout class="nav__link">
+                    <ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
+                    <span class="nav_name">Log out</span>
+                </a>
+            </div>
         </nav>
     </div>
 	<!-- 공통 바디 파일 포함 -->
@@ -128,20 +145,27 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </body>
 <script>
+<%
+CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+String token = userDetails.getToken();
+%>
+var chatSocket = null;
+var friendSocket = null;
+var token = '<%=token%>';
+const chatToast = document.getElementById('chatToast');
+
 $(document).ready(function() {
-	// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
-	if (isLogin) {
-	    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-	    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-	    initializeChatToast();
-	    initializeSearchEvents();
-	    initializeFriendRequest();
-	    handleMessageEnterPress();
-	}
+    connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+    connectFriend(); // 페이지 로드시 Friend WebSocket 연결
+    initializeChatToast();
+    initializeSearchEvents();
+    initializeFriendRequest();
     initializeCollapseMenu();
     initializeSidebarToggle();
     initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
-    //receiveFriendRequests(); // 친구 요청란에 받은 데이터값을 보여주는 코드
+    handleMessageEnterPress();
+    receiveFriendRequests('example@example.com'); // 친구 요청란에 받은 데이터값을 보여주는 코드
+
 });
 </script>
 </html>

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -14,6 +14,7 @@
 	/* 수정창 이동 */
 	function goOneCustomMap(){
 		alert("수정 페이지로 이동합니다");
+		location.href="updateCustMap";
 	}
 	/* 삭제하기 */
 	function deleteMap(){

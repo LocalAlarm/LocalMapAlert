@@ -14,14 +14,15 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
 <!-- 사이드바 https://getbootstrap.kr/docs/5.1/components/navs-tabs/-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-2" id="sidebar">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <!-- 전체 목록 버튼 -->
-<button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
+                <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" onclick="All()" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">전체 목록</button>
 
 <!-- 사건 사고 메뉴 -->
 <div class="dropdown">
@@ -47,6 +48,8 @@
     
 </div><button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
 
+                <button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
+                <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
             </div>
         </div>       
         <div id="map"></div> 

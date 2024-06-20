@@ -162,13 +162,13 @@
       var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
       if (checkEmail.trim().length == 0) {
-         alert("이메일을 입력해주세요!");
+    	  showDangerAlert('오류', '이메일을 입력해주세요.', '');
          $("#email").focus();
          return false;
       }
-
+      
       if (!emailPattern.test(checkEmail)) {
-         alert("잘못된 이메일 형식입니다. 올바른 이메일을 입력해주세요.");
+    	  showDangerAlert('오류', '올바른 이메일 형식을 입력해주세요', '');
          frm.email.value = '';
          return false;
       }
@@ -181,7 +181,7 @@
          },
          success: function(response) {
             if (response === "duplicate") {
-               alert("이미 사용중인 이메일입니다.");
+            	showDangerAlert('오류', '이미 사용중인 이메일입니다.', '');
                $("#email").focus();
             } else {
                if (confirm("이 아이디는 사용 가능합니다. \n사용하시겠습니까?")) {
@@ -328,35 +328,35 @@
 		var nickname = $("#nickname").val().trim();
 		var recoverEmail = $("#recoverEmail").val().trim();
 		if (email == "") {
-			alert("이메일을 입력해주세요!");
+			showDangerAlert('오류', '이메일을 입력해주세요!', '');
 			$("#email").focus();
 			return false;
 		} else if (!duplicateCheck) {
-			alert("이메일 중복체크해주세요!");
+			showDangerAlert('오류', '이메일 중복체크해주세요!', '');
 			$("#email").focus();
 			return false;
 		} else if (!authenticCheck) {
-			alert("이메일 인증해주세요!");
+			showDangerAlert('오류', '이메일 인증해주세요!', '');
 			$("#authentic").focus();
 			return false;
 		} else if (password == "") {
-			alert("비밀번호를 입력해주세요!");
+			showDangerAlert('오류', '비밀번호를 입력해주세요!', '');
 			$("#password").focus();
 			return false;
 		} else if (passwordSurvey == false) {
-			alert("비밀번호 확인과 비교해주세요!");
+			showDangerAlert('오류', '비밀번호 확인과 비교해주세요!', '');
 			$("#password").focus();
 			return false;
 		} else if (nickname == "") {
-			alert("닉네임을 입력해주세요!");
+			showDangerAlert('오류', '닉네임을 입력해주세요!', '');
 			$("#nickname").focus();
 			return false;
 		} else if (!nicknameSurvey) {
-			alert("닉네임을 확인해주세요 !");
+			showDangerAlert('오류', '닉네임을 확인해주세요!', '');
 			$("#nickname").focus();
 			return false;
 		} else if (recoverEmail == "") {
-			alert("복구이메일을 입력해주세요!");
+			showDangerAlert('오류', '복구이메일을 입력해주세요!', '');
 			$("#recoverEmail").focus();
 			return false;
 		}
@@ -372,14 +372,14 @@
 	        success: function(response) {
 	            console.log("response : " + response);
 	            if (response === "pass") {
-	                alert("회원가입이 완료되었습니다.");
+	            	showSuccessAlert('성공', '회원가입이 완료되었습니다.', '');
 	                window.location.href = 'login'; // 회원가입 후 로그인 페이지로 이동
 	            } else {
 	                alert(response);
 	            }
 	        },
 	        error: function(request, status, error) {
-	            alert("회원가입에 실패했습니다.");
+	        	showDangerAlert('오류', '회원가입이 실패했습니다!', '');
 	            console.error("code: " + request.status + "\n" + "error: " + error);
 	        }
 	    });

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.socket.scheme.Board;
@@ -59,10 +58,10 @@ public class MoimController {
         return moimService.getMoimDtoInfo(moimId);
     }
 	
-	@PostMapping("/{moimId}/add-participants/{token}")
-	public Moim addParticipantToMoim(@PathVariable String moimId, @PathVariable String token) {
-		return moimService.addParticipantToMoim(moimId, token);
-	}
+    @PostMapping("/{moimId}/add-participants/{token}")
+    public Moim addParticipantToMoim(@PathVariable String moimId, @PathVariable String token) {
+      return moimService.addParticipantToMoim(moimId, token);
+    }
 
     
     @PostMapping("/{moimId}/board")

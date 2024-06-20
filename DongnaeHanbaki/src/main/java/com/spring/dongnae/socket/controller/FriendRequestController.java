@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.ApproveFriendRequest;
@@ -19,7 +18,6 @@ import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.FriendInfo;
 import com.spring.dongnae.socket.scheme.FriendRequest;
 import com.spring.dongnae.socket.scheme.FriendRoom;
-import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @RestController
@@ -28,7 +26,7 @@ public class FriendRequestController {
     @Autowired
     private GetAuthenticInfo getAuthenticInfo;
     @Autowired
-	private FriendRoomRepository friendRoomRepository;
+	  private FriendRoomRepository friendRoomRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -54,12 +52,13 @@ public class FriendRequestController {
 
     //친구요청 받아온걸 화면에 띄워주는 코드
     @PostMapping("/api/receiveFriendRequest")
-    public ResponseEntity<List<String>> receiveFriendRequest() {
-        Optional<FriendRoom> optionalReceiveFriend = friendRoomRepository.findByEmail(getAuthenticInfo.GetEmail()); // 친구요청 받는 사용자 이메일로 찾기
+    public ResponseEntity<List<FriendRoom>> receiveFriendRequest(@RequestBody FriendRequest friendRequest) {
+        Optional<FriendRoom> optionalReceiveFriend = friendRoomRepository.findByEmail(friendRequest.getRequestEmail()); // 친구요청 받는 사용자 이메일로 찾기
         if (optionalReceiveFriend.isPresent()) { // 있으면
             FriendRoom friendRoom = optionalReceiveFriend.get();
             // 필요한 로직 수행 후 친구 요청 목록 반환 
-            return ResponseEntity.ok(friendRoom.getRequestIds());
+            List<FriendRoom> friendRequests = Arrays.asList(friendRoom); 
+            return ResponseEntity.ok(friendRequests);
         }
         return ResponseEntity.notFound().build();
     }

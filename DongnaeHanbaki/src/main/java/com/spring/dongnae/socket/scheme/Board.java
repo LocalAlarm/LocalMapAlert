@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.scheme;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,13 +45,13 @@ public class Board {
         this.id = id;
     }
     
-	public String getMoimId() {
-		return moimId;
-	}
+    public String getMoimId() {
+      return moimId;
+    }
 
-	public void setMoimId(String moimId) {
-		this.moimId = moimId;
-	}
+    public void setMoimId(String moimId) {
+      this.moimId = moimId;
+    }
 
     public String getTitle() {
         return title;
@@ -133,7 +134,6 @@ public class Board {
     public void setMoim(Moim moim) {
         this.moim = moim;
     }
-
     
     public Date getCreatedDate() {
     	return createdDate;
@@ -150,5 +150,5 @@ public class Board {
 				+ author + ", images=" + images + ", comments=" + comments + ", likes=" + likes + ", createdDate="
 				+ createdDate + ", moim=" + moim + "]";
 	}   
-    
+
 }

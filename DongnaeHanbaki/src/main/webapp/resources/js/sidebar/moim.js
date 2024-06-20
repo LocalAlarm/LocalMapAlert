@@ -48,7 +48,6 @@ async function handleMoimUserRooms(userRooms) {
     }
     $('#moimList').html(buttonHtml);
 }
-
 function createMoimModalFunction(){
     var createMoimModal = new bootstrap.Modal($('#createMoimModal')[0]);
     $('#nav__create-moim').on('click', function() {
@@ -94,7 +93,6 @@ async function submitCreateMoimForm() {
 
     try {
         $('#createMoimForm').find('input, textarea, button').prop('disabled', true);
-
         const response = await fetch('/dongnae/moim/createMoim', {
             method: 'POST',
             body: formData,

@@ -219,7 +219,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
 };
 
-	
+   
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -377,14 +377,11 @@ function All() {
                 var sysDate = event.sysDate;
                 addMarker(position, markerType, title, content);
             });
-
             // 마커 보이기
             closePopup();
    			map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
-
-	
 			   },
 			   error: function(xhr, status, error) {
 			   	console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -446,7 +443,6 @@ function RealTimeAccidents() {
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
-
             if (data.length > 0) {
                 // 데이터에서 가장 최근 사건사고 정보 가져오기 (리스트의 첫 번째 요소)
                 var latestEvent = data[0];
@@ -556,7 +552,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
 //사용자 주소 좌표로 변환하는 함수 -----------------------------------------------------------------------
 
 var coords = null;
-
 function getUserAddress() {
     $.ajax({
         url: 'userAddress', 

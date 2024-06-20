@@ -137,6 +137,4 @@ public class Moim {
 				+ ", subLeader=" + subLeader + ", participants=" + participants + "]";
 	}
     
-    
-
 }

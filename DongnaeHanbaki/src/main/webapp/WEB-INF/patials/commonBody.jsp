@@ -188,7 +188,7 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </div>
 
-<!-- 모임 모달 -->
+
 <div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
@@ -213,7 +213,7 @@ const chatToast = document.getElementById('chatToast');
                             	<tbody id="moim-board-list">
                             	
                             	</tbody>
-                            </table>
+                            </table>n
                         </div>
                         <!-- 오른쪽 4개 열 -->
                         <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
@@ -260,7 +260,6 @@ const chatToast = document.getElementById('chatToast');
         </div>
     </div>
 </div>
-
 <!-- 게시글 상세 정보 모달 -->
 <div class="modal fade" id="moim-post-detail-modal" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -292,7 +291,6 @@ const chatToast = document.getElementById('chatToast');
         </div>
     </div>
 </div>
-
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
