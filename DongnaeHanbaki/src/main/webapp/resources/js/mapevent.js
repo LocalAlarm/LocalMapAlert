@@ -12,7 +12,7 @@ document.getElementById('markerType').addEventListener('change', function () {
                 <option value="팝업 스토어">팝업 스토어</option>
                 <option value="일일 장터">일일 장터</option>
                 <option value="강연">강연</option>
-                <option value="버스킹">버스킹</ㅉoption>
+                <option value="버스킹">버스킹</option>
             </select>
         `;
     } else {
