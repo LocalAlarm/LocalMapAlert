@@ -199,17 +199,17 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
 	console.log("marker : "+markerIdx);
 	
     // 마커 등록을 갑자기 수정하다보니 정립이 안돼서 두개의 값중 비교함 (추후 값 정리해서 switch문 쓸예정) markerType 결정
-    if (markerContent === '사건사고' || markerIdx === '사건사고') {
+    if (markerIdx === '사건사고') {
         markerType = '1';
-    } else if (markerContent === '공연' || markerIdx === '공연') {
+    } else if (markerContent === '공연') {
         markerType = '2';
-    } else if (markerContent === '팝업 스토어' || markerIdx === '팝업 스토어') {
+    } else if (markerContent=== '팝업 스토어') {
         markerType = '3';
-    } else if (markerContent === '일일 장터' || markerIdx === '일일 장터') {
+    } else if (markerContent === '일일 장터') {
         markerType = '4';
-    } else if (markerContent === '강연' || markerIdx === '강연') {
+    } else if (markerContent === '강연') {
         markerType = '5';
-    } else if (markerContent === '버스킹' || markerIdx === '버스킹') {
+    } else if (markerContent === '버스킹') {
         markerType = '6';
     } else {
         console.error('Unknown marker type:', markerIdx);
@@ -225,7 +225,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
 };
 
-   
+	
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -415,11 +415,14 @@ function All() {
                 var sysDate = event.sysDate;
                 addMarker(position, markerType, title, content);
             });
+
             // 마커 보이기
             closePopup();
    			map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
+
+	
 			   },
 			   error: function(xhr, status, error) {
 			   	console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -481,6 +484,7 @@ function RealTimeAccidents() {
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
+
             if (data.length > 0) {
                 // 데이터에서 가장 최근 사건사고 정보 가져오기 (리스트의 첫 번째 요소)
                 var latestEvent = data[0];
@@ -590,6 +594,7 @@ function getDistance(lat1, lng1, lat2, lng2) {
 //사용자 주소 좌표로 변환하는 함수 -----------------------------------------------------------------------
 
 var coords = null;
+
 function getUserAddress() {
     $.ajax({
         url: 'userAddress', 
@@ -668,4 +673,3 @@ $(document).ready(function() {
         document.getElementById('v-pills-home-tab').classList.add('active');
         
 });
-

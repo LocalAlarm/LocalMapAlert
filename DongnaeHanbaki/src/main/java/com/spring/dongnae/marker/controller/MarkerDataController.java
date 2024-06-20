@@ -15,44 +15,49 @@ import com.spring.dongnae.marker.vo.MarkerDataVO;
 
 @Controller
 public class MarkerDataController {
-    
-    @Autowired
-    private MarkerDataService markerdataService; 
-    
-    @RequestMapping("/Events")
-    @ResponseBody
-    public List<MarkerDataVO> getEvents() {
-    	int marker_idx = 1;
-    	return markerdataService.getMenu(marker_idx);
-    }
-    
-    @RequestMapping("/EventAccidents")
-    @ResponseBody
-    public List<MarkerDataVO> getEventAccidents() {
-        int marker_idx = 2;
-        return markerdataService.getMenu(marker_idx);
-    }
-    
-    @RequestMapping("/RealTimeEvents")
-    @ResponseBody
-    public List<MarkerDataVO> RealTimeEvents() {
-    	System.out.println("1");
-    	int marker_idx = 2;
-        return markerdataService.getRealTimeEvents(marker_idx);
-    }
-    
-    @RequestMapping("/all")
-    @ResponseBody
-    public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
-    	return markerdataService.allMenu(vo);
-    }
-    
-    @PostMapping("/saveM")
-    public ResponseEntity<String> saveMarker(@RequestBody MarkerDataVO vo) {
-        System.out.println("세이브 마커 컨트롤러");
-        markerdataService.saveMarker(vo);
-        return ResponseEntity.ok("마커 저장.");
-    }
 
- 
+	@Autowired
+	private MarkerDataService markerdataService;
+
+	@RequestMapping("/Events")
+	@ResponseBody
+	public List<MarkerDataVO> getEvents() {
+		int marker_idx = 1;
+		return markerdataService.getMenu(marker_idx);
+	}
+
+	@RequestMapping("/AllAccidents")
+	@ResponseBody
+	public List<MarkerDataVO> getAllAccidents() {
+		int marker_idx = 2;
+		return markerdataService.getMenu(marker_idx);
+	}
+
+	@RequestMapping("/RealTimeAccidents")
+	@ResponseBody
+	public List<MarkerDataVO> RealTimeEvents() {
+		int marker_idx = 2;
+		return markerdataService.getRealTimeEvents(marker_idx);
+	}
+
+	
+	@RequestMapping("/NearAccidents")
+	@ResponseBody 
+	public List<MarkerDataVO> AllAccidents() { 
+		int marker_idx = 2;
+		return markerdataService.getNearAccidents(marker_idx); 
+	}
+	 
+	@RequestMapping("/all")
+	@ResponseBody
+	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
+		return markerdataService.allMenu(vo);
+	}
+
+	@PostMapping("/saveM")
+	public ResponseEntity<String> saveMarker(@RequestBody MarkerDataVO vo) {
+		markerdataService.saveMarker(vo);
+		return ResponseEntity.ok("마커 저장.");
+	}
+
 }
