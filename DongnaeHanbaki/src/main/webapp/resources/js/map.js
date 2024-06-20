@@ -373,7 +373,6 @@ function All() {
    			map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
-            setMapCenter(coords);
 
 	// 마우스 우클릭 이벤트 발생 시 마커 추가
 	kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
@@ -572,7 +571,6 @@ function Events() {
             });
 
             closePopup();
-			setMapCenter();         
             // 마커 보이기
             showMarkers();
             updateSidebar(data);  
@@ -609,6 +607,7 @@ function getUserAddress() {
                 } else {
                     console.error('주소를 좌표로 변환하는 중 오류 발생:', status);
                     // 주소 변환 실패 시 서울시청 중심으로 설정
+                    //카카오톡은 주소 설정 안됨
                     initializeMap(new kakao.maps.LatLng(37.5665, 126.9780));
                     All();
                 }
