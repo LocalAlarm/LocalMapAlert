@@ -16,6 +16,10 @@ public class MapController {
     public String map(HttpSession session) {
         return "map/map"; 
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
 	
     @RequestMapping(value = "/userAddress", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -32,6 +36,9 @@ public class MapController {
         }
     }
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
 	
 }

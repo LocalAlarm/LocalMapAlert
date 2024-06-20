@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
 <%@ page import="org.springframework.security.core.Authentication" %>
 
+=======
+<%@page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
+<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@page import="org.springframework.security.core.Authentication"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!--  팝업창 오픈소스  -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>

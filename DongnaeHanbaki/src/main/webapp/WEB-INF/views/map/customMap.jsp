@@ -14,6 +14,12 @@
 		alert("새 커스텀맵 생성 페이지로 이동합니다");
 		location.href="createMap";
 	}
+	
+	function goSearch(frm){
+		console.log(frm);
+		console.log(frm);
+		/* location.href="serchCustomMap?title=" + frm.title + "&content=" + frm.content; */
+	}
 </script>
 <style>
 .mapTitle {
@@ -78,9 +84,9 @@ crossorigin="anonymous"></script>
         <a class="nav-link disabled" aria-disabled="true">Disabled</a>
       </div>
     </div>
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
+    <form class="d-flex">
+      <input class="form-control me-2" type="serch" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" onclick="goSearch(this.form)">Search</button>
     </form>
   </div>
 </nav>
@@ -90,8 +96,8 @@ crossorigin="anonymous"></script>
 <div class="container-fluid">
 <div class="row gy-2">
       <div class="col-6 border" style="height: 600px;">
-        <div class="text-center p-1"><h3>다른 커스텀맵 보기</h3></div>
-        <div class="row g-1 p-2 border rounded mb-2">
+        <div class="text-center p-3"><h3>다른 커스텀맵 보기</h3></div>
+<!--         <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5>제목</h5>
 		    <h6 class="text-body-secondary">제작자</h6>
@@ -100,13 +106,13 @@ crossorigin="anonymous"></script>
 		  <div class="col-8">
 		  	<pre>내용</pre>
 		  </div>
-        </div>
+        </div> -->
     <c:forEach items="${openCustomMapList}" var="vo">
 	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5 class="mapTitle">${vo.title }</h5>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
-		    <a href="oneCustMapTest0611?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		  </div>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>
@@ -117,9 +123,9 @@ crossorigin="anonymous"></script>
       
 	  <div class="col-6 border" style="height: 600px;">
 	  
-        <div class="text-center p-1"><h3>나의 커스텀맵</h3></div>
+        <div class="text-center p-3"><h3>나의 커스텀맵</h3></div>
         
-        <div class="row g-1 p-2 border rounded mb-2">
+<!--         <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
 		    <h5 class="mapTitle">제목</h5>
 		    <h6 class="text-body-secondary">제작자</h6>
@@ -129,9 +135,7 @@ crossorigin="anonymous"></script>
 		  <div class="col-8">
 		  	<pre>내용</pre>
 		  </div>
-		  <div>
-		  </div>
-        </div>
+        </div> -->
     <c:forEach items="${myCustomMapList}" var="vo">
 	    <div class="row g-1 p-2 border rounded mb-2">
 		  <div class="col-3">
@@ -143,13 +147,16 @@ crossorigin="anonymous"></script>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>
 		  </div>
-		  <div>
-		  </div>
         </div>
     </c:forEach>
         
         <div class="d-grid gap-2 py-2">
-		  <button class="btn btn-outline-primary py-3" type="button" onclick="goCreateCustomMap()">새 커스텀맵 만들기</button>
+	        <c:if test='${user == null}'>
+			  <button class="btn btn-outline-secondary py-3" type="button" disabled>로그인이 필요합니다</button>
+	        </c:if>
+	        <c:if test='${user != null}'>
+			  <button class="btn btn-outline-primary py-3" type="button" onclick="goCreateCustomMap()">새 커스텀맵 만들기</button>
+	        </c:if>
 		</div>
 		
 	  </div>

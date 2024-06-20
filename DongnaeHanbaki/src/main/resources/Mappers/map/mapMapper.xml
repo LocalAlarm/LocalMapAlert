@@ -7,28 +7,50 @@
  	<select id="getMapList" parameterType="mapVO" resultType="mapVO">
 		SELECT * FROM MAP
 		WHERE DEL_YN = 0
-		<if test='userEmail != null and userEmail != ""'>
-		AND USER_EMAIL = #{userEmail }
-		</if>
-		<if test='openYn != null and openYn != ""'>
-		AND OPEN_YN = #{openYn }
-		</if>
+		<choose>
+			<!-- 로그인유저 커스텀지도 -->
+			<when test='userEmail != null and userEmail != ""'>
+				AND USER_EMAIL = #{userEmail }
+			</when>
+			<!-- 공개 커스텀지도 -->
+			<when test='openYn != null and openYn != ""'>
+				AND OPEN_YN = #{openYn }
+			</when>
+		</choose>
 	</select>
 	
  	<select id="getMap" parameterType="mapVO" resultType="mapVO">
 		SELECT * FROM MAP
 		WHERE DEL_YN = 0
-		AND MAP_IDX = ${maPIdx}
+		AND MAP_IDX = ${mapIdx}
 	</select>
 	
-<!-- 	<insert id="insertMap" parameterType="mapVO"> -->
-<!-- 		INSERT INTO MAP (MAP_IDX, USER_EMAIL, TITLE, CONTENT, -->
-<!-- 			VIEW_LEVEL, CENTER_LATITUDE, CENTER_LOGITUDE, CREATE_DATE, OPEN_YN, DEL_YN) -->
-<!-- 		VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{title}, #{content}, -->
-<!-- 			#{viewLevel}, #{centerLatitude}, #{centerLogitude}, SYSDATE, 0, 0) -->
-<!-- 	</insert> -->
+	<!-- 검색 구문 -->
+	<select id="getSerchMapList" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP
+		WHERE DEL_YN = 0
+		<choose>
+			<!-- 유저 이메일 검색 -->
+			<when test='userEmail != null'>
+				AND USER_EMAIL LIKE '%' || #{userEmail } || '%'
+			</when>
+			<!-- 제목+내용 검색 -->
+			<when test='content != null and title != null'>
+				AND (CONTENT LIKE '%' || #{title  } || '%') OR (TITLE LIKE '%' || #{title } || '%')
+			</when>
+			<!-- 제목검색 -->
+			<when test='title != null'>
+				AND TITLE LIKE '%' || #{title } || '%'
+			</when>
+			<!-- 내용검색 -->
+			<when test='content != null'>
+				AND CONTENT LIKE '%' || #{content } || '%'
+			</when>
+		</choose>
+		AND OPEN_YN = 1
+	</select>
 	
-		<!-- 맵 삽입 -->
+	<!-- 맵 삽입 -->
 	<insert id="insertMap" parameterType="mapVO">
 	    INSERT INTO MAP (MAP_IDX, USER_EMAIL, TITLE, CONTENT,
 	        VIEW_LEVEL, CENTER_LATITUDE, CENTER_LONGITUDE, CREATE_DATE, OPEN_YN, DEL_YN)

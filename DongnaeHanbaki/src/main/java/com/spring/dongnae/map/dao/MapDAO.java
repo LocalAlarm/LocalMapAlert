@@ -10,6 +10,9 @@ public interface MapDAO {
 	//유저이메일(제작자) 또는 등급으로 리스트얻기, 값이 있으면 조건 검색
 	List<MapVO> getMapList(MapVO vo);
 	
+	//검색리스트, 제목+내용  or 제목 or 내용 검색 가능
+	List<MapVO> getSerchMapList(MapVO vo);
+	
 	//mapIdx 필요
 	MapVO getMap(MapVO vo);
 	int insertMap(MapVO vo);

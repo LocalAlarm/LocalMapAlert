@@ -8,6 +8,19 @@ var markersVisible = true;
 var markerListVisible = true;
 var container = document.getElementById('map');
 var geocoder = new kakao.maps.services.Geocoder();
+<<<<<<< HEAD
+=======
+var options = {
+<<<<<<< HEAD
+    center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
+=======
+    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644), // 기본 중심 좌표
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+    level: 2
+};
+
+var map = new kakao.maps.Map(container, options);
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
 
 // 세션에서 가져오기
 //var userAddress = '<%= session.getAttribute("address") %>'; 
@@ -440,6 +453,10 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return distance;
 }
 
+<<<<<<< HEAD
+=======
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
 //전체목록 클릭
 function All() {
     $.ajax({
@@ -616,7 +633,44 @@ function initializeMap(centerCoords) {
     setMapCenter(centerCoords);
 }
 
+<<<<<<< HEAD
 $(document).ready(function() {
         getUserAddress();
-});
+=======
+                if (tempMarker) {
+                    tempMarker.setMap(null);
+                }
+                tempMarker = new kakao.maps.Marker({
+                    position: latLng,
+                    map: map
+                });
+            });
 
+            All(); // 전체 마커 불러오기
+        }
+// 페이지 로드 시 사용자 주소로 좌표 설정
+window.onload = getUserAddress;
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+
+     $(document).ready(function() {
+        All();
+<<<<<<< HEAD
+        $('#v-pills-home-tab').on('click', function() {
+            updateHeader('전체 마커 목록');
+        });
+        $('#v-pills-profile-tab').on('click', function() {
+            updateHeader('사건사고 마커 목록');
+        });
+        $('#v-pills-messages-tab').on('click', function() {
+            updateHeader('이벤트 마커 목록');
+        });
+    });
+=======
+        getUserAddress();    
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
+});
+<<<<<<< HEAD
+
+=======
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git

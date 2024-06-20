@@ -268,4 +268,9 @@ function friendRequestModal(){
     $('#nav__friend-request').on('click', function() {
         friendRequestModal.show();
     });
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git

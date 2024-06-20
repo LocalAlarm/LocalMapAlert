@@ -1,6 +1,12 @@
   <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 
+맵 VO : mapVO
+마커타입 종류 : markerTypeList
+마커리스트 : markerList 
+댓글목록 : mapCommentsList
+--%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,55 +16,131 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
     rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
+<jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
 <script>
 	/* 수정창 이동 */
 	function goOneCustomMap(){
 		alert("수정 페이지로 이동합니다");
 		location.href="updateCustMap";
 	}
-	/* 삭제하기 */
+	/* 지도 삭제하기 */
 	function deleteMap(){
 		alert("지도를  삭제합니다");
 	}
-	/* 댓글작성하기 */
-	function insertComment(frm){
-		alert("댓글을 작성합니다");
-	}
-</script>
-<!-- 
-맵 VO : mapVO
-댓글목록 : commentsList 
--->
+	
+	/*비동기 댓글작성하기 */
+	function insertComment(frm) {
+		/* alert("댓글을 작성합니다"); */
+		if($("#writer").val() == null || $("#writer").val().trim() == ""){
+			alert("로그인 데이터가 없습니다. 로그인이 필요합니다");
+			return;
+		}
+		var formData = {
+			mapIdx : $("#mapIdx").val(),
+			writer : $("#writer").val(),
+			content : $("#content").val()
+		};
 
-<jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
-<script type="text/javascript">
-	$('document').ready(function() {
-	    $("#commentForm").submit(function(event) {
-	        event.preventDefault(); // 기본 form submit 동작 막기
+		console.log("formData : " + formData);
+		console.log("frm : " + frm);
+
+ 		$.ajax({
+			type : "POST",
+			url : "/dongnae/insertComment",
+			data : formData,
+			success : function(response) {
+				console.log("response : " + response);
+				/* alert("댓글이 입력되었습니다"); // 성공 시 알림 창에 메시지 표시 */
+				printCommentsList(); 
+			},
+			error : function(xhr, status, error) {
+				console.log(xhr);
+				console.log(status);
+				console.log(error);
+				alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+			}
+		});
+		$("#content").val("");
+		$("#content").focus();
+	}
 	
-	        var formData = {
-	            bbsIdx: $("#bbsIdx").val(),
-	            writer: $("#writer").val(),
-	            content: $("#content").val()
-	        };
+	/*  비동기 댓글 삭제하기 */
+	function deleteComment(mapCommentIdx){
+		console.log(mapCommentIdx);
+		if(confirm("댓글을 삭제하시겠습니까")){
+			
+	/* 		if(!isLogin()){
+				alert("로그인 데이터가 없습니다. 로그인이 필요합니다");
+				return;
+			}
+			 */
+			// 댓글 삭제처리 ajax
+			$.ajax({
+				type : "GET",
+				url : "/dongnae/deleteComment",
+				data : {mapCommentIdx: mapCommentIdx},
+				success : function(response) {
+					console.log("response : " + response);
+					alert("댓글이 삭제되었습니다");
+					printCommentsList(); 
+				},
+				error : function(xhr, status, error) {
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+					alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+				}
+			});
+			
+			
+		}
+	}
 	
-	        $.ajax({
-	            type: "POST",
-	            url: "/dongnae/insertComment",
-	            data: formData,
-	            success: function(response) {
-	            	console.log("response : " + response);
-	                alert(response); // 성공 시 알림 창에 메시지 표시
-	            },
-	            error: function(xhr, status, error) {
-	            	console.log(xhr);
-	            	console.log(status);
-	            	console.log(error);
-	                alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
-	            }
-	        });
-	    });
-	});
+	/* 비동기로 댓글리스트 출력 */
+	function printCommentsList(){
+		let a ="";
+		let mapIdx = ${mapVO.mapIdx};
+		$.ajax({
+			type : "GET",
+			url : "/dongnae/getCommentList",
+			data : {mapIdx: mapIdx},
+			datatype: "JSON",
+			success : function(response) {
+				let count = 0;
+				$(response).each(
+					function(){
+						count++;
+						let wri = 
+						console.log(this);
+						a += '<div class="row m-2">';
+						a += '	<div class="col-2">';
+						a +=    	'<img src="#" alt="사진" id="writer-info-profile-img">';
+						a +=    	'<a href="#">'+ this.writer +'</a>';
+						a +=    	'<br>';
+						a +=    	this.writeDate;
+						a +=   '</div>';
+						a +=    '<div class="vr p-0"></div>';
+						a +=   '<div class="col-9 text-break">'+ this.content +'</div>';
+						if(this.writer == "${user.email}"){
+							a +=   '<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment('+ this.mapCommentIdx +')"></button>';
+						}
+						a += '</div>';
+					});
+				$("#printCommentsLIst").html(a);
+				$("#commentButton").html('댓글 보기 (' + count + ')');
+			}
+		});
+	}
+	
+	/* 로그인 여부 확인 */
+/* 	function isLogin(){
+		if("${user.email == null}" || "${user.email == ''}"){
+			return false;
+		} else {
+			return true;
+		}
+	} */
+	
 </script>
 </head>
 <body>
@@ -91,24 +173,19 @@
   </div>
 </nav>
 <hr>
-<!-- 
-커스텀 맵 VO : mapVO
-마커타입 종류 : markerTypeList
-마커리스트 : markerList 
--->
 	<div class="container">
 		<div class="row p-3 text-center">
-			<h3>제목 : 맛?집 지도</h3>
+			<h3> ${mapVO.title } </h3>
 		</div>
 		<div class="row gy-2">
 			<!-- 만들어진 지도 표시 -->
-			<div class="col-6 border" style="height: 500px;">
+			<div class="col-6 border" style="height: 600px;">
 				<!-- 지도를 표시할 div 입니다 -->
-				<div id="map" style="width:100%;height:70vh;"></div>
+				<div id="map" style="width:100%;height: 600px;"></div>
 			</div>
 
 			<!-- 커스텀맵 설명칸 -->
-			<div class="col-6 border overflow-y-scroll p-0" style="height: 500px;">
+			<div class="col-6 border overflow-y-scroll p-0" style="height: 600px;">
 			
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 			  <li class="nav-item" role="presentation">
@@ -127,22 +204,24 @@
 				  <tbody>
 				    <tr>
 				      <th> 제목</th>
-				      <td>지도의 제목</td>
+				      <td>${mapVO.title}</td>
 				    </tr>
 				    <tr>
 				      <th> 중심주소</th>
-				      <td>모도 모시 모구</td>
+				      <td>주소</td>
 				    </tr>
 				    <tr>
 				      <th> 지도 크기</th>
 				      <td>확대배율 : 3</td>
 				    </tr>
+				    <tr>
+				      <th> 제작일</th>
+				      <td>${mapVO.createDate }</td>
+				    </tr>
 				  </tbody>
 				</table>
 				<div>
-			    <pre class="p-3">강남역 주면 음식점
-먹어본곳 표시함
-			    </pre>
+			    <pre class="p-3  text-wrap">${mapVO.content }</pre>
 				</div>
 			  </div>
 			  <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
@@ -181,7 +260,7 @@
 		</div> 
 		<div class="col-11 py-3 pb-0">
 		<!-- 커스텀맵 비공개 중일 경우 : 비공개 문구 출력 -->
-		<c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'>
+		<c:if test='${mapVO.openYn.equals("0")} || ${mapVO.openYn == null}'>
 				<h5>&nbsp;&nbsp;&nbsp;&nbsp;※ 비공개 된 커스텀 맵입니다</h5>
 				<hr>
 		</c:if>
@@ -191,9 +270,9 @@
 			  <button type="button" class="btn btn-outline-danger" onclick="deleteMap()">삭제</button>
 			</div>
 			<!-- 공개중에만 댓글 출력 -->
-		<%-- <c:if test='${mapVO.openYn }.equals("0") '> --%>
-			<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
-				댓글 보기(1)
+		<c:if test='${mapVO.openYn.equals("1")}'>
+			<button id="commentButton" class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
+				댓글 보기 (${mapCommentsList.size() })
 		    </button>
 		    <hr>
 		  	<!--  커스텀맵 공개중일 때만 댓글입력창 생성 -->
@@ -202,12 +281,12 @@
 					<div class="input-group p-0">
 					  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment(this.form)">댓글작성</button>
 					  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
-					  <input type="hidden" id="writer" value="${userVO.email }">
+					  <input type="hidden" id="writer" value="${user.email }">
 					  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
 					</div>
-				</form>
+				</form> 
 				<!-- 예시댓글 -->
-				<div class="row m-2">
+				<!-- <div class="row m-2">
 					<div class="col-2">
 		            	<img src="#" alt="사진" id="writer-info-profile-img">
 		            	<a href="#">킴모씨</a>
@@ -216,8 +295,15 @@
 				    </div>
 				    <div class="vr p-0"></div>
 			        <div class="col-9">지도 잘 봤습니다</div>
-			    </div>
-		  <%-- <c:forEach items="mapCommentsList" var="vo">
+			    </div> -->
+		<c:if test="${mapCommentsList} == null">
+			<div class="row m-2">
+				<div class="text-center">- 아직 댓글이 없습니다 -</div>
+			</div>
+			
+		 </c:if>
+		 <div id="printCommentsLIst">
+		  <c:forEach items="${mapCommentsList}" var="vo">
 		      <div class="row m-2">
 				<div class="col-2">
 	            	<img src="#" alt="사진" id="writer-info-profile-img">
@@ -226,22 +312,27 @@
 	            	${vo.writeDate }
 			    </div>
 			    <div class="vr p-0"></div>
-		        <div class="col-9">${vo.content }</div>
+		        <div class="col-9 text-break">${vo.content }</div>
+		        <!-- 작성자가 로그인유저와 일치하면 수정/삭제버튼 띄워줌 -->
+		        <c:if test="${vo.writer == user.email }">
+		        	<button type="button" class="btn-close col" onclick="deleteComment(${vo.mapCommentIdx})"></button>
+		        </c:if>
 			  </div>
-		  </c:forEach> --%>
-			</div>
-		<%-- </c:if> --%>
+		  </c:forEach>
+		 </div>
+		</div>
+		</c:if>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>
-		<form id="commentForm">
+		<!-- <form id="commentForm">
 		    <input type="hidden" id="bbsIdx" value="9"> 
 		    <label for="writer">작성자:</label>
 		    <input type="text" id="writer" name="writer" required><br><br>
 		    <label for="content">내용:</label><br>
 		    <textarea id="content" name="content" rows="4" cols="50" required></textarea><br><br>
-		    <button type="submit">댓글 등록</button>
-		</form>
+		    <button onclick="insertComment()">댓글 등록</button>
+		</form> -->
 	</div>
 	
 	
@@ -249,13 +340,17 @@
 <script>
 
 /* 변수선언 *****************************/
-var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
+/* var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
 var myModal = new bootstrap.Modal('#exampleModal');
-
+ */
 /* 지도 표시하기 ************************/
+
+
+var centerLatitude = ${mapVO.centerLatitude};
+var centerLongitude = ${mapVO.centerLongitude};
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        center: new kakao.maps.LatLng(centerLatitude,centerLongitude), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };
 

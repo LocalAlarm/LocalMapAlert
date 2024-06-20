@@ -115,9 +115,19 @@ function showDangerAlert(title, text, footerText) {
 
 function showSuccessAlert(title, text, footerText) {
 	Swal.fire({
+<<<<<<< HEAD
 		icon: "success",
 		title: title,
 		text: text,
 		footer: '<span style="color:indianred">' + footerText + '</span>'
 	});
 }
+=======
+		  icon: "success",
+		  title: title,
+		  text: text,
+		  footer: '<span style="color:indianred">' + footerText + '</span>'
+		});
+>>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
+}
+>>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
