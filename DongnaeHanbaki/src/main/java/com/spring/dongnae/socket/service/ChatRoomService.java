@@ -8,27 +8,25 @@ import org.springframework.stereotype.Service;
 
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
+import com.spring.dongnae.socket.scheme.UserRooms;
 
 @Service
 public class ChatRoomService {
 	@Autowired
 	private ChatRoomRepository chatRoomRepository;
 	
-	public Optional<ChatRoom> getChatRoomByUserIds(String userId) {
-        return chatRoomRepository.findByUserIdsContaining(userId);
-    }
-	
-	public Optional<ChatRoom> getChatRoomByUserIds(List<String> userIds) {
-        return chatRoomRepository.findByUserIdsContaining(userIds);
-    }
-	
     public ChatRoom saveChatRoom(ChatRoom chatRoom) {
         return chatRoomRepository.save(chatRoom);
     }
     
-    public ChatRoom createChatRoom(List<String> userIds) {
+    public ChatRoom createChatRoom() {
     	ChatRoom chatRoom = new ChatRoom();
-    	chatRoom.setUserIds(userIds);
     	return chatRoomRepository.save(chatRoom);
     }
+    
+//    public ChatRoom createChatRoom(List<UserRooms> userRooms) {
+//    	ChatRoom chatRoom = new ChatRoom();
+//    	chatRoom.set(userRooms);
+//    	return chatRoomRepository.save(chatRoom);
+//    }
 }
