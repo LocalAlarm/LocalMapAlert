@@ -36,7 +36,7 @@ function isMessage(data) {
 }
 
 function isUserRooms(data) {
-    return data.chatRoomIds !== undefined && data.email !== undefined;
+    return data.requestIds !== undefined && data.friendIds !== undefined;
 }
 
 async function handleUserRooms(userRooms) {
@@ -119,7 +119,7 @@ function scrollToBottom() {
 }
 
 function initializeChatToast() {
-    $('#chatList, #friendList').on('click', '.chatToastBtn', function () {
+    $('#friendList').on('click', '.chatToastBtn', function () {
         const chatToast = document.getElementById('chatToast');
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
         toastBootstrap.hide();

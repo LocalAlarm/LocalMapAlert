@@ -1,11 +1,14 @@
 package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Document(collection = "userRooms")
@@ -14,22 +17,25 @@ public class UserRooms {
 	@Id
 	private String id;
 	private String email;
-	private String token;
-	private List<String> chatRoomIds;
+	@DBRef(lazy = true)
+    private List<Moim> moims;
+	@DBRef(lazy = true)
+    private List<Moim> masterMoims; // 유저가 master인 모임 리스트
+	private List<String> requestIds; // 친구추가 요청받은 아이디(목록) 들
+	private List<FriendInfo> friendIds;
 
 	public UserRooms() {
+		setInitValue();
 	}
 	
 	public UserRooms(UserVO vo) {
+		setInitValue();
 		this.email = vo.getEmail();
-		this.token = vo.getToken();
-		this.chatRoomIds = new ArrayList<String>();
 	}
 	
-	public UserRooms(String email, String token) {
+	public UserRooms(String email) {
+		setInitValue();
 		this.email = email;
-		this.token = token;
-		this.chatRoomIds = new ArrayList<String>();
 	}
 	
 	public String getId() {
@@ -47,30 +53,73 @@ public class UserRooms {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public String getToken() {
-		return token;
+	
+	public List<Moim> getMoims() {
+		return moims;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void addMoim(Moim moim) {
+		this.moims.add(moim);
 	}
+	
+    public void removeMoim(Moim moim) {
+        this.moims.remove(moim);
+    }
+	
+    // 자기가 Master인 모임
+    public void addMasterMoims(Moim moim) throws Exception {
+        if (this.masterMoims.size() >= 4) {
+            throw new Exception("모임은 3개까지 개설할 수 있어요!");
+        }
+        this.masterMoims.add(moim);
+    }
 
-	public List<String> getChatRoomIds() {
-		return chatRoomIds;
+    public List<Moim> getMasterMoims() {
+    	return masterMoims;
+    }
+    
+    public void removeMasterMoim(Moim moim) {
+        this.masterMoims.remove(moim);
+    }
+	
+    
+	public List<String> getRequestIds() {
+		return requestIds;
 	}
+	
+    public void removeFriendRequest(String email) {
+        this.requestIds.remove(email);
+    }
 
-	public void setChatRoomIds(List<String> chatRoomIds) {
-		this.chatRoomIds = chatRoomIds;
+	public void addFriendRequest(String email) {
+		this.requestIds.remove(email);
+		this.requestIds.add(email);
 	}
-
-	public void addChatRoom(String roomId) {
-		this.chatRoomIds.add(roomId);
+	
+	public List<FriendInfo> getFriendIds() {
+		return friendIds;
+	}
+	
+	public void addFriendId(FriendInfo friendInfo) {
+		this.friendIds.add(friendInfo);
+	}
+	
+    public void removeFriendId(FriendInfo friendInfo) {
+        this.friendIds.remove(friendInfo);
+    }
+	
+	private void setInitValue() {
+		this.moims = new ArrayList<Moim>();
+		this.masterMoims = new ArrayList<Moim>();
+		this.requestIds = new ArrayList<String>();
+		this.friendIds = new ArrayList<FriendInfo>();
 	}
 
 	@Override
 	public String toString() {
-		return "UserRooms [id=" + id + ", email=" + email + ", token=" + token + ", chatRoomIds=" + chatRoomIds + "]";
+		return "UserRooms [id=" + id + ", email=" + email + ", moims=" + moims + ", masterMoims=" + masterMoims
+				+ ", requestIds=" + requestIds + ", friendIds=" + friendIds + "]";
 	}
+
 
 }

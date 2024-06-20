@@ -1,18 +1,19 @@
 package com.spring.dongnae.socket.scheme;
 
+
 //친구정보
 public class FriendInfo {
-
-	private String roomId;
+	
+	private ChatRoom chatRoomId;
+	private String friendToken;
 	private String roomName;
-	private String token;
-
-	public String getRoomId() {
-		return roomId;
+	
+	public ChatRoom getChatRoomId() {
+		return chatRoomId;
 	}
-
-	public void setRoomId(String roomId) {
-		this.roomId = roomId;
+	
+	public void setChatRoomId(ChatRoom chatRoomId) {
+		this.chatRoomId = chatRoomId;
 	}
 
 	public String getRoomName() {
@@ -24,18 +25,17 @@ public class FriendInfo {
 	}
 
 
-	public String getToken() {
-		return token;
+	public String getFriendToken() {
+		return friendToken;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setFriendToken(String friendToken) {
+		this.friendToken = friendToken;
 	}
 
 	@Override
 	public String toString() {
-		return "FriendInfo [roomId=" + roomId + ", roomName=" + roomName + ", token="
-				+ token + "]";
+		return "FriendInfo [chatRoomId=" + chatRoomId + ", friendToken=" + friendToken + ", roomName=" + roomName + "]";
 	}
-
+	
 }

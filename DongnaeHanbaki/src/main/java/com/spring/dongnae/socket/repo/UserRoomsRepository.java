@@ -8,6 +8,5 @@ import com.spring.dongnae.socket.scheme.UserRooms;
 
 public interface UserRoomsRepository extends MongoRepository<UserRooms, String> {
     Optional<UserRooms> findById(String id);
-    Optional<UserRooms> findByToken(String token);
-    
+    //Optional<UserRooms> findByIdWithSelectedFields(String id);
 }

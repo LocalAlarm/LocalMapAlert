@@ -21,7 +21,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 CustomUserDetails userDetails = null;
 boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
 if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
 	userDetails = new CustomUserDetails();	
 }
@@ -43,13 +43,14 @@ const chatToast = document.getElementById('chatToast');
 				<div>
 					<div class="nav__brand">
 						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-						<a href="/dongnae/main" class="nav__logo">
+						<a href="/dongnae/main" class="nav__logo" style="text-decoration: none;">
 							<img src="<%=userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
 							<%=userDetails.getNickname()%>
 						</a>
 					</div>
 					<div class="nav__list">
-						<a href="/dongnae/map" class="nav__link"> <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+						<a href="/dongnae/map" class="nav__link">
+							<ion-icon name="home-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">홈페이지</span>
 						</a>
 						<div class="nav__link collapse__nav" id="nav__friend-request">
@@ -80,7 +81,7 @@ const chatToast = document.getElementById('chatToast');
 							<ion-icon name="chatbubbles-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">모임</span>
 							<ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-							<ul class="collapse__menu" id="chatList">
+							<ul class="collapse__menu" id="moimList">
 								<!-- 모임 리스트가 들어올 자리 -->
 							</ul>
 						</div>
@@ -140,7 +141,7 @@ const chatToast = document.getElementById('chatToast');
 
 <!-- 친구 요청 보내는 모달 창 -->
 <div class="modal fade" id="friendRequestModal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="height: 365px;">
 			<div class="modal-header">
 				<h5 class="modal-title" id="friendRequestModalLabel">친구 요청</h5>
@@ -187,18 +188,125 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </div>
 
+<!-- 모임 모달 -->
+<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moim-modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 왼쪽 8개 열 -->
+                        <div class="col-md-8" id="left-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 왼쪽 내용이 들어갈 자리 -->
+                            <!-- 게시물 목록이 들어간다 -->
+                            <table class="table">
+                            	<thead>
+                            		<tr>
+										<th scope="col">게시글</th>
+										<th scope="col">작성자</th>
+                            		</tr>
+                            	</thead>
+                            	<tbody id="moim-board-list">
+                            	
+                            	</tbody>
+                            </table>
+                        </div>
+                        <!-- 오른쪽 4개 열 -->
+                        <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 오른쪽 내용이 들어갈 자리 -->
+                            <!-- 채팅이 들어간다 -->
+                            <div id="chatArea">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="openMoimPostModal">작성하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모임 게시물 작성 모달 구조 -->
+<div class="modal fade" id="moim-post-modal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postModalLabel">게시물 작성</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="postForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="postMoimTitle" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">내용</label>
+                        <textarea class="form-control" id="postMoimContent" rows="3" name="content" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImages" class="form-label">이미지 파일</label>
+                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" name="images" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 게시글 상세 정보 모달 -->
+<div class="modal fade" id="moim-post-detail-modal" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="post-detail-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            	<p id="post-detail-content"></p>
+                <div class="card" style="display: flex; align-items: center; justify-content: flex-end; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+                    <p id="post-detail-author" style="margin: 0;"></p>
+                </div>
+                <div id="post-detail-carousel-container">
+                    <!-- Carousel structure -->
+                    <div id="post-detail-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="post-detail-carousel-inner"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#post-detail-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#post-detail-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
-			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
 			connectFriend(); // 페이지 로드시 Friend WebSocket 연결
 			initializeChatToast();
 			initializeSearchEvents();
 			initializeFriendRequest();
 			handleMessageEnterPress();
-			friendRequestModal();
-			moimModalFunction();
+			friendRequestModal(); */
+			connectMoim();
+			createMoimModalFunction();
+			initializeMoimModal();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
