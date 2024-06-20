@@ -29,16 +29,22 @@ public class MapCommentsController {
         System.out.println("====== MapCommentsController() 객체 생성 ======");
     }
     
-    @RequestMapping(value = "/getCommentList", method = RequestMethod.GET)
-    public String getCommentList(MapCommentsVO vo, Model model) {
-        // 서비스로부터 댓글 목록을 가져옵니다.
-        List<MapCommentsVO> commentList = mapCommentsService.getCommentList(vo);
-        
-        // 모델에 댓글 목록을 추가합니다.
-        model.addAttribute("commentList", commentList);
-        
-        // 렌더링할 JSP 파일 이름을 반환합니다.
-        return "oneCustMapTest0611";
+//    @RequestMapping(value = "/getCommentList", method = RequestMethod.GET)
+//    public String getCommentList(MapCommentsVO vo, Model model) {
+//        // 서비스로부터 댓글 목록을 가져옵니다.
+//        List<MapCommentsVO> commentList = mapCommentsService.getCommentList(vo);
+//        
+//        // 모델에 댓글 목록을 추가합니다.
+//        model.addAttribute("commentList", commentList);
+//        
+//        // 렌더링할 JSP 파일 이름을 반환합니다.
+//        return "oneCustMapTest0611";
+//    }
+    
+    @RequestMapping("/getCommentList")
+    public List<MapCommentsVO> getCommentList(MapCommentsVO mapCommentsVO, String mapIdx) {
+    	mapCommentsVO.setMapIdx(mapIdx);
+    	return mapCommentsService.getCommentList(mapCommentsVO);
     }
     
     @PostMapping(value = "/insertComment", produces = "text/plain; charset=UTF-8")
@@ -56,5 +62,10 @@ public class MapCommentsController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 등록 중 오류가 발생했습니다.");
         }
+    }
+    
+    @RequestMapping("/deleteComment")
+    public int deleteComment(MapCommentsVO mapCommentsVO) {
+    	return mapCommentsService.deleteComment(mapCommentsVO);
     }
 }

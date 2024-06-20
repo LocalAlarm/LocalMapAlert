@@ -133,11 +133,23 @@ public class CustomController {
 	private boolean isLogin(HttpSession session) {
 		loginUserVO = (UserVO)session.getAttribute("user");
 		System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
-		if(loginUserVO != null && loginUserVO.getEmail() != null) {
+		if(loginUserVO == null || loginUserVO.getEmail() == null) {
+			return false;
+		} else if("".equals(loginUserVO.getEmail().trim())) {
 			return false;
 		} else {
 			return true;
 		}
+	}
+	
+	@RequestMapping("/serchCustomMap")
+	public String serchMap(MapVO mapVO, Model model) {
+		//커스텀맵 검색
+		mapVO.setTitle("관리자");//-------------------test code-----------------
+		List<MapVO> serchMapList = mapService.getSerchMapList(mapVO);//-------------------test code-----------------
+		System.out.println("serchMapList : " + serchMapList.toString());//-------------------test code-----------------
+		model.addAttribute("serchMapList", serchMapList);//-------------------test code-----------------
+		return "map/serchCustomMap"; 
 	}
 	
 	@RequestMapping("/createMap")

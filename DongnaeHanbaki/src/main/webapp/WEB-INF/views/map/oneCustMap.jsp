@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%-- 
 맵 VO : mapVO
+마커타입 종류 : markerTypeList
+마커리스트 : markerList 
 댓글목록 : mapCommentsList
 --%>
 <!DOCTYPE html>
@@ -21,14 +23,14 @@
 		alert("수정 페이지로 이동합니다");
 		location.href="updateCustMap";
 	}
-	/* 삭제하기 */
+	/* 지도 삭제하기 */
 	function deleteMap(){
 		alert("지도를  삭제합니다");
 	}
-	/* 댓글작성하기 */
 	
-	function insertComment() {
-		alert("댓글을 작성합니다");
+	/* 댓글작성하기 */
+	function insertComment(frm) {
+		/* alert("댓글을 작성합니다"); */
 		if($("#writer").val() == null || $("#writer").val().trim() == ""){
 			alert("로그인 데이터가 없습니다. 로그인이 필요합니다");
 			return;
@@ -39,31 +41,17 @@
 			content : $("#content").val()
 		};
 
-		console.log(formData);
+		console.log("formData : " + formData);
+		console.log("frm : " + frm);
 
-		$.ajax({
+ 		$.ajax({
 			type : "POST",
 			url : "/dongnae/insertComment",
 			data : formData,
 			success : function(response) {
 				console.log("response : " + response);
-				alert(response); // 성공 시 알림 창에 메시지 표시
-				
-				let a ="";
-				a += '<c:forEach items="${mapCommentsList}" var="vo">';
-				a += '<div class="row m-2">';
-				a += '	<div class="col-2">';
-				a +=    	'<img src="#" alt="사진" id="writer-info-profile-img">';
-				a +=    	'<a href="#">${vo.writer }</a>';
-				a +=    	'<br>';
-				a +=    	'${vo.writeDate }';
-				a +=   '</div>';
-				a +=    '<div class="vr p-0"></div>';
-				a +=   '<div class="col-9">${vo.content }</div>';
-				a += '</div>';
-				a +='</c:forEach>';
-				
-				$("#printCommentsLIst").html(a);
+				/* alert("댓글이 입력되었습니다"); // 성공 시 알림 창에 메시지 표시 */
+				printCommentsList(); 
 			},
 			error : function(xhr, status, error) {
 				console.log(xhr);
@@ -74,7 +62,46 @@
 		});
 		$("#content").val("");
 		$("#content").focus();
-	}printCommentsLIst
+	}
+	
+	/* 댓글 삭제하기 */
+	
+	
+	/* 비동기로 댓글리스트 출력 */
+	function printCommentsList(){
+		let a ="";
+		let mapIdx = ${mapVO.mapIdx};
+		$.ajax({
+			type : "GET",
+			url : "/dongnae/getCommentList",
+			data : {mapIdx: mapIdx},
+			datatype: "JSON",
+			success : function(response) {
+				let count = 0;
+				$(response).each(
+					function(){
+						count++;
+						console.log(this);
+						a += '<div class="row m-2">';
+						a += '	<div class="col-2">';
+						a +=    	'<img src="#" alt="사진" id="writer-info-profile-img">';
+						a +=    	'<a href="#">'+ this.writer +'</a>';
+						a +=    	'<br>';
+						a +=    	this.writeDate;
+						a +=   '</div>';
+						a +=    '<div class="vr p-0"></div>';
+						a +=   '<div class="col-9 text-break">'+ this.content +'</div>';
+						a +=   '<c:if test="${vo.writer == user.email }">';
+						a +=   '<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment('+ this.mapCommentIdx +')"></button>';
+						a +=   '</c:if>';
+						a += '</div>';
+					});
+				$("#printCommentsLIst").html(a);
+				$("#commentButton").html('댓글 보기 (' + count + ')');
+			}
+		});
+	}
+	
 </script>
 </head>
 <body>
@@ -107,11 +134,6 @@
   </div>
 </nav>
 <hr>
-<!-- 
-커스텀 맵 VO : mapVO
-마커타입 종류 : markerTypeList
-마커리스트 : markerList 
--->
 	<div class="container">
 		<div class="row p-3 text-center">
 			<h3> ${mapVO.title } </h3>
@@ -199,8 +221,7 @@
 		</div> 
 		<div class="col-11 py-3 pb-0">
 		<!-- 커스텀맵 비공개 중일 경우 : 비공개 문구 출력 -->
-		\${mapVO.openYn } : ${mapVO.openYn } 
-		<c:if test='${mapVO.openYn }.equals("0") || ${mapVO.openYn } == null'>
+		<c:if test='${mapVO.openYn.equals("0")} || ${mapVO.openYn == null}'>
 				<h5>&nbsp;&nbsp;&nbsp;&nbsp;※ 비공개 된 커스텀 맵입니다</h5>
 				<hr>
 		</c:if>
@@ -210,8 +231,8 @@
 			  <button type="button" class="btn btn-outline-danger" onclick="deleteMap()">삭제</button>
 			</div>
 			<!-- 공개중에만 댓글 출력 -->
-		<%-- <c:if test='${mapVO.openYn }.equals("1")'> --%>
-			<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
+		<c:if test='${mapVO.openYn.equals("1")}'>
+			<button id="commentButton" class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#commentsList" aria-expanded="false" aria-controls="collapseExample">
 				댓글 보기 (${mapCommentsList.size() })
 		    </button>
 		    <hr>
@@ -219,14 +240,14 @@
 		    <div class="collapse" id="commentsList">
 			    <form class="row mx-2">
 					<div class="input-group p-0">
-					  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment()">댓글작성</button>
+					  <button class="btn btn-outline-secondary col-2" type="button" id="button-addon1" onclick="insertComment(this.form)">댓글작성</button>
 					  <textarea class="form-control" aria-label="With textarea" id="content"></textarea>
 					  <input type="hidden" id="writer" value="${user.email }">
 					  <input type="hidden" id="mapIdx" value="${mapVO.mapIdx }">
 					</div>
 				</form> 
 				<!-- 예시댓글 -->
-				<div class="row m-2">
+				<!-- <div class="row m-2">
 					<div class="col-2">
 		            	<img src="#" alt="사진" id="writer-info-profile-img">
 		            	<a href="#">킴모씨</a>
@@ -235,7 +256,7 @@
 				    </div>
 				    <div class="vr p-0"></div>
 			        <div class="col-9">지도 잘 봤습니다</div>
-			    </div>
+			    </div> -->
 		<c:if test="${mapCommentsList} == null">
 			<div class="row m-2">
 				<div class="text-center">- 아직 댓글이 없습니다 -</div>
@@ -252,12 +273,16 @@
 	            	${vo.writeDate }
 			    </div>
 			    <div class="vr p-0"></div>
-		        <div class="col-9">${vo.content }</div>
+		        <div class="col-9 text-break">${vo.content }</div>
+		        <!-- 작성자가 로그인유저와 일치하면 수정/삭제버튼 띄워줌 -->
+		        <c:if test="${vo.writer == user.email }">
+		        	<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment(${vo.mapCommentIdx})"></button>
+		        </c:if>
 			  </div>
 		  </c:forEach>
 		 </div>
 		</div>
-		<%-- </c:if> --%>
+		</c:if>
 		<div class="row">
 			<div class="col p-3"><!-- 여백 --></div>
 		</div>

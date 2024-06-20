@@ -6,10 +6,10 @@
 <head>
 <%
 	// 커스텀맵 기능 개발중에 쓸 임시로그인 데이터 
-	UserVO user = new UserVO();
+  	UserVO user = new UserVO();
 	user.setEmail("adminEmail");
 	user.setNickname("관리자");
-	session.setAttribute("user", user);
+	session.setAttribute("user", user); 
 %>
     <title>index</title>
 </head>
