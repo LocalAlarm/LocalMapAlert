@@ -1,4 +1,4 @@
-var map;
+     var map;
 var markers = [];
 var coords;
 // 마커 추가를 위한 임시 위치 저장
@@ -8,19 +8,6 @@ var markersVisible = true;
 var markerListVisible = true;
 var container = document.getElementById('map');
 var geocoder = new kakao.maps.services.Geocoder();
-<<<<<<< HEAD
-var options = {
-<<<<<<< HEAD
-    center: new kakao.maps.LatLng(37.49879634476233, 127.03151757116309),
-=======
-    center: new kakao.maps.LatLng(37.49948516874355, 127.03314633997644), // 기본 중심 좌표
->>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
-    level: 2
-};
-
-var map = new kakao.maps.Map(container, options);
-=======
->>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 
 // 세션에서 가져오기
 //var userAddress = '<%= session.getAttribute("address") %>'; 
@@ -76,7 +63,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
     };
 
-	
+   
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -292,14 +279,14 @@ function Events() {
 
             closePopup();
             map.setLevel(2);
-			setMapCenter();         
+         setMapCenter();         
             // 마커 보이기
             showMarkers();
             updateSidebar(data);  
             document.getElementById('markerlist').style.display = 'visible';
 
             // 네비게이션 바 탭 활성화
-   			toggleEventAccidentsTab(false);
+            toggleEventAccidentsTab(false);
         },
         error: function (xhr, status, error) {
             console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -348,7 +335,7 @@ function AllAccidents() {
             map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-			setMapCenter();
+         setMapCenter();
             // 네비게이션 바 탭 활성화
             toggleEventAccidentsTab(true);
         },
@@ -382,7 +369,7 @@ function RealTimeAccidents() {
             map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
-			setMapCenter();
+         setMapCenter();
             // 네비게이션 바 탭 활성화
             toggleEventAccidentsTab(true);
         },
@@ -453,10 +440,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return distance;
 }
 
-<<<<<<< HEAD
->>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
-=======
->>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 //전체목록 클릭
 function All() {
     $.ajax({
@@ -464,7 +447,7 @@ function All() {
         method: "GET",
         dataType: "json",
         success: function(data) {
-        	console.log("1");
+           console.log("1");
             // 기존 마커 숨기기
             hideMarkers();
             console.log(data); // 데이터 확인용 로그
@@ -481,41 +464,41 @@ function All() {
 
             // 마커 보이기
             closePopup();
-   			map.setLevel(2);
+            map.setLevel(2);
             showMarkers();
             updateSidebar(data);  
             setMapCenter(coords);
-			// 마우스 우클릭 이벤트 발생 시 마커 추가
-			kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-			    tempLatLng = mouseEvent.latLng;
-			    var lat = tempLatLng.getLat();
-			    var lng = tempLatLng.getLng();
-			    console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
-			
-			    // 지도의 중심을 클릭된 위치로 이동
-			    map.setLevel(2);
-			    map.setCenter(tempLatLng);
-			
-			    document.getElementById('markerLat').value = lat;
-			    document.getElementById('markerLng').value = lng;
-			    document.getElementById('inputForm').style.display = 'block';
-			
-			    // 임시 마커 생성
-			    if (tempMarker) {
-			        tempMarker.setMap(null);
-			    }
-			    tempMarker = new kakao.maps.Marker({
-			        position: tempLatLng,
-			        map: map
-			    });
-			    
-			});
-			        },
-			        error: function(xhr, status, error) {
-			            console.error("데이터를 가져오는 중 오류 발생: " + error);
-			       }
-			   });
-			}
+         // 마우스 우클릭 이벤트 발생 시 마커 추가
+         kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
+             tempLatLng = mouseEvent.latLng;
+             var lat = tempLatLng.getLat();
+             var lng = tempLatLng.getLng();
+             console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
+         
+             // 지도의 중심을 클릭된 위치로 이동
+             map.setLevel(2);
+             map.setCenter(tempLatLng);
+         
+             document.getElementById('markerLat').value = lat;
+             document.getElementById('markerLng').value = lng;
+             document.getElementById('inputForm').style.display = 'block';
+         
+             // 임시 마커 생성
+             if (tempMarker) {
+                 tempMarker.setMap(null);
+             }
+             tempMarker = new kakao.maps.Marker({
+                 position: tempLatLng,
+                 map: map
+             });
+             
+         });
+                 },
+                 error: function(xhr, status, error) {
+                     console.error("데이터를 가져오는 중 오류 발생: " + error);
+                }
+            });
+         }
 
 function toggleMarkerList() {
         var markerList = document.getElementById('markerlist');
@@ -633,44 +616,7 @@ function initializeMap(centerCoords) {
     setMapCenter(centerCoords);
 }
 
-<<<<<<< HEAD
-                if (tempMarker) {
-                    tempMarker.setMap(null);
-                }
-                tempMarker = new kakao.maps.Marker({
-                    position: latLng,
-                    map: map
-                });
-            });
-
-            All(); // 전체 마커 불러오기
-        }
-// 페이지 로드 시 사용자 주소로 좌표 설정
-window.onload = getUserAddress;
->>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
-
-     $(document).ready(function() {
-        All();
-<<<<<<< HEAD
-        $('#v-pills-home-tab').on('click', function() {
-            updateHeader('전체 마커 목록');
-        });
-        $('#v-pills-profile-tab').on('click', function() {
-            updateHeader('사건사고 마커 목록');
-        });
-        $('#v-pills-messages-tab').on('click', function() {
-            updateHeader('이벤트 마커 목록');
-        });
-    });
-=======
-        getUserAddress();    
-=======
 $(document).ready(function() {
         getUserAddress();
->>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 });
-<<<<<<< HEAD
->>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
-=======
 
->>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
