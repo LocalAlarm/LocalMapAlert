@@ -15,7 +15,7 @@ public class Board {
     private String title;
     private String content;
     private String author;
-    private List<String> images;
+    private List<Image> images;
     private List<Comment> comments;
     private List<String> likes;
     
@@ -23,7 +23,11 @@ public class Board {
     private Moim moim;
     
     public Board(String moimId, String title, String content, String author) {
-    	this.setImages(new ArrayList<String>());
+    	this.setMoimId(moimId);
+    	this.setTitle(title);
+    	this.setContent(content);
+    	this.setAuthor(author);
+    	this.setImages(new ArrayList<Image>());
     	this.setComments(new ArrayList<Comment>());
     	this.setLikes(new ArrayList<String>());
     }
@@ -69,12 +73,16 @@ public class Board {
         this.author = author;
     }
 
-    public List<String> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
+    }
+    
+    public void addImage(Image image) {
+    	this.images.add(image);
     }
 
     public List<Comment> getComments() {

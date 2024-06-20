@@ -118,6 +118,8 @@ function initializeMoimModal() {
     $('#moimList').on('click', '.moim-list', function() {
         // 클릭된 li 요소의 id 가져오기
         const moimId = this.id;
+        // moimId를 모임 모달의 data 속성에 저장
+        $('#moim-modal').attr('data-moim-id', moimId);
         
         $.ajax({
             url: `/dongnae/moim/${moimId}`,
@@ -130,6 +132,7 @@ function initializeMoimModal() {
                     <img src="${data.profilePic}" alt="Moim logo" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
                     ${data.name}
                 `);
+                loadBoardList(moimId, 0, 10); // 첫 번째 페이지를 로드
                 createMoimModal.show();
             },
             error: function(err) {
@@ -146,15 +149,66 @@ function initializeMoimModal() {
     // 게시물 작성 폼 제출 이벤트
     $('#postForm').on('submit', function(e) {
         e.preventDefault();
-        // 작성된 게시물 데이터를 서버에 전송 (예: AJAX 사용)
-        const postTitle = $('#postTitle').val();
-        const postContent = $('#postContent').val();
         
-        // 여기에 AJAX 요청을 추가하여 서버에 데이터 전송 가능
-        console.log('게시물 작성:', postTitle, postContent);
+        // FormData 객체 생성
+        var formData = new FormData(this);
+        var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
+        formData.append('moimId', moimId); // moimId 추가
+        console.log(formData.get('moimId'));
+        console.log(formData.get('title'));
+        console.log(formData.get('content'));
 
-        // 작성 완료 후 모달 닫기
-        createPostModal.hide();
+        // 작성된 게시물 데이터를 서버에 전송 (예: AJAX 사용)
+        $.ajax({
+            url: `/dongnae/moim/${moimId}/board`,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('게시물 작성 성공:', response);
+                // 작성 완료 후 모달 닫기
+                createPostModal.hide();
+            },
+            error: function(err) {
+                console.error('게시물 작성 실패:', err);
+            }
+        });
+    });
+}
+
+function loadBoardList(moimId, page, size) {
+    $.ajax({
+        url: `/dongnae/moim/${moimId}/boards`,
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            page: page,
+            size: size
+        },
+        success: function(data) {
+            const boardList = $('#boardList');
+            boardList.empty();
+
+            if (data.content.length > 0) {
+                data.content.forEach(function(board) {
+                    boardList.append(`
+                        <li class="board-item" data-id="${board.id}">${board.title}</li>
+                    `);
+                });
+
+                // 게시글 클릭 이벤트 추가
+                $('.board-item').on('click', function() {
+                    const postId = $(this).data('id');
+                    showPostDetail(postId);
+                });
+            } else {
+                boardList.append('<li>게시물이 없습니다.</li>');
+            }
+        },
+        error: function(err) {
+            console.error('Error fetching boards:', err);
+        }
     });
 }
 

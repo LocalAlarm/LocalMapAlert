@@ -1,6 +1,7 @@
 package com.spring.dongnae.socket.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,17 +20,24 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
+import com.spring.dongnae.socket.scheme.Image;
 import com.spring.dongnae.socket.scheme.Moim;
 import com.spring.dongnae.socket.service.MoimService;
+import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @RestController
 @RequestMapping("/moim")
 public class MoimController {
 	@Autowired
 	private MoimService moimService;
+	@Autowired
+	private GetAuthenticInfo getAuthenticInfo;
+	@Autowired
+	private ImageUploadController imageUploadController;
 	
     @PostMapping("/createMoim")
     public ResponseEntity<String> createMoim(
@@ -37,7 +45,6 @@ public class MoimController {
             @RequestParam("introduce") String introduce,
             @RequestPart(value = "profilePic", required = false) MultipartFile profilePic) {
         try {
-        	System.out.println("연결된다");
             moimService.createMoim(title, introduce, profilePic);
             return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
         } catch (Exception e) {
@@ -47,7 +54,6 @@ public class MoimController {
     
     @GetMapping(value = "/{moimId}", produces = "application/json; charset=UTF-8")
     public MoimDto getMoimDtoInfo(@PathVariable String moimId) throws Exception {
-    	System.out.println(moimId);
         return moimService.getMoimDtoInfo(moimId);
     }
 	
@@ -56,9 +62,30 @@ public class MoimController {
 		return moimService.addParticipantToMoim(moimId, token);
 	}
 	
+//    @PostMapping("/{moimId}/board")
+//    public Board addPostToMoim(@PathVariable String moimId, @RequestBody Board board) {
+//        return moimService.addBoardToMoim(moimId, board);
+//    }
+    
     @PostMapping("/{moimId}/board")
-    public Board addPostToGroup(@PathVariable String moimId, @RequestBody Board board) {
-        return moimService.addBoardToMoim(moimId, board);
+    public Board addPostToMoim(@PathVariable String moimId, 
+                               @RequestParam("title") String title, 
+                               @RequestParam("content") String content, 
+                               @RequestParam("images") MultipartFile[] images) {
+        // Board 객체 생성
+        Board board = new Board(moimId, title, content, getAuthenticInfo.GetToken());
+        // 이미지 파일 처리 (예: 저장 경로 지정, 파일 저장 등)
+        for (MultipartFile imageFile : images) {
+        	if (!imageFile.isEmpty()) {
+        		Map<String, String> imageMap = imageUploadController.uploadImage(imageFile);
+        		Image image = new Image();
+        		image.setImage(imageMap.get("url"));
+        		image.setImagePi(imageMap.get("public_id"));
+        		board.addImage(image);  
+        	}
+        }
+        // 모임에 게시물 추가 로직
+        return moimService.addBoardToMoim(board);
     }
     
     @DeleteMapping("/{boardId}")
@@ -90,7 +117,7 @@ public class MoimController {
     public Page<Board> getBoards(@PathVariable String moimId,
                                  @RequestParam int page,
                                  @RequestParam int size) {
-    	Pageable pageable = new PageRequest(page, size); // 수정된 부분
+    	Pageable pageable = new PageRequest(page, size);
         return moimService.getBoardsByMoimIdPaged(moimId, pageable);
     }
     

@@ -189,7 +189,7 @@ const chatToast = document.getElementById('chatToast');
 </div>
 
 <!-- 모임 모달 -->
-<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,15 +238,15 @@ const chatToast = document.getElementById('chatToast');
                 <form id="postForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
-                        <input type="text" class="form-control" id="postMoimTitle" required>
+                        <input type="text" class="form-control" id="postMoimTitle" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="postContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="postMoimContent" rows="3" required></textarea>
+                        <textarea class="form-control" id="postMoimContent" rows="3" name="content" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="postImages" class="form-label">이미지 파일</label>
-                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" multiple>
+                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" name="images" multiple>
                     </div>
                     <button type="submit" class="btn btn-primary">작성</button>
                 </form>

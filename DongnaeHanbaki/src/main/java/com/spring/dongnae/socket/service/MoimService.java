@@ -65,13 +65,12 @@ public class MoimService {
     	return null;
     }
     
-    public Board addBoardToMoim(String moimId, Board board) {
-    	Optional<Moim> moimOptional = moimRepository.findById(moimId);
+    public Board addBoardToMoim(Board board) {
+    	Optional<Moim> moimOptional = moimRepository.findById(board.getMoimId());
     	if (moimOptional.isPresent()) {
     		Moim moim = moimOptional.get();
     		board.setMoim(moim);
     		Board savedBoard = boardRepository.save(board);
-    		moimRepository.save(moim);
     		return savedBoard;
     	}
     	return null;
