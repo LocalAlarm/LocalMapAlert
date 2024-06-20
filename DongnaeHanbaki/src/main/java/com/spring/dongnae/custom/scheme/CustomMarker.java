@@ -12,9 +12,6 @@ public class CustomMarker {
 	private int mapIdx;
     private List<Marker> markers;
     private List<Line> lines;
-    private List<Rect> rects;
-    private List<Circle> circles;
-    private List<Poly> polys;
     private String center;
     private String level;
     private String title;
@@ -52,39 +49,6 @@ public class CustomMarker {
 		this.lines.add(line);
 	}
 	
-	// 사각형에 관한 메서드
-	public List<Rect> getRects() {
-		return rects;
-	}
-	public void setRects(List<Rect> rects) {
-		this.rects = rects;
-	}
-	public void addRects(Rect rect) {
-		this.rects.add(rect);
-	}
-	
-	// 원에 관한 메서드
-	public List<Circle> getCircles() {
-		return circles;
-	}
-	public void setCircles(List<Circle> circles) {
-		this.circles = circles;
-	}
-	public void addCircle(Circle circle) {
-		this.circles.add(circle);
-	}
-	
-	// 다각형에 관한 메서드
-	public List<Poly> getPolys() {
-		return polys;
-	}
-	public void setPolys(List<Poly> polys) {
-		this.polys = polys;
-	}
-	public void addPoly(Poly poly) {
-		this.polys.add(poly);
-	}
-	
 	
 	public String getCenter() {
 		return center;
@@ -113,10 +77,10 @@ public class CustomMarker {
 
 	@Override
 	public String toString() {
-		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + ", lines=" + lines + ", rects=" + rects
-				+ ", circles=" + circles + ", polys=" + polys + ", center=" + center + ", level=" + level + ", title="
-				+ title + ", content=" + content + "]";
+		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + ", lines=" + lines + ", center=" + center
+				+ ", level=" + level + ", title=" + title + ", content=" + content + "]";
 	}
+
 
 
 	

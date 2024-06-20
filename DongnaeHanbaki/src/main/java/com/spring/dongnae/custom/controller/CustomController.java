@@ -43,7 +43,7 @@ public class CustomController {
       String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-      String email = "test18@naver.com";
+      String email = "test5@naver.com";
       try {
          
          ObjectMapper objectMapper = new ObjectMapper();
@@ -149,6 +149,8 @@ public class CustomController {
 		//커스텀맵 편집페이지 이동
 		//로그인여부 확인 필요 , false : 로그인 페이지로 이동
 		//mapIdx로 불러온 customMapVO 필요
+		
+//		customService.selectMarker(MapIdx);
 		//커스텀맵에서 사용한 마커종류 리스트 필요
 		//표시한 마커목록 리스트 필요
 		return "map/updateCustMap"; 

@@ -1052,10 +1052,9 @@
 
    function saveConfirm() {
       Swal.fire({
-              title: '정말로 그렇게 하시겠습니까?',
+              title: '지도를 저장하시겠습니까?',
               text: '다시 되돌릴 수 없습니다. 신중하세요.',
               icon: 'warning',
-              
               showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
               confirmButtonColor: '#3085d6', // confirm 버튼 색깔 지정
               cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
@@ -1072,6 +1071,29 @@
           });
 
    }
+   
+   function Confirm() { 
+         Swal.fire({
+                 title: '지도 저장 성공!',
+                 text: '나의 커스텀 페이지로 이동합니다.',
+                 icon: 'success',
+                 showCancelButton: false, // cancel버튼 보이기. 기본은 원래 없음
+                 confirmButtonColor: '#3085d6', // confirm 버튼 색깔 지정
+                 cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+                 confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+                 cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+                 
+                 reverseButtons: true, // 버튼 순서 거꾸로
+                 
+             }).then(result => {
+                 // 만약 Promise리턴을 받으면,
+                 if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                    location.href="oneCustMap";
+                 }
+             });
+
+      }
+   
    function saveMap(check) {
       console.log("지도생성!!!");
       //json에 넣을수있게 정보 뽑기
@@ -1089,28 +1111,31 @@
       console.log(title.value);
       console.log(content.value);
 
-//       if (check == "1") {
-//          console.log("커스텀 맵 저장!!!");
-//          $.ajax({
-//             type : 'POST',
-//             url : 'saveMap',
-//             data : JSON.stringify({
-//                markers : markerList,
-//                lines : lineList,
-//                center : center.textContent,
-//                level : rangeInput.value,
-//                title : title.value,
-//                content : content.value
-//             }),
-//             contentType : 'application/json; charset=UTF-8',
-//             success : function(response) {
+      if (check == "1") {
+         console.log("커스텀 맵 저장!!!");
+         $.ajax({
+            type : 'POST',
+            url : 'saveMap',
+            data : JSON.stringify({
+               markers : markerList,
+               lines : lineList,
+               center : center.textContent,
+               level : rangeInput.value,
+               title : title.value,
+               content : content.value
+            }),
+            contentType : 'application/json; charset=UTF-8',
+            success : function(response) {
 //                console.log('Data saved successfully:', response);
-//             },
-//             error : function(error) {
+               Confirm();
+//                location.href="oneCustMap";
+            },
+            error : function(error) {
 //                console.error('Error saving data:', error);
-//             }
-//          });
-//       }
+               showDangerAlert("지도 저장 실패!", "다시 시도해 주세요.", "");
+            }
+         });
+      }
    }
 
    //customOverlay떄문에 순환참조 오류나므로 markerList를 
