@@ -270,7 +270,7 @@ public class UserController {
        return "user/findPassword"; 
    }
 
-   @PostMapping("/findEmail")
+   @PostMapping("/findEmailForPassword")
    @ResponseBody
    public String findEmail(@RequestParam("email") String email) {
 	   String findEmail = userService.findPasswordByEmail(email);

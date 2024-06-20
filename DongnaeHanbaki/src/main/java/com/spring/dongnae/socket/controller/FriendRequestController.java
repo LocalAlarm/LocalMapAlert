@@ -1,5 +1,6 @@
 package com.spring.dongnae.socket.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
 import com.spring.dongnae.socket.scheme.ApproveFriendRequest;
@@ -18,6 +20,7 @@ import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.FriendInfo;
 import com.spring.dongnae.socket.scheme.FriendRequest;
 import com.spring.dongnae.socket.scheme.FriendRoom;
+import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @RestController
