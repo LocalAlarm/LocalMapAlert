@@ -12,6 +12,10 @@ body {
     z-index: 1000; /* 지도가 사이드바 뒤쪽에 위치하도록했음 */
 }
 
+/* .nav-pills {
+    border: 2px solid #007bff; 
+    padding: 10px;
+} */
 #sidebar .nav {
     background-color: rgba(248, 249, 250, 0.9); /* 버튼 배경 색과 투명도  */
 }

@@ -19,3 +19,63 @@ document.getElementById('markerType').addEventListener('change', function () {
         `;
     }
 });
+
+$('#eventsDropdown').click(function() {
+		$('.nav-link').removeClass('active');
+		$('#eventsDropdown').addClass('active');
+    	resetMarkersAndIndex();
+    	Events();
+});
+
+// 이벤트 클릭
+function Events() {
+    $.ajax({
+        url: "Events",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+        
+            // 기존 마커 제거
+            hideMarkers();
+            markers = [];
+
+            // 가져온 데이터로 마커 생성
+            data.forEach(function (event) {
+                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
+                var title = event.title;
+                var content = event.content;
+                var markerType = event.markerIdx;
+                addMarker(position, markerType, title, content);
+            });
+
+            closePopup();
+            // 마커 보이기
+            showMarkers();
+            updateSidebar(data);  
+            document.getElementById('markerlist').style.display = 'visible';
+
+            // 네비게이션 바 탭 활성화
+   			toggleEventAccidentsTab(false);
+        },
+        error: function (xhr, status, error) {
+            console.error("데이터를 가져오는 중 오류 발생: " + error);
+        }
+    });
+}
+
+// 사건 사고 메뉴 활성화/비활성화 함수
+function toggleEventTab(activate) {
+    if (activate) {
+        // 모든 nav-link에서 'active' 클래스 제거
+        document.querySelectorAll('.nav-link').forEach(function (el) {
+            el.classList.remove('active');
+        });
+
+        // 사건 사고 메뉴 활성화
+        document.getElementById('eventsDropdown').classList.add('active');
+    } else {
+        // 사건 사고 메뉴 비활성화
+        document.getElementById('eventsDropdown').classList.remove('active');
+    }
+}
+

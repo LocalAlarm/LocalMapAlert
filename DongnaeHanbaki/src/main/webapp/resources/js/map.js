@@ -170,11 +170,6 @@ $('#eventAccidentsDropdown').click(function() {
     	resetMarkersAndIndex();
     	AllAccidents();
 	});
-
-$('#v-pills-events-tab').click(function() {
-    	resetMarkersAndIndex();
-	});
-
 }
 
 // 내 위치 버튼 클릭 시 호출되는 함수
@@ -368,6 +363,7 @@ function All() {
         success: function(data) {
             // 기존 마커 숨기기
             hideMarkers();
+            toggleEventTab(false);
     		toggleEventAccidentsTab(false); // 사건사고 메뉴 비활성화
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
@@ -558,42 +554,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var distance = R * c;
     return distance;
-}
-
-// 이벤트 클릭
-function Events() {
-    $.ajax({
-        url: "Events",
-        method: "GET",
-        dataType: "json",
-        success: function (data) {
-        
-            // 기존 마커 제거
-            hideMarkers();
-            markers = [];
-
-            // 가져온 데이터로 마커 생성
-            data.forEach(function (event) {
-                var position = new kakao.maps.LatLng(event.latitude, event.longitude);
-                var title = event.title;
-                var content = event.content;
-                var markerType = event.markerIdx;
-                addMarker(position, markerType, title, content);
-            });
-
-            closePopup();
-            // 마커 보이기
-            showMarkers();
-            updateSidebar(data);  
-            document.getElementById('markerlist').style.display = 'visible';
-
-            // 네비게이션 바 탭 활성화
-   			toggleEventAccidentsTab(false);
-        },
-        error: function (xhr, status, error) {
-            console.error("데이터를 가져오는 중 오류 발생: " + error);
-        }
-    });
 }
 
 //사용자 주소 좌표로 변환하는 함수 -----------------------------------------------------------------------

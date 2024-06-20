@@ -25,7 +25,7 @@
 
 <!-- 사건 사고 메뉴 -->
 <div class="dropdown">
-    <a class="nav-link dropdown-toggle text-center" href="#" id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle text-center"  id="eventAccidentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         사건 사고
     </a>
     <ul class="dropdown-menu" aria-labelledby="eventAccidentsDropdown">
@@ -35,8 +35,17 @@
     </ul>
 </div>
 
-<button class="nav-link" id="v-pills-events-tab" data-bs-toggle="pill" data-bs-target="#v-pills-events" onclick="Events()" type="button" role="tab" aria-controls="v-pills-events" aria-selected="false">이벤트</button>
-<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle text-center" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        이벤트
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+        <li><a class="dropdown-item" href="#" onclick="Events()">전국 행사 보기</a></li>
+        <li><a class="dropdown-item" href="#" onclick="LocalEvents()">우리동네 행사 보기</a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealTimeBusking()">실시간 버스킹</a></li>
+    </ul>
+    
+</div><button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
 
             </div>
         </div>       
