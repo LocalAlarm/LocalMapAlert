@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 <%@page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@page import="org.springframework.security.core.Authentication"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+=======
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@ page import="com.spring.dongnae.user.vo.CustomUserDetails"%>
+<%@ page import="org.springframework.security.core.Authentication" %>
+
+>>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!--  팝업창 오픈소스  -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
@@ -20,7 +29,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 CustomUserDetails userDetails = null;
 boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUser");
 if (isLogin) {
-	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
 	userDetails = new CustomUserDetails();	
 }
@@ -48,7 +57,8 @@ const chatToast = document.getElementById('chatToast');
 						</a>
 					</div>
 					<div class="nav__list">
-						<a href="/dongnae/map" class="nav__link"> <ion-icon name="home-outline" class="nav__icon"></ion-icon>
+						<a href="/dongnae/map" class="nav__link">
+							<ion-icon name="home-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">홈페이지</span>
 						</a>
 						<div class="nav__link collapse__nav" id="nav__friend-request">
@@ -139,7 +149,7 @@ const chatToast = document.getElementById('chatToast');
 
 <!-- 친구 요청 보내는 모달 창 -->
 <div class="modal fade" id="friendRequestModal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content" style="height: 365px;">
 			<div class="modal-header">
 				<h5 class="modal-title" id="friendRequestModalLabel">친구 요청</h5>
@@ -197,7 +207,7 @@ const chatToast = document.getElementById('chatToast');
 			initializeFriendRequest();
 			handleMessageEnterPress();
 			friendRequestModal();
-			moimModalFunction();
+			createMoimModalFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();

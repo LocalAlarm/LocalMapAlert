@@ -18,11 +18,11 @@ function getNickname(token) {
             type: 'POST',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify({ token: token }),
-            success: function(response) {
+            success: function (response) {
                 console.log('Received data:', response);
                 resolve(response.nickname);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.error('Error fetching nickname:', errorThrown);
                 reject(null);
             }
@@ -64,12 +64,12 @@ async function searchUserByEmail(email) {
 }
 
 function initializeCollapseMenu() {
-    $(document).on('click', '.collapse__nav', function(e) {
+    $(document).on('click', '.collapse__nav', function (e) {
         // li 요소가 클릭된 경우는 제외
-        if(!$(e.target).is('card, card *, li, li*')) {
+        if (!$(e.target).is('card, card *, li, li*, ion-icon, ion-icon*')) {
             let $collapseMenu = $(this).closest('.collapse__nav').find('.collapse__menu');
             let $collapseLink = $(this).closest('.collapse__nav').find('.collapse__link');
-            
+
             $collapseMenu.toggleClass('showCollapse');
             $collapseLink.toggleClass('rotate');
         }
@@ -78,12 +78,11 @@ function initializeCollapseMenu() {
 
 function initializeSidebarToggle() {
     // 사이드바를 확장하는 클릭 이벤트 리스너
-    $('#nav-toggle').on('click', function(){
+    $('#nav-toggle').on('click', function () {
         $('#side-navbar').toggleClass('expander');
         $(this).toggleClass('rotate');
-        console.log("회전회오리");
         $('#body-pd').toggleClass('body-pd');
-        
+
         // 모든 collapse__menu에서 showCollapse 클래스 제거
         $('.collapse__menu').removeClass('showCollapse');
         $('.collapse__link').removeClass('rotate');
@@ -91,12 +90,10 @@ function initializeSidebarToggle() {
 }
 
 function initializeMenuActivation() {
-    $(document).on('click', '.nav__link', function(){
-        $('.nav__link').removeClass('active');
-        $(this).addClass('active');
+    $(document).on('click', '.nav__link', function () {
+        $('.nav__link').removeClass('side__active');
+        $(this).addClass('side__active');
     });
-<<<<<<< HEAD
-=======
 }
 
 var isEmpty = function (value) {
@@ -109,15 +106,16 @@ var isEmpty = function (value) {
 
 function showDangerAlert(title, text, footerText) {
 	Swal.fire({
-		  icon: "error",
-		  title: title,
-		  text: text,
-		  footer: '<span style="color:indianred">' + footerText + '</span>'
-		});
+		icon: "error",
+		title: title,
+		text: text,
+        footer: '<span style="color:indianred">' + footerText + '</span>'
+	});
 }
 
 function showSuccessAlert(title, text, footerText) {
 	Swal.fire({
+<<<<<<< HEAD
 		  icon: "success",
 		  title: title,
 		  text: text,
@@ -125,3 +123,11 @@ function showSuccessAlert(title, text, footerText) {
 		});
 >>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
 }
+=======
+		icon: "success",
+		title: title,
+		text: text,
+		footer: '<span style="color:indianred">' + footerText + '</span>'
+	});
+}
+>>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git

@@ -1,5 +1,7 @@
 package com.spring.dongnae.custom.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,5 +22,9 @@ public class CustomService {
 	
 	public CustomMarker saveMarker(CustomMarker customMarker) {
 		return customRepository.save(customMarker);
+	}
+	
+	public Optional<CustomMarker> selectMarker(int MapIdx) {
+		return customRepository.findByMapIdx(MapIdx);
 	}
 }

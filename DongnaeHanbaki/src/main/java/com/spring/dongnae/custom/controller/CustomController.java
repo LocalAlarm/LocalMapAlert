@@ -43,68 +43,71 @@ public class CustomController {
       System.out.println("========= customController() 객체생성");
    }
 	
-	@PostMapping("/saveMap")
-	@ResponseBody
-	public boolean saveMap(HttpServletRequest request, HttpSession session) throws IOException {
-		boolean check = false;
-		String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-//	      session.getAttribute("user");
-		System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-		String email = "test5@naver.com";
-		try {
+   @PostMapping("/saveMap")
+   @ResponseBody
+   public boolean saveMap(HttpServletRequest request, HttpSession session) throws IOException {
+      boolean check = false;
+      String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//      session.getAttribute("user");
+      System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
+      String email = "test5@naver.com";
+      try {
+         
+         ObjectMapper objectMapper = new ObjectMapper();
+         
+            // JSON 문자열을 JsonNode 객체로 변환
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
 
-			ObjectMapper objectMapper = new ObjectMapper();
+            // center 필드 추출
+            String center = jsonNode.get("center").asText();
+            
+            // 괄호 제거 후 분리
+            String coordinates = center.substring(1, center.length() - 1);
+            String[] parts = coordinates.split(", ");
+            
+         // 좌표 추출
+            double la = Double.parseDouble(parts[0]);
+            double ma = Double.parseDouble(parts[1]);
 
-			// JSON 문자열을 JsonNode 객체로 변환
-			JsonNode jsonNode = objectMapper.readTree(jsonString);
+            // 변수에 저장
+            double centerLongitude = la;
+            double centerLatitude = ma;
+            // level 필드 추출
+            String level = jsonNode.get("level").asText();
+            String title = jsonNode.get("title").asText();
+            String content = jsonNode.get("content").asText();
 
-			// center 필드 추출
-			String center = jsonNode.get("center").asText();
+            // 추출한 필드 값 출력
+//            System.out.println("centerLongitude: " + centerLongitude);
+//            System.out.println("centerLatitude: " + centerLatitude);
+//            System.out.println("Level: " + level);
+            MapVO vo = new MapVO();
+            vo.setUserEmail(email);
+            vo.setCenterLatitude(centerLatitude);
+            vo.setCenterLongitude(centerLongitude);
+            vo.setViewLevel(level);
+            vo.setTitle(title);
+            vo.setContent(content);
+//            System.out.println("삽입할 map : " + vo);
+            
+            if( mapService.insertMap(vo) > 0) {
+               System.out.println("map 입력 성공!!!");
+               check = true;
+               ObjectMapper mapper = new ObjectMapper();
+               CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
+               customMarker.setMapIdx(12);
+               System.out.println("커스텀 스키마로 변경! : " + customMarker);
+               customService.saveMarker(customMarker);
+               
+            }
+            
+            
 
-			// 괄호 제거 후 분리
-			String coordinates = center.substring(1, center.length() - 1);
-			String[] parts = coordinates.split(", ");
-
-			// 좌표 추출
-			double la = Double.parseDouble(parts[0]);
-			double ma = Double.parseDouble(parts[1]);
-
-			// 변수에 저장
-			double centerLongitude = la;
-			double centerLatitude = ma;
-			// level 필드 추출
-			String level = jsonNode.get("level").asText();
-			String title = jsonNode.get("title").asText();
-			String content = jsonNode.get("content").asText();
-
-			// 추출한 필드 값 출력
-//	            System.out.println("centerLongitude: " + centerLongitude);
-//	            System.out.println("centerLatitude: " + centerLatitude);
-//	            System.out.println("Level: " + level);
-			MapVO vo = new MapVO();
-			vo.setUserEmail(email);
-			vo.setCenterLatitude(centerLatitude);
-			vo.setCenterLongitude(centerLongitude);
-			vo.setViewLevel(level);
-			vo.setTitle(title);
-			vo.setContent(content);
-//	            System.out.println("삽입할 map : " + vo);
-
-			if (mapService.insertMap(vo) > 0) {
-				check = true;
-				ObjectMapper mapper = new ObjectMapper();
-				CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
-				customMarker.setMapIdx(12);
-				System.out.println("커스텀 스키마로 변경! : " + customMarker);
-				customService.saveMarker(customMarker);
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return check;
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+      return check;
+   }
 	
 	@RequestMapping("/customMap")
 	public String customMap(MapVO mapVO, Model model,HttpSession session) {
@@ -189,5 +192,5 @@ public class CustomController {
 		return "map/updateCustMap"; 
 	}
 
-	
 }
+

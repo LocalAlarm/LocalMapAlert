@@ -9,6 +9,7 @@
 <!--  팝업창 오픈소스  -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
  
+<<<<<<< HEAD
      <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
         /* VARIABLES CSS */
@@ -168,10 +169,17 @@
             transition: .5s;
         }
     </style>
+=======
+ 
+>>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git
 <!-- 사이드바 스크립트, css -->
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/common.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/chat.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/friend.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sidebar/moim.js"></script>
 <link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet">
+<<<<<<< HEAD
 <link href="${pageContext.request.contextPath}/resources/css/message.css" rel="stylesheet">
+=======
+<link href="${pageContext.request.contextPath}/resources/css/message.css" rel="stylesheet">
+>>>>>>> branch 'newGun3' of https://github.com/LocalAlarm/LocalMapAlert.git

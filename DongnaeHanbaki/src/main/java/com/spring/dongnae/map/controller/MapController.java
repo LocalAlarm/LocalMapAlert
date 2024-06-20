@@ -16,7 +16,6 @@ public class MapController {
     public String map(HttpSession session) {
         return "map/map"; 
     }
-
 	
     @RequestMapping(value = "/userAddress", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -32,6 +31,5 @@ public class MapController {
             return "{\"address\": \"없음\"}";
         }
     }
-	
 	
 }

@@ -7,19 +7,34 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/login.css">
     <script>
         function validateForm() {
+            console.log("validateForm called");
             var nickname = document.getElementById("nickname").value;
             var email = document.getElementById("recoverEmail").value;
             var nicknamePattern = /^[a-zA-Z]{1,8}$|^[\u3131-\uD79D]{1,8}$/;
             var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
+            if (nickname === "") {
+                console.log("닉네임 비어있음");
+                showDangerAlert('오류', '닉네임을 입력하세요!', '');
+                return false;
+            }
+
             if (!nicknamePattern.test(nickname)) {
-                alert("유효한 닉네임을 입력하세요. 닉네임은 1자에서 8자 사이의 영문 또는 한글이어야 합니다.");
+                console.log("닉네임 패턴 오류");
+                showDangerAlert('오류', '닉네임은 1자에서 8자 사이의 영문 또는 한글이어야 합니다!', '');
                 document.getElementById("nickname").value = '';
                 return false;
             }
-            
+
+            if (email === "") {
+                console.log("복구 이메일 비어있음");
+                showDangerAlert('오류', '복구 이메일을 입력하세요!', '');
+                return false;
+            }
+
             if (!emailPattern.test(email)) {
-                alert("유효한 이메일 주소를 입력하세요.");
+                console.log("복구 이메일 패턴 오류");
+                showDangerAlert('오류', '유효한 이메일 주소를 입력하세요!', '');
                 document.getElementById("recoverEmail").value = '';
                 return false;
             }
@@ -40,22 +55,18 @@
     </div> 
     <h4 align="center">이메일 찾기</h4>
     <hr>
-       <form action="findEmailProcess" method="post" onsubmit="return validateForm()">
-           <div class="mb-3">
-             <input type="text" class="form-control" name="nickname" title="닉네임" placeholder="닉네임 입력" style="margin-bottom: 10px;">
-          </div>
-          
-          <div class="mb-3">
-             <input type="text" class="form-control" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력" style="margin-bottom: 10px;">
-          </div>
-          
-          
-           <div class="d-flex justify-content-center mb-2 px-3">
-               <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="찾기">
-               <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
-           </div>
-            
-      </form> 
+    <form action="findEmailProcess" method="post" onsubmit="return validateForm()">
+        <div class="mb-3">
+            <input type="text" class="form-control" id="nickname" name="nickname" title="닉네임" placeholder="닉네임 입력" style="margin-bottom: 10px;">
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="recoverEmail" name="recoverEmail" title="복구이메일" placeholder="복구이메일 입력" style="margin-bottom: 10px;">
+        </div>
+        <div class="d-flex justify-content-center mb-2 px-3">
+            <input type="submit" class="btn btn-primary me-2" style="background-color: #FF6347; border-color: #FF6347; color: white;" value="찾기">
+            <input type="button" class="btn btn-light ms-2" value="뒤로가기" onclick="goBack()">
+        </div>
+    </form> 
 </div> 
 </body>
 </html>
