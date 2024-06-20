@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,11 +63,7 @@ public class MoimController {
 	public Moim addParticipantToMoim(@PathVariable String moimId, @PathVariable String token) {
 		return moimService.addParticipantToMoim(moimId, token);
 	}
-	
-//    @PostMapping("/{moimId}/board")
-//    public Board addPostToMoim(@PathVariable String moimId, @RequestBody Board board) {
-//        return moimService.addBoardToMoim(moimId, board);
-//    }
+
     
     @PostMapping("/{moimId}/board")
     public Board addPostToMoim(@PathVariable String moimId, 
@@ -86,6 +84,12 @@ public class MoimController {
         }
         // 모임에 게시물 추가 로직
         return moimService.addBoardToMoim(board);
+    }
+    
+    @GetMapping("/board/{boardId}")
+    public Board getBoardDetail(@PathVariable String boardId) {
+        return moimService.getBoardById(boardId)
+                .orElseThrow(() -> new ResourceNotFoundException("게시물을 찾을 수 없습니다."));
     }
     
     @DeleteMapping("/{boardId}")
@@ -112,18 +116,14 @@ public class MoimController {
     public List<Board> getBoardsByMoimId(@PathVariable String moimId) {
     	return moimService.getBoardByMoimId(moimId);
     }
-
+    
     @GetMapping("/{moimId}/boards")
     public Page<Board> getBoards(@PathVariable String moimId,
                                  @RequestParam int page,
                                  @RequestParam int size) {
-    	Pageable pageable = new PageRequest(page, size);
+    	Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
+    	Pageable pageable = new PageRequest(page, size, sort);
         return moimService.getBoardsByMoimIdPaged(moimId, pageable);
     }
     
-//    @GetMapping("/userRooms/{token}")
-//    public List<Moim> getMoimsByUser(@PathVariable String token) {
-//    	return moimService.getMoimByToken(token);
-//    }
-	
 }

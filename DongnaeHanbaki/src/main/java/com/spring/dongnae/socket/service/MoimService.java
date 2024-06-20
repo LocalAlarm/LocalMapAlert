@@ -140,6 +140,10 @@ public class MoimService {
     	return boardRepository.findByMoimId(moimId);
     }
     
+    public Optional<Board> getBoardById(String boardId) {
+        return boardRepository.findById(boardId);
+    }
+    
 //    public List<Moim> getMoimByToken(String token) {
 //    	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
 //    	return userRoomsOptional.map(UserRooms::getMoims).orElse(null);

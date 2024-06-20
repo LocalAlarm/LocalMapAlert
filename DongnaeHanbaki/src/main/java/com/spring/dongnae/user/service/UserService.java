@@ -42,4 +42,5 @@ public interface UserService {
 	
 	//친구아이디 찾기
 	List<UserVO> searchFriendByEmail(String email);
+	
 }

@@ -1,6 +1,7 @@
 package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -18,6 +19,7 @@ public class Board {
     private List<Image> images;
     private List<Comment> comments;
     private List<String> likes;
+    private Date createdDate; // 정렬에 사용할 필드
     
     @DBRef
     private Moim moim;
@@ -30,6 +32,7 @@ public class Board {
     	this.setImages(new ArrayList<Image>());
     	this.setComments(new ArrayList<Comment>());
     	this.setLikes(new ArrayList<String>());
+    	this.setCreatedDate(createdDate = new Date());;
     }
 
     // Getters and Setters
@@ -131,12 +134,21 @@ public class Board {
         this.moim = moim;
     }
 
+    
+    public Date getCreatedDate() {
+    	return createdDate;
+    }
+    
+    public Date setCreatedDate(Date createdDate) {
+    	this.createdDate = createdDate;
+    	return createdDate;
+    }
+
 	@Override
 	public String toString() {
 		return "Board [id=" + id + ", moimId=" + moimId + ", title=" + title + ", content=" + content + ", author="
-				+ author + ", images=" + images + ", comments=" + comments + ", likes=" + likes + ", moim=" + moim
-				+ "]";
-	}
-    
+				+ author + ", images=" + images + ", comments=" + comments + ", likes=" + likes + ", createdDate="
+				+ createdDate + ", moim=" + moim + "]";
+	}   
     
 }

@@ -89,6 +89,23 @@ function initializeSidebarToggle() {
     });
 }
 
+function searchUserByToken(token, callback) {
+    // 작성자 토큰 값을 사용하여 사용자 정보를 가져오기
+    $.ajax({
+        url: `/api/getUserVoByToken`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ token: data.author }),
+        success: function(userData) {
+            callback(null, userData);
+        },
+        error: function(err) {
+            console.error('Error fetching user data:', err);
+            callback(err);
+        }
+    });
+}
+
 function initializeMenuActivation() {
     $(document).on('click', '.nav__link', function () {
         $('.nav__link').removeClass('side__active');

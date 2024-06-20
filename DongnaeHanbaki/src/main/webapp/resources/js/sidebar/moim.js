@@ -154,9 +154,6 @@ function initializeMoimModal() {
         var formData = new FormData(this);
         var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
         formData.append('moimId', moimId); // moimId 추가
-        console.log(formData.get('moimId'));
-        console.log(formData.get('title'));
-        console.log(formData.get('content'));
 
         // 작성된 게시물 데이터를 서버에 전송 (예: AJAX 사용)
         $.ajax({
@@ -187,20 +184,23 @@ function loadBoardList(moimId, page, size) {
             size: size
         },
         success: function(data) {
-            const boardList = $('#boardList');
+            const boardList = $('#moim-board-list');
             boardList.empty();
 
             if (data.content.length > 0) {
                 data.content.forEach(function(board) {
                     boardList.append(`
-                        <li class="board-item" data-id="${board.id}">${board.title}</li>
+                        <tr class="moim-board-item" data-id="${board.id}">
+                            <td>${board.title}</td>
+                            <td>${board.author}</td>
+                        </tr>
                     `);
                 });
 
                 // 게시글 클릭 이벤트 추가
-                $('.board-item').on('click', function() {
-                    const postId = $(this).data('id');
-                    showPostDetail(postId);
+                $('.moim-board-item').on('click', function() {
+                    const boardId = $(this).data('id');
+                    showMoimBoardDetail(boardId);
                 });
             } else {
                 boardList.append('<li>게시물이 없습니다.</li>');
@@ -211,6 +211,46 @@ function loadBoardList(moimId, page, size) {
         }
     });
 }
+
+function showMoimBoardDetail(boardId) {
+    $.ajax({
+        url: `/dongnae/moim/board/${boardId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // 게시글 상세 정보를 모달에 채워넣기
+            $('#post-detail-title').text(data.title);
+            $('#post-detail-author').text(data.author);
+            $('#post-detail-content').text(data.content);
+
+            // Carousel 처리
+            const postDetailCarouselContainer = $('#post-detail-carousel-container');
+            const postDetailCarouselInner = $('#post-detail-carousel-inner');
+            postDetailCarouselInner.empty();
+
+            if (data.images && data.images.length > 0) {
+                data.images.forEach(function(image, index) {
+                    postDetailCarouselInner.append(`
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                            <img src="${image.url}" alt="Post Image ${index + 1}" class="d-block w-100">
+                        </div>
+                    `);
+                });
+                postDetailCarouselContainer.show();
+            } else {
+                postDetailCarouselContainer.hide();
+            }
+
+            // 모달을 보여주기
+            var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+            postDetailModal.show();
+        },
+        error: function(err) {
+            console.error('Error fetching post details:', err);
+        }
+    });
+}
+
 
 
     // 모달창이 닫혔을대 폼을 리셋한다.
