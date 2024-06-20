@@ -182,6 +182,8 @@ function goToMyLocation() {
         map.setCenter(seoulCityHallCoords);
     }
 }
+
+
 //마커 서버 관련 코드 -----------------------------------------------------------------------
 
 // 폼 제출 시 마커 정보를 서버로 전송
@@ -234,8 +236,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
             resetTempMarker();
              // 마커 생성 및 지도에 표시
             addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerContent, markerDetails);
-            
-             All();
+            All();
         },
         error: function(xhr, status, error) {
             console.error('마커 저장 중 오류 발생:', error);
@@ -250,12 +251,12 @@ function addMarker(position, markerType, title, content) {
     // 마커 이미지 설정
     switch (markerType) {
         case '1': // 이벤트
-            imageSrc = contextPath + '/resources/image/balloons-29920_640.png';
+            imageSrc = 'resources/image/balloons-29920_640.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;
         case '2': // 사건사고
-            imageSrc = contextPath + '/resources/image/ohno.png';
+            imageSrc = 'resources/image/ohno.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(25, 50)};
             break;
@@ -365,6 +366,8 @@ function All() {
             hideMarkers();
             toggleEventTab(false);
     		toggleEventAccidentsTab(false); // 사건사고 메뉴 비활성화
+    		document.getElementById('v-pills-home-tab').classList.add('active');
+    		
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
@@ -381,31 +384,7 @@ function All() {
             showMarkers();
             updateSidebar(data);  
 
-	// 마우스 우클릭 이벤트 발생 시 마커 추가
-	kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-		tempLatLng = mouseEvent.latLng;
-		var lat = tempLatLng.getLat();
-		var lng = tempLatLng.getLng();
-		console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
-			
-		// 지도의 중심을 클릭된 위치로 이동
-		map.setLevel(2);
-		map.setCenter(tempLatLng);
-			
-		document.getElementById('markerLat').value = lat;
-		document.getElementById('markerLng').value = lng;
-		document.getElementById('inputForm').style.display = 'block';
-			
-		// 임시 마커 생성
-		if (tempMarker) {
-			tempMarker.setMap(null);
-		}
-			tempMarker = new kakao.maps.Marker({
-				position: tempLatLng,
-			        map: map
-		});
-			    
-		});
+	
 			   },
 			   error: function(xhr, status, error) {
 			   	console.error("데이터를 가져오는 중 오류 발생: " + error);
@@ -471,7 +450,8 @@ function RealTimeAccidents() {
             if (data.length > 0) {
                 // 데이터에서 가장 최근 사건사고 정보 가져오기 (리스트의 첫 번째 요소)
                 var latestEvent = data[0];
-
+				alert('실시간 사건사고가 ' + data.length + '건 있습니다.\n가장 최근 사건사고로 이동합니다.');
+				
                 if (latestEvent) {
                     // 최근 사건사고의 좌표 가져오기
                     var latestPosition = new kakao.maps.LatLng(latestEvent.latitude, latestEvent.longitude);
@@ -482,11 +462,10 @@ function RealTimeAccidents() {
                     updateSidebar(data);
                     map.setCenter(latestPosition);
                     map.setLevel(3); // 예시로 레벨 3으로 설정
-
                     // 네비게이션 바 탭 활성화
                     toggleEventAccidentsTab(true);
                 } else {
-                    console.error("가장 최근 사건사고를 찾을 수 없습니다.");
+                    alert("실시간 사건사고가 없습니다.");
                 }
             } else {
                 alert("실시간 사건사고가 없습니다.");
@@ -501,7 +480,9 @@ function RealTimeAccidents() {
 // 근처 사건사고 찾기
 function NearAccidents() {
     var center = map.getCenter(); // 현재 지도의 중심 좌표 가져오기
-    var radius = 2; // 반경 설정 km단위로함
+    var radius = 2; // 반경 설정 km 단위로 함
+    var nearestMarkerPosition = null;
+    var minDistance = Number.MAX_VALUE;
     var nearbyAccidents = [];
 
     $.ajax({
@@ -509,8 +490,9 @@ function NearAccidents() {
         method: "GET",
         dataType: "json",
         success: function (data) {
-        resetMarkersAndIndex();
+            resetMarkersAndIndex();
             hideMarkers();
+
             data.forEach(function (accident) {
                 var position = new kakao.maps.LatLng(accident.latitude, accident.longitude);
                 var distance = getDistance(center.getLat(), center.getLng(), accident.latitude, accident.longitude);
@@ -518,19 +500,33 @@ function NearAccidents() {
                 if (distance <= radius) {
                     nearbyAccidents.push(accident);
                     addMarker(position, '2', accident.title, accident.content);
+
+                    // 가장 가까운 마커의 위치 업데이트
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestMarkerPosition = position;
+                    }
                 }
             });
-            
+
             closePopup();
-            map.setLevel(3);
-            
+            map.setLevel(4);
+
             // 필터링된 반경 데이터를 사이드바에 표시
             updateSidebar(nearbyAccidents);
 
-            if (nearbyAccidents.length > 0) {
-                alert('근처에 사건사고가 ' + nearbyAccidents.length + '개 있습니다.');
+            if (nearestMarkerPosition) {
+                // 가장 가까운 마커의 위치로 지도 중심 이동
+                map.setCenter(nearestMarkerPosition);
             } else {
+                // 근처에 사건사고가 없는 경우
                 alert('근처에 사건사고가 없습니다.');
+                AllAccidents();
+            }
+
+            if (nearbyAccidents.length > 0) {
+                alert('근처에 사건사고가 ' + nearbyAccidents.length + '건 있습니다.\n가장 가까운 사건사고로 이동합니다.');
+
             }
         },
         error: function (error) {
@@ -538,6 +534,7 @@ function NearAccidents() {
         }
     });
 }
+
 
 // 두 좌표 사이의 거리를 계산하는 함수 km단위
 function getDistance(lat1, lng1, lat2, lng2) {
@@ -588,7 +585,6 @@ function getUserAddress() {
             console.error('사용자 주소를 가져오는 중 오류 발생:', error);
             // 주소 가져오기 실패 시 서울시청 중심으로 설정
             initializeMap(new kakao.maps.LatLng(37.5665, 126.9780));
-            All();
         }
     });
 }
@@ -607,6 +603,29 @@ function initializeMap(centerCoords) {
 
     // 지도 중심을 설정합니다.
     setMapCenter(centerCoords);
+    // 마우스 우클릭 이벤트 발생 시 마커 추가
+	kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
+		tempLatLng = mouseEvent.latLng;
+		var lat = tempLatLng.getLat();
+		var lng = tempLatLng.getLng();
+		console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
+			
+		// 지도의 중심을 클릭된 위치로 이동
+		map.setCenter(tempLatLng);
+			
+		document.getElementById('markerLat').value = lat;
+		document.getElementById('markerLng').value = lng;
+		document.getElementById('inputForm').style.display = 'block';
+			
+		// 임시 마커 생성
+		if (tempMarker) {
+			tempMarker.setMap(null);
+		}
+			tempMarker = new kakao.maps.Marker({
+				position: tempLatLng,
+			        map: map
+		});
+		});
 } 
 
 //레디 -----------------------------------------------------------------------
