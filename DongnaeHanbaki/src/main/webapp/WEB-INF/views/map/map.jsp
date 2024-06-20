@@ -55,7 +55,10 @@
     <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 off</button>
     <button id="toggleMarkerListBtn" onclick="toggleMarkerList()" class="btn btn-secondary btn-sm">게시판 off</button>
 </div>
-
+<!-- 내 위치 버튼 -->
+<div class="overlay-button-left">
+    <button id="myLocationBtn" onclick="goToMyLocation()" class="btn btn-secondary btn-sm">내 위치</button>
+</div>
 <!-- 사용자 입력 폼 -->
 <div id="inputForm">
     <form id="markerForm">
@@ -69,7 +72,9 @@
         </div>
         <div class="form-group">
             <label for="markerContent">내용</label>
-            <input type="text" class="form-control" id="markerContent" required>
+            <div id="markerContentContainer">
+                <input type="text" class="form-control" id="markerContent" required>
+            </div>
         </div>
         <div class="form-group">
             <label for="markerDetails">자세한 내용</label>
@@ -81,6 +86,7 @@
         <button type="button" class="btn btn-secondary" onclick="closeForm()">취소</button>
     </form>
 </div>
+
 
 <!-- 팝업 창 -->
 <div id="popup">
@@ -99,7 +105,8 @@
 <script>
     var contextPath = "${pageContext.request.contextPath}";
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/map.js"></script>
+<script src="resources/js/map.js"></script>
+<script src="resources/js/mapevent.js"></script>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>

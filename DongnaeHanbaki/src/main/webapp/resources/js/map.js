@@ -177,7 +177,16 @@ $('#v-pills-events-tab').click(function() {
 
 }
 
+// 내 위치 버튼 클릭 시 호출되는 함수
+function goToMyLocation() {
+    var seoulCityHallCoords = new kakao.maps.LatLng(37.5665, 126.9780);
 
+    if (coords) {
+        map.setCenter(coords);
+    } else {
+        map.setCenter(seoulCityHallCoords);
+    }
+}
 //마커 서버 관련 코드 -----------------------------------------------------------------------
 
 // 폼 제출 시 마커 정보를 서버로 전송
@@ -230,6 +239,8 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
             resetTempMarker();
              // 마커 생성 및 지도에 표시
             addMarker(new kakao.maps.LatLng(lat, lng), markerType, markerContent, markerDetails);
+            
+             All();
         },
         error: function(xhr, status, error) {
             console.error('마커 저장 중 오류 발생:', error);
@@ -482,7 +493,7 @@ function RealTimeAccidents() {
                     console.error("가장 최근 사건사고를 찾을 수 없습니다.");
                 }
             } else {
-                console.error("데이터가 없습니다.");
+                alert("실시간 사건사고가 없습니다.");
             }
         },
         error: function (xhr, status, error) {
