@@ -12,15 +12,11 @@ import com.spring.dongnae.user.vo.UserVO;
 
 @Controller
 public class MapController {
-	@RequestMapping("/map")
+   @RequestMapping("/map")
     public String map(HttpSession session) {
         return "map/map"; 
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
-	
+   
     @RequestMapping(value = "/userAddress", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getUserAddress(HttpSession session) {
@@ -35,10 +31,5 @@ public class MapController {
             return "{\"address\": \"없음\"}";
         }
     }
-	
-<<<<<<< HEAD
-	
-=======
->>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
-	
+   
 }

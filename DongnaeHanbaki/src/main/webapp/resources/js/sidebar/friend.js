@@ -165,7 +165,7 @@ function displaySearchResults(results, searchString) {
         html += result.email;
         html += '</li>';
         if (result.email === searchString) {
-        	// 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
+           // 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
             matchFound = true;
         }
     });
@@ -268,9 +268,4 @@ function friendRequestModal(){
     $('#nav__friend-request').on('click', function() {
         friendRequestModal.show();
     });
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> branch 'main' of https://github.com/LocalAlarm/LocalMapAlert.git
->>>>>>> branch 'jin0614_0617' of https://github.com/LocalAlarm/LocalMapAlert.git
