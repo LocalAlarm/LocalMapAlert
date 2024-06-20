@@ -40,9 +40,9 @@
         이벤트
     </a>
     <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-        <li><a class="dropdown-item" href="#" onclick="Events()">전국 행사 보기</a></li>
-        <li><a class="dropdown-item" href="#" onclick="LocalEvents()">우리동네 행사 보기</a></li>
-        <li><a class="dropdown-item" href="#" onclick="RealTimeBusking()">실시간 버스킹</a></li>
+        <li><a class="dropdown-item" href="#" onclick="Events()">전체 행사</a></li>
+        <li><a class="dropdown-item" href="#" onclick="LocalEvents()">우리동네 행사 </a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealTimeEvent()">실시간 진행중인 행사</a></li>
     </ul>
     
 </div><button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>

@@ -8,9 +8,11 @@ document.getElementById('markerType').addEventListener('change', function () {
         markerContentContainer.innerHTML = `
             <select class="form-select" id="markerContent" required>
                 <option value="" selected disabled hidden>내용을 선택해주세요</option>
-                <option value="전국 축제 및 행사">전국 축제 및 행사</option>
-                <option value="우리동네 행사">우리동네 행사</option>
-                <option value="실시간 버스킹">실시간 버스킹</option>
+                <option value="공연">공연 및 행사</option>
+                <option value="팝업 스토어">팝업 스토어</option>
+                <option value="일일 장터">일일 장터</option>
+                <option value="강연">강연</option>
+                <option value="버스킹">버스킹</ㅉoption>
             </select>
         `;
     } else {
