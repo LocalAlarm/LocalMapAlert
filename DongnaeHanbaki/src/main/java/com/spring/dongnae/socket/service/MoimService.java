@@ -5,10 +5,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dongnae.cloudinary.ImageUploadController;
+import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.socket.repo.BoardRepository;
 import com.spring.dongnae.socket.repo.MoimRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
@@ -68,7 +71,6 @@ public class MoimService {
     		Moim moim = moimOptional.get();
     		board.setMoim(moim);
     		Board savedBoard = boardRepository.save(board);
-//    		moim.addBoard(savedBoard);
     		moimRepository.save(moim);
     		return savedBoard;
     	}
@@ -79,11 +81,6 @@ public class MoimService {
     	Optional<Board> boardOptional = boardRepository.findById(boardId);
     	if (boardOptional.isPresent()) {
     		Board board = boardOptional.get();
-    		Moim moim = board.getMoim();
-    		if (moim != null) {
-//    			moim.getBoards().remove(board);
-    			moimRepository.save(moim);
-    		}
     		boardRepository.delete(board);
     		return true;
     	}
@@ -121,6 +118,23 @@ public class MoimService {
     		return result;
     	}
     	return false;
+    }
+    
+    // 모임 정보 가져오기
+    public MoimDto getMoimDtoInfo(String moimId) throws Exception {
+    	Moim moim = moimRepository.findById(moimId).orElseThrow(() -> new Exception("Moim not found"));
+    	MoimDto moimDTO = new MoimDto();
+    	moimDTO.setId(moim.getId());
+    	moimDTO.setChatId(moim.getChatRoomId());
+    	moimDTO.setName(moim.getName());
+    	moimDTO.setProfilePic(moim.getProfilePic());
+    	
+        return moimDTO;
+    }
+    
+    // 게시글 페이징 처리하여 가져오기
+    public Page<Board> getBoardsByMoimIdPaged(String moimId, Pageable pageable) {
+        return boardRepository.findByMoimId(moimId, pageable);
     }
     
     public List<Board> getBoardByMoimId(String moimId) {

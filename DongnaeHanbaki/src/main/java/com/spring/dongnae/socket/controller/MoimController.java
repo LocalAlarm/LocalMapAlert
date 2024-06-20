@@ -3,6 +3,9 @@ package com.spring.dongnae.socket.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Moim;
@@ -40,15 +44,21 @@ public class MoimController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("모임 생성에 실패했습니다: " + e.getMessage());
         }
     }
+    
+    @GetMapping(value = "/{moimId}", produces = "application/json; charset=UTF-8")
+    public MoimDto getMoimDtoInfo(@PathVariable String moimId) throws Exception {
+    	System.out.println(moimId);
+        return moimService.getMoimDtoInfo(moimId);
+    }
 	
 	@PostMapping("/{moimId}/add-participants/{token}")
 	public Moim addParticipantToMoim(@PathVariable String moimId, @PathVariable String token) {
 		return moimService.addParticipantToMoim(moimId, token);
 	}
 	
-    @PostMapping("/{groupId}/board")
-    public Board addPostToGroup(@PathVariable String groupId, @RequestBody Board board) {
-        return moimService.addBoardToMoim(groupId, board);
+    @PostMapping("/{moimId}/board")
+    public Board addPostToGroup(@PathVariable String moimId, @RequestBody Board board) {
+        return moimService.addBoardToMoim(moimId, board);
     }
     
     @DeleteMapping("/{boardId}")
@@ -71,9 +81,17 @@ public class MoimController {
     	return moimService.deleteCommentFromBoard(boardId, commentId);
     }
     
-    @GetMapping("/{moimId}/boards")
+    @GetMapping("/{moimId}/all-boards")
     public List<Board> getBoardsByMoimId(@PathVariable String moimId) {
     	return moimService.getBoardByMoimId(moimId);
+    }
+
+    @GetMapping("/{moimId}/boards")
+    public Page<Board> getBoards(@PathVariable String moimId,
+                                 @RequestParam int page,
+                                 @RequestParam int size) {
+    	Pageable pageable = new PageRequest(page, size); // 수정된 부분
+        return moimService.getBoardsByMoimIdPaged(moimId, pageable);
     }
     
 //    @GetMapping("/userRooms/{token}")

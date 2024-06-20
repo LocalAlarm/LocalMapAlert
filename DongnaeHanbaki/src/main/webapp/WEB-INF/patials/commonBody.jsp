@@ -188,6 +188,73 @@ const chatToast = document.getElementById('chatToast');
 	</div>
 </div>
 
+<!-- 모임 모달 -->
+<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moim-modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 왼쪽 8개 열 -->
+                        <div class="col-md-8" id="left-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 왼쪽 내용이 들어갈 자리 -->
+                            <!-- 게시물 목록이 들어간다 -->
+                            <ul id="boardList">
+                                <li class="board-item" data-id="post1">게시물 1</li>
+                                <li class="board-item" data-id="post2">게시물 2</li>
+                                <li class="board-item" data-id="post3">게시물 3</li>
+                            </ul>
+                        </div>
+                        <!-- 오른쪽 4개 열 -->
+                        <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
+                            <!-- 오른쪽 내용이 들어갈 자리 -->
+                            <!-- 채팅이 들어간다 -->
+                            <div id="chatArea">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="openMoimPostModal">작성하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모임 게시물 작성 모달 구조 -->
+<div class="modal fade" id="moim-post-modal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postModalLabel">게시물 작성</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="postForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="postMoimTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">내용</label>
+                        <textarea class="form-control" id="postMoimContent" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImages" class="form-label">이미지 파일</label>
+                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
@@ -201,6 +268,7 @@ const chatToast = document.getElementById('chatToast');
 			friendRequestModal(); */
 			connectMoim();
 			createMoimModalFunction();
+			initializeMoimModal();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();

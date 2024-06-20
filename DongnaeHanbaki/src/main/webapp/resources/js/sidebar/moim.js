@@ -33,7 +33,7 @@ async function handleMoimUserRooms(userRooms) {
     var buttonHtml = '';
     if (Array.isArray(userRooms.masterMoims)) {
         for (const element of userRooms.masterMoims) {
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.id + '">' + element.name + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">' + element.name + '</li>';
         }
     } else {
         console.error("userRooms.masterMoims is not an array");
@@ -41,7 +41,7 @@ async function handleMoimUserRooms(userRooms) {
 
     if (Array.isArray(userRooms.moims)) { // 메시지가 배열인지 확인
         for (const element of userRooms.moims) {
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.id + '">' + element + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">' + element + '</li>';
         }
     } else {
         console.error("userRooms.moims is not an array");
@@ -110,3 +110,56 @@ async function submitCreateMoimForm() {
         showDangerAlert('모임 생성에 실패했습니다!', `${error.message}`, '나중에 다시 시도해주세요.')
     }
 }
+
+function initializeMoimModal() {
+    var createMoimModal = new bootstrap.Modal($('#moim-modal')[0]);
+    var createPostModal = new bootstrap.Modal($('#moim-post-modal')[0]);
+    
+    $('#moimList').on('click', '.moim-list', function() {
+        // 클릭된 li 요소의 id 가져오기
+        const moimId = this.id;
+        
+        $.ajax({
+            url: `/dongnae/moim/${moimId}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const modalTitle = $('#moim-modal-title');
+                modalTitle.empty();
+                modalTitle.append(`
+                    <img src="${data.profilePic}" alt="Moim logo" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                    ${data.name}
+                `);
+                createMoimModal.show();
+            },
+            error: function(err) {
+                console.error('Error fetching moim data:', err);
+            }
+        });
+    });
+
+    // 작성하기 버튼 클릭 이벤트
+    $('#openMoimPostModal').on('click', function() {
+        createPostModal.show();
+    });
+
+    // 게시물 작성 폼 제출 이벤트
+    $('#postForm').on('submit', function(e) {
+        e.preventDefault();
+        // 작성된 게시물 데이터를 서버에 전송 (예: AJAX 사용)
+        const postTitle = $('#postTitle').val();
+        const postContent = $('#postContent').val();
+        
+        // 여기에 AJAX 요청을 추가하여 서버에 데이터 전송 가능
+        console.log('게시물 작성:', postTitle, postContent);
+
+        // 작성 완료 후 모달 닫기
+        createPostModal.hide();
+    });
+}
+
+
+    // 모달창이 닫혔을대 폼을 리셋한다.
+    $('#createMoimModal').on('hidden.bs.modal', function () {
+        //$(this).find('form')[0].reset();
+    });
