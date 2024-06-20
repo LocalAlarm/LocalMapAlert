@@ -28,7 +28,7 @@
 		alert("지도를  삭제합니다");
 	}
 	
-	/* 댓글작성하기 */
+	/*비동기 댓글작성하기 */
 	function insertComment(frm) {
 		/* alert("댓글을 작성합니다"); */
 		if($("#writer").val() == null || $("#writer").val().trim() == ""){
@@ -64,8 +64,37 @@
 		$("#content").focus();
 	}
 	
-	/* 댓글 삭제하기 */
-	
+	/*  비동기 댓글 삭제하기 */
+	function deleteComment(mapCommentIdx){
+		console.log(mapCommentIdx);
+		if(confirm("댓글을 삭제하시겠습니까")){
+			
+	/* 		if(!isLogin()){
+				alert("로그인 데이터가 없습니다. 로그인이 필요합니다");
+				return;
+			}
+			 */
+			// 댓글 삭제처리 ajax
+			$.ajax({
+				type : "GET",
+				url : "/dongnae/deleteComment",
+				data : {mapCommentIdx: mapCommentIdx},
+				success : function(response) {
+					console.log("response : " + response);
+					alert("댓글이 삭제되었습니다");
+					printCommentsList(); 
+				},
+				error : function(xhr, status, error) {
+					console.log(xhr);
+					console.log(status);
+					console.log(error);
+					alert("오류 발생: " + xhr.responseText); // 오류 시 알림 창에 오류 메시지 표시
+				}
+			});
+			
+			
+		}
+	}
 	
 	/* 비동기로 댓글리스트 출력 */
 	function printCommentsList(){
@@ -81,6 +110,7 @@
 				$(response).each(
 					function(){
 						count++;
+						let wri = 
 						console.log(this);
 						a += '<div class="row m-2">';
 						a += '	<div class="col-2">';
@@ -91,9 +121,9 @@
 						a +=   '</div>';
 						a +=    '<div class="vr p-0"></div>';
 						a +=   '<div class="col-9 text-break">'+ this.content +'</div>';
-						a +=   '<c:if test="${vo.writer == user.email }">';
-						a +=   '<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment('+ this.mapCommentIdx +')"></button>';
-						a +=   '</c:if>';
+						if(this.writer == "${user.email}"){
+							a +=   '<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment('+ this.mapCommentIdx +')"></button>';
+						}
 						a += '</div>';
 					});
 				$("#printCommentsLIst").html(a);
@@ -101,6 +131,15 @@
 			}
 		});
 	}
+	
+	/* 로그인 여부 확인 */
+/* 	function isLogin(){
+		if("${user.email == null}" || "${user.email == ''}"){
+			return false;
+		} else {
+			return true;
+		}
+	} */
 	
 </script>
 </head>
@@ -276,7 +315,7 @@
 		        <div class="col-9 text-break">${vo.content }</div>
 		        <!-- 작성자가 로그인유저와 일치하면 수정/삭제버튼 띄워줌 -->
 		        <c:if test="${vo.writer == user.email }">
-		        	<button type="button" class="btn-close col" aria-label="Close" onclick="deleteComment(${vo.mapCommentIdx})"></button>
+		        	<button type="button" class="btn-close col" onclick="deleteComment(${vo.mapCommentIdx})"></button>
 		        </c:if>
 			  </div>
 		  </c:forEach>

@@ -91,7 +91,7 @@ crossorigin="anonymous"></script>
 			<div class="col-2"></div>
 			<div class="col-8 border" style="height: 100vh;">
 				<div class="text-center p-1">
-					<h5>"관리자"키워드로 검색된 지도입니다</h5>
+					<h5>"-"키워드로 검색된 지도입니다</h5>
 				</div>
 				<!-- <div class="row g-1 p-2 border rounded mb-2">
 					<div class="col-3">

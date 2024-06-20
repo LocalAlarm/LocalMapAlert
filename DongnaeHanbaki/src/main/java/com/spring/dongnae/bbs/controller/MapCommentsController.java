@@ -64,8 +64,10 @@ public class MapCommentsController {
         }
     }
     
+//    @PostMapping(value = "/deleteComment", produces = "text/plain; charset=UTF-8")
     @RequestMapping("/deleteComment")
     public int deleteComment(MapCommentsVO mapCommentsVO) {
+    	System.out.println("mapCommentsVO : " + mapCommentsVO);//-------------------test code-----------------
     	return mapCommentsService.deleteComment(mapCommentsVO);
     }
 }
