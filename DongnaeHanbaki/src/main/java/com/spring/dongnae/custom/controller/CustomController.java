@@ -158,7 +158,7 @@ public class CustomController {
       //커스텀맵 검색
 //      mapVO.setTitle("111");//-------------------test code-----------------
       System.out.println("map : " + mapVO);
-      List<MapVO> serchMapList = mapService.getSerchMapList(mapVO);//-------------------test code-----------------
+      List<MapVO> serchMapList = mapService.getSearchMapList(mapVO);//-------------------test code-----------------
       System.out.println("serchMapList : " + serchMapList.toString());//-------------------test code-----------------
       model.addAttribute("serchMapList", serchMapList);//-------------------test code-----------------
       return "map/serchCustomMap"; 
