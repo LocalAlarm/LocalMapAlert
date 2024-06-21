@@ -99,7 +99,14 @@ async function submitCreateMoimForm() {
         })
 
         if (!response.ok) {
-            throw new Error('네트워크가 응답하지 않습니다!!');
+            if (response.status === 409) {
+                // 중복된 모임 이름인 경우
+                const errorMessage = await response.text();
+                showDangerAlert('중복된 모임입니다!', '이미 생성된 모임의 이름이에요.', '다른 이름을 사용해주세요.');
+            } else {
+                throw new Error('네트워크가 응답하지 않습니다!!');
+            }
+            return;
         }
 
         showSuccessAlert('모임이 생성되었습니다.', '모임창을 확인해주세요!', '친구들과 활동해보세요!');
@@ -145,7 +152,7 @@ function initializeMoimModal() {
     });
 
     // 게시물 작성 폼 제출 이벤트
-    $('#postForm').on('submit', function(e) {
+    $('#postMoimForm').on('submit', function(e) {
         e.preventDefault();
         
         // FormData 객체 생성
@@ -228,7 +235,7 @@ function loadBoardList(moimId, page, size) {
 function showMoimBoardDetail(boardId) {
     // 모달을 닫기
     var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
-    console.log(postDetailModal);
+    resetMoimDetailModal();
     postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
@@ -279,6 +286,8 @@ function showMoimBoardDetail(boardId) {
                     showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
+                    postDetailModal.hide();
+                    showMoimBoardDetail(boardId);
                 }
             });
 
@@ -300,8 +309,6 @@ function submitMoimComment(boardId, content) {
         contentType: 'application/json',
         data: JSON.stringify({ content: content }),
         success: function(data) {
-            // 댓글 작성 후 댓글 리스트를 다시 로드
-            showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
@@ -334,9 +341,21 @@ function MoimCommentList(moimCommentList, commentsList) {
     }
 }
 
+function resetMoimDetailModal() {
+    // 입력된 값을 초기화
+    $('#post-detail-title').text('');
+    $('#post-detail-content').text('');
+    $('#post-detail-author').html('');
+    $('#post-detail-carousel-inner').empty();
+    $('#post-detail-comments-list').empty();
+    $('#post-detail-comment-input').val('');
+    $('#collapseComments').collapse('hide');
+}
 
-
-    // 모달창이 닫혔을대 폼을 리셋한다.
-    $('#createMoimModal').on('hidden.bs.modal', function () {
-        //$(this).find('form')[0].reset();
-    });
+function offDarkBackgroundOfMoimDetailModal() {
+	$('#moim-post-detail-modal').on('show.bs.modal', function (e) {
+	    var modal = new bootstrap.Modal(document.getElementById('moim-post-detail-modal'), {
+	        backdrop: false
+	    });
+	});
+}
