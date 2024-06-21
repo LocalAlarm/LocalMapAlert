@@ -51,8 +51,11 @@ public class CustomController {
       String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
-      String email = "adminEmail";
       try {
+    	  String email = null;
+    	  if(isLogin(session)) {
+    		  email = loginUserVO.getEmail();
+    	  }
          
          ObjectMapper objectMapper = new ObjectMapper();
          
