@@ -230,6 +230,7 @@ function loadBoardList(moimId, page, size) {
 function showMoimBoardDetail(boardId) {
     // 모달을 닫기
     var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    console.log(postDetailModal);
     postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
@@ -271,34 +272,13 @@ function showMoimBoardDetail(boardId) {
             } else {
                 postDetailCarouselContainer.hide();
             }
-            if (data.comments.length > 0) {
-                data.comments.forEach(function(comment) {
-                    searchUserByToken(comment.author, function(err, userData) {
-                        if (err) {
-                            commentsList.append(`
-                                <div class="comment">
-                                    <p><strong>Unknown Author</strong>: ${comment.content}</p>
-                                </div>
-                            `);
-                        } else {
-                            commentsList.append(`
-                                <div class="comment">
-                                    <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
-                                    <strong>${userData.nickname}</strong>: ${comment.content}</p>
-                                </div>
-                            `);
-                        }
-                    });
-                });
-            } else {
-                commentsList.append('<p>댓글이 없습니다.</p>');
-            }
+            MoimCommentList(data.comments, commentsList);
 
             // 댓글 작성 이벤트 설정
             $('#post-detail-comment-submit').off('click').on('click', function() {
                 const commentContent = $('#post-detail-comment-input').val();
                 if (commentContent.length < 5) {
-                    alert('댓글은 최소 5글자 이상이어야 합니다.');
+                    showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
                 }
@@ -323,13 +303,37 @@ function submitMoimComment(boardId, content) {
         data: JSON.stringify({ content: content }),
         success: function(data) {
             // 댓글 작성 후 댓글 리스트를 다시 로드
-           	console.log("성공");
             showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
         }
     });
+}
+
+function MoimCommentList(moimCommentList, commentsList) {
+    if (moimCommentList.length > 0) {
+        moimCommentList.forEach(function(comment) {
+            searchUserByToken(comment.author, function(err, userData) {
+                if (err) {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><strong>Unknown Author</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                } else {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                            <strong>${userData.nickname}</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                }
+            });
+        });
+    } else {
+        commentsList.append('<p>댓글이 없습니다.</p>');
+    }
 }
 
 
