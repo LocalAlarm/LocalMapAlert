@@ -23,20 +23,43 @@
 // console.log(customMarker);
 	window.onload = function(){
 		var mapIdx = "${param.mapIdx}";
+		console.log(mapIdx);
 		$.ajax({
 			type: 'GET',
 			url: 'allMarker',
-			data: mapIdx,
-		  success : function(response) {
-             console.log('Data saved successfully:', response);
+			data: { mapIdx: mapIdx },
+		  success : function(customMarker) {
+              console.log('Data saved successfully:', customMarker);
+             
+              var title = customMarker.title;
+              console.log(title);
+              $('#pre-title').val(title);    
+              var content = customMarker.content;
+              var center = customMarker.center;
+	          // 괄호 제거하고 쉼표로 분리
+	          var cleanedCoords = center.replace(/[()]/g, '');
+	          var parts = cleanedCoords.split(', ');
+	
+	          // 위도와 경도 추출
+	          var latitude = parseFloat(parts[0]);
+	          var longitude = parseFloat(parts[1]);
+	
+	          // 결과 출력
+	          console.log("Latitude: " + latitude);
+	          console.log("Longitude: " + longitude);
+	          
+	          var markers = customMarker.markers;
+	          console.log(markers);
+	          console.log(markers.id);
+	          var lines = customMarker.lines;
+	          console.log(lines);
           },
           error : function(error) {
              console.error('Error saving data:', error);
           }
 		});
-		
+		$('title').text(title);
 	};
-	
 	function updateMap(frm){
 		alert("게시글을 수정합니다");
 	}
@@ -110,7 +133,7 @@
 			    <form class="p-2">
 				  <div class="mb-3">
 				    <label for="title" class="form-label">제목</label>
-				    <input type="text" class="form-control" id="title" value="${customMarker.title }">
+				    <input type="text" class="form-control" id="title">
 				  </div>
 				  <div class="mb-3">
 				    <label for="center" class="form-label">중심좌표</label>
@@ -196,7 +219,7 @@
 			    <form class="p-2">
 				  <div class="mb-3">
 				    <label for="pre-title" class="form-label">제목</label>
-				    <input type="text" class="form-control" id="pre-title" disabled="disabled" value='${customMarker.title}'>
+				    <input type="text" class="form-control" id="pre-title" disabled="disabled" value='customMarker.title'>
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-center" class="form-label">중심좌표</label>
@@ -276,62 +299,62 @@
 // var myModal = new bootstrap.Modal('#exampleModal');
 
 /* 지도 표시하기 ************************/
-var level = document.getElementById("viewLevel");
-var center = document.getElementById("center").value;
-console.log("Original Value: " + center);
+// var level = document.getElementById("viewLevel");
+// var center = document.getElementById("center").value;
+// console.log("Original Value: " + center);
 
-// 괄호 제거하고 쉼표로 분리
-var cleanedCoords = center.replace(/[()]/g, '');
-var parts = cleanedCoords.split(', ');
+// // 괄호 제거하고 쉼표로 분리
+// var cleanedCoords = center.replace(/[()]/g, '');
+// var parts = cleanedCoords.split(', ');
 
-// 위도와 경도 추출
-var latitude = parseFloat(parts[0]);
-var longitude = parseFloat(parts[1]);
+// // 위도와 경도 추출
+// var latitude = parseFloat(parts[0]);
+// var longitude = parseFloat(parts[1]);
 
-// 결과 출력
-console.log("Latitude: " + latitude);
-console.log("Longitude: " + longitude);
+// // 결과 출력
+// console.log("Latitude: " + latitude);
+// console.log("Longitude: " + longitude);
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: level.value // 지도의 확대 레벨
-    };
+// var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+//     mapOption = { 
+//         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+//         level: level.value // 지도의 확대 레벨
+//     };
 
-// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-var map = new kakao.maps.Map(mapContainer, mapOption); 
+// // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+// var map = new kakao.maps.Map(mapContainer, mapOption); 
 
-// //수정전 초기 지도
-var preMap;
-function initMap() {
-	var mapContainer = document.getElementById('preMap'), // 지도를 표시할 div 
-	mapOption = { 
-	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
-	    level: level.value // 지도의 확대 레벨
-	};
-    preMap = new kakao.maps.Map(mapContainer, mapOption); 
-}
+// // //수정전 초기 지도
+// var preMap;
+// function initMap() {
+// 	var mapContainer = document.getElementById('preMap'), // 지도를 표시할 div 
+// 	mapOption = { 
+// 	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
+// 	    level: level.value // 지도의 확대 레벨
+// 	};
+//     preMap = new kakao.maps.Map(mapContainer, mapOption); 
+// }
 
-$('#pre-map').on('shown.bs.collapse', function () {
-    initMap();
-});
-console.log(${customMarker.markers}.length);
-var customMarker = ${customMarker.markers};
-var markerInfoList = extractMarkerList();
-function extractMarkerList() {
-    return customMarker.map(function(marker) {
-       return {
-          id : marker.id,
-          path : {
-             Ma : marker.path.getLat(),
-             La : marker.path.getLng()
-          },
-          content : marker.content
-       }
-    });
- }
-console.log(markerInfoList);
-console.log(lineList);
+// $('#pre-map').on('shown.bs.collapse', function () {
+//     initMap();
+// });
+var markerInfoList = markers;
+console.log(markers);
+// var markerInfoList = extractMarkerList();
+// function extractMarkerList() {
+//     return customMarker.map(function(marker) {
+//        return {
+//           id : marker.id,
+//           path : {
+//              Ma : marker.path.getLat(),
+//              La : marker.path.getLng()
+//           },
+//           content : marker.content
+//        }
+//     });
+//  }
+// console.log(markerInfoList);
+// console.log(lineList);
 
 
 </script>

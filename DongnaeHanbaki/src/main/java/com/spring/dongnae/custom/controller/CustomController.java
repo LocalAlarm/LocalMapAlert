@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -207,23 +208,29 @@ public class CustomController {
 	
 	@RequestMapping(value = "/allMarker", method=RequestMethod.GET)
 	@ResponseBody
-	public CustomMarker selectAllMarker(@RequestParam("mapIdx") int mapIdx) {
-		System.out.println("마커 데이터 가져오기!");
-		System.out.println(mapIdx);
-		Optional<CustomMarker> custom = customService.selectMarker(mapIdx);
-		if (custom.isPresent()) {
-//			ObjectMapper objectMapper = new ObjectMapper();
-			System.out.println(">>>> " + custom);
-			CustomMarker customMarker = custom.get();
-			System.out.println(">>>> " + customMarker);
-//			String customMarkerJson = objectMapper.writeValueAsString(customMarker);
-//			System.out.println(">>>> " + customMarkerJson);
-			return customMarker;
-		} else {
-			System.out.println("오류!");
-			return null;
-		}
-	}
+	public ResponseEntity<?> selectAllMarker(@RequestParam("mapIdx") String mapIdx) {
+        try {
+            System.out.println("마커 데이터 가져오기!");
+            System.out.println("mapIdx: " + mapIdx);
+            int idx = Integer.parseInt(mapIdx); // 문자열을 정수로 변환
+            Optional<CustomMarker> custom = customService.selectMarker(idx);
+            if (custom.isPresent()) {
+                CustomMarker customMarker = custom.get();
+                System.out.println(">>>> " + customMarker);
+                return ResponseEntity.ok(customMarker);
+            } else {
+                System.out.println("오류: 해당 mapIdx에 해당하는 데이터가 없습니다.");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("오류: mapIdx 파라미터가 정수로 변환할 수 없습니다.");
+            return ResponseEntity.badRequest().body("Invalid mapIdx parameter: " + mapIdx);
+        } catch (Exception e) {
+            System.out.println("오류: 서버에서 데이터 조회 중 예외 발생");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
 
