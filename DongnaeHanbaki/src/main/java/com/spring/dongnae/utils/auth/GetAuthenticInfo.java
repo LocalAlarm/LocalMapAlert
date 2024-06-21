@@ -20,4 +20,5 @@ public class GetAuthenticInfo {
 		authentication = SecurityContextHolder.getContext().getAuthentication();
 		return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
 	}
+	
 }

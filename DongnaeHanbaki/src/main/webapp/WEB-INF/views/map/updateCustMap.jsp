@@ -14,6 +14,29 @@
     }
   </style>
 <script>
+// // 모델에서 가져온 JSON 문자열을 JavaScript 변수에 저장
+// var customMarkerJson = '${customMarker}';
+
+// // JSON 문자열을 JavaScript 객체로 변환
+// var customMarker = JSON.parse(customMarkerJson);
+
+// console.log(customMarker);
+	window.onload = function(){
+		var mapIdx = "${param.mapIdx}";
+		$.ajax({
+			type: 'GET',
+			url: 'allMarker',
+			data: mapIdx,
+		  success : function(response) {
+             console.log('Data saved successfully:', response);
+          },
+          error : function(error) {
+             console.error('Error saving data:', error);
+          }
+		});
+		
+	};
+	
 	function updateMap(frm){
 		alert("게시글을 수정합니다");
 	}
@@ -65,7 +88,7 @@
 			<!-- 만들어진 지도 표시 -->
 			<div class="col-6 border" style="height: 500px;">
 				<!-- 지도를 표시할 div 입니다 -->
-				<div id="map" style="width:100%;height:500px;"></div>
+				<div id="map" style="width:100%;height:100%;"></div>
 			</div>
 
 			<!-- 커스텀맵 설명칸 -->
@@ -146,13 +169,12 @@
 			</div>
 		</div> 
 		
-		<!-- 기존지도 비교용 출력 -->
 		<div class="row gy-2 collapse" id="pre-map">
 			<!-- 만들어진 지도 표시 -->
 			<div class="col-12 p-2"></div>
 			<div class="col-6 border" style="height: 500px;">
 				<!-- 지도를 표시할 div 입니다 -->
-				<div id="pre-map" style="width:100%;height:70vh;"></div>
+				<div id="preMap" style="width:100%;height:100%;"></div>
 			</div>
 
 			<!-- 커스텀맵 설명칸 -->
@@ -255,8 +277,20 @@
 
 /* 지도 표시하기 ************************/
 var level = document.getElementById("viewLevel");
-var center = document.getElementById("center");
-console.log(center.value);
+var center = document.getElementById("center").value;
+console.log("Original Value: " + center);
+
+// 괄호 제거하고 쉼표로 분리
+var cleanedCoords = center.replace(/[()]/g, '');
+var parts = cleanedCoords.split(', ');
+
+// 위도와 경도 추출
+var latitude = parseFloat(parts[0]);
+var longitude = parseFloat(parts[1]);
+
+// 결과 출력
+console.log("Latitude: " + latitude);
+console.log("Longitude: " + longitude);
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
@@ -267,15 +301,37 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption); 
 
-//수정전 초기 지도
-// var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-// mapOption = { 
-//     center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-//     level: 3 // 지도의 확대 레벨
-// };
+// //수정전 초기 지도
+var preMap;
+function initMap() {
+	var mapContainer = document.getElementById('preMap'), // 지도를 표시할 div 
+	mapOption = { 
+	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
+	    level: level.value // 지도의 확대 레벨
+	};
+    preMap = new kakao.maps.Map(mapContainer, mapOption); 
+}
 
-// //지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-// var map = new kakao.maps.Map(mapContainer, mapOption); 
+$('#pre-map').on('shown.bs.collapse', function () {
+    initMap();
+});
+console.log(${customMarker.markers}.length);
+var customMarker = ${customMarker.markers};
+var markerInfoList = extractMarkerList();
+function extractMarkerList() {
+    return customMarker.map(function(marker) {
+       return {
+          id : marker.id,
+          path : {
+             Ma : marker.path.getLat(),
+             La : marker.path.getLng()
+          },
+          content : marker.content
+       }
+    });
+ }
+console.log(markerInfoList);
+console.log(lineList);
 
 
 </script>
