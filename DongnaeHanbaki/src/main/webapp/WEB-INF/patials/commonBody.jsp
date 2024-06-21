@@ -212,7 +212,7 @@ const chatToast = document.getElementById('chatToast');
                             	<tbody id="moim-board-list">
                             	
                             	</tbody>
-                            </table>n
+                            </table>
                         </div>
                         <!-- 오른쪽 4개 열 -->
                         <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
