@@ -44,7 +44,7 @@
     		   },
     		   success: function(data) {
     			   console.log("data: " + data);
-    			   if (data == null) {
+    			   if (data == "") {
     				   showDangerAlert('오류', '가입된 이메일이 없습니다!', '');
     				   return false;
     			   }
