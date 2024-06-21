@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.spring.dongnae.user.vo.CustomUserDetails;
+import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class GetAuthenticInfo {
@@ -19,5 +20,12 @@ public class GetAuthenticInfo {
 	public String GetEmail() {
 		authentication = SecurityContextHolder.getContext().getAuthentication();
 		return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
+	}
+	
+	public UserVO GetUser() {
+		authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(authentication);
+		System.out.println((CustomUserDetails) authentication.getPrincipal());
+		return null;
 	}
 }
