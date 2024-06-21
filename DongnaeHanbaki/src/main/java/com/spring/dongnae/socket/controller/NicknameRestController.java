@@ -43,9 +43,9 @@ public class NicknameRestController {
         }
     }
     
-    @PostMapping(value = "/api/getUserVoByToken", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<String> getUserVOByToken(@RequestBody TokenRequest tokenRequest) {
-        UserVO userVO = userService.getUserByToken(tokenRequest.getToken());
+    @PostMapping(value = "/api/getUserVOByToken", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> getUserVOByToken(@RequestBody String token) {
+        UserVO userVO = userService.getUserByToken(token);
         try {
             String json = objectMapper.writeValueAsString(userVO);
             return ResponseEntity.ok(json);
