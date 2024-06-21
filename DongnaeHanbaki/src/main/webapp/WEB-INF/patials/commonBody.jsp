@@ -68,7 +68,6 @@ const chatToast = document.getElementById('chatToast');
 								<!-- 친구 요청 목록 여기에 뜸. -->
 							</ul>
 						</div>
-
 						<div class="nav__link collapse__nav">
 							<ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">친구목록</span>
@@ -241,7 +240,7 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="postForm" enctype="multipart/form-data">
+                <form id="postMoimForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
                         <input type="text" class="form-control" id="postMoimTitle" name="title" required>
@@ -287,6 +286,20 @@ const chatToast = document.getElementById('chatToast');
                         </button>
                     </div>
                 </div>
+                <div id="post-detail-comments-section">
+                    <button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
+                        댓글 목록
+                    </button>
+                    <div class="collapse" id="collapseComments">
+                        <div class="card" id="post-detail-comments-list" style="max-height: 200px; overflow-y: auto; padding: 10px; margin-bottom: 15px;">
+                            <!-- Comments will be dynamically added here -->
+                        </div>
+                    </div>
+					<div class="input-group mb-3">
+						<input type="text" id="post-detail-comment-input" class="form-control" placeholder="댓글을 작성해보세요!">
+						<button class="btn btn-primary" id="post-detail-comment-submit" type="button">작성</button>
+					</div>
+				</div>
             </div>
         </div>
     </div>
@@ -295,16 +308,17 @@ const chatToast = document.getElementById('chatToast');
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
-/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-			connectFriend(); // 페이지 로드시 Friend WebSocket 연결
-			initializeChatToast();
-			initializeSearchEvents();
-			initializeFriendRequest();
-			handleMessageEnterPress();
-			friendRequestModal(); */
+			/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
+			 connectFriend(); // 페이지 로드시 Friend WebSocket 연결
+			 initializeChatToast();
+			 initializeSearchEvents();
+			 initializeFriendRequest();
+			 handleMessageEnterPress();
+			 friendRequestModal(); */
 			connectMoim();
 			createMoimModalFunction();
 			initializeMoimModal();
+			offDarkBackgroundOfMoimDetailModal();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();

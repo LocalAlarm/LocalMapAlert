@@ -101,9 +101,10 @@ public class MoimController {
         return moimService.toggleLikeToBoard(boardId, userEmail);
     }
     
-    @PostMapping("/{boardId}/comments")
-    public void addCommentToBoard(@PathVariable String baordId, @RequestBody Comment comment) {
-    	moimService.addCommentToBoard(baordId, comment);
+    @PostMapping("/{boardId}/add-comments")
+    public void addCommentToBoard(@PathVariable String boardId, @RequestBody Comment comment) {
+    	System.out.println(comment.toString());
+    	moimService.addCommentToBoard(boardId, comment);
     }
     
     @DeleteMapping("/{boardId}/comments/{commentId}")
