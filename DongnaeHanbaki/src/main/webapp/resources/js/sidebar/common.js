@@ -30,11 +30,6 @@ function getNickname(token) {
     });
 }
 
-// 알람창을 띄워주는 함수
-function showAlert(message) {
-    alert(message);
-}
-
 // 유저 메일로 유저를 검색하는 함수
 async function searchUserByEmail(email) {
     try {
@@ -51,10 +46,41 @@ async function searchUserByEmail(email) {
         const data = await response.json();
         const searchString = $('#searchFriend').val();
         if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
-            displaySearchResults(data, searchString); // 검색 결과를 화면에 표시
+            displaySearchUsersResults(data, searchString); // 검색 결과를 화면에 표시
         } else {
             hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
             disableFriendRequestButton(); // 버튼 비활성화
+        }
+    } catch (error) {
+        console.error(error);
+        // 에러 처리
+        disableFriendRequestButton(); // 버튼 비활성화
+    }
+}
+
+// 모임을 모임 이름으로 검색하는 함수
+async function searchMoimByName(searchData) {
+    console.log(searchData);
+    try {
+        const response = await fetch('/dongnae/moim-search/name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body:searchData
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        console.log(data);
+        console.log(data.content && data.content.length > 0)
+        const searchString = $('#search-moim').val();
+        if (data.content && data.content.length > 0) { // 검색 결과가 있을 경우에만 표시
+            displaySearchMoimsResults(data.content, searchString); // 검색 결과를 화면에 표시
+        } else {
+            hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
+            disableMoimRegisterButton(); // 버튼 비활성화
         }
     } catch (error) {
         console.error(error);

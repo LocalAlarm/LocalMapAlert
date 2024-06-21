@@ -361,3 +361,121 @@ function offDarkBackgroundOfMoimDetailModal() {
 	    });
 	});
 }
+
+function initializeSearchMoimsEvents() {
+    // searchMoimResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
+    $(document).on('mouseenter', '.searchMoimResultsElement', function () {
+        $(this).addClass('active');
+    });
+
+    $(document).on('mouseleave', '.searchMoimResultsElement', function () {
+        $(this).removeClass('active');
+    });
+
+    $(document).on('click', '.searchMoimResultsElement', function () {
+        const clickText = $(this).text();
+        $('#search-moim').val(clickText);
+        hideMoimSearchResults();
+        enableMoimRegisterButton(); // 클릭된 값과 일치하므로 버튼 활성화
+    });
+
+    // 검색창 입력 시 이벤트 처리
+    $('#search-moim').on('input', function () {
+        var searchString = $(this).val(); // 검색어 가져오기
+        if (searchString.length >= 1) { // 검색어가 1글자 이상일 때만 검색 요청
+            searchMoimByName(searchString);
+        } else {
+            hideMoimSearchResults(); // 검색어가 없을 때는 검색 결과 창을 숨깁니다.
+            $('#moim-search-results').empty(); // 검색 결과 비우기
+            disableMoimRegisterButton(); // 버튼 비활성화
+        }
+    });
+}
+
+async function processRegistMoim() {
+    $('#register-moim-button').on('click', async function (event) {
+        const searchString = $('#search-moim').val();
+        // 친구 요청 확인 메시지 표시
+        if (confirm("모임에 가입을 하시겠습니까?")) {
+            // const requestData = {
+            //     request: "REQUEST",
+            //     requestEmail: requestEmail
+            // };
+
+            // try {
+            //     const response = await fetch('/dongnae/api/sendFriendRequest', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(requestData)
+            //     });
+
+            //     if (!response.ok) {
+            //         throw new Error('Network response was not ok');
+            //     }
+            //     alert("친구 요청이 성공적으로 전송되었습니다!");
+            // } catch (error) {
+            //     console.error('Error:', error);
+            //     alert("친구 요청 전송에 실패했습니다.");
+            // }
+        } else {
+            // 취소 버튼을 눌렀을 때의 동작
+            event.preventDefault(); // 기본 동작 막기
+        }
+    });
+}
+
+function hideMoimSearchResults() {
+    // 검색 결과 창을 숨깁니다.
+    $('#moim-search-results').hide();
+}
+
+function displaySearchMoimsResults(data, searchString) {
+        // 검색 결과를 표시할 HTML 문자열을 생성합니다.
+        var html = '';
+        var matchFound = false;
+        data.forEach(function (result) {
+            // 각 결과를 리스트 아이템으로 표시합니다.
+            html += '<li class="list-group-item searchMoimResultsElement">';
+            html += '<img src="' + result.profilePic + '" alt="Profile Image" class="rounded-circle" style="width: 35px; height: 35px; margin-right: 10px;">';
+            html += result.name;
+            html += '</li>';
+            if (result.name === searchString) {
+                matchFound = true;
+            }
+        });
+    
+        // 생성된 HTML을 검색 결과 창에 넣어줍니다.
+        $('#moim-search-results').html(html);
+    
+        // 검색 결과 창을 보이게 합니다.
+        $('#moim-search-results').show();
+    
+        if (matchFound) {
+            enableFriendRequestButton(); // 일치하는 검색 결과가 있을 때만 버튼 활성화
+        } else {
+            disableMoimRegisterButton(); // 일치하는 검색 결과가 없으면 버튼 비활성화
+        }
+
+}
+
+function enableMoimRegisterButton() {
+    $('#register-moim-button').prop('disabled', false);
+    $('#register-moim-button').removeClass('btn-secondary');
+    $('#register-moim-button').addClass('btn-outline-success');
+}
+
+function disableMoimRegisterButton() {
+    $('#register-moim-button').prop('disabled', true);
+    $('#register-moim-button').addClass('btn-secondary');
+    $('#register-moim-button').removeClass('btn-outline-success');
+}
+
+// 모임 가입을 하는 모달창
+function registerMoimModal(){
+    var registerMoimModal = new bootstrap.Modal($('#register-moim-modal')[0]);
+    $('#nav__register-moim').on('click', function() {
+        registerMoimModal.show();
+    });
+};

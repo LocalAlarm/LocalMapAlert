@@ -118,6 +118,7 @@ public class Moim {
     }
 
     public void addParticipant(UserRooms userRoom) {
+    	userRoom.addMoim(this);
         this.participants.add(userRoom.getId());
     }
     

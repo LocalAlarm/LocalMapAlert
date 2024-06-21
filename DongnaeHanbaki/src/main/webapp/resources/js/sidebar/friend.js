@@ -154,7 +154,7 @@ async function initializeFriendRequest() {
 }
 
 // 검색한 유저에 대한 정보를 보여주는 함수
-function displaySearchResults(results, searchString) {
+function displaySearchUsersResults(results, searchString) {
     // 검색 결과를 표시할 HTML 문자열을 생성합니다.
     var html = '';
     var matchFound = false;

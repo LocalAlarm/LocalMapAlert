@@ -150,12 +150,11 @@ public class MoimService {
     public Optional<Board> getBoardById(String boardId) {
         return boardRepository.findById(boardId);
     }
-//    
-//    public List<Moim> searchMoimByTitle(String query) {
-//        Pageable pageable = PageRequest.(0, 5); // 첫 페이지에서 5개의 결과만 가져옴
-//        return moimRepository.findByNameContainingIgnoreCase(query, pageable).getContent();
-//    }
     
+    public Page<Moim> searchMoims(String name, List<String> excludeIds) {
+    	Pageable pageable = new PageRequest(0, 5);  // 첫 페이지에서 최대 5개의 결과
+        return moimRepository.findByNameContainingIgnoreCaseAndIdNotIn(name, excludeIds, pageable);
+    }
 //    public List<Moim> getMoimByToken(String token) {
 //    	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
 //    	return userRoomsOptional.map(UserRooms::getMoims).orElse(null);

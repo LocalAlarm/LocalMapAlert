@@ -84,6 +84,12 @@ const chatToast = document.getElementById('chatToast');
 								<!-- 모임 리스트가 들어올 자리 -->
 							</ul>
 						</div>
+						<div class="nav__link collapse__nav" id="nav__register-moim">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-universal-access" viewBox="0 0 16 16">
+								<path d="M9.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M6 5.5l-4.535-.442A.531.531 0 0 1 1.531 4H14.47a.531.531 0 0 1 .066 1.058L10 5.5V9l.452 6.42a.535.535 0 0 1-1.053.174L8.243 9.97c-.064-.252-.422-.252-.486 0l-1.156 5.624a.535.535 0 0 1-1.053-.174L6 9z"/>
+							</svg>
+							<span class="nav_name">모임 가입하기</span>
+						</div>
 						<div class="nav__link collapse__nav" id="nav__create-moim">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-add-fill" viewBox="0 0 16 16">
 								<path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 1 1-1 0v-1h-1a.5.5 0 1 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
@@ -166,6 +172,26 @@ const chatToast = document.getElementById('chatToast');
 					<button class="btn btn-secondary" id="request-friend-button" type="button">친구요청</button>
 				</div>
 				<ul class="list-group" id="searchResults">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 모임 가입을 하는 모달 창 -->
+<div class="modal fade" id="register-moim-modal" tabindex="-1" aria-labelledby="register-moim-modal-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content" style="height: 365px;">
+			<div class="modal-header">
+				<h5 class="modal-title" id="register-moim-modal-label">모임 가입하기</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex" role="search">
+					<input class="form-control me-2" type="search" placeholder="Search" id="search-moim" aria-label="Search">
+					<button class="btn btn-secondary" id="register-moim-button" type="button">가입</button>
+				</div>
+				<ul class="list-group" id="moim-search-results">
 				</ul>
 			</div>
 		</div>
@@ -326,14 +352,17 @@ const chatToast = document.getElementById('chatToast');
 			/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
 			 connectFriend(); // 페이지 로드시 Friend WebSocket 연결
 			 initializeChatToast();
-			 initializeSearchEvents();
+			 initializeSearchUsersEvents();
 			 initializeFriendRequest();
 			 handleMessageEnterPress();
 			 friendRequestModal(); */
+			initializeSearchMoimsEvents();
 			connectMoim();
 			createMoimModalFunction();
 			initializeMoimModal();
 			offDarkBackgroundOfMoimDetailModal();
+			registerMoimModal();
+			processRegistMoim();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
