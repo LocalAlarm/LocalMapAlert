@@ -228,6 +228,9 @@ function loadBoardList(moimId, page, size) {
 
 
 function showMoimBoardDetail(boardId) {
+    // 모달을 닫기
+    var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
         method: 'GET',
@@ -237,6 +240,7 @@ function showMoimBoardDetail(boardId) {
             $('#post-detail-title').text(data.title);
             $('#post-detail-content').text(data.content);
             const commentsList = $('#post-detail-comments-list');
+            commentsList.empty(); // 댓글 목록 초기화
 
             // 작성자 토큰 값을 사용하여 사용자 정보를 가져오기
             searchUserByToken(data.author, function(err, userData) {
@@ -268,7 +272,7 @@ function showMoimBoardDetail(boardId) {
                 postDetailCarouselContainer.hide();
             }
             if (data.comments.length > 0) {
-                data.forEach(function(comment) {
+                data.comments.forEach(function(comment) {
                     searchUserByToken(comment.author, function(err, userData) {
                         if (err) {
                             commentsList.append(`
@@ -310,16 +314,17 @@ function showMoimBoardDetail(boardId) {
     });
 }
 
+
 function submitMoimComment(boardId, content) {
-    console.log(boardId);
     $.ajax({
         url: `/dongnae/moim/${boardId}/add-comments`,
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ content: content }),
         success: function(data) {
-            $('#post-detail-comment-input').val('');
-            //loadMoimComments(boardId);
+            // 댓글 작성 후 댓글 리스트를 다시 로드
+           	console.log("성공");
+            showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
