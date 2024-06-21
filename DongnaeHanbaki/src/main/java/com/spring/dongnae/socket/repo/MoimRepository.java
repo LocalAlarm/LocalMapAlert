@@ -12,8 +12,8 @@ import com.spring.dongnae.socket.scheme.Moim;
 
 public interface MoimRepository extends MongoRepository<Moim, String> {
 	Optional<Moim> findById(String id);
+	Optional<Moim> findByName(String name);
 	boolean existsByName(String name);
-	
     @Query("{ 'name': { $regex: ?0, $options: 'i' }, '_id': { $nin: ?1 } }")
     Page<Moim> findByNameContainingIgnoreCaseAndIdNotIn(String name, List<String> excludeIds, Pageable pageable);
 }

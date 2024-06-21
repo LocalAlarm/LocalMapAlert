@@ -41,7 +41,7 @@ async function handleMoimUserRooms(userRooms) {
 
     if (Array.isArray(userRooms.moims)) { // 메시지가 배열인지 확인
         for (const element of userRooms.moims) {
-            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">' + element + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">' + element.name + '</li>';
         }
     } else {
         console.error("userRooms.moims is not an array");
@@ -397,30 +397,24 @@ async function processRegistMoim() {
         const searchString = $('#search-moim').val();
         // 친구 요청 확인 메시지 표시
         if (confirm("모임에 가입을 하시겠습니까?")) {
-            // const requestData = {
-            //     request: "REQUEST",
-            //     requestEmail: requestEmail
-            // };
-
-            // try {
-            //     const response = await fetch('/dongnae/api/sendFriendRequest', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify(requestData)
-            //     });
-
-            //     if (!response.ok) {
-            //         throw new Error('Network response was not ok');
-            //     }
-            //     alert("친구 요청이 성공적으로 전송되었습니다!");
-            // } catch (error) {
-            //     console.error('Error:', error);
-            //     alert("친구 요청 전송에 실패했습니다.");
-            // }
+            try {
+                const response = await fetch(`/dongnae/moim/${encodeURIComponent(searchString)}/add-participants`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to register for the moim');
+                }
+                const data = await response.json();
+                console.log(data);
+                showSuccessAlert("가입 성공", "모임에 가입되었습니다.", "");
+            } catch (error) {
+                console.error(error);
+                // 에러 처리
+            }
         } else {
-            // 취소 버튼을 눌렀을 때의 동작
             event.preventDefault(); // 기본 동작 막기
         }
     });

@@ -57,8 +57,8 @@ public class MoimService {
         return moim;
     }
     
-    public Moim addParticipantToMoim(String moimId, String token) {
-    	Optional<Moim> moimOptional = moimRepository.findById(moimId);
+    public Moim addParticipantToMoim(String moimName, String token) {
+    	Optional<Moim> moimOptional = moimRepository.findByName(moimName);
     	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
     	if (moimOptional.isPresent() && userRoomsOptional.isPresent()) {
     		Moim moim = moimOptional.get();

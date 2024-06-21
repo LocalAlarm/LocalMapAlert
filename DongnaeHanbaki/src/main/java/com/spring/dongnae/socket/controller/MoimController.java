@@ -62,9 +62,9 @@ public class MoimController {
         return moimService.getMoimDtoInfo(moimId);
     }
 	
-	@PostMapping("/{moimId}/add-participants")
-	public Moim addParticipantToMoim(@PathVariable String moimId) {
-		return moimService.addParticipantToMoim(moimId, getAuthenticInfo.GetToken());
+	@PostMapping("/{moimName}/add-participants")
+	public Moim addParticipantToMoim(@PathVariable String moimName) {
+		return moimService.addParticipantToMoim(moimName, getAuthenticInfo.GetToken());
 	}
 
     
