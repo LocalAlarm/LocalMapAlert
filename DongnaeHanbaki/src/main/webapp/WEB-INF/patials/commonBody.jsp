@@ -94,7 +94,7 @@ const chatToast = document.getElementById('chatToast');
 							<span class="nav_name">모임 만들기</span>
 						</div>
 					</div>
-					<a href="/dongnae/login?logout" class="nav__link">
+					<a href="/dongnae/logout" class="nav__link">
 						<ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
 						<span class="nav_name">로그아웃</span>
 					</a>
