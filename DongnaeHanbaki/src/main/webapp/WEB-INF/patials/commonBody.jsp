@@ -68,7 +68,6 @@ const chatToast = document.getElementById('chatToast');
 								<!-- 친구 요청 목록 여기에 뜸. -->
 							</ul>
 						</div>
-
 						<div class="nav__link collapse__nav">
 							<ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">친구목록</span>
@@ -241,7 +240,7 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="postForm" enctype="multipart/form-data">
+                <form id="postMoimForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
                         <input type="text" class="form-control" id="postMoimTitle" name="title" required>
@@ -321,6 +320,7 @@ const chatToast = document.getElementById('chatToast');
 			connectMoim();
 			createMoimModalFunction();
 			initializeMoimModal();
+			offDarkBackgroundOfMoimDetailModal();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();
