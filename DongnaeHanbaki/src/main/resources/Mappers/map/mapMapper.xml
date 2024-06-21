@@ -58,6 +58,12 @@
 	        #{viewLevel}, #{centerLatitude}, #{centerLongitude}, SYSTIMESTAMP, 0, 0)
 	</insert>
 	
+	<!-- 맵 최근 조회 -->
+	<select id="getRecentMap" resultType="mapVO">
+		SELECT * 
+		FROM (SELECT * FROM MAP ORDER BY MAP_IDX DESC) 
+		WHERE ROWNUM = 1
+	</select>
 	
 	<update id="updateMap" parameterType="mapVO">
 		UPDATE MAKER

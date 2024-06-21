@@ -12,11 +12,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-    crossorigin="anonymous">
 <jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include> <!-- 공통 헤더 파일 포함 -->
+<style>
+    /* 활성화된 탭의 배경색을 하얀색으로 변경 */
+    .active {
+      background-color: white !important;
+    }
+  </style>
 <script>
 	/* 수정창 이동 */
 	function goOneCustomMap(){
@@ -208,7 +210,7 @@
 				    </tr>
 				    <tr>
 				      <th> 중심주소</th>
-				      <td>주소</td>
+				      <td>(${mapVO.centerLongitude}, ${mapVO.centerLatitude})</td>
 				    </tr>
 				    <tr>
 				      <th> 지도 크기</th>
@@ -351,11 +353,13 @@ var centerLongitude = ${mapVO.centerLongitude};
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
         center: new kakao.maps.LatLng(centerLatitude,centerLongitude), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        level: ${mapVO.viewLevel} // 지도의 확대 레벨
     };
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+
 </script>
 </body>
 </html>

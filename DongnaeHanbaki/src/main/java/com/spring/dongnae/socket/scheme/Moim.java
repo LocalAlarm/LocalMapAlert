@@ -1,10 +1,12 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document(collection = "moims")
 public class Moim {
@@ -14,15 +16,28 @@ public class Moim {
     private String name;
     private String description;
     private String profilePic;
-    @DBRef
+    private String profilePicPI;
     private String leader;
-    @DBRef
-    private List<UserRooms> subLeader;
-    @DBRef
-    private List<UserRooms> participants;
-    @DBRef
-    private List<Board> boards;
-
+    private String chatRoomId;
+    private List<String> subLeader;
+    private List<String> participants;
+    
+    public Moim() {
+    	setInitValue();
+    }
+    public Moim(String name, String description, Map<String, String> profilePicMap) {
+    	setInitValue();
+        this.setName(name);
+        this.setDescription(description);
+        if (profilePicMap == null) {
+            this.setProfilePic("https://res.cloudinary.com/djlee4yl2/image/upload/v1713834954/logo/github_logo_icon_tpisfg.png");
+            this.setProfilePicPI(null);
+        } else {
+        	this.setProfilePic(profilePicMap.get("url"));
+        	this.setProfilePicPI(profilePicMap.get("public_id"));        	
+        }
+    }
+    
     // Getters and Setters
     public String getId() {
         return id;
@@ -56,55 +71,70 @@ public class Moim {
 		this.profilePic = profilePic;
 	}
     
+	public String getProfilePicPI() {
+		return profilePicPI;
+	}
+
+	public void setProfilePicPI(String profilePicPI) {
+		this.profilePicPI = profilePicPI;
+	}
+	
     public String getLeader() {
 		return leader;
 	}
 
-	public void setLeader(String leader) {
-		this.leader = leader;
+	public void setLeader(UserRooms userRooms) throws Exception {
+		userRooms.addMasterMoims(this);
+		this.leader = userRooms.getId();
 	}
-
-	public List<UserRooms> getSubLeader() {
+	
+	public String getChatRoomId() {
+		return chatRoomId;
+	}
+	
+	public void setChatRoomId(ChatRoom chatRoom) {
+		if (chatRoom.getId() != null) {			
+			this.chatRoomId = chatRoom.getId();
+		} else {
+			throw new NullPointerException("ChatRoom ID is null.");
+		}
+	}
+	
+	public List<String> getSubLeader() {
 		return subLeader;
-	}
-
-	public void setSubLeader(List<UserRooms> subLeader) {
-		this.subLeader = subLeader;
 	}
 	
 	public void addSubLeader(UserRooms userRoom) {
-		this.subLeader.add(userRoom);
+		this.subLeader.add(userRoom.getId());
+	}
+	
+	public void deleteSubLeader(UserRooms userRoom) {
+		this.subLeader.remove(userRoom.getId());
 	}
 
-	public List<UserRooms> getParticipants() {
+	public List<String> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<UserRooms> participants) {
-        this.participants = participants;
-    }
-
     public void addParticipant(UserRooms userRoom) {
-        this.participants.add(userRoom);
+        this.participants.add(userRoom.getId());
     }
-
-    public List<Board> getBoards() {
-        return boards;
+    
+    public void removeParticipant(UserRooms participant) {
+        this.participants.remove(participant.getId());
+        participant.removeMoim(this);
     }
-
-    public void setBoards(List<Board> boards) {
-        this.boards = boards;
+    
+    private void setInitValue() {
+    	this.subLeader = new ArrayList<String>();
+    	this.participants = new ArrayList<String>();
+    	this.setProfilePicPI(null);
     }
-
-    public void addPost(Board board) {
-        this.boards.add(board);
-    }
-
 	@Override
 	public String toString() {
 		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
-				+ ", leader=" + leader + ", subLeader=" + subLeader + ", participants=" + participants + ", boards="
-				+ boards + "]";
+				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoomId=" + chatRoomId
+				+ ", subLeader=" + subLeader + ", participants=" + participants + "]";
 	}
     
 }

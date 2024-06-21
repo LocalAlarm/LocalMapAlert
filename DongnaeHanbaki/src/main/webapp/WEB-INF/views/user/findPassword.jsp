@@ -38,7 +38,7 @@
     	   console.log(email);
     	   $.ajax({
     		   type: "POST",
-    		   url:  "findEmail",
+    		   url:  "findEmailForPassword",
     		   data: {
     			   email: email
     		   },
@@ -47,10 +47,11 @@
     			   if (data == "") {
     				   showDangerAlert('오류', '가입된 이메일이 없습니다!', '');
     				   return false;
+    			   } else {
+    				   showSuccessAlert('성공', '이메일이 확인되었습니다.', '');
+        			   $("#button-addon2").attr("disabled", false);
+        			   findEamilCheck = true;
     			   }
-    			   showSuccessAlert('성공', '이메일이 확인되었습니다.', '');
-    			   $("#button-addon2").attr("disabled", false);
-    			   findEamilCheck = true;
     		   },
     		   error: function (request, status,error) {
                    alert("ajax 실행 실패");

@@ -1088,13 +1088,13 @@
              }).then(result => {
                  // 만약 Promise리턴을 받으면,
                  if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
-                    location.href="oneCustMap";
+                    location.href="customMap";
                  }
              });
 
       }
    
-   function saveMap(check) {
+   function saveMap(check) { //공개 비공개 추가
       console.log("지도생성!!!");
       //json에 넣을수있게 정보 뽑기
       markerList = extractMarkerList();

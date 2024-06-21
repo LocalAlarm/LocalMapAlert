@@ -188,8 +188,8 @@ const chatToast = document.getElementById('chatToast');
    </div>
 </div>
 
-<!-- 모임 모달 -->
-<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -203,11 +203,17 @@ const chatToast = document.getElementById('chatToast');
                         <div class="col-md-8" id="left-content" style="height: 500px; overflow-y:auto;">
                             <!-- 왼쪽 내용이 들어갈 자리 -->
                             <!-- 게시물 목록이 들어간다 -->
-                            <ul id="boardList">
-                                <li class="board-item" data-id="post1">게시물 1</li>
-                                <li class="board-item" data-id="post2">게시물 2</li>
-                                <li class="board-item" data-id="post3">게시물 3</li>
-                            </ul>
+                            <table class="table">
+                               <thead>
+                                  <tr>
+                              <th scope="col">게시글</th>
+                              <th scope="col">작성자</th>
+                                  </tr>
+                               </thead>
+                               <tbody id="moim-board-list">
+                               
+                               </tbody>
+                            </table>n
                         </div>
                         <!-- 오른쪽 4개 열 -->
                         <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
@@ -238,15 +244,15 @@ const chatToast = document.getElementById('chatToast');
                 <form id="postForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
-                        <input type="text" class="form-control" id="postMoimTitle" required>
+                        <input type="text" class="form-control" id="postMoimTitle" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="postContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="postMoimContent" rows="3" required></textarea>
+                        <textarea class="form-control" id="postMoimContent" rows="3" name="content" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="postImages" class="form-label">이미지 파일</label>
-                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" multiple>
+                        <input type="file" class="form-control" id="postMoimImages" accept="image/*" name="images" multiple>
                     </div>
                     <button type="submit" class="btn btn-primary">작성</button>
                 </form>
@@ -254,7 +260,37 @@ const chatToast = document.getElementById('chatToast');
         </div>
     </div>
 </div>
-
+<!-- 게시글 상세 정보 모달 -->
+<div class="modal fade" id="moim-post-detail-modal" tabindex="-1" aria-labelledby="postDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="post-detail-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <p id="post-detail-content"></p>
+                <div class="card" style="display: flex; align-items: center; justify-content: flex-end; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+                    <p id="post-detail-author" style="margin: 0;"></p>
+                </div>
+                <div id="post-detail-carousel-container">
+                    <!-- Carousel structure -->
+                    <div id="post-detail-carousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="post-detail-carousel-inner"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#post-detail-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#post-detail-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
    $(document).ready(function() {
       // 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.

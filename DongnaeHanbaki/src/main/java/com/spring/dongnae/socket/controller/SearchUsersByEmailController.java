@@ -24,4 +24,9 @@ public class SearchUsersByEmailController {
     public List<UserVO> searchUserByEmail(@RequestBody EmailRequest emailRequest) {
         return userService.searchFriendByEmail(emailRequest.getEmail());
     }
+    
+    @PostMapping("/api/searchUserByToken")
+    public List<UserVO> searchUserByToken(@RequestBody String email) {
+        return userService.searchFriendByEmail(email);
+    }
 }

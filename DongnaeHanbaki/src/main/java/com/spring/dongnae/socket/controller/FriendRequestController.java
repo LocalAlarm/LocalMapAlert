@@ -12,23 +12,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.repo.FriendRoomRepository;
+import com.spring.dongnae.socket.repo.UserRoomsRepository;
+import com.spring.dongnae.socket.scheme.ApproveFriendRequest;
+import com.spring.dongnae.socket.scheme.ChatRoom;
+import com.spring.dongnae.socket.scheme.FriendInfo;
 import com.spring.dongnae.socket.scheme.FriendRequest;
 import com.spring.dongnae.socket.scheme.FriendRoom;
+import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @RestController
 public class FriendRequestController {
 
     @Autowired
-    private final GetAuthenticInfo getAuthenticInfo;
+    private GetAuthenticInfo getAuthenticInfo;
     @Autowired
-	private final FriendRoomRepository friendRoomRepository;
+	  private FriendRoomRepository friendRoomRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+    @Autowired
+    private UserRoomsRepository userRoomsRepository;
     
-    public FriendRequestController(FriendRoomRepository friendRoomRepository, GetAuthenticInfo getAuthenticInfo) {
-		this.getAuthenticInfo = getAuthenticInfo;
-		this.friendRoomRepository = friendRoomRepository;
-    }
+    private ApproveFriendRequest approveFriendRequest;
     
     @PostMapping("/api/sendFriendRequest") // POST 요청을 처리하는 메서드를 정의합니다.
     public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequest friendRequest) { // 요청 본문에 있는 FriendRequest 객체를 인자로 받습니다. 
@@ -57,4 +66,59 @@ public class FriendRequestController {
         return ResponseEntity.notFound().build();
     }
     
+    @PostMapping(value = "/api/approveFriendRequest", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> approveFriendRequest(@RequestBody ApproveFriendRequest approveRequest) {
+        try {
+            String requestId = approveRequest.getRequestId();
+            Optional<FriendRoom> optionalFriendRoom = friendRoomRepository.findByEmail(requestId);
+            Optional<FriendRoom> optionalMyFriendRoom = friendRoomRepository.findByEmail(getAuthenticInfo.GetEmail());
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.addUser(userRoomsRepository.findById(userService.getUserByEmail(requestId).getToken()).get());
+            chatRoom.addUser(userRoomsRepository.findById(getAuthenticInfo.GetToken()).get());
+            chatRoomRepository.save(chatRoom);
+            
+            System.out.println(chatRoom.toString());
+            if (optionalFriendRoom.isPresent()) {
+                FriendRoom friendRoom = optionalFriendRoom.get();
+
+                // 친구 요청 목록에서 해당 요청 제거
+                friendRoom.getRequestIds().remove(getAuthenticInfo.GetEmail());
+                FriendInfo friendInfo = new FriendInfo();
+                System.out.println(requestId);
+                friendInfo.setFriendToken(userService.getUserByEmail(getAuthenticInfo.GetEmail()).getToken());
+                friendInfo.setRoomName(getAuthenticInfo.GetEmail());
+                friendInfo.setChatRoomId(chatRoom);
+                friendRoom.getFriendIds().add(friendInfo);
+                friendRoomRepository.save(friendRoom);
+                // 친구 목록에 요청한 이메일 추가
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+            
+            if (optionalMyFriendRoom.isPresent()) {
+                FriendRoom friendRoom = optionalMyFriendRoom.get();
+
+                // 친구 요청 목록에서 해당 요청 제거
+                friendRoom.getRequestIds().remove(requestId);
+                FriendInfo friendInfo = new FriendInfo();
+                friendInfo.setFriendToken(userService.getUserByEmail(requestId).getToken());
+                friendInfo.setRoomName(requestId);
+                friendInfo.setChatRoomId(chatRoom);
+                friendRoom.getFriendIds().add(friendInfo);
+                friendRoomRepository.save(friendRoom);
+                // 친구 목록에 요청한 이메일 추가
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok("친구 요청을 수락하였습니다.");
+        } catch (Exception e) {
+        	e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("친구 요청 수락 중 오류가 발생하였습니다.");
+        }
+    }
+    
+    public ResponseEntity<String> rejectFriendRequest(@RequestBody ApproveFriendRequest approveRequest) {
+		return null;
+    	
+    }
 }
