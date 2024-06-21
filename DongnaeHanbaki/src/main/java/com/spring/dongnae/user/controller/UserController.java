@@ -42,6 +42,7 @@ import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
+import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Controller
 public class UserController {
@@ -50,13 +51,15 @@ public class UserController {
    private final PasswordEncoder passwordEncoder;
    private final JavaMailSender mailSender;
    private final ImageUploadController imageUploadController;
+   private final GetAuthenticInfo getAuthenticInfo;
 
    @Autowired
-   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController) {
+   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController, GetAuthenticInfo getAuthenticInfo) {
       this.userService = userService;
       this.passwordEncoder = passwordEncoder;
       this.mailSender = mailSender;
       this.imageUploadController = imageUploadController;
+      this.getAuthenticInfo = getAuthenticInfo;
       System.out.println("========= UserController() 객체생성");
    }
 
@@ -137,13 +140,13 @@ public class UserController {
    public String main(HttpSession session) {
      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.isAuthenticated()) {
-          String email = authentication.getName();
+          String email = getAuthenticInfo.GetEmail();
           System.out.println(">> 로그인 성공 사용자 : " + email);
-          UserVO userVO = userService.getIdUser(email);
-          System.out.println(userVO);
-          userVO.setPassword("");
-          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
-          session.setAttribute("user", userVO);
+          CustomUserDetails cud = getAuthenticInfo.GetUser();
+          System.out.println("userVO : " + cud);
+          cud.setPassword("");
+          System.out.println(">> 로그인 성공 사용자정보 : " + cud);
+          session.setAttribute("user", cud);
       }
       return "user/profile";
    }
