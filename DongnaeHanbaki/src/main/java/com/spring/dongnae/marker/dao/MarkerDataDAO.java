@@ -12,6 +12,7 @@ public interface MarkerDataDAO {
     List<MarkerDataVO> getRealTimeAccidents(int marker_idx);
     List<MarkerDataVO> getAllAccidents(int marker_idx);
     List<MarkerDataVO> getNearAccidents(int marker_idx);
+    List<MarkerDataVO> getEvents(MarkerDataVO vo);
 
 	void insertMarker(MarkerDataVO vo);
 

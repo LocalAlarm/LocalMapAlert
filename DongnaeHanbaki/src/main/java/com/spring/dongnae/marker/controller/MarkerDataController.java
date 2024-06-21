@@ -1,5 +1,6 @@
 package com.spring.dongnae.marker.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +20,22 @@ public class MarkerDataController {
 	@Autowired
 	private MarkerDataService markerdataService;
 
-	@RequestMapping("/Events")
+	@RequestMapping("/all")
 	@ResponseBody
-	public List<MarkerDataVO> getEvents() {
-		int marker_idx = 1;
-		return markerdataService.getMenu(marker_idx);
+	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
+		return markerdataService.allMenu(vo);
 	}
-
 	@RequestMapping("/AllAccidents")
 	@ResponseBody
 	public List<MarkerDataVO> getAllAccidents() {
-		int marker_idx = 2;
+		int marker_idx = 1;
 		return markerdataService.getMenu(marker_idx);
 	}
 
 	@RequestMapping("/RealTimeAccidents")
 	@ResponseBody
 	public List<MarkerDataVO> RealTimeEvents() {
-		int marker_idx = 2;
+		int marker_idx = 1;
 		return markerdataService.getRealTimeEvents(marker_idx);
 	}
 
@@ -44,16 +43,17 @@ public class MarkerDataController {
 	@RequestMapping("/NearAccidents")
 	@ResponseBody 
 	public List<MarkerDataVO> AllAccidents() { 
-		int marker_idx = 2;
+		int marker_idx = 1;
 		return markerdataService.getNearAccidents(marker_idx); 
 	}
-	 
-	@RequestMapping("/all")
+	
+	@RequestMapping("/Events")
 	@ResponseBody
-	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
-		return markerdataService.allMenu(vo);
+	public List<MarkerDataVO> getEvents(MarkerDataVO vo) {
+		System.out.println("1");
+	    return markerdataService.getEvents(vo);
 	}
-
+	
 	@PostMapping("/saveM")
 	public ResponseEntity<String> saveMarker(@RequestBody MarkerDataVO vo) {
 		markerdataService.saveMarker(vo);

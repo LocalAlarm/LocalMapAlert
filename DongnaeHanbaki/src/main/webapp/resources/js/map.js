@@ -537,7 +537,7 @@ function NearAccidents() {
 
                 if (distance <= radius) {
                     nearbyAccidents.push(accident);
-                    addMarker(position, '2', accident.title, accident.content);
+                    addMarker(position, '1', accident.title, accident.content);
 
                     // 가장 가까운 마커의 위치 업데이트
                     if (distance < minDistance) {
