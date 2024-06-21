@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Comment {
     @Id
     private String id;
@@ -11,7 +14,8 @@ public class Comment {
     private String author;
     private Date createdDate;
     
-    public Comment(String content) {
+    @JsonCreator
+    public Comment(@JsonProperty("content")String content) {
         this.content = content;
         this.createdDate = new Date();
     }

@@ -226,6 +226,10 @@ function loadBoardList(moimId, page, size) {
 
 
 function showMoimBoardDetail(boardId) {
+    // 모달을 닫기
+    var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    console.log(postDetailModal);
+    postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
         method: 'GET',
@@ -235,6 +239,7 @@ function showMoimBoardDetail(boardId) {
             $('#post-detail-title').text(data.title);
             $('#post-detail-content').text(data.content);
             const commentsList = $('#post-detail-comments-list');
+            commentsList.empty(); // 댓글 목록 초기화
 
             // 작성자 토큰 값을 사용하여 사용자 정보를 가져오기
             searchUserByToken(data.author, function(err, userData) {
@@ -265,34 +270,13 @@ function showMoimBoardDetail(boardId) {
             } else {
                 postDetailCarouselContainer.hide();
             }
-            if (data.comments.length > 0) {
-                data.forEach(function(comment) {
-                    searchUserByToken(comment.author, function(err, userData) {
-                        if (err) {
-                            commentsList.append(`
-                                <div class="comment">
-                                    <p><strong>Unknown Author</strong>: ${comment.content}</p>
-                                </div>
-                            `);
-                        } else {
-                            commentsList.append(`
-                                <div class="comment">
-                                    <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
-                                    <strong>${userData.nickname}</strong>: ${comment.content}</p>
-                                </div>
-                            `);
-                        }
-                    });
-                });
-            } else {
-                commentsList.append('<p>댓글이 없습니다.</p>');
-            }
+            MoimCommentList(data.comments, commentsList);
 
             // 댓글 작성 이벤트 설정
             $('#post-detail-comment-submit').off('click').on('click', function() {
                 const commentContent = $('#post-detail-comment-input').val();
                 if (commentContent.length < 5) {
-                    alert('댓글은 최소 5글자 이상이어야 합니다.');
+                    showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
                 }
@@ -308,21 +292,46 @@ function showMoimBoardDetail(boardId) {
     });
 }
 
+
 function submitMoimComment(boardId, content) {
-    console.log(boardId);
     $.ajax({
         url: `/dongnae/moim/${boardId}/add-comments`,
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ content: content }),
         success: function(data) {
-            $('#post-detail-comment-input').val('');
-            //loadMoimComments(boardId);
+            // 댓글 작성 후 댓글 리스트를 다시 로드
+            showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
         }
     });
+}
+
+function MoimCommentList(moimCommentList, commentsList) {
+    if (moimCommentList.length > 0) {
+        moimCommentList.forEach(function(comment) {
+            searchUserByToken(comment.author, function(err, userData) {
+                if (err) {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><strong>Unknown Author</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                } else {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                            <strong>${userData.nickname}</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                }
+            });
+        });
+    } else {
+        commentsList.append('<p>댓글이 없습니다.</p>');
+    }
 }
 
 
