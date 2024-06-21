@@ -1,4 +1,4 @@
-package com.spring.dongnae.socket.handler;
+  package com.spring.dongnae.socket.handler;
 
 import java.util.List;
 import java.util.Map;
@@ -31,9 +31,10 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	private final ChatRoomRepository chatRoomRepository;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
-
+	
 	// In-memory storage for WebSocket sessions and user IDs
 	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+
 
 	public ChatListWebSocketHandler(UserService userService, UserRoomsRepository userRoomsRepository,
 			ChatRoomRepository chatRoomRepository) {
@@ -49,7 +50,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		if (token != null) {
 			sessions.put(token, session);
 			// 사용자 ID로 기존 메시지 문서 검색
-			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findByToken(token);
+			Optional<UserRooms> optionalUserRooms = userRoomsRepository.findById(token);
 			UserRooms userRooms = new UserRooms();
 			// 기존 채팅방이 있으면 해당 데이터를 가져옴
 			if (optionalUserRooms.isPresent()) {
@@ -66,7 +67,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 //				}
 			} else {
 				// 새로운 메시지 문서 생성
-				userRooms = new UserRooms(userService.getUserByToken(token).getEmail(), token);
+				userRooms = new UserRooms(userService.getUserByToken(token));
 				userRoomsRepository.save(userRooms);
 			}
 		} else {
@@ -78,31 +79,36 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
-		String payload = message.getPayload();
-		System.out.println("payload : " + payload);
-		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
-		newMessage.setSenderToken(token);
-
-		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());
-		if (optionalChatRoom.isPresent()) {
-			ChatRoom chatRoom = optionalChatRoom.get();
-			chatRoom.addMessage(newMessage);
-			chatRoomRepository.save(chatRoom);
-
-			// JSON 메시지 생성
-			String jsonMessage = objectMapper.writeValueAsString(newMessage);
-
-			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
-			List<String> userTokens = chatRoom.getUserIds(); // 사용자 토큰들 가져오기
-			for (String chatRoomUser : userTokens) {
-				session = sessions.get(chatRoomUser); // 세션 정보 가져오기
-				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
-					session.sendMessage(new TextMessage(jsonMessage));
-				}
-			}
-		} else {
-			session.sendMessage(new TextMessage("Error: Chat room not found"));
-		}
+//		String payload = message.getPayload();
+//		System.out.println("payload : " + payload);
+//		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
+//		newMessage.setSenderToken(token);
+//
+//		Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(newMessage.getRoomId());
+//		if (optionalChatRoom.isPresent()) {
+//			ChatRoom chatRoom = optionalChatRoom.get();
+//			try {
+//			    chatRoom.addMessage(newMessage);
+//			} catch (NullPointerException e) {
+//				chatRoom.setMessages(new ArrayList<Message>());
+//				chatRoom.addMessage(newMessage);
+//			}
+//			chatRoomRepository.save(chatRoom);
+//			
+//			// JSON 메시지 생성
+//			String jsonMessage = objectMapper.writeValueAsString(newMessage);
+//
+//			// 특정 채팅방에 속한 사용자들에게만 메시지를 전송
+//			List<String> userTokens = chatRoom.getUserTokens(); // 사용자 토큰들 가져오기
+//			for (String userToken : userTokens) {
+//				session = sessions.get(userToken); // 세션 정보 가져오기
+//				if (session != null && session.isOpen()) { // null이 아니거나 유효하면
+//					session.sendMessage(new TextMessage(jsonMessage));
+//				}
+//			}
+//		} else {
+//			session.sendMessage(new TextMessage("Error: Chat room not found"));
+//		}
 	}
 
 	@Override

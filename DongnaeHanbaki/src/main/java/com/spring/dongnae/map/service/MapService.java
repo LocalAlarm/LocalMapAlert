@@ -18,4 +18,7 @@ public interface MapService {
 	int insertMap(MapVO vo);
 	int updateMap(MapVO vo);
 	int deleteMap(MapVO vo);
+	
+	//가장 최근 mapIdx 가져오기
+	MapVO getRecentMap();
 }
