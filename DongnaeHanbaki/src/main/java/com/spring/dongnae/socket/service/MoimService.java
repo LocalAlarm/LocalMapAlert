@@ -99,8 +99,9 @@ public class MoimService {
     
     public void addCommentToBoard(String boardId, Comment comment) {
     	Optional<Board> boardOptional = boardRepository.findById(boardId);
-    	if (boardOptional.isPresent()) {
+    	if (boardOptional.isPresent() && getAuthenticInfo.GetToken() != null) {
     		Board board = boardOptional.get();
+    		comment.setAuthor(getAuthenticInfo.GetToken());
     		board.addComment(comment);
     		boardRepository.save(board);
     	}
