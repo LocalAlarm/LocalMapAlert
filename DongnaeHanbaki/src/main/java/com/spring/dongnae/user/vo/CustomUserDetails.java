@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails extends UserVO implements UserDetails {
    private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
 
    private String username;

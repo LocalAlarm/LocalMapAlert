@@ -28,4 +28,12 @@ public class GetAuthenticInfo {
 			return null;
 		}
 	}
+	public CustomUserDetails GetLoginUser() {
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal());
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
 }

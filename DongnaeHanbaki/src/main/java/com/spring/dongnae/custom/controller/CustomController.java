@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +25,19 @@ import com.spring.dongnae.custom.scheme.CustomMarker;
 import com.spring.dongnae.custom.service.CustomService;
 import com.spring.dongnae.map.service.MapService;
 import com.spring.dongnae.map.vo.MapVO;
+import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
+import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Controller
 public class CustomController {
    
    private final MapService mapService;
    private final CustomService customService;
-   private UserVO loginUserVO;
+   @Autowired
+   private CustomUserDetails loginUserVO;
+   @Autowired
+	private GetAuthenticInfo getAuthenticInfo;
    private final MapCommentsService mapCommentsService;
 //   private final ObjectMapper objectMapper;
 
@@ -40,7 +46,6 @@ public class CustomController {
 	  this.mapCommentsService = mapCommentsService;
       this.mapService = mapService;
       this.customService = customService;
-      this.loginUserVO = new UserVO();
       System.out.println("========= customController() 객체생성");
    }
 	
@@ -52,10 +57,7 @@ public class CustomController {
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
       try {
-    	  String email = null;
-    	  if(isLogin(session)) {
-    		  email = loginUserVO.getEmail();
-    	  }
+    	  String email = getAuthenticInfo.GetEmail();
          
          ObjectMapper objectMapper = new ObjectMapper();
          
@@ -126,7 +128,7 @@ public class CustomController {
 		System.out.println("openCustomMapList : " + openCustomMapList.toString());//-------------------test code-----------------
 		model.addAttribute("openCustomMapList", openCustomMapList);
 		//로그인 여부 확인-> true : 내 커스텀 맵 불러옴
-		if(isLogin(session)) {
+		if(isLogin()) {
 			mapVO.setOpenYn(null);
 			mapVO.setUserEmail(loginUserVO.getEmail());
 			List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
@@ -137,13 +139,10 @@ public class CustomController {
 		return "map/customMap"; 
 	}
 	
-	//세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
-	private boolean isLogin(HttpSession session) {
-		loginUserVO = (UserVO)session.getAttribute("user");
-		System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
-		if(loginUserVO == null || loginUserVO.getEmail() == null) {
-			return false;
-		} else if("".equals(loginUserVO.getEmail().trim())) {
+	//시큐리티에서 유저 가져옴 + 로그인 여부 확인 메 서드
+	private boolean isLogin() {
+		loginUserVO = getAuthenticInfo.GetLoginUser();
+		if(loginUserVO == null) {
 			return false;
 		} else {
 			return true;
