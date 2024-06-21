@@ -13,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.dongnae.bbs.MapCommentsService;
@@ -190,7 +192,7 @@ public class CustomController {
    }
    
    @RequestMapping("/updateCustMap")
-   public String updateCustMap(HttpServletRequest request, Model model) {
+   public String updateCustMap(HttpServletRequest request, Model model) throws JsonProcessingException {
       //커스텀맵 편집페이지 이동
       System.out.println("편집하기!");
       //로그인여부 확인 필요 , false : 로그인 페이지로 이동
@@ -199,9 +201,12 @@ public class CustomController {
       System.out.println(MapIdx);
       Optional<CustomMarker> custom = customService.selectMarker(MapIdx);
       if (custom.isPresent()) {
+//         ObjectMapper objectMapper = new ObjectMapper();
          System.out.println(">>>> " + custom);
          CustomMarker customMarker = custom.get();
          System.out.println(">>>> " + customMarker);
+//         String customMarkerJson = objectMapper.writeValueAsString(customMarker);
+//         System.out.println(">>>> " + customMarkerJson);
          model.addAttribute("customMarker", customMarker);
       } else {
          System.out.println("오류!");
@@ -210,6 +215,26 @@ public class CustomController {
       //커스텀맵에서 사용한 마커종류 리스트 필요
       //표시한 마커목록 리스트 필요
       return "map/updateCustMap"; 
+   }
+   
+   @RequestMapping("/allMarker")
+   @ResponseBody
+   public CustomMarker selectAllMarker(@RequestParam("mapIdx") int mapIdx) {
+      System.out.println("마커 데이터 가져오기!");
+      System.out.println(mapIdx);
+      Optional<CustomMarker> custom = customService.selectMarker(mapIdx);
+      if (custom.isPresent()) {
+//         ObjectMapper objectMapper = new ObjectMapper();
+         System.out.println(">>>> " + custom);
+         CustomMarker customMarker = custom.get();
+         System.out.println(">>>> " + customMarker);
+//         String customMarkerJson = objectMapper.writeValueAsString(customMarker);
+//         System.out.println(">>>> " + customMarkerJson);
+         return customMarker;
+      } else {
+         System.out.println("오류!");
+         return null;
+      }
    }
 
 }

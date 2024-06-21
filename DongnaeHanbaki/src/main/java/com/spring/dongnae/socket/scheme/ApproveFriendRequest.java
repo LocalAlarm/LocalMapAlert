@@ -4,14 +4,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApproveFriendRequest {
-	
-	private String requestId;
+   
+   private String requestId;
 
-	public String getRequestId() {
-		return requestId;
-	}
+   public String getRequestId() {
+      return requestId;
+   }
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
+   public void setRequestId(String requestId) {
+      this.requestId = requestId;
+   }
 }

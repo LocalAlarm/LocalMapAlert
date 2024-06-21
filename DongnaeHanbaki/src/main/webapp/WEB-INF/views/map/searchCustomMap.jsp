@@ -90,9 +90,7 @@ crossorigin="anonymous"></script>
 		<div class="row gy-2">
 			<div class="col-2"></div>
 			<div class="col-8 border" style="height: 100vh;">
-				<div class="text-center p-1">
-					<h5>"-"키워드로 검색된 지도입니다</h5>
-				</div>
+				
 				<!-- <div class="row g-1 p-2 border rounded mb-2">
 					<div class="col-3">
 						<h5>제목</h5>
@@ -103,17 +101,45 @@ crossorigin="anonymous"></script>
 						<pre>내용</pre>
 					</div>
 				</div> -->
-				<c:forEach items="${serchMapList}" var="vo">
-					<div class="row g-1 p-2 border rounded mb-2">
-						<div class="col-3">
-							<h5 class="mapTitle">${vo.title }</h5>
-							<h6 class="text-body-secondary">${vo.userEmail }</h6>
-							<a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+				<c:forEach items="${searchMapList}" var="vo">
+					<c:if test="${vo.mapIdx == -1111 }">
+						<c:choose>
+							<c:when test="${vo.userEmail != null }">
+							<div class="text-center p-1">
+								<h5> 지도 작성자명에서 "${vo.userEmail}"키워드로 검색된 지도입니다</h5>
+							</div>
+							</c:when>
+							<c:when test="${vo.title != null and vo.content != null}">
+							<div class="text-center p-1">
+								<h5> "${vo.title}"키워드로 검색된 지도입니다</h5>
+							</div>
+							</c:when>
+							<c:when test="${vo.title != null }">
+							<div class="text-center p-1">
+								<h5> 지도 제목에서 "${vo.title}"키워드로 검색된 지도입니다</h5>
+							</div>
+							</c:when>
+							<c:when test="${vo.content != null }">
+							<div class="text-center p-1">
+								<h5> 지도 내용에서 "${vo.content}"키워드로 검색된 지도입니다</h5>
+							</div>
+							</c:when>
+						</c:choose>
+					</c:if>
+					</c:forEach>
+					<c:forEach items="${searchMapList}" var="vo">
+					<c:if test="${vo.mapIdx != -1111 }">
+						<div class="row g-1 p-2 border rounded mb-2">
+							<div class="col-3">
+								<h5 class="mapTitle">${vo.title }</h5>
+								<h6 class="text-body-secondary">${vo.userEmail }</h6>
+								<a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
+							</div>
+							<div class="col-8">
+								<p class="px-2 mapContent">${vo.content }</p>
+							</div>
 						</div>
-						<div class="col-8">
-							<p class="px-2 mapContent">${vo.content }</p>
-						</div>
-					</div>
+					</c:if>
 				</c:forEach>
 			</div>
 			<div class="col-2"></div>

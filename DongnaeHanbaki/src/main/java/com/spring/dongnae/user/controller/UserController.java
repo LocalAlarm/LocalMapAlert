@@ -42,7 +42,6 @@ import com.spring.dongnae.user.dto.KakaoDTO;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
-import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Controller
 public class UserController {
@@ -51,15 +50,13 @@ public class UserController {
    private final PasswordEncoder passwordEncoder;
    private final JavaMailSender mailSender;
    private final ImageUploadController imageUploadController;
-   private final GetAuthenticInfo getAuthenticInfo;
 
    @Autowired
-   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController, GetAuthenticInfo getAuthenticInfo) {
+   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController) {
       this.userService = userService;
       this.passwordEncoder = passwordEncoder;
       this.mailSender = mailSender;
       this.imageUploadController = imageUploadController;
-      this.getAuthenticInfo = getAuthenticInfo;
       System.out.println("========= UserController() 객체생성");
    }
 
@@ -79,7 +76,7 @@ public class UserController {
 
    @RequestMapping("/loginerror")
    public String loginError(@ModelAttribute("user") UserVO vo) {
-	   System.out.println(vo);
+      System.out.println(vo);
       System.out.println(">> 로그인 에러");
       return "user/loginerror";
    }
@@ -138,14 +135,15 @@ public class UserController {
    // 로그인후
    @GetMapping("/main")
    public String main(HttpSession session) {
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.isAuthenticated()) {
-          String email = getAuthenticInfo.GetEmail();
+          String email = authentication.getName();
           System.out.println(">> 로그인 성공 사용자 : " + email);
           UserVO userVO = userService.getIdUser(email);
           System.out.println(userVO);
           userVO.setPassword("");
           System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
+          session.setAttribute("user", userVO);
       }
       return "user/profile";
    }
@@ -159,7 +157,7 @@ public class UserController {
 //   
 //   @PostMapping("/join")
 //   public String join(@ModelAttribute UserVO userVO, 
-//		   	@RequestParam(value = "image", required = false) MultipartFile image) {
+//            @RequestParam(value = "image", required = false) MultipartFile image) {
 //       userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
 //       userVO.setToken(passwordEncoder.encode(userVO.getEmail()));
 //       System.out.println(">> 회원가입 처리");
@@ -180,8 +178,8 @@ public class UserController {
    public ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
       System.out.println("email : " + email);
       if (userService.doubleCheckEmail(email) > 0) {
-    	  System.out.println("이메일 중복!!!!");
-    	  return ResponseEntity.ok("duplicate");
+         System.out.println("이메일 중복!!!!");
+         return ResponseEntity.ok("duplicate");
       }
       return ResponseEntity.ok("pass");
    }
@@ -194,141 +192,140 @@ public class UserController {
    
    // 이메일 찾기 결과 
    @PostMapping("/findEmailProcess")
-	public String findEmail(HttpServletRequest request, Model model,UserVO vo,
-			@RequestParam String nickname, 
-			@RequestParam String recoverEmail) {
-		try {
-			vo.setNickname(nickname);
-			vo.setRecoverEmail(recoverEmail); 
-			
-			String email = userService.findUserEmail(vo);
-			
-			model.addAttribute("findEmail", email); 
+   public String findEmail(HttpServletRequest request, Model model,UserVO vo,
+         @RequestParam String nickname, 
+         @RequestParam String recoverEmail) {
+      try {
+         vo.setNickname(nickname);
+         vo.setRecoverEmail(recoverEmail); 
+         
+         String email = userService.findUserEmail(vo);
+         
+         model.addAttribute("findEmail", email); 
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "user/emailFound";
-	}
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      return "user/emailFound";
+   }
 
    //이메일 인증
    @PostMapping("/mailAuthentic")
    @ResponseBody
    public String mailAuthentic(@RequestParam("email") String email) {
-	   System.out.println("email인증!!!!!!!!! :" + email);
-	   
-	   //인증번호만들기
-	   String num = "0123456789ABCDEFGHIJ";
-	   StringBuilder authenticNum = new StringBuilder();
-	   Random random = new Random();
-	   int length = 6;
-	   for (int i=0; i<length; i++) {
-		   int index = random.nextInt(num.length());
-		   authenticNum.append(num.charAt(index));
-	   }
-	   
-//	   //이메일 보내기
-//	   String setFrom = "jailju1016@gmail.com";
-//	   String senderName = "동네한바퀴";
-//	   String toMail = email;
-//	   String title = "회원가입 이메일 본인인증";
-//	   StringBuilder sb = new StringBuilder();
-//	   sb.append("<html><body>");
-//	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
-//	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
-//	   sb.append("<br>");
-//	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
-//	   sb.append("<html><body>");        
-//	   sb.append("<html><body>");
-//	   sb.append("<html><body>");
-//	   sb.append("</body></html>");
-//	   String content = sb.toString();
-//	   
-//		try {
-//			MimeMessage message = mailSender.createMimeMessage();
-//			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-//			helper.setFrom(new InternetAddress(setFrom, senderName));
-//			helper.setTo(toMail);
-//			helper.setSubject(title);
-//			helper.setText(content, true);
-//			mailSender.send(message);
+      System.out.println("email인증!!!!!!!!! :" + email);
+      
+      //인증번호만들기
+      String num = "0123456789ABCDEFGHIJ";
+      StringBuilder authenticNum = new StringBuilder();
+      Random random = new Random();
+      int length = 6;
+      for (int i=0; i<length; i++) {
+         int index = random.nextInt(num.length());
+         authenticNum.append(num.charAt(index));
+      }
+      
+//      //이메일 보내기
+//      String setFrom = "jailju1016@gmail.com";
+//      String senderName = "동네한바퀴";
+//      String toMail = email;
+//      String title = "회원가입 이메일 본인인증";
+//      StringBuilder sb = new StringBuilder();
+//      sb.append("<html><body>");
+//      sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
+//      sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
+//      sb.append("<br>");
+//      sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
+//      sb.append("<html><body>");        
+//      sb.append("<html><body>");
+//      sb.append("<html><body>");
+//      sb.append("</body></html>");
+//      String content = sb.toString();
+//      
+//      try {
+//         MimeMessage message = mailSender.createMimeMessage();
+//         MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+//         helper.setFrom(new InternetAddress(setFrom, senderName));
+//         helper.setTo(toMail);
+//         helper.setSubject(title);
+//         helper.setText(content, true);
+//         mailSender.send(message);
 //
-//			 // 첨부 파일 추가
-////			FileSystemResource file = new FileSystemResource(new File());
-////			helper.addAttachment(, file);
-//	        
-//		} catch (MessagingException | UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-	   
-	   return authenticNum.toString();
+//          // 첨부 파일 추가
+////         FileSystemResource file = new FileSystemResource(new File());
+////         helper.addAttachment(, file);
+//           
+//      } catch (MessagingException | UnsupportedEncodingException e) {
+//         e.printStackTrace();
+//      }
+      
+      return authenticNum.toString();
    }
    
    // 비밀번호 찾기
    @RequestMapping("/findPassword")
    public String showFindPasswordForm(@RequestParam(value = "profile", required = false) String profile, Model model) {
-	   System.out.println("location : " + profile);
-	   model.addAttribute("profile", profile);
+      System.out.println("location : " + profile);
+      model.addAttribute("profile", profile);
        return "user/findPassword"; 
    }
 
    @PostMapping("/findEmailForPassword")
    @ResponseBody
    public String findEmail(@RequestParam("email") String email) {
-	   String findEmail = userService.findPasswordByEmail(email);
-	   return findEmail;
+      String findEmail = userService.findPasswordByEmail(email);
+      return findEmail;
    }
    
    @PostMapping("/passwordChange")
    public String passwordChange(@ModelAttribute UserVO userVO, @RequestParam(value = "profile", required = false) String profile) {
-	   System.out.println("비번바꾸기 처리");
-	   userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
-	   System.out.println("바꾸기 vo : " + userVO);
-	   String redirectURL = "redirect:login";
+      System.out.println("비번바꾸기 처리");
+      userVO.setPassword(passwordEncoder.encode(userVO.getPassword()));
+      System.out.println("바꾸기 vo : " + userVO);
+      String redirectURL = "redirect:login";
        if (profile != null) {
-    	   //프로필에서 온거 구분 하지만 비번바꾸면 로그아웃되고 다시 로그인?
+          //프로필에서 온거 구분 하지만 비번바꾸면 로그아웃되고 다시 로그인?
 //           redirectURL += ;
        }
-	   userService.updatePassowrd(userVO);
-	   return redirectURL;
+      userService.updatePassowrd(userVO);
+      return redirectURL;
    }
    
    @GetMapping("/profile")
    public String profile(HttpSession session) {
-//	   UserVO userVO = getAuthenticInfo.GetEmail();
-	   System.out.println("::" + getAuthenticInfo.GetUser());
-//	   System.out.println("프로필vo : " + userVO);
-	   return "user/profile";
+      UserVO userVO = (UserVO) session.getAttribute("user");
+      System.out.println("프로필vo : " + userVO);
+      return "user/profile";
    }
    
    @PostMapping("/updateProfile")
    @ResponseBody
    public void updateProfile(@RequestParam(value = "email", required = false) String email
-		   , @RequestParam(value = "idx", required = false) String idxS
-		   , @RequestParam(value = "newValue", required = false) String newValue
-		   , @RequestParam(value = "address", required = false) String address
-		   , @RequestParam(value = "detailAddress", required = false) String detailAddress
-		   , @RequestParam(value = "image", required = false) MultipartFile image) {
-	   Map<String, Object> map = new HashMap<String, Object>();
-	   map.put("email", email);
-	   int idx = Integer.parseInt(idxS);
-	   map.put("idx", idx);
-	   System.out.println("프로필 수정처리 : " + map);
-	   System.out.println("email : " + email);
-	   if (idx == 5 && image != null && !image.isEmpty()) {
+         , @RequestParam(value = "idx", required = false) String idxS
+         , @RequestParam(value = "newValue", required = false) String newValue
+         , @RequestParam(value = "address", required = false) String address
+         , @RequestParam(value = "detailAddress", required = false) String detailAddress
+         , @RequestParam(value = "image", required = false) MultipartFile image) {
+      Map<String, Object> map = new HashMap<String, Object>();
+      map.put("email", email);
+      int idx = Integer.parseInt(idxS);
+      map.put("idx", idx);
+      System.out.println("프로필 수정처리 : " + map);
+      System.out.println("email : " + email);
+      if (idx == 5 && image != null && !image.isEmpty()) {
            Map<String, String> imageMap = imageUploadController.uploadImage(image);
            map.put("image", imageMap.get("url"));
            map.put("imagePi", imageMap.get("public_id"));
        }
-	   else if (idx == 1) {
-		   map.put("address", address);
-		   map.put("detailAddress", detailAddress);
-	   } else {
-		   map.put("newValue", newValue);
-	   }
+      else if (idx == 1) {
+         map.put("address", address);
+         map.put("detailAddress", detailAddress);
+      } else {
+         map.put("newValue", newValue);
+      }
 
-	   System.out.println("프로필 수정처리>> : " + map);
-	   userService.updateProfile(map);
+      System.out.println("프로필 수정처리>> : " + map);
+      userService.updateProfile(map);
    }
 }
 

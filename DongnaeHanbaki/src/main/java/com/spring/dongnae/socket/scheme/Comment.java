@@ -1,13 +1,24 @@
 package com.spring.dongnae.socket.scheme;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Comment {
     @Id
     private String id;
     private String content;
     private String author;
-    private String timestamp;
+    private Date createdDate;
+    
+    @JsonCreator
+    public Comment(@JsonProperty("content")String content) {
+        this.content = content;
+        this.createdDate = new Date();
+    }
 
     // Getters and Setters
     public String getId() {
@@ -34,11 +45,12 @@ public class Comment {
         this.author = author;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+    
 }

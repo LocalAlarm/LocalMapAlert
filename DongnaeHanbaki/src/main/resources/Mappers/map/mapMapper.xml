@@ -26,8 +26,8 @@
 	</select>
 	
 	<!-- 검색 구문 -->
-	<select id="getSerchMapList" parameterType="mapVO" resultType="mapVO">
-		SELECT * FROM MAP
+	<select id="getSearchMapList" parameterType="mapVO" resultType="mapVO">
+		SELECT * FROM MAP M, USERS U
 		WHERE DEL_YN = 0
 		<choose>
 			<!-- 유저 이메일 검색 -->
@@ -45,6 +45,9 @@
 			<!-- 내용검색 -->
 			<when test='content != null'>
 				AND CONTENT LIKE '%' || #{content } || '%'
+			</when>
+			<when test='userEmail != null'>
+				AND USER_EMAIL LIKE '%' || #{userEmail } || '%'
 			</when>
 		</choose>
 		AND OPEN_YN = 1

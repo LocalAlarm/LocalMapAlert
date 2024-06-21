@@ -99,7 +99,14 @@ async function submitCreateMoimForm() {
         })
 
         if (!response.ok) {
-            throw new Error('네트워크가 응답하지 않습니다!!');
+            if (response.status === 409) {
+                // 중복된 모임 이름인 경우
+                const errorMessage = await response.text();
+                showDangerAlert('중복된 모임입니다!', '이미 생성된 모임의 이름이에요.', '다른 이름을 사용해주세요.');
+            } else {
+                throw new Error('네트워크가 응답하지 않습니다!!');
+            }
+            return;
         }
 
         showSuccessAlert('모임이 생성되었습니다.', '모임창을 확인해주세요!', '친구들과 활동해보세요!');
@@ -145,7 +152,7 @@ function initializeMoimModal() {
     });
 
     // 게시물 작성 폼 제출 이벤트
-    $('#postForm').on('submit', function(e) {
+    $('#postMoimForm').on('submit', function(e) {
         e.preventDefault();
         
         // FormData 객체 생성
@@ -187,12 +194,26 @@ function loadBoardList(moimId, page, size) {
 
             if (data.content.length > 0) {
                 data.content.forEach(function(board) {
-                    boardList.append(`
+                    // Add the board item with a placeholder for the author
+                    const boardItem = $(`
                         <tr class="moim-board-item" data-id="${board.id}">
                             <td>${board.title}</td>
-                            <td>${board.author}</td>
+                            <td id="author-${board.id}">Loading...</td>
                         </tr>
                     `);
+                    boardList.append(boardItem);
+
+                    // Fetch the author's name and image
+                    searchUserByToken(board.author, function(err, userData) {
+                        if (err) {
+                            $(`#author-${board.id}`).html('Unknown Author');
+                        } else {
+                            $(`#author-${board.id}`).html(`
+                                <img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                                ${userData.nickname}
+                            `);
+                        }
+                    });
                 });
 
                 // 게시글 클릭 이벤트 추가
@@ -210,7 +231,12 @@ function loadBoardList(moimId, page, size) {
     });
 }
 
+
 function showMoimBoardDetail(boardId) {
+    // 모달을 닫기
+    var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    resetMoimDetailModal();
+    postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
         method: 'GET',
@@ -218,8 +244,21 @@ function showMoimBoardDetail(boardId) {
         success: function(data) {
             // 게시글 상세 정보를 모달에 채워넣기
             $('#post-detail-title').text(data.title);
-            $('#post-detail-author').text(data.author);
             $('#post-detail-content').text(data.content);
+            const commentsList = $('#post-detail-comments-list');
+            commentsList.empty(); // 댓글 목록 초기화
+
+            // 작성자 토큰 값을 사용하여 사용자 정보를 가져오기
+            searchUserByToken(data.author, function(err, userData) {
+                if (err) {
+                    $('#post-detail-author').text('Unknown Author');
+                } else {
+                    $('#post-detail-author').html(`
+                        <img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                        ${userData.nickname}
+                    `); // 변환된 사용자 이름을 표시
+                }
+            });
 
             // Carousel 처리
             const postDetailCarouselContainer = $('#post-detail-carousel-container');
@@ -238,6 +277,19 @@ function showMoimBoardDetail(boardId) {
             } else {
                 postDetailCarouselContainer.hide();
             }
+            MoimCommentList(data.comments, commentsList);
+
+            // 댓글 작성 이벤트 설정
+            $('#post-detail-comment-submit').off('click').on('click', function() {
+                const commentContent = $('#post-detail-comment-input').val();
+                if (commentContent.length < 5) {
+                    showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
+                } else {
+                    submitMoimComment(boardId, commentContent);
+                    postDetailModal.hide();
+                    showMoimBoardDetail(boardId);
+                }
+            });
 
             // 모달을 보여주기
             var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
@@ -250,8 +302,60 @@ function showMoimBoardDetail(boardId) {
 }
 
 
-
-    // 모달창이 닫혔을대 폼을 리셋한다.
-    $('#createMoimModal').on('hidden.bs.modal', function () {
-        //$(this).find('form')[0].reset();
+function submitMoimComment(boardId, content) {
+    $.ajax({
+        url: `/dongnae/moim/${boardId}/add-comments`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ content: content }),
+        success: function(data) {
+        },
+        error: function(err) {
+            console.error('Error submitting comment:', err);
+        }
     });
+}
+
+function MoimCommentList(moimCommentList, commentsList) {
+    if (moimCommentList.length > 0) {
+        moimCommentList.forEach(function(comment) {
+            searchUserByToken(comment.author, function(err, userData) {
+                if (err) {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><strong>Unknown Author</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                } else {
+                    commentsList.append(`
+                        <div class="comment">
+                            <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                            <strong>${userData.nickname}</strong>: ${comment.content}</p>
+                        </div>
+                    `);
+                }
+            });
+        });
+    } else {
+        commentsList.append('<p>댓글이 없습니다.</p>');
+    }
+}
+
+function resetMoimDetailModal() {
+    // 입력된 값을 초기화
+    $('#post-detail-title').text('');
+    $('#post-detail-content').text('');
+    $('#post-detail-author').html('');
+    $('#post-detail-carousel-inner').empty();
+    $('#post-detail-comments-list').empty();
+    $('#post-detail-comment-input').val('');
+    $('#collapseComments').collapse('hide');
+}
+
+function offDarkBackgroundOfMoimDetailModal() {
+	$('#moim-post-detail-modal').on('show.bs.modal', function (e) {
+	    var modal = new bootstrap.Modal(document.getElementById('moim-post-detail-modal'), {
+	        backdrop: false
+	    });
+	});
+}

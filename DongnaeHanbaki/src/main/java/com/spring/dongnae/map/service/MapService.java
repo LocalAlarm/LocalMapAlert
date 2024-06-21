@@ -11,7 +11,7 @@ public interface MapService {
 	List<MapVO> getMapList(MapVO vo);
 	
 	//검색리스트, 제목+내용  or 제목 or 내용 검색 가능
-	List<MapVO> getSerchMapList(MapVO vo);
+	List<MapVO> getSearchMapList(MapVO vo);
 	
 	//mapIdx 필요
 	MapVO getMap(MapVO vo);

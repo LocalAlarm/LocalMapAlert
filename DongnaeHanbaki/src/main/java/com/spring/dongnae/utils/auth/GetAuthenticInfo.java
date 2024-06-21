@@ -13,13 +13,29 @@ public class GetAuthenticInfo {
 	private Authentication authentication = null;
 	
 	public String GetToken() {
-		authentication = SecurityContextHolder.getContext().getAuthentication();
-		return ((CustomUserDetails) authentication.getPrincipal()).getToken();
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal()).getToken();
+		} catch(NullPointerException e) {
+			return null;
+		}
 	}
 	
 	public String GetEmail() {
-		authentication = SecurityContextHolder.getContext().getAuthentication();
-		return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
+	public CustomUserDetails GetLoginUser() {
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal());
+		} catch(NullPointerException e) {
+			return null;
+		}
 	}
 	
 	public UserVO GetUser() {
