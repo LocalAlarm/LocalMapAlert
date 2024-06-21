@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.dto.MoimDto;
+import com.spring.dongnae.socket.error.DuplicateTitleException;
 import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Image;
@@ -49,6 +50,8 @@ public class MoimController {
         try {
             moimService.createMoim(title, introduce, profilePic);
             return ResponseEntity.ok("모임이 성공적으로 생성되었습니다.");
+        } catch (DuplicateTitleException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 모임입니다. " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("모임 생성에 실패했습니다: " + e.getMessage());
         }

@@ -133,21 +133,21 @@ public class UserController {
    }
    
    // 로그인후
-   @GetMapping("/main")
-   public String main(HttpSession session) {
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (authentication != null && authentication.isAuthenticated()) {
-          String email = authentication.getName();
-          System.out.println(">> 로그인 성공 사용자 : " + email);
-          UserVO userVO = userService.getIdUser(email);
-          System.out.println(userVO);
-          userVO.setPassword("");
-          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
-          session.setAttribute("user", userVO);
-          
-      }
-      return "user/profile";
-   }
+//   @GetMapping("/main")
+//   public String main(HttpSession session) {
+//	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//      if (authentication != null && authentication.isAuthenticated()) {
+//          String email = authentication.getName();
+//          System.out.println(">> 로그인 성공 사용자 : " + email);
+//          UserVO userVO = userService.getIdUser(email);
+//          System.out.println(userVO);
+//          userVO.setPassword("");
+//          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
+//          session.setAttribute("user", userVO);
+//          
+//      }
+//      return "main/main";
+//   }
 
    // 회원가입 페이지로 이동
 //   @GetMapping("/joinform")

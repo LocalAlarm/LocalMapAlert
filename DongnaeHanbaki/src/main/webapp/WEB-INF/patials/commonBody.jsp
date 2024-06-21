@@ -43,13 +43,13 @@ const chatToast = document.getElementById('chatToast');
 				<div>
 					<div class="nav__brand">
 						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
-						<a href="/dongnae/main" class="nav__logo" style="text-decoration: none;">
+						<a href="/dongnae/profile" class="nav__logo" style="text-decoration: none;">
 							<img src="<%=userDetails.getImage()%>" alt="UserProfileImg" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
 							<%=userDetails.getNickname()%>
 						</a>
 					</div>
 					<div class="nav__list">
-						<a href="/dongnae/map" class="nav__link">
+						<a href="/dongnae/main" class="nav__link">
 							<ion-icon name="home-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">홈페이지</span>
 						</a>
@@ -92,6 +92,19 @@ const chatToast = document.getElementById('chatToast');
 							</svg>
 							<span class="nav_name">모임 만들기</span>
 						</div>
+						<a href="/dongnae/map" class="nav__link">
+							<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z"/>
+							</svg>
+							<span class="nav_name">지도 바로가기</span>
+						</a>
+						<a href="/dongnae/customMap" class="nav__link">
+							<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-stack" viewBox="0 0 16 16">
+								<path d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z"/>
+								<path d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z"/>
+							</svg>
+							<span class="nav_name">커스텁 맵</span>
+						</a>
 					</div>
 					<a href="/dongnae/login?logout" class="nav__link">
 						<ion-icon name="log-out-outline" class="nav__icon"></ion-icon>

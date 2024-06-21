@@ -101,7 +101,14 @@ async function submitCreateMoimForm() {
         })
 
         if (!response.ok) {
-            throw new Error('네트워크가 응답하지 않습니다!!');
+            if (response.status === 409) {
+                // 중복된 모임 이름인 경우
+                const errorMessage = await response.text();
+                showDangerAlert('중복된 모임입니다!', '이미 생성된 모임의 이름이에요.', '다른 이름을 사용해주세요.');
+            } else {
+                throw new Error('네트워크가 응답하지 않습니다!!');
+            }
+            return;
         }
 
         showSuccessAlert('모임이 생성되었습니다.', '모임창을 확인해주세요!', '친구들과 활동해보세요!');
@@ -230,6 +237,7 @@ function loadBoardList(moimId, page, size) {
 function showMoimBoardDetail(boardId) {
     // 모달을 닫기
     var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    resetMoimDetailModal();
     postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
@@ -293,8 +301,6 @@ function showMoimBoardDetail(boardId) {
             console.error('Error fetching post details:', err);
         }
     });
-    // 모달창이 닫혔을대 폼을 리셋한다.
-    resetMoimDetailModal();
 }
 
 
@@ -338,17 +344,14 @@ function MoimCommentList(moimCommentList, commentsList) {
 }
 
 function resetMoimDetailModal() {
-    // 모달이 닫힐 때 실행될 함수
-    $('#moim-post-detail-modal').on('hidden.bs.modal', function () {
-        // 입력된 값을 초기화
-        $('#post-detail-title').text('');
-        $('#post-detail-content').text('');
-        $('#post-detail-author').html('');
-        $('#post-detail-carousel-inner').empty();
-        $('#post-detail-comments-list').empty();
-        $('#post-detail-comment-input').val('');
-        $('#collapseComments').collapse('hide');
-    });
+    // 입력된 값을 초기화
+    $('#post-detail-title').text('');
+    $('#post-detail-content').text('');
+    $('#post-detail-author').html('');
+    $('#post-detail-carousel-inner').empty();
+    $('#post-detail-comments-list').empty();
+    $('#post-detail-comment-input').val('');
+    $('#collapseComments').collapse('hide');
 }
 
 function offDarkBackgroundOfMoimDetailModal() {

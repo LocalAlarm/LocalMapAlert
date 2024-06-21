@@ -6,12 +6,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.dto.MoimDto;
+import com.spring.dongnae.socket.error.DuplicateTitleException;
 import com.spring.dongnae.socket.repo.BoardRepository;
 import com.spring.dongnae.socket.repo.MoimRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
@@ -36,12 +38,16 @@ public class MoimService {
     @Autowired
 	private GetAuthenticInfo getAuthenticInfo;
     
-    public Moim createMoim(String title, String introduce, MultipartFile profilePic) throws Exception {
+    public Moim createMoim(String name, String introduce, MultipartFile profilePic) throws Exception {
     	Map<String, String> imageMap = null;
     	if (profilePic != null && !profilePic.isEmpty()) {
             imageMap = imageUploadController.uploadImage(profilePic);
         }
-    	Moim moim = new Moim(title, introduce, imageMap);
+        if (moimRepository.existsByName(name)) {
+            throw new DuplicateTitleException("모임 이름이 이미 존재합니다.");
+        }
+
+    	Moim moim = new Moim(name, introduce, imageMap);
         UserRooms userRoom = userRoomsRepository.findById(getAuthenticInfo.GetToken()).orElseThrow(() -> new Exception("User not found"));
         moim.setLeader(userRoom);
         moim.setChatRoomId(chatRoomService.createChatRoom());
@@ -144,6 +150,11 @@ public class MoimService {
     public Optional<Board> getBoardById(String boardId) {
         return boardRepository.findById(boardId);
     }
+//    
+//    public List<Moim> searchMoimByTitle(String query) {
+//        Pageable pageable = PageRequest.(0, 5); // 첫 페이지에서 5개의 결과만 가져옴
+//        return moimRepository.findByNameContainingIgnoreCase(query, pageable).getContent();
+//    }
     
 //    public List<Moim> getMoimByToken(String token) {
 //    	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
