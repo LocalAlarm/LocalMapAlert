@@ -228,6 +228,7 @@ function loadBoardList(moimId, page, size) {
 function showMoimBoardDetail(boardId) {
     // 모달을 닫기
     var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
+    console.log(postDetailModal);
     postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
@@ -303,6 +304,8 @@ function submitMoimComment(boardId, content) {
         contentType: 'application/json',
         data: JSON.stringify({ content: content }),
         success: function(data) {
+            // 댓글 작성 후 댓글 리스트를 다시 로드
+            showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
