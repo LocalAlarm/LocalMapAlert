@@ -112,7 +112,7 @@ const chatToast = document.getElementById('chatToast');
 							<span class="nav_name">커스텁 맵</span>
 						</a>
 					</div>
-					<a href="/dongnae/login?logout" class="nav__link">
+					<a href="/dongnae/logout" class="nav__link">
 						<ion-icon name="log-out-outline" class="nav__icon"></ion-icon>
 						<span class="nav_name">로그아웃</span>
 					</a>
@@ -349,13 +349,10 @@ const chatToast = document.getElementById('chatToast');
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
+			friendFunction();
 			/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-			 connectFriend(); // 페이지 로드시 Friend WebSocket 연결
 			 initializeChatToast();
-			 initializeSearchUsersEvents();
-			 initializeFriendRequest();
-			 handleMessageEnterPress();
-			 friendRequestModal(); */
+			 handleMessageEnterPress(); */
 			initializeSearchMoimsEvents();
 			connectMoim();
 			createMoimModalFunction();
@@ -367,6 +364,5 @@ const chatToast = document.getElementById('chatToast');
 		initializeCollapseMenu();
 		initializeSidebarToggle();
 		initializeMenuActivation(); // 클릭된 메뉴를 active로 활성화 시키고, 기존의 active를 제거하는 코드
-		//receiveFriendRequests(); // 친구 요청란에 받은 데이터값을 보여주는 코드
 	});
 </script>

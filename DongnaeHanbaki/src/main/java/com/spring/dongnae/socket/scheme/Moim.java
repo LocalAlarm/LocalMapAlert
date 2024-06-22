@@ -22,6 +22,7 @@ public class Moim {
     private String chatRoomId;
     private List<String> subLeader;
     private List<String> participants;
+    private List<String> banUserList;
     
     public Moim() {
     	setInitValue();
@@ -126,18 +127,37 @@ public class Moim {
         participant.removeMoim(this);
     }
     
+    public void banUser(UserRooms userRoom) {
+    	this.participants.remove(userRoom.getId());
+    	userRoom.removeMoim(this);
+    	banUserList.add(userRoom.getId());
+    }
+    
+	public List<String> getBanUserList() {
+		return banUserList;
+	}
+	
+	public void addBanUserList(UserRooms userRoom) {
+		this.banUserList.add(userRoom.getId());
+	}
+	
+	public void removeBanUserList(UserRooms userRoom) {
+		this.banUserList.remove(userRoom.getId());
+	}
+    
+    
+    
     private void setInitValue() {
     	this.subLeader = new ArrayList<String>();
     	this.participants = new ArrayList<String>();
+    	this.banUserList = new ArrayList<String>();
     	this.setProfilePicPI(null);
     }
 	@Override
 	public String toString() {
 		return "Moim [id=" + id + ", name=" + name + ", description=" + description + ", profilePic=" + profilePic
 				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoomId=" + chatRoomId
-				+ ", subLeader=" + subLeader + ", participants=" + participants + "]";
+				+ ", subLeader=" + subLeader + ", participants=" + participants + ", banUserList=" + banUserList + "]";
 	}
-    
-    
 
 }

@@ -5,13 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApproveFriendRequest {
 	
-	private String requestId;
+	private String requestEmail;
 
-	public String getRequestId() {
-		return requestId;
+	public String getRequestEmail() {
+		return requestEmail;
 	}
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
+	public void setRequestEmail(String requestEmail) {
+		this.requestEmail = requestEmail;
 	}
+
 }
