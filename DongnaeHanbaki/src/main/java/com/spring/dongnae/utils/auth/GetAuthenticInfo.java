@@ -28,4 +28,22 @@ public class GetAuthenticInfo {
 			return null;
 		}
 	}
+	
+	public String GetImg() {
+		try {
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal()).getImage();
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
+	
+	public CustomUserDetails GetCUD() {
+		try {
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal());
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }
