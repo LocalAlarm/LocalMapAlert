@@ -145,7 +145,7 @@ function initializeMoimModal() {
     });
 
     // 게시물 작성 폼 제출 이벤트
-    $('#postForm').on('submit', function(e) {
+    $('#postMoimForm').on('submit', function(e) {
         e.preventDefault();
         
         // FormData 객체 생성
@@ -279,6 +279,8 @@ function showMoimBoardDetail(boardId) {
                     showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
+                    postDetailModal.hide();
+                    showMoimBoardDetail(boardId);
                 }
             });
 
@@ -290,6 +292,8 @@ function showMoimBoardDetail(boardId) {
             console.error('Error fetching post details:', err);
         }
     });
+    // 모달창이 닫혔을대 폼을 리셋한다.
+    resetMoimDetailModal();
 }
 
 
@@ -334,9 +338,24 @@ function MoimCommentList(moimCommentList, commentsList) {
     }
 }
 
-
-
-    // 모달창이 닫혔을대 폼을 리셋한다.
-    $('#createMoimModal').on('hidden.bs.modal', function () {
-        //$(this).find('form')[0].reset();
+function resetMoimDetailModal() {
+    // 모달이 닫힐 때 실행될 함수
+    $('#moim-post-detail-modal').on('hidden.bs.modal', function () {
+        // 입력된 값을 초기화
+        $('#post-detail-title').text('');
+        $('#post-detail-content').text('');
+        $('#post-detail-author').html('');
+        $('#post-detail-carousel-inner').empty();
+        $('#post-detail-comments-list').empty();
+        $('#post-detail-comment-input').val('');
+        $('#collapseComments').collapse('hide');
     });
+}
+
+function offDarkBackgroundOfMoimDetailModal() {
+	$('#moim-post-detail-modal').on('show.bs.modal', function (e) {
+	    var modal = new bootstrap.Modal(document.getElementById('moim-post-detail-modal'), {
+	        backdrop: false
+	    });
+	});
+}

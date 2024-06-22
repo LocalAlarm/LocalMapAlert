@@ -1168,8 +1168,6 @@
 
    //마커 내용 쓰기
    function markerContent(markerId) {
-      alert("임건희 시발아 코딩좀해 미친년아 너는 최종ppt당첨이다 이색기야");
-      //        alert("내용쓰기!!ㅋㅋㅎㅎ");
       // 현재 클릭된 마커의 info 객체를 저장
       console.log("마커받았음!");
       console.log(markerId);
