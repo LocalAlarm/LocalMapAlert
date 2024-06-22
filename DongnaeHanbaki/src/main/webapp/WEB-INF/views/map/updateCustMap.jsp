@@ -36,7 +36,7 @@
               $('#pre-title').val(title);    
               var content = customMarker.content;
               var center = customMarker.center;
-	          // 괄호 제거하고 쉼표로 분리
+	          // 괄호 제거하고 쉼표로 분리	
 	          var cleanedCoords = center.replace(/[()]/g, '');
 	          var parts = cleanedCoords.split(', ');
 	
