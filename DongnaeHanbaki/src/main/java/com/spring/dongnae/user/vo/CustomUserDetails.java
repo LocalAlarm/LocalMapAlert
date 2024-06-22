@@ -186,6 +186,38 @@ public class CustomUserDetails implements UserDetails {
       this.nickname = nickname;
    }
 
+   public void setCustomUserDetails(CustomUserDetails cud) {
+	    this.username = cud.getUsername();
+	    this.password = cud.getPassword();
+	    this.token = cud.getToken();
+	    this.image = cud.getImage();
+	    this.nickname = cud.getNickname();
+	    this.address = cud.getAddress();
+	    this.detailAddress = cud.getDetailAddress();
+	    this.email = cud.getEmail();
+	    this.recoverEmail = cud.getRecoverEmail();
+	    this.imagePi = cud.getImagePi();
+	    this.kakaoCheck = cud.getKakaoCheck();
+	    this.role = cud.getRole();
+	}
+   
+   public void setCustomUserDetails(String username, String password, String token, String image, String nickname,
+           String address, String detailAddress, String email, String recoverEmail, String imagePi, int kakaoCheck,
+           String role) {
+       this.username = username;
+       this.password = password;
+       this.token = token;
+       this.image = image;
+       this.nickname = nickname;
+       this.address = address;
+       this.detailAddress = detailAddress;
+       this.email = email;
+       this.recoverEmail = recoverEmail;
+       this.imagePi = imagePi;
+       this.kakaoCheck = kakaoCheck;
+       this.role = role;
+   }
+
 	@Override
 	public String toString() {
 		return "CustomUserDetails [username=" + username + ", password=" + password + ", token=" + token + ", image="

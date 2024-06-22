@@ -9,13 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -95,9 +97,9 @@ public class CustomController {
             vo.setViewLevel(level);
             vo.setTitle(title);
             vo.setContent(content);
-//            System.out.println("삽입할 map : " + vo);
+            System.out.println("삽입할 map : " + vo);
             
-            if( mapService.insertMap(vo) > 0) {
+            if( mapService.insertMap(vo) > 0) {   
                System.out.println("map 입력 성공!!!");
                check = true;
                ObjectMapper mapper = new ObjectMapper();
@@ -129,9 +131,10 @@ public class CustomController {
       System.out.println("openCustomMapList : " + openCustomMapList.toString());//-------------------test code-----------------
       model.addAttribute("openCustomMapList", openCustomMapList);
       //로그인 여부 확인-> true : 내 커스텀 맵 불러옴
-      if(isLogin(session)) {
+      String email = getAuthenticInfo.GetEmail();
+      if(email != null) {
          mapVO.setOpenYn(null);
-         mapVO.setUserEmail(loginUserVO.getEmail());
+         mapVO.setUserEmail(email);
          List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
          System.out.println("myCustomMapList : " + myCustomMapList.toString());//-------------------test code-----------------
          model.addAttribute("myCustomMapList", myCustomMapList);
@@ -140,18 +143,18 @@ public class CustomController {
       return "map/customMap"; 
    }
    
-   //세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
-   private boolean isLogin(HttpSession session) {
-      loginUserVO = (UserVO)session.getAttribute("user");
-      System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
-      if(loginUserVO == null || loginUserVO.getEmail() == null) {
-         return false;
-      } else if("".equals(loginUserVO.getEmail().trim())) {
-         return false;
-      } else {
-         return true;
-      }
-   }
+//   //세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
+//   private boolean isLogin(HttpSession session) {
+//      loginUserVO = (UserVO)session.getAttribute("user");
+//      System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
+//      if(loginUserVO == null || loginUserVO.getEmail() == null) {
+//         return false;
+//      } else if("".equals(loginUserVO.getEmail().trim())) {
+//         return false;
+//      } else {
+//         return true;
+//      }
+//   }
    
    @RequestMapping("/serchCustomMap")
    public String serchMap(MapVO mapVO, Model model) {
@@ -199,43 +202,36 @@ public class CustomController {
       //mapIdx로 불러온 customMapVO 필요
       int MapIdx = Integer.parseInt(request.getParameter("mapIdx"));
       System.out.println(MapIdx);
-      Optional<CustomMarker> custom = customService.selectMarker(MapIdx);
-      if (custom.isPresent()) {
-//         ObjectMapper objectMapper = new ObjectMapper();
-         System.out.println(">>>> " + custom);
-         CustomMarker customMarker = custom.get();
-         System.out.println(">>>> " + customMarker);
-//         String customMarkerJson = objectMapper.writeValueAsString(customMarker);
-//         System.out.println(">>>> " + customMarkerJson);
-         model.addAttribute("customMarker", customMarker);
-      } else {
-         System.out.println("오류!");
-         //페이지처리
-      }
       //커스텀맵에서 사용한 마커종류 리스트 필요
       //표시한 마커목록 리스트 필요
       return "map/updateCustMap"; 
    }
    
-   @RequestMapping("/allMarker")
+   @RequestMapping(value = "/allMarker", method=RequestMethod.GET)
    @ResponseBody
-   public CustomMarker selectAllMarker(@RequestParam("mapIdx") int mapIdx) {
-      System.out.println("마커 데이터 가져오기!");
-      System.out.println(mapIdx);
-      Optional<CustomMarker> custom = customService.selectMarker(mapIdx);
-      if (custom.isPresent()) {
-//         ObjectMapper objectMapper = new ObjectMapper();
-         System.out.println(">>>> " + custom);
-         CustomMarker customMarker = custom.get();
-         System.out.println(">>>> " + customMarker);
-//         String customMarkerJson = objectMapper.writeValueAsString(customMarker);
-//         System.out.println(">>>> " + customMarkerJson);
-         return customMarker;
-      } else {
-         System.out.println("오류!");
-         return null;
-      }
-   }
+   public ResponseEntity<?> selectAllMarker(@RequestParam("mapIdx") String mapIdx) {
+        try {
+            System.out.println("마커 데이터 가져오기!");
+            System.out.println("mapIdx: " + mapIdx);
+            int idx = Integer.parseInt(mapIdx); // 문자열을 정수로 변환
+            Optional<CustomMarker> custom = customService.selectMarker(idx);
+            if (custom.isPresent()) {
+                CustomMarker customMarker = custom.get();
+                System.out.println(">>>> " + customMarker);
+                return ResponseEntity.ok(customMarker);
+            } else {
+                System.out.println("오류: 해당 mapIdx에 해당하는 데이터가 없습니다.");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("오류: mapIdx 파라미터가 정수로 변환할 수 없습니다.");
+            return ResponseEntity.badRequest().body("Invalid mapIdx parameter: " + mapIdx);
+        } catch (Exception e) {
+            System.out.println("오류: 서버에서 데이터 조회 중 예외 발생");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
 

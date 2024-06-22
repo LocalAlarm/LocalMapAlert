@@ -24,7 +24,7 @@ public class GetAuthenticInfo {
 	public String GetEmail() {
 		try {			
 			authentication = SecurityContextHolder.getContext().getAuthentication();
-			 SecurityContextHolder.getContext().setAuthentication(authentication);
+//			 SecurityContextHolder.getContext().setAuthentication(authentication);
 			return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
 		} catch(NullPointerException e) {
 			return null;

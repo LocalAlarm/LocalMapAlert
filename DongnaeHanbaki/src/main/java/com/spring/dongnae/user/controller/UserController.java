@@ -43,6 +43,7 @@ import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
+import com.spring.dongnae.utils.auth.SetAuthenticInfo;
 
 @Controller
 public class UserController {
@@ -52,14 +53,17 @@ public class UserController {
    private final JavaMailSender mailSender;
    private final ImageUploadController imageUploadController;
    private final GetAuthenticInfo getAuthenticInfo;
+   private final SetAuthenticInfo setAuthenticInfo;
 
    @Autowired
-   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController, GetAuthenticInfo getAuthenticInfo) {
+   public UserController(UserService userService, PasswordEncoder passwordEncoder, JavaMailSender mailSender, ImageUploadController imageUploadController, GetAuthenticInfo getAuthenticInfo, 
+		   SetAuthenticInfo setAuthenticInfo) {
       this.userService = userService;
       this.passwordEncoder = passwordEncoder;
       this.mailSender = mailSender;
       this.imageUploadController = imageUploadController;
       this.getAuthenticInfo = getAuthenticInfo;
+	  this.setAuthenticInfo = setAuthenticInfo;
       System.out.println("========= UserController() 객체생성");
    }
 
@@ -329,6 +333,8 @@ public class UserController {
 
       System.out.println("프로필 수정처리>> : " + map);
       userService.updateProfile(map);
+      UserVO vo = userService.getUserByEmail(email);
+      setAuthenticInfo.setUser(vo);
    }
 }
 
