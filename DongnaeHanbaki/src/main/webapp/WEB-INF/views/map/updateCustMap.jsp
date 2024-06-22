@@ -21,45 +21,6 @@
 // var customMarker = JSON.parse(customMarkerJson);
 
 // console.log(customMarker);
-	window.onload = function(){
-		var mapIdx = "${param.mapIdx}";
-		console.log(mapIdx);
-		$.ajax({
-			type: 'GET',
-			url: 'allMarker',
-			data: { mapIdx: mapIdx },
-		  success : function(customMarker) {
-              console.log('Data saved successfully:', customMarker);
-             
-              var title = customMarker.title;
-              console.log(title);
-              $('#pre-title').val(title);    
-              var content = customMarker.content;
-              var center = customMarker.center;
-	          // 괄호 제거하고 쉼표로 분리	
-	          var cleanedCoords = center.replace(/[()]/g, '');
-	          var parts = cleanedCoords.split(', ');
-	
-	          // 위도와 경도 추출
-	          var latitude = parseFloat(parts[0]);
-	          var longitude = parseFloat(parts[1]);
-	
-	          // 결과 출력
-	          console.log("Latitude: " + latitude);
-	          console.log("Longitude: " + longitude);
-	          
-	          var markers = customMarker.markers;
-	          console.log(markers);
-	          console.log(markers.id);
-	          var lines = customMarker.lines;
-	          console.log(lines);
-          },
-          error : function(error) {
-             console.error('Error saving data:', error);
-          }
-		});
-		$('title').text(title);
-	};
 	function updateMap(frm){
 		alert("게시글을 수정합니다");
 	}
@@ -125,7 +86,7 @@
 			    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">마커 종류</button>
 			  </li>
 			  <li class="nav-item" role="presentation">
-			    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">표시된 마커 보기</button>
+			    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" onclick="showMarkerList()">표시된 마커 보기</button>
 			</ul>
 			<div class="tab-content p-2" id="myTabContent">
 			  <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
@@ -137,11 +98,11 @@
 				  </div>
 				  <div class="mb-3">
 				    <label for="center" class="form-label">중심좌표</label>
-				    <input type="text" class="form-control" id="center" value="${customMarker.center }">
+				    <input type="text" class="form-control" id="center">
 				  </div>
 				  <div class="mb-3">
 				    <label for="viewLevel" class="form-label">확대배율</label>
-				    <input type="range" class="form-range" min="0" max="14" id="viewLevel" value="${customMarker.level }">
+				    <input type="range" class="form-range" min="0" max="14" id="viewLevel">
 				  </div>
 				  <div class="form-check form-switch mb-3">
 				    <input class="form-check-input" type="checkbox" role="switch" id="opneYn">
@@ -149,7 +110,7 @@
 				  </div>
 				  <div class="mb-3">
 				    <label for="content" class="form-label">지도 설명</label>
-				    <textarea class="form-control" id="content" value="${customMarker.content }"></textarea>
+				    <textarea class="form-control" id="content"></textarea>
 				  </div>
 				  <button type="submit" class="btn btn-success" onclick="updateMap(this.form)">수정완료</button>
 				</form>
@@ -211,7 +172,7 @@
 			    <button class="nav-link" id="pre-profile-tab" data-bs-toggle="tab" data-bs-target="#pre-profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">마커 종류</button>
 			  </li>
 			  <li class="nav-item" role="presentation">
-			    <button class="nav-link" id="pre-contact-tab" data-bs-toggle="tab" data-bs-target="#pre-contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">표시된 마커 보기</button>
+			    <button class="nav-link" id="pre-contact-tab" data-bs-toggle="tab" data-bs-target="#pre-contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" onclick="showMarkerList()">표시된 마커 보기</button>
 			</ul>
 			<div class="tab-content p-2" id="pre-myTabContent">
 			  <div class="tab-pane fade show active" id="pre-home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
@@ -223,11 +184,11 @@
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-center" class="form-label">중심좌표</label>
-				    <input type="text" class="form-control" id="pre-center" disabled="disabled" value="${customMarker.center }">
+				    <input type="text" class="form-control" id="pre-center" disabled="disabled" value="customMarker.center">
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-viewLevel" class="form-label">확대배율</label>
-				    <input type="range" class="form-range" min="0" max="14" id="pre-viewLevel" disabled="disabled" value="${customMarker.level }">
+				    <input type="range" class="form-range" min="0" max="14" id="pre-viewLevel" disabled="disabled" value="customMarker.level">
 				  </div>
 				  <div class="form-check form-switch mb-3">
 				    <input class="form-check-input" type="checkbox" role="switch" id="pre-opneYn" disabled="disabled">
@@ -235,7 +196,7 @@
 				  </div>
 				  <div class="mb-3">
 				    <label for="pre-content" class="form-label">지도 설명</label>
-				    <textarea class="form-control" id="pre-content" disabled="disabled" value="${customMarker.content }"></textarea>
+				    <textarea class="form-control" id="pre-content" disabled="disabled" value="customMarker.content"></textarea>
 				  </div>
 				  <button type="submit" class="btn btn-success" disabled="disabled">수정 전 지도</button>
 				</form>
@@ -243,36 +204,37 @@
 			  </div>
 			  <div class="tab-pane fade" id="pre-profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
 			  <div class="tab-pane fade" id="pre-contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-			  	<table class="table table-sm table-hover">
-				  <colgroup>
-				  	<col style="width:3em;">
-				  	<col style="width:20%;">
-				  </colgroup>
-				  <thead>
-				    <tr>
-				      <th scope="col">#</th>
-				      <th scope="col">Marker</th>
-				      <th scope="col">About</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr>
-				      <th scope="row">1</th>
-				      <td>Mark</td>
-				      <td>삼원타워 지하 : 고기가 이상함 별점2점</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">2</th>
-				      <td>Jacob</td>
-				      <td>두껍삼 : 묵은지찌개 맛있다 별점4점</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">3</th>
-				      <td>Larry the Bird</td>
-				      <td>육전식당 : 무난평범 별점3점</td>
-				    </tr>
-				  </tbody>
-				</table>
+			  	<div id="showMarkerList"></div>
+<!-- 			  	<table class="table table-sm table-hover"> -->
+<%-- 				  <colgroup> --%>
+<%-- 				  	<col style="width:3em;"> --%>
+<%-- 				  	<col style="width:20%;"> --%>
+<%-- 				  </colgroup> --%>
+<!-- 				  <thead> -->
+<!-- 				    <tr> -->
+<!-- 				      <th scope="col">#</th> -->
+<!-- 				      <th scope="col">Marker</th> -->
+<!-- 				      <th scope="col">About</th> -->
+<!-- 				    </tr> -->
+<!-- 				  </thead> -->
+<!-- 				  <tbody> -->
+<!-- 				    <tr> -->
+<!-- 				      <th scope="row">1</th> -->
+<!-- 				      <td>Mark</td> -->
+<!-- 				      <td>삼원타워 지하 : 고기가 이상함 별점2점</td> -->
+<!-- 				    </tr> -->
+<!-- 				    <tr> -->
+<!-- 				      <th scope="row">2</th> -->
+<!-- 				      <td>Jacob</td> -->
+<!-- 				      <td>두껍삼 : 묵은지찌개 맛있다 별점4점</td> -->
+<!-- 				    </tr> -->
+<!-- 				    <tr> -->
+<!-- 				      <th scope="row">3</th> -->
+<!-- 				      <td>Larry the Bird</td> -->
+<!-- 				      <td>육전식당 : 무난평범 별점3점</td> -->
+<!-- 				    </tr> -->
+<!-- 				  </tbody> -->
+<!-- 				</table> -->
 			  </div>
 			</div>
 			</div>
@@ -293,68 +255,225 @@
 	
 	
 <script>
-
 /* 변수선언 *****************************/
-// var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
-// var myModal = new bootstrap.Modal('#exampleModal');
+//var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
+//var myModal = new bootstrap.Modal('#exampleModal');
+var markerInfoList = [];
+var lineList = [];
+var preMap;
+var level;
+var latitude;
+var longitude;
 
-/* 지도 표시하기 ************************/
-// var level = document.getElementById("viewLevel");
-// var center = document.getElementById("center").value;
-// console.log("Original Value: " + center);
+window.onload = function(){
+	var mapIdx = "${param.mapIdx}";
+	console.log(mapIdx);
+	$.ajax({
+		type: 'GET',
+		url: 'allMarker',
+		data: { mapIdx: mapIdx },
+	  success : function(customMarker) {
+          console.log('Data saved successfully:', customMarker);
+         
+          var title = customMarker.title;
+          level = customMarker.level;
+          $('#pre-viewLevel').val(level);
+          console.log(title);
+          $('#pre-title').val(title);    
+          var content = customMarker.content;
+          $('#pre-content').val(title);
+          var center = customMarker.center;
+          // 괄호 제거하고 쉼표로 분리	
+          var cleanedCoords = center.replace(/[()]/g, '');
+          var parts = cleanedCoords.split(', ');
 
-// // 괄호 제거하고 쉼표로 분리
-// var cleanedCoords = center.replace(/[()]/g, '');
-// var parts = cleanedCoords.split(', ');
+          // 위도와 경도 추출
+          latitude = parseFloat(parts[0]);
+          longitude = parseFloat(parts[1]);
 
-// // 위도와 경도 추출
-// var latitude = parseFloat(parts[0]);
-// var longitude = parseFloat(parts[1]);
+          // 결과 출력
+          console.log("Latitude: " + latitude);
+          console.log("Longitude: " + longitude);
+          $('#pre-center').val(center);
+          markerInfoList = customMarker.markers;
+          console.log(markerInfoList);
+          lineList = customMarker.lines;
+          console.log(lineList);
+          
+//           displayMap(level, latitude, longitude, markerInfoList, lineList);
+          
+      },
+      error : function(error) {
+         console.error('Error saving data:', error);
+      }
+	});
+};
 
-// // 결과 출력
-// console.log("Latitude: " + latitude);
-// console.log("Longitude: " + longitude);
+function initMap(level, latitude, longitude) {
+	console.log("preMap 설정");
+ 	var mapContainer = document.getElementById('preMap'), // 지도를 표시할 div 
+ 	mapOption = { 
+ 	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
+ 	    level: level // 지도의 확대 레벨
+ 	};
+     preMap = new kakao.maps.Map(mapContainer, mapOption); 
+ }
+//Bootstrap Collapse 이벤트에 초기 지도 설정
+$('#pre-map').on('shown.bs.collapse', function () {
+	console.log("수정전 지도 !");
+    // 기존 지도의 중심 좌표와 확대 레벨을 사용하여 초기화
+    if (markerInfoList.length > 0) {
+    	console.log("수정전 지도 !");
+        initMap(level, latitude, longitude);
+        displayMap(markerInfoList, lineList);
+    }
+});
 
-// var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-//     mapOption = { 
-//         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-//         level: level.value // 지도의 확대 레벨
-//     };
+function displayMap(markers, lines) {
+	markerInfoList = markers;
+	lineList = lines;
+	console.log("데이터 받음!");
+	console.log(markerInfoList);
+	console.log(lineList);
+	
+	//markers 배열의 각 요소에 접근
+	for (var i = 0; i < markerInfoList.length; i++) {
+	    console.log("Marker " + i + ":");
+	    console.log("ID: " + markerInfoList[i].id);
+	    console.log("Content: " + markerInfoList[i].content);
+	}
+	
 
-// // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-// var map = new kakao.maps.Map(mapContainer, mapOption); 
+    // 마커 표시
+    for (var i = 0; i < markerInfoList.length; i++) {
+        var markerPosition  = new kakao.maps.LatLng(markerInfoList[i].path.Ma, markerInfoList[i].path.La); 
 
-// // //수정전 초기 지도
-// var preMap;
-// function initMap() {
-// 	var mapContainer = document.getElementById('preMap'), // 지도를 표시할 div 
-// 	mapOption = { 
-// 	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
-// 	    level: level.value // 지도의 확대 레벨
-// 	};
-//     preMap = new kakao.maps.Map(mapContainer, mapOption); 
-// }
+        var marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+		console.log(markerPosition);
+        marker.setMap(preMap);
 
-// $('#pre-map').on('shown.bs.collapse', function () {
-//     initMap();
-// });
-var markerInfoList = markers;
-console.log(markers);
-// var markerInfoList = extractMarkerList();
-// function extractMarkerList() {
-//     return customMarker.map(function(marker) {
-//        return {
-//           id : marker.id,
-//           path : {
-//              Ma : marker.path.getLat(),
-//              La : marker.path.getLng()
-//           },
-//           content : marker.content
-//        }
-//     });
-//  }
-// console.log(markerInfoList);
-// console.log(lineList);
+        // 인포윈도우에 표시할 내용
+        var iwContent = '<div style="padding:5px;">' + markers[i].content + '</div>';
+
+        // 인포윈도우를 생성합니다.
+        var infowindow = new kakao.maps.InfoWindow({
+            content: iwContent
+        });
+
+        // 인포윈도우를 표시합니다.
+        infowindow.open(preMap, marker);
+        
+        // 마커에 클릭 이벤트를 등록합니다.
+        (function(marker, content) {
+            kakao.maps.event.addListener(marker, 'click', function() {
+                // 인포윈도우에 표시할 내용
+                var iwContent = '<div style="padding:5px;">' + content + '</div>';
+
+                // 인포윈도우를 생성합니다.
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: iwContent
+                });
+
+                infowindow.open(preMap, marker); 
+            });
+        })(marker, markerInfoList[i].content);
+    }
+
+    // 라인 표시
+    for (var j = 0; j < lineList.length; j++) {
+        var linePath = lineList[j].path.map(function(coord) {
+            return new kakao.maps.LatLng(coord.Ma, coord.La);
+        });
+        var lineStyle = {
+                strokeWeight: lineList[j].style.strokeWeight,
+                strokeColor: lineList[j].style.strokeColor,
+                strokeOpacity: lineList[j].style.strokeOpacity,
+                strokeStyle: lineList[j].style.strokeStyle
+            };
+
+		console.log(linePath);
+		console.log(lineStyle);
+        var polyline = new kakao.maps.Polyline({
+            path: linePath,
+            strokeWeight: lineStyle.strokeWeight || 5, // 기본값 설정
+            strokeColor: lineStyle.strokeColor || '#FF0000', // 기본값 설정
+            strokeOpacity: lineStyle.strokeOpacity || 0.7, // 기본값 설정
+            strokeStyle: lineStyle.strokeStyle || 'solid' // 기본값 설정
+        });
+
+        polyline.setMap(preMap);
+    }
+}
+
+//마커리스트 출력
+function showMarkerList() {
+   console.log("마커리스트 출력!!");
+   console.log(markerInfoList);
+   
+   if (markerInfoList.length != 0) {
+	   console.log("마커리스트 info!!");
+         var showMarkerInfoList = document.getElementById('showMarkerList');
+         showMarkerInfoList.innerHTML = "";
+		  // htmlContent 생성
+		  var htmlContent = `
+			 <div class="tab-pane fade" id="pre-contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+			  <table class="table table-sm table-hover">
+		        <colgroup>
+		          <col style="width:3em;">
+		          <col style="width:20%;">
+		        </colgroup>
+		        <thead>
+		          <tr>
+		            <th scope="col">#</th>
+		            <th scope="col">Marker</th>
+		            <th scope="col">About</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		  `;
+		
+		  // markerInfoList 반복하여 각 마커 정보 추가
+		  markerInfoList.forEach(function(marker, index) {
+			console.log(marker.id);
+		    htmlContent += `
+		      <tr>
+		        <th scope="row">${index + 1}</th>
+		        <td>marker.id</td>
+		        <td>marker.content</td>
+		      </tr>
+		    `;
+		  });
+		
+		  // htmlContent 마무리
+		  htmlContent += `
+		        </tbody>
+		      </table>
+		     </div>
+		  `;
+		
+		  // showMarkerList에 htmlContent 삽입
+		  showMarkerInfoList.innerHTML = htmlContent;
+   } else {
+      console.log("마커없음!!");
+      showDangerAlert("마커 오류", "마커가 없습니다!", '');
+   }
+}
+
+function moveToMarker(markerId) {
+   console.log("마커이동!!!");
+   console.log(markerId);
+   var markerMove = markerInfoList.find(function(marker) {
+      return marker.id == markerId;
+   });
+   if (markerMove) {
+      var moveLatLon = new kakao.maps.LatLng(markerMove.path.Ma, markerMove.path.La);
+      map.panTo(moveLatLon);   
+   } else {
+      showDangerAlert("마커 오류", "해당 마커를 찾을 수 없습니다.", '마커 연결하기를 다시눌러주세요');
+   }
+}
 
 
 </script>

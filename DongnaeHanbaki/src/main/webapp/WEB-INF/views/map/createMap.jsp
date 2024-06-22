@@ -731,8 +731,8 @@
          path: linePath,
          style: lineStyle,
          depart: departMarker ? departMarker.id : null,
-           via: viaMarker ? viaMarker.id : null,
-           arrive: arriveMarker ? arriveMarker.id : null
+         via: viaMarker ? viaMarker.id : null,
+         arrive: arriveMarker ? arriveMarker.id : null
       })
       console.log(lineList);
       // 지도에 선을 표시합니다 
