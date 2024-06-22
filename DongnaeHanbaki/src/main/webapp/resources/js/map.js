@@ -305,29 +305,21 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
     // markerType에 따라 인포윈도우에 표시할 내용을 생성하는 함수
     function generateInfoContent(markerType, title) {
-        var type;
-        switch (markerType) {
-            case '1':
-                type = "사건사고";
-                break;
-            case '2':
-                type = "공연";
-                break;
-            case '3':
-                type = "팝업 스토어";
-                break;
-            case '4':
-                type = "일일 장터";
-                break;
-            case '5':
-                type = "강연";
-                break;
-            case '6':
-                type = "버스킹";
-                break;
-            default:
-                type = "알 수 없음";
-                break;
+    var type;
+    switch (markerType) {
+        case '1':
+            type = "사건사고";
+            break;
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+            type = "이벤트";
+            break;
+        default:
+            type = "알 수 없음";
+            break;
     }
     return `${type} : ${title}`;
 }
@@ -418,7 +410,6 @@ function All() {
 
             // 마커 보이기
             closePopup();
-   			map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
 
@@ -504,9 +495,12 @@ function RealTimeAccidents() {
                     toggleEventAccidentsTab(true);
                 } else {
                     alert("실시간 사건사고가 없습니다.");
+                    
                 }
             } else {
                 alert("실시간 사건사고가 없습니다.");
+                AllAccidents();
+                
             }
         },
         error: function (xhr, status, error) {
@@ -558,7 +552,8 @@ function NearAccidents() {
                 map.setCenter(nearestMarkerPosition);
             } else {
                 // 근처에 사건사고가 없는 경우
-                alert('근처에 사건사고가 없습니다.');
+                alert('근처에 사건사고가 없습니다. \n사용자 등록 위치로 이동합니다');
+                map.setCenter(coords);
                 AllAccidents();
             }
 
