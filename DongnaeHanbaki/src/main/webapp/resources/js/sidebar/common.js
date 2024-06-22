@@ -90,12 +90,11 @@ function initializeSidebarToggle() {
 }
 
 function searchUserByToken(token, callback) {
-    // 작성자 토큰 값을 사용하여 사용자 정보를 가져오기
     $.ajax({
-        url: `/api/getUserVoByToken`,
+        url: `/dongnae/api/getUserVOByToken`,
         method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ token: data.author }),
+        contentType: 'text/plain',
+        data: token, // 단순 문자열 토큰 값
         success: function(userData) {
             callback(null, userData);
         },
@@ -122,19 +121,19 @@ var isEmpty = function (value) {
 };
 
 function showDangerAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "error",
-		title: title,
-		text: text,
+   Swal.fire({
+      icon: "error",
+      title: title,
+      text: text,
         footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+   });
 }
 
 function showSuccessAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "success",
-		title: title,
-		text: text,
-		footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+   Swal.fire({
+      icon: "success",
+      title: title,
+      text: text,
+      footer: '<span style="color:indianred">' + footerText + '</span>'
+   });
 }

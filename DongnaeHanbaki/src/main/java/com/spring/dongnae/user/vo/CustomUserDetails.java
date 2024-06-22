@@ -8,11 +8,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CustomUserDetails implements UserDetails {
    private static final long serialVersionUID = 1L; // serialVersionUID 필드 추가
 
-   private String username;
+    private String username;
     private String password;
     private String token;
     private String image;
     private String nickname;
+	private String address;
+	private String detailAddress;
+	private String email;
+	private String recoverEmail;
+	private String imagePi;
+	private int kakaoCheck;
+	private String role;
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -28,6 +35,13 @@ public class CustomUserDetails implements UserDetails {
        this.setToken(userVO.getToken());
        this.setImage(userVO.getImage());
        this.setNickname(userVO.getNickname());
+       this.setAddress(userVO.getAddress());
+       this.setDetailAddress(userVO.getDetailAddress());
+       this.setEmail(userVO.getEmail());
+       this.setRecoverEmail(userVO.getRecoverEmail());
+       this.setImagePi(userVO.getImagePi());
+       this.setKakaoCheck(userVO.getKakaoCheck());
+       this.setRole(userVO.getRole());
     }
     
    @Override
@@ -35,8 +49,64 @@ public class CustomUserDetails implements UserDetails {
       return authorities;
    }
    
-   public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-      this.authorities = authorities;
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+	
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+	
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
+	}
+	
+	public String getRecoverEmail() {
+		return recoverEmail;
+	}
+	
+	public void setRecoverEmail(String recoverEmail) {
+		this.recoverEmail = recoverEmail;
+	}
+	
+	public String getImagePi() {
+		return imagePi;
+	}
+	
+	public void setImagePi(String imagePi) {
+		this.imagePi = imagePi;
+	}
+	
+	public int getKakaoCheck() {
+		return kakaoCheck;
+	}
+	
+	public void setKakaoCheck(int kakaoCheck) {
+		this.kakaoCheck = kakaoCheck;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+	      this.authorities = authorities;
    }
 
    @Override
@@ -116,12 +186,46 @@ public class CustomUserDetails implements UserDetails {
       this.nickname = nickname;
    }
 
-   @Override
-   public String toString() {
-      return "CustomUserDetails [username=" + username + ", password=" + password + ", token=" + token
-            + ", isEnabled=" + isEnabled + ", isAccountNonExpired=" + isAccountNonExpired + ", isAccountNonLocked="
-            + isAccountNonLocked + ", isCredentialsNonExpired=" + isCredentialsNonExpired + ", authorities="
-            + authorities + "]";
+   public void setCustomUserDetails(CustomUserDetails cud) {
+	    this.username = cud.getUsername();
+	    this.password = cud.getPassword();
+	    this.token = cud.getToken();
+	    this.image = cud.getImage();
+	    this.nickname = cud.getNickname();
+	    this.address = cud.getAddress();
+	    this.detailAddress = cud.getDetailAddress();
+	    this.email = cud.getEmail();
+	    this.recoverEmail = cud.getRecoverEmail();
+	    this.imagePi = cud.getImagePi();
+	    this.kakaoCheck = cud.getKakaoCheck();
+	    this.role = cud.getRole();
+	}
+   
+   public void setCustomUserDetails(String username, String password, String token, String image, String nickname,
+           String address, String detailAddress, String email, String recoverEmail, String imagePi, int kakaoCheck,
+           String role) {
+       this.username = username;
+       this.password = password;
+       this.token = token;
+       this.image = image;
+       this.nickname = nickname;
+       this.address = address;
+       this.detailAddress = detailAddress;
+       this.email = email;
+       this.recoverEmail = recoverEmail;
+       this.imagePi = imagePi;
+       this.kakaoCheck = kakaoCheck;
+       this.role = role;
    }
 
+	@Override
+	public String toString() {
+		return "CustomUserDetails [username=" + username + ", password=" + password + ", token=" + token + ", image="
+				+ image + ", nickname=" + nickname + ", address=" + address + ", detailAddress=" + detailAddress
+				+ ", email=" + email + ", recoverEmail=" + recoverEmail + ", imagePi=" + imagePi + ", kakaoCheck="
+				+ kakaoCheck + ", role=" + role + ", isEnabled=" + isEnabled + ", isAccountNonExpired="
+				+ isAccountNonExpired + ", isAccountNonLocked=" + isAccountNonLocked + ", isCredentialsNonExpired="
+				+ isCredentialsNonExpired + ", authorities=" + authorities + "]";
+	}
+   
 }
