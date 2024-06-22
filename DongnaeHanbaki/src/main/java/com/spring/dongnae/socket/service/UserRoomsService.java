@@ -48,13 +48,13 @@ public class UserRoomsService {
     	return requestTokens.stream().map(userService::getUserByToken).collect(Collectors.toList());
     }
     
-    public List<UserVO> getFriendIds() throws Exception {
+    public List<FriendInfo> getFriendIds() throws Exception {
     	UserRooms userRooms = userRoomsRepository.findById(getAuthenticInfo.GetToken()).orElseThrow(() -> new RuntimeException("UserRooms not found"));
     	List<FriendInfo> friendInfo = userRooms.getFriendIds();
-    	List<UserVO> friendUserVOLists = friendInfo.stream().map(friend -> userService.getUserByToken(friend.getFriendToken())).collect(Collectors.toList());
-    	return friendUserVOLists;
+    	// List<UserVO> friendUserVOLists = friendInfo.stream().map(friend -> userService.getUserByToken(friend.getFriendToken())).collect(Collectors.toList());
+    	return friendInfo;
     }
-    
+
     public boolean processApproveFriendRequest(String requestedEmail) throws Exception {
     	try {
         	String myEmail = getAuthenticInfo.GetEmail();

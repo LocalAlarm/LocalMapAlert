@@ -12,8 +12,6 @@ function connectChat() {
 
             if (isMessage(chatJsonData)) {
                 handleMessage(chatJsonData);
-            } else if (isUserRooms(chatJsonData)) {
-                handleUserRooms(chatJsonData);
             } else {
                 console.error("Unknown data type received:", chatJsonData);
             }
@@ -35,21 +33,6 @@ function isMessage(data) {
     return data.senderToken !== undefined && data.content !== undefined;
 }
 
-function isUserRooms(data) {
-    return data.requestIds !== undefined && data.friendIds !== undefined;
-}
-
-async function handleUserRooms(userRooms) {
-    if (Array.isArray(userRooms.chatRoomIds)) { // 메시지가 배열인지 확인
-        for (const element of userRooms.chatRoomIds) {
-            var buttonHtml = '';
-            buttonHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element + '">' + element + '</li>';
-            $('#chatList').html(buttonHtml);
-        }
-    } else {
-        console.error("userRooms.chatRoomIds is not an array");
-    }
-}
 
 // Message 데이터를 처리하는 함수
 async function handleMessage(message) {
@@ -78,7 +61,7 @@ function sendMessage() {
     }
 }
 
-function displayMessage(nickname, message, type) {
+function displayMessage(nickname, message, type, eleid) {
     var chatBox = document.getElementById('chatBox');
     var messageDiv = document.createElement('div');
     messageDiv.classList.add('message', type); // 메시지 스타일 지정

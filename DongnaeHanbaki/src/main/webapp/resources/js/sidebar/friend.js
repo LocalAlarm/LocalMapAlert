@@ -39,14 +39,12 @@ function loadFriendRequests() {
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
-            console.log('Received data:', response);
             try {
                 const container = $('#friend-requests');
                 container.empty();
                 var friendRequestHtml = '';
                 response.forEach(data => {
-                	console.log(data);
-                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" id="${data.email}">
+                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" data-token="${data.email}">
                                             <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
                                             <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
                                             ${data.email}
@@ -78,7 +76,7 @@ async function loadFriendList() {
 
             if (data && data.length > 0) {
                 $.each(data, function(index, user) {
-                    var listItem = $('<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + user.email + '">' + user.nickname + '</li>');
+                    var listItem = $(`<li class="mb-1 mt-1 chatToastBtn collapse__sublink" data-token="${user.chatRoomId}">${user.roomName}</li>`);
                     friendList.append(listItem);
                 });
             }

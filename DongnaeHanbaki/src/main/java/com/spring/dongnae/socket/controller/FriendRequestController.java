@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.dongnae.socket.scheme.ApproveFriendRequest;
+import com.spring.dongnae.socket.scheme.FriendInfo;
 import com.spring.dongnae.socket.scheme.FriendRequest;
 import com.spring.dongnae.socket.service.UserRoomsService;
 import com.spring.dongnae.user.vo.UserVO;
@@ -49,14 +50,14 @@ public class FriendRequestController {
     
     // 친구의 리스트를 보내주는 코드
     @PostMapping("/friendIds")
-    public ResponseEntity<List<UserVO>> receiveFriendIds() {
-    	List<UserVO> friendsVO = null;
+    public ResponseEntity<List<FriendInfo>> receiveFriendIds() {
+    	List<FriendInfo> friendsInfo = null;
     	try {
-    		friendsVO = userRoomsService.getFriendIds();
+    		friendsInfo = userRoomsService.getFriendIds();
     	} catch(Exception e) {
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     	}
-    	return ResponseEntity.ok(friendsVO);
+    	return ResponseEntity.ok(friendsInfo);
     }
     
     @PostMapping(value = "/approveFriendRequest", produces = "text/plain;charset=UTF-8")
