@@ -97,9 +97,9 @@ public class CustomController {
             vo.setViewLevel(level);
             vo.setTitle(title);
             vo.setContent(content);
-//            System.out.println("삽입할 map : " + vo);
+            System.out.println("삽입할 map : " + vo);
             
-            if( mapService.insertMap(vo) > 0) {
+            if( mapService.insertMap(vo) > 0) {	
                System.out.println("map 입력 성공!!!");
                check = true;
                ObjectMapper mapper = new ObjectMapper();
@@ -111,8 +111,6 @@ public class CustomController {
                customService.saveMarker(customMarker);
                
             }
-            
-            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,9 +129,10 @@ public class CustomController {
 		System.out.println("openCustomMapList : " + openCustomMapList.toString());//-------------------test code-----------------
 		model.addAttribute("openCustomMapList", openCustomMapList);
 		//로그인 여부 확인-> true : 내 커스텀 맵 불러옴
-		if(isLogin(session)) {
+		String email = getAuthenticInfo.GetEmail();
+		if(email != null) {
 			mapVO.setOpenYn(null);
-			mapVO.setUserEmail(loginUserVO.getEmail());
+			mapVO.setUserEmail(email);
 			List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
 			System.out.println("myCustomMapList : " + myCustomMapList.toString());//-------------------test code-----------------
 			model.addAttribute("myCustomMapList", myCustomMapList);
@@ -142,18 +141,18 @@ public class CustomController {
 		return "map/customMap"; 
 	}
 	
-	//세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
-	private boolean isLogin(HttpSession session) {
-		loginUserVO = (UserVO)session.getAttribute("user");
-		System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
-		if(loginUserVO == null || loginUserVO.getEmail() == null) {
-			return false;
-		} else if("".equals(loginUserVO.getEmail().trim())) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+//	//세션에서 유저 가져옴 + 로그인 여부 확인 메 서드
+//	private boolean isLogin(HttpSession session) {
+//		loginUserVO = (UserVO)session.getAttribute("user");
+//		System.out.println("loginUser : " + loginUserVO);//-------------------test code-----------------
+//		if(loginUserVO == null || loginUserVO.getEmail() == null) {
+//			return false;
+//		} else if("".equals(loginUserVO.getEmail().trim())) {
+//			return false;
+//		} else {
+//			return true;
+//		}
+//	}
 	
 	@RequestMapping("/serchCustomMap")
 	public String serchMap(MapVO mapVO, Model model) {
