@@ -45,7 +45,7 @@ function loadFriendRequests() {
                 container.empty();
                 var friendRequestHtml = '';
                 response.forEach(data => {
-                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" data-token="${data.email}">
+                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" req-data-token="${data.email}">
                                             <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
                                             <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
                                             ${data.email}
@@ -89,7 +89,7 @@ async function loadFriendList() {
 
 function approveFriendRequest() {
     $(document).on('click', '.friendApprove', function () {
-        var requestEmail = $(this).parent().attr('id');
+        var requestEmail = $(this).parent().attr('req-data-token');
         $.ajax({
             url: '/dongnae/friendData/approveFriendRequest', // 요청을 처리할 서버의 URL 경로
             type: 'POST', // POST 방식으로 요청

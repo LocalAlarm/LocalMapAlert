@@ -11,6 +11,7 @@ import com.spring.dongnae.socket.error.AccessDenied;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
 import com.spring.dongnae.socket.scheme.ChatRoom;
 import com.spring.dongnae.socket.scheme.Message;
+import com.spring.dongnae.socket.scheme.UserRooms;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
@@ -33,12 +34,36 @@ public class ChatRoomService {
     	return chatRoomRepository.save(chatRoom);
     }
     
+    public void addUserToChatRoom(String chatId, String userToken) {
+		ChatRoom chatRoom = chatRoomRepository.findById(chatId).orElseThrow(() -> new RuntimeException("ChatRoom not found"));
+		chatRoom.addUser(userToken);
+		chatRoomRepository.save(chatRoom);
+    }
+    
+    public void addUserToChatRoom(String chatId, UserRooms userRoom) {
+    	ChatRoom chatRoom = chatRoomRepository.findById(chatId).orElseThrow(() -> new RuntimeException("ChatRoom not found"));
+    	chatRoom.addUser(userRoom);
+    	chatRoomRepository.save(chatRoom);
+    }
+    
+    public void banUserToChatRoom(String chatId, String userToken) {
+		ChatRoom chatRoom = chatRoomRepository.findById(chatId).orElseThrow(() -> new RuntimeException("ChatRoom not found"));
+		chatRoom.banUser(userToken);
+		chatRoomRepository.save(chatRoom);
+    }
+    
+    public void banUserToChatRoom(String chatId, UserRooms userRoom) {
+    	ChatRoom chatRoom = chatRoomRepository.findById(chatId).orElseThrow(() -> new RuntimeException("ChatRoom not found"));
+    	chatRoom.banUser(userRoom);
+    	chatRoomRepository.save(chatRoom);
+    }
+    
     
     public List<String> addMessage(Message newMessage) {
     	try {
     		ChatRoom chatRoom = chatRoomRepository.findById(newMessage.getRoomId()).orElseThrow(() -> new RuntimeException("ChatRoom not found"));
-    		System.out.println("chatROom: " + chatRoom);
     		chatRoom.addMessage(newMessage);
+    		chatRoomRepository.save(chatRoom);
     		return chatRoom.getUserTokens();
     	} catch(Exception e) {
     		return null;

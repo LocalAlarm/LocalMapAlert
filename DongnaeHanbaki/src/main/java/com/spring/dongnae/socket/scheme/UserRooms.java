@@ -1,14 +1,12 @@
 package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Document(collection = "userRooms")

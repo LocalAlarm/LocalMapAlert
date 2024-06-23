@@ -23,9 +23,9 @@ public class ChatRoomController {
 	private ChatRoomService chatRoomService;
 	
 	@PostMapping(value = "/getChatHistory", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<?> getChatHistory(@RequestBody ChatRoom chatRoomId) {
+	public ResponseEntity<?> getChatHistory(@RequestBody ChatRoom chatRoom) {
 	    try {
-	    	List<MessageDto> chatHistory = chatRoomService.getChatHistory(chatRoomId.getId());
+	    	List<MessageDto> chatHistory = chatRoomService.getChatHistory(chatRoom.getId());
 	    	return ResponseEntity.ok(chatHistory);
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");

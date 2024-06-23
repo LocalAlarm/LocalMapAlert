@@ -144,20 +144,16 @@ const chatToast = document.getElementById('chatToast');
 		</div>
 
 		<div class="toast-body">
-			<div class="chatBox">
+			<div class="chatBox" id="chatBoxToast">
 				<div class="chat-histroy-div"></div>
 				<div class="chat-new-div"></div>			
 			</div>
 			<!-- <div id="chatBox"></div> -->
 		</div>
 		<!-- 채팅 메시지 표시 영역 -->
-		<input type="text" id="message" placeholder="Enter your message" />
+		<input type="text" class="form-control p-3" id="chat-message-input" placeholder="Enter your message" />
 		<!-- 메시지 입력 필드 -->
-		<img
-			src="${pageContext.request.contextPath}/resources/svg/paper-plane-outline.svg"
-			class="rounded me-2" style="height: 50px; width: 50px;"
-			alt="ChatIcon">
-		<button onclick="sendMessage()">Send</button>
+		<button class="btn btn-info" onclick="sendToastMessage()">Send</button>
 		<!-- 전송 버튼 -->
 	</div>
 </div>
@@ -263,12 +259,17 @@ const chatToast = document.getElementById('chatToast');
 							</nav>
                         </div>
                         <!-- 오른쪽 4개 열 -->
-                        <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
+                        <div class="col-md-4" id="moim-right-content" style="height: 500px; display: flex; flex-direction:column; overflow-y:auto;">
                             <!-- 오른쪽 내용이 들어갈 자리 -->
                             <!-- 채팅이 들어간다 -->
-							<div class="chatBox">
+							<div class="chatBox" style="flex-grow: 1; overflow-y: auto;">
 								<div class="chat-histroy-div"></div>
 								<div class="chat-new-div"></div>			
+							</div>
+							<div class="moim-chat-text-button" style="flex-shrink: 0;">
+								<input type="text" class="form-control p-3" id="moim-message-input" placeholder="Enter your message" />
+								<!-- 메시지 입력 필드 -->
+								<button class="btn btn-info" onclick="sendMoimMessage()">Send</button>
 							</div>
                         </div>
                     </div>
@@ -360,13 +361,7 @@ const chatToast = document.getElementById('chatToast');
 		if (isLogin) {
 			friendFunction();
 			chatFunction();
-			initializeSearchMoimsEvents();
-			connectMoim();
-			createMoimModalFunction();
-			initializeMoimModal();
-			offDarkBackgroundOfMoimDetailModal();
-			registerMoimModal();
-			processRegistMoim();
+			moimFunction();
 		}
 		initializeCollapseMenu();
 		initializeSidebarToggle();

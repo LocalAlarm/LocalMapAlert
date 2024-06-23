@@ -145,6 +145,15 @@ function getDataTokenByClass(className) {
     }
 }
 
+function getChatTokenById(Id) {
+    var element = document.getElementById(Id); // #를 제거합니다
+    if (element) { 
+        return element.getAttribute('chat-token');
+    } else {
+        return null;
+    }
+}
+
 function initializeMenuActivation() {
     $(document).on('click', '.nav__link', function () {
         $('.nav__link').removeClass('side__active');

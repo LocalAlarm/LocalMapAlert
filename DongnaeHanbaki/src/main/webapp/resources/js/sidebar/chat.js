@@ -2,7 +2,8 @@
 function chatFunction() {
     connectChat();
     initializeChatToast();
-    handleMessageEnterPress();
+    handleToastMessageEnterPress();
+    handleMoimMessageEnterPress();
 }
 
 function connectChat() {
@@ -52,8 +53,8 @@ async function handleNewMessage(message) {
     displayMessage(message, 'chat-new-div');
 }
 
-function sendMessage() {
-    var messageInput = document.getElementById('message');
+function sendToastMessage() {
+    var messageInput = document.getElementById('chat-message-input');
     var content = messageInput.value;
     if (content.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
         var jsonMsg = {
@@ -66,19 +67,40 @@ function sendMessage() {
     }
 }
 
-function displayMessage(message, divType) {
-    var chatBox = document.getElementById(divType);
-    var messageDiv = document.createElement('div');
-
-    if (loginUserEmail === message.senderEmail) {
-        messageDiv.classList.add('message', 'sent'); // 메시지 스타일 지정
-        messageDiv.textContent = message.content; // 메시지 내용 설정
-    } else {
-        messageDiv.classList.add('message', 'received'); // 메시지 스타일 지정
-        messageDiv.textContent = message.senderNickName + ': ' + message.content; // 메시지 내용 설정
+function sendMoimMessage() {
+    var messageInput = document.getElementById('moim-message-input');
+    var content = messageInput.value;
+    if (content.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
+        var jsonMsg = {
+            "roomId": getChatTokenById('moim-modal'),
+            "content": content,
+            "timestamp": Date.now()
+        };
+     	chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
+        messageInput.value = ''; // 입력창 비우기
     }
-    chatBox.appendChild(messageDiv); // 메시지를 채팅 박스에 추가
-    chatBox.scrollTop = chatBox.scrollHeight; // 새 메시지가 추가될 때 스크롤을 맨 아래로 이동
+}
+
+function displayMessage(message, divType) {
+    var targetElement = $('[chat-token="' + message.roomId + '"]');
+    var messageDiv = document.createElement('div');
+    // 해당 요소가 존재하는지 확인
+    if (targetElement.length > 0) {
+        // 요소 안의 특정 클래스를 찾아서 내용을 추가
+        const divTarget = targetElement.find('.' + divType)[0];
+        const scrollDiv = targetElement.find('.chatBox')[0];
+        if (loginUserEmail === message.senderEmail) {
+            messageDiv.classList.add('message', 'sent'); // 메시지 스타일 지정
+            messageDiv.textContent = message.content; // 메시지 내용 설정
+        } else {
+            messageDiv.classList.add('message', 'received'); // 메시지 스타일 지정
+            messageDiv.textContent = message.senderNickName + ': ' + message.content; // 메시지 내용 설정
+        }
+        divTarget.appendChild(messageDiv); // 메시지를 채팅 박스에 추가
+        scrollDiv.scrollTop = scrollDiv.scrollHeight; // 새 메시지가 추가될 때 스크롤을 맨 아래로 이동
+    } else {
+        return null;
+    }
 }
 
 function initResize() {
@@ -107,8 +129,8 @@ function initResize() {
     }
 }
 
-function scrollToBottom() {
-    var chatBox = document.getElementById('chatBox');
+function scrollToBottomToast() {
+    var chatBox = $('#chatToast .chatBox');
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
@@ -118,19 +140,19 @@ function initializeChatToast() {
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
         toastBootstrap.hide();
         var dataToken = $(this).attr('data-token');
+        console.log(dataToken);
         $.ajax({
             type: 'POST',
             url: '/dongnae/chat/getChatHistory',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify({ id: dataToken }), // 버튼 ID 전송
             success: async function (response) {
-                if (isEmpty(response.messages)) {
-                    var chatHistoryBox = document.getElementById('chat-histroy-div');
-                    var chatNewBox = document.getElementById('chat-new-div');
-                    chatHistoryBox.innerHTML = '';
-                    chatNewBox.innerHTML = '';
-                } else if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
-                    for (const element of response.messages) {
+                $('#chatToast').attr('chat-token', dataToken);
+                $('#chatToast .chat-histroy-div').html('');
+                $('#chatToast .chat-new-div').html('');
+                if (isEmpty(response)) {
+                } else if (Array.isArray(response)) { // 메시지가 배열인지 확인
+                    for (const element of response) {
                         displayMessage(element, 'chat-histroy-div');
                     }
                 } else {
@@ -138,7 +160,7 @@ function initializeChatToast() {
                 }
                 $('.toast-container').attr('data-token', dataToken);
                 toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
-                scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
+                scrollToBottomToast(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
             },
             error: function(xhr, status, error) {
                 // 에러 시 처리
@@ -148,10 +170,19 @@ function initializeChatToast() {
     });
 }
 
-function handleMessageEnterPress() {
-    document.getElementById('message').addEventListener('keypress', function(event) {
+function handleToastMessageEnterPress() {
+    document.getElementById('chat-message-input').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            sendMessage(); // 엔터 키 누를 시 메시지 전송
+            sendToastMessage(); // 엔터 키 누를 시 메시지 전송
+            event.preventDefault(); // 엔터 키의 기본 동작 막기
+        }
+    });
+}
+
+function handleMoimMessageEnterPress() {
+    document.getElementById('moim-message-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMoimMessage(); // 엔터 키 누를 시 메시지 전송
             event.preventDefault(); // 엔터 키의 기본 동작 막기
         }
     });

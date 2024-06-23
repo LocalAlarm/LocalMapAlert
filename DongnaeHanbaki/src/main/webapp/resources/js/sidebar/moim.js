@@ -1,3 +1,13 @@
+function moimFunction() {
+    connectMoim();
+    resetMoimModal();
+    createMoimModalFunction();
+    initializeMoimModal();
+    registerMoimModal();
+	processRegistMoim();
+    initializeSearchMoimsEvents();
+}
+
 function connectMoim() {
     moimSocket = new WebSocket('ws://localhost:8088/dongnae/moim');
 
@@ -136,8 +146,27 @@ function initializeMoimModal() {
                     <img src="${data.profilePic}" alt="Moim logo" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
                     ${data.name}
                 `);
+                console.log(data);
+                $('#moim-modal').attr('chat-token', data.chatId);
                 loadBoardList(1); // 첫 번째 페이지를 로드
                 createMoimModal.show();
+
+                $.ajax({
+                    type:'POST',
+                    url: '/dongnae/chat/getChatHistory',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ id: data.chatId }),
+                    success: async function(response) {
+                        if (isEmpty(response)) {
+                        } else if (Array.isArray(response)) { // 메시지가 배열인지 확인
+                            for (const element of response) {
+                                displayMessage(element, 'chat-histroy-div');
+                            }
+                        } else {
+                            console.error("chatRoom.messages is not an array");
+                        }
+                    }
+                })
             },
             error: function(err) {
                 console.error('Error fetching moim data:', err);
@@ -223,7 +252,6 @@ function loadBoardList(page) {
             if (data.content.length > 0) {
                 data.content.forEach(function(board) {
                     // Add the board item with a placeholder for the author
-                    console.log(board);
                     const boardItem = $(`
                         <tr class="moim-board-item" data-id="${board.id}">
                             <td>${board.title}</td>
@@ -525,3 +553,26 @@ function registerMoimModal(){
         registerMoimModal.show();
     });
 };
+
+function resetMoimModal() {
+    $('#moim-modal').on('hidden.bs.modal', function () {
+        // 제목 초기화
+        $('#moim-modal-title').text('');
+        
+        // 게시물 목록 초기화
+        $('#moim-board-list').empty();
+        
+        // 페이지네이션 초기화
+        $('#moim-pagination').empty();
+        
+        // 채팅 내역 초기화
+        $('#moim-modal .chat-histroy-div').empty();
+        $('#moim-modal .chat-new-div').empty();
+        
+        // 메시지 입력 필드 초기화
+        $('#moim-message-input').val('');
+        
+        // chat-token 초기화 (필요 시)
+        $('#moim-modal').removeAttr('chat-token');
+    });
+}

@@ -50,6 +50,7 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		String payload = message.getPayload();
 		Message newMessage = objectMapper.readValue(payload, Message.class); // Message.class - 받아온 데이터를 message클래스로 변환시킴
 		newMessage.setSenderToken(token);
+		System.out.println(newMessage);
 		List<String> userTokens = chatRoomService.addMessage(newMessage);
 		MessageDto messageDto = chatRoomService.transferDto(newMessage);
 		String jsonMessageDto = objectMapper.writeValueAsString(messageDto);

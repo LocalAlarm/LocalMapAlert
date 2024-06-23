@@ -64,7 +64,23 @@ public class MoimService {
     		Moim moim = moimOptional.get();
     		UserRooms userRooms = userRoomsOptional.get();
     		moim.addParticipant(userRooms);
+    		chatRoomService.addUserToChatRoom(moim.getChatRoomId(), userRooms);
     		userRooms.addMoim(moim);
+    		userRoomsRepository.save(userRooms);
+    		return moimRepository.save(moim);
+    	}
+    	return null;
+    }
+    
+    public Moim banUserAtMoim(String moimName, String token) {
+    	Optional<Moim> moimOptional = moimRepository.findByName(moimName);
+    	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
+    	if (moimOptional.isPresent() && userRoomsOptional.isPresent()) {
+    		Moim moim = moimOptional.get();
+    		UserRooms userRooms = userRoomsOptional.get();
+    		moim.banUser(userRooms);
+    		userRooms.removeMoim(moim);
+    		chatRoomService.banUserToChatRoom(moim.getChatRoomId(), userRooms);
     		userRoomsRepository.save(userRooms);
     		return moimRepository.save(moim);
     	}
@@ -155,8 +171,5 @@ public class MoimService {
     	Pageable pageable = new PageRequest(0, 5);  // 첫 페이지에서 최대 5개의 결과
         return moimRepository.findByNameContainingIgnoreCaseAndIdNotIn(name, excludeIds, pageable);
     }
-//    public List<Moim> getMoimByToken(String token) {
-//    	Optional<UserRooms> userRoomsOptional = userRoomsRepository.findById(token);
-//    	return userRoomsOptional.map(UserRooms::getMoims).orElse(null);
-//    }
+
 }

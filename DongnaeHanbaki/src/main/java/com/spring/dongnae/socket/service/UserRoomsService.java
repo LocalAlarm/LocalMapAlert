@@ -57,17 +57,16 @@ public class UserRoomsService {
 
     public boolean processApproveFriendRequest(String requestedEmail) throws Exception {
     	try {
-        	String myEmail = getAuthenticInfo.GetEmail();
-        	UserRooms userRooms = userRoomsRepository.findByEmail(myEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+        	String myToken = getAuthenticInfo.GetToken();
+        	UserRooms userRooms = userRoomsRepository.findById(myToken).orElseThrow(() -> new RuntimeException("UserRooms not found"));
         	UserRooms requestedUserRooms = userRoomsRepository.findByEmail(requestedEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
         	ChatRoom chatRoom = new ChatRoom();
         	chatRoom.addUser(requestedUserRooms);
         	chatRoom.addUser(userRooms);
         	chatRoomRepository.save(chatRoom);
-        	
+        	System.out.println("챗룸 아디 " + chatRoom.getId());
         	FriendInfo myFriendInfo = new FriendInfo(chatRoom.getId(), requestedUserRooms.getId(), requestedUserRooms.getEmail());
         	FriendInfo requestedFriendInfo = new FriendInfo(chatRoom.getId(), userRooms.getId(), userRooms.getEmail());
-        	
         	userRooms.addFriendId(myFriendInfo);
         	requestedUserRooms.addFriendId(requestedFriendInfo);
         	
