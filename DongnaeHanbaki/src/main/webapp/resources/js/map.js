@@ -83,7 +83,6 @@ function toggleEventAccidentsTab(activate) {
         document.querySelectorAll('.nav-link').forEach(function (el) {
             el.classList.remove('active');
         });
-
         // 사건 사고 메뉴 활성화
         document.getElementById('eventAccidentsDropdown').classList.add('active');
     } else {
