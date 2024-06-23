@@ -150,10 +150,10 @@ function initializeMoimModal() {
         createPostModal.show();
     });
 
-    // 게시물 작성 폼 제출 이벤트
+    // 게시물 작성 이벤트
     $('#postMoimForm').on('submit', function(e) {
         e.preventDefault();
-        
+        var page = $('#moim-modal').attr('data-moim-page');
         // FormData 객체 생성
         var formData = new FormData(this);
         var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
@@ -168,8 +168,8 @@ function initializeMoimModal() {
             contentType: false,
             success: function(response) {
                 console.log('게시물 작성 성공:', response);
-                // 작성 완료 후 모달 닫기
                 createPostModal.hide();
+                loadBoardList(page);
             },
             error: function(err) {
                 console.error('게시물 작성 실패:', err);
@@ -179,21 +179,28 @@ function initializeMoimModal() {
 }
 
 async function moimPagenate(moimId, page, pageSize) {
-    // 페이징 처리 작업을 쉽게 하기 위해, 페이지에 1을 더한다...? 그
+    // 모임 페이지에 관한 것을 모달에 저장.
+    page = Number(page); // page 변수를 숫자로 변환
+    $('#moim-modal').attr('data-moim-page', page);
     const moimPagenation = $('#moim-pagination');
     moimPagenation.empty();
     const totalCount = await $.ajax({
         url: `/dongnae/moim/${moimId}/boards/count`,
         method: 'GET'
     });
-    
-    console.log(totalCount);
-
-    if (totalCount > (page * pageSize)) {
-        console.log("wkr");
-        moimPagenation.append('<li class="page-item"><a class="page-link" href="#">2</a></li>');
+    if (page >= 3) {
+        moimPagenation.append(`<li class="page-item"><a class="page-link" onclick="loadBoardList(${page - 2})">${page - 2}</a></li>`);
     }
-
+    if (page >= 2) {
+        moimPagenation.append(`<li class="page-item"><a class="page-link" onclick="loadBoardList(${page - 1})">${page - 1}</a></li>`);
+    }
+    moimPagenation.append(`<li class="page-item"><a class="page-link disabled active">${page}</a></li>`);
+    if (totalCount > (page * pageSize)) {
+        moimPagenation.append(`<li class="page-item"><a class="page-link" onclick="loadBoardList(${page + 1})">${page + 1}</a></li>`);
+    }
+    if (totalCount > ((page + 1) * pageSize)) {
+        moimPagenation.append(`<li class="page-item"><a class="page-link" onclick="loadBoardList(${page + 2})">${page + 2}</a></li>`);
+    }
 }
 
 function loadBoardList(page) {
@@ -216,6 +223,7 @@ function loadBoardList(page) {
             if (data.content.length > 0) {
                 data.content.forEach(function(board) {
                     // Add the board item with a placeholder for the author
+                    console.log(board);
                     const boardItem = $(`
                         <tr class="moim-board-item" data-id="${board.id}">
                             <td>${board.title}</td>
@@ -254,10 +262,7 @@ function loadBoardList(page) {
 
 
 function showMoimBoardDetail(boardId) {
-    // 모달을 닫기
-    var postDetailModal = new bootstrap.Modal($('#moim-post-detail-modal')[0]);
     resetMoimDetailModal();
-    postDetailModal.hide();
     $.ajax({
         url: `/dongnae/moim/board/${boardId}`,
         method: 'GET',
@@ -307,8 +312,6 @@ function showMoimBoardDetail(boardId) {
                     showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
-                    postDetailModal.hide();
-                    showMoimBoardDetail(boardId);
                 }
             });
 
@@ -331,7 +334,9 @@ function submitMoimComment(boardId, content) {
         data: JSON.stringify({ content: content }),
         success: function(data) {
             // 댓글 작성 후 댓글 리스트를 다시 로드
-            showMoimBoardDetail(boardId);
+            const commentsList = $('#post-detail-comments-list');
+            commentsList.empty(); // 댓글 목록 초기화
+            fetchComments(boardId, commentsList);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);
@@ -339,30 +344,57 @@ function submitMoimComment(boardId, content) {
     });
 }
 
-function MoimCommentList(moimCommentList, commentsList) {
+async function fetchComments(boardId, commentsList) {
+    try {
+        const response = await fetch(`/dongnae/moim/get-comments/${boardId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const comments = await response.json();
+        // 함수
+        MoimCommentList(comments, commentsList)
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+    }
+}
+
+async function MoimCommentList(moimCommentList, commentsList) {
+    console.log(moimCommentList);
     if (moimCommentList.length > 0) {
-        moimCommentList.forEach(function(comment) {
-            searchUserByToken(comment.author, function(err, userData) {
-                if (err) {
-                    commentsList.append(`
-                        <div class="comment">
-                            <p><strong>Unknown Author</strong>: ${comment.content}</p>
-                        </div>
-                    `);
-                } else {
-                    commentsList.append(`
-                        <div class="comment">
-                            <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
-                            <strong>${userData.nickname}</strong>: ${comment.content}</p>
-                        </div>
-                    `);
-                }
-            });
+        // 모든 댓글에 대해 searchUserByToken을 호출하고 결과를 Promise 배열로 반환
+        const commentPromises = moimCommentList.map(comment => 
+            new Promise((resolve, reject) => {
+                searchUserByToken(comment.author, (err, userData) => {
+                    if (err) {
+                        resolve(`
+                            <div class="comment">
+                                <p><strong>Unknown Author</strong>: ${comment.content}</p>
+                            </div>
+                        `);
+                    } else {
+                        resolve(`
+                            <div class="comment">
+                                <p><img src="${userData.image}" alt="${userData.nickname}" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
+                                <strong>${userData.nickname}</strong>: ${comment.content}</p>
+                            </div>
+                        `);
+                    }
+                });
+            })
+        );
+
+        // 모든 Promise가 완료될 때까지 기다림
+        const commentElements = await Promise.all(commentPromises);
+
+        // 결과를 순서대로 commentsList에 추가
+        commentElements.forEach(commentHtml => {
+            commentsList.append(commentHtml);
         });
     } else {
         commentsList.append('<p>댓글이 없습니다.</p>');
     }
 }
+
 
 function resetMoimDetailModal() {
     // 입력된 값을 초기화

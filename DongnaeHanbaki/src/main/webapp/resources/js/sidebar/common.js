@@ -121,7 +121,7 @@ function initializeSidebarToggle() {
 
 function searchUserByToken(token, callback) {
     $.ajax({
-        url: `/dongnae/api/getUserVOByToken`,
+        url: '/dongnae/api/getUserVOByToken',
         method: 'POST',
         contentType: 'text/plain',
         data: token, // 단순 문자열 토큰 값

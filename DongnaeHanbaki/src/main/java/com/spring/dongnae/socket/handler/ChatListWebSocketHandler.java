@@ -21,8 +21,6 @@ import com.spring.dongnae.user.service.UserService;
 public class ChatListWebSocketHandler extends TextWebSocketHandler {
 
 	@Autowired
-	private UserService userService;
-	@Autowired
 	private ChatRoomService chatRoomService;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();

@@ -118,6 +118,12 @@ public class MoimController {
     	return moimService.deleteCommentFromBoard(boardId, commentId);
     }
     
+    @GetMapping("/get-comments/{boardId}")
+    public List<Comment> getCommetList(@PathVariable String boardId) {
+    	System.out.println("asdsa");
+    	return boardService.getCommentList(boardId);
+    }
+    
     @GetMapping("/{moimId}/all-boards")
     public List<Board> getBoardsByMoimId(@PathVariable String moimId) {
     	return moimService.getBoardByMoimId(moimId);

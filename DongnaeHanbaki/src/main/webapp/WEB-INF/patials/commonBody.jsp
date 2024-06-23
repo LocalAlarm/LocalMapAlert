@@ -144,9 +144,9 @@ const chatToast = document.getElementById('chatToast');
 		</div>
 
 		<div class="toast-body">
-			<div id="chatBox">
-				<div id="chat-histroy-div"></div>
-				<div id="chat-new-div"></div>			
+			<div class="chatBox">
+				<div class="chat-histroy-div"></div>
+				<div class="chat-new-div"></div>			
 			</div>
 			<!-- <div id="chatBox"></div> -->
 		</div>
@@ -266,8 +266,10 @@ const chatToast = document.getElementById('chatToast');
                         <div class="col-md-4" id="right-content" style="height: 500px; overflow-y:auto;">
                             <!-- 오른쪽 내용이 들어갈 자리 -->
                             <!-- 채팅이 들어간다 -->
-                            <div id="chatArea">
-                            </div>
+							<div class="chatBox">
+								<div class="chat-histroy-div"></div>
+								<div class="chat-new-div"></div>			
+							</div>
                         </div>
                     </div>
                 </div>
