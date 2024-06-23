@@ -159,5 +159,4 @@ public class Moim {
 				+ ", profilePicPI=" + profilePicPI + ", leader=" + leader + ", chatRoomId=" + chatRoomId
 				+ ", subLeader=" + subLeader + ", participants=" + participants + ", banUserList=" + banUserList + "]";
 	}
-
 }

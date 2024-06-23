@@ -406,11 +406,11 @@
 			contentType : false,
 			success : function(response) {
 				console.log(response);
-				alert("프로필이 업데이트 되었습니다.");
+				showSuccessAlert('성공', '프로필이 업데이트 되었습니다.', '');
 				location.reload();
 			},
 			error : function(request, status, error) {
-				alert("프로필 업데이트에 실패했습니다.");
+				showDangerAlert('오류', '프로필 업데이트에 실패했습니다!', '');
 				console.error("Error:", request.status, error);
 			}
 		});
@@ -577,6 +577,12 @@
             <tr class="clickable-row" onclick="location.href='map'">
                 <td class="profile-row">
                     <div class="profile-value">지도 바로가기</div>
+                </td>
+                <td class="profile-link">></td>
+            </tr>
+            <tr class="clickable-row" onclick="location.href='customMap'">
+                <td class="profile-row">
+                    <div class="profile-value">커스텀 지도 바로가기</div>
                 </td>
                 <td class="profile-link">></td>
             </tr>

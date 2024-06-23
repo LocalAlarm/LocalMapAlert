@@ -286,3 +286,4 @@ function enableFriendRequestButton() {
     $('#request-friend-button').removeClass('btn-secondary');
     $('#request-friend-button').addClass('btn-outline-success');
 }
+

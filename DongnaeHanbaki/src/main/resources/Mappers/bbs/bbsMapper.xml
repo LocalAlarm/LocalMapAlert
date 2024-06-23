@@ -55,22 +55,22 @@
 	<update id="updateBbs" parameterType="bbsVO">
 		UPDATE BBS
 		SET
-		<if test="#{makerIdx} != null">
+		<if test="makerIdx != null">
 			MAKER_IDX = #{makerIdx},
 		</if>
-		<if test="#{title} != null">
+		<if test="title != null">
 			TITLE = #{title},
 		</if>
-		<if test="#{content} != null">
+		<if test="content != null">
 			CONTENT = #{content},
 		</if>
-		<if test="#{latitude} != null">
+		<if test="latitude != null">
 			LATITUDE = #{latitude},
 		</if>
-		<if test="#{longitude} != null">
+		<if test="longitude != null">
 			LONGITUDE = #{longitude},
 		</if>
-		<if test="#{imageIdx} != null">
+		<if test="imageIdx != null">
 			IMAGE_IDX = #{imageIdx},
 		</if>
 			BBS_IDX = #{bbsIdx}

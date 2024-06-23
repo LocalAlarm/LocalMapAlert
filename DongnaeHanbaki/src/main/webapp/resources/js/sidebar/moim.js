@@ -48,7 +48,6 @@ async function handleMoimUserRooms(userRooms) {
     }
     $('#moimList').html(buttonHtml);
 }
-
 function createMoimModalFunction(){
     var createMoimModal = new bootstrap.Modal($('#createMoimModal')[0]);
     $('#nav__create-moim').on('click', function() {
@@ -94,7 +93,6 @@ async function submitCreateMoimForm() {
 
     try {
         $('#createMoimForm').find('input, textarea, button').prop('disabled', true);
-
         const response = await fetch('/dongnae/moim/createMoim', {
             method: 'POST',
             body: formData,
@@ -332,6 +330,8 @@ function submitMoimComment(boardId, content) {
         contentType: 'application/json',
         data: JSON.stringify({ content: content }),
         success: function(data) {
+            // 댓글 작성 후 댓글 리스트를 다시 로드
+            showMoimBoardDetail(boardId);
         },
         error: function(err) {
             console.error('Error submitting comment:', err);

@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
-import com.spring.dongnae.socket.scheme.FriendRoom;
 import com.spring.dongnae.socket.scheme.UserRooms;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.user.vo.UserVO;

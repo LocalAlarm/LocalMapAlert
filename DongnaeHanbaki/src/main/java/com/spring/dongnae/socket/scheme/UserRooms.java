@@ -122,6 +122,8 @@ public class UserRooms {
 		return "UserRooms [id=" + id + ", email=" + email + ", moims=" + moims + ", masterMoims=" + masterMoims
 				+ ", requestIds=" + requestIds + ", friendIds=" + friendIds + "]";
 	}
+	
+	
 
 
 }

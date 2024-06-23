@@ -17,6 +17,7 @@
 	
 	<!-- MongoDB 설정 추가 -->
     <mongo:repositories base-package="com.spring.dongnae.socket.repo" />
+    <mongo:repositories base-package="com.spring.dongnae.custom.repo" />
     
 	<!-- datasource 설정 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">

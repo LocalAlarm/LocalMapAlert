@@ -17,13 +17,8 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	private MarkerDataDAO markerdataDAO;
 	
 	@Override
-	public List<MarkerDataVO> getMenu(int marker_idx) {
-		return markerdataDAO.getMenu(marker_idx);
-	}
-	
-	@Override
-	public List<MarkerDataVO> getRealTimeEvents(int marker_idx) {
-		return markerdataDAO.getRealTimeAccidents(marker_idx);
+	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
+		return markerdataDAO.allMenu(vo);
 	}
 	
 	@Override
@@ -32,8 +27,28 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	}
 	
 	@Override
-	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
-		return markerdataDAO.allMenu(vo);
+	public List<MarkerDataVO> getRealTimeEvents(int marker_idx) {
+		return markerdataDAO.getRealTimeAccidents(marker_idx);
+	}
+	
+	@Override
+	public List<MarkerDataVO> getNearAccidents(int marker_idx) {
+		return markerdataDAO.getNearAccidents(marker_idx);
+	}
+	
+	@Override
+	public List<MarkerDataVO> getMenu(int marker_idx) {
+		return markerdataDAO.getMenu(marker_idx);
+	}
+	
+	@Override
+	public List<MarkerDataVO> allEvents(MarkerDataVO vo) {
+		return markerdataDAO.allEvents(vo);
+	}
+	
+	@Override
+	public List<MarkerDataVO> nearEvents(MarkerDataVO vo) {
+		return markerdataDAO.nearEvents(vo);
 	}
 	
 	public void saveMarker(MarkerDataVO vo) {
@@ -41,8 +56,12 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	}
 
 	@Override
-	public List<MarkerDataVO> getNearAccidents(int marker_idx) {
-		return markerdataDAO.getNearAccidents(marker_idx);
+	public List<MarkerDataVO> realEvents(MarkerDataVO vo) {
+		return markerdataDAO.realEvents(vo);
 	}
 
+
+
+
+	
 }

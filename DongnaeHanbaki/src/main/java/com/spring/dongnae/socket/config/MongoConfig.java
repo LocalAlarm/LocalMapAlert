@@ -13,7 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import com.spring.dongnae.utils.properties.PropertiesConfig;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.spring.dongnae.socket.scheme")
+@EnableMongoRepositories(basePackages = {"com.spring.dongnae.socket.scheme", "com.spring.dongnae.custom.repo"})
 public class MongoConfig {
 
     @Bean

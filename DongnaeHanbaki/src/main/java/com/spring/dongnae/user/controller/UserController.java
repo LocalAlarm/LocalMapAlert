@@ -144,9 +144,8 @@ public class UserController {
 //          userVO.setPassword("");
 //          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
 //          session.setAttribute("user", userVO);
-//          
 //      }
-//      return "main/main";
+//      return "user/profile";
 //   }
 
    // 회원가입 페이지로 이동
@@ -226,39 +225,39 @@ public class UserController {
 		   authenticNum.append(num.charAt(index));
 	   }
 	   
-//	   //이메일 보내기
-//	   String setFrom = "jailju1016@gmail.com";
-//	   String senderName = "동네한바퀴";
-//	   String toMail = email;
-//	   String title = "회원가입 이메일 본인인증";
-//	   StringBuilder sb = new StringBuilder();
-//	   sb.append("<html><body>");
-//	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
-//	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
-//	   sb.append("<br>");
-//	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
-//	   sb.append("<html><body>");        
-//	   sb.append("<html><body>");
-//	   sb.append("<html><body>");
-//	   sb.append("</body></html>");
-//	   String content = sb.toString();
-//	   
-//		try {
-//			MimeMessage message = mailSender.createMimeMessage();
-//			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-//			helper.setFrom(new InternetAddress(setFrom, senderName));
-//			helper.setTo(toMail);
-//			helper.setSubject(title);
-//			helper.setText(content, true);
-//			mailSender.send(message);
-//
-//			 // 첨부 파일 추가
-////			FileSystemResource file = new FileSystemResource(new File());
-////			helper.addAttachment(, file);
-//	        
-//		} catch (MessagingException | UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+	   //이메일 보내기
+	   String setFrom = "jailju1016@gmail.com";
+	   String senderName = "동네한바퀴";
+	   String toMail = email;
+	   String title = "회원가입 이메일 본인인증";
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("<html><body>");
+	   sb.append("<h1>" + "홈페이지를 방문해주셔서 감사합니다." + "</h1><br><br>");
+	   sb.append("인증 번호는 " + authenticNum.toString() + " 입니다.");
+	   sb.append("<br>");
+	   sb.append("해당 인증번호를 인증번호 확인란에 기입하여 주세요.");
+	   sb.append("<html><body>");        
+	   sb.append("<html><body>");
+	   sb.append("<html><body>");
+	   sb.append("</body></html>");
+	   String content = sb.toString();
+	   
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+			helper.setFrom(new InternetAddress(setFrom, senderName));
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content, true);
+			mailSender.send(message);
+
+			 // 첨부 파일 추가
+//			FileSystemResource file = new FileSystemResource(new File());
+//			helper.addAttachment(, file);
+	        
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	   
 	   return authenticNum.toString();
    }
@@ -271,7 +270,7 @@ public class UserController {
        return "user/findPassword"; 
    }
 
-   @PostMapping("/findEmail")
+   @PostMapping("/findEmailForPassword")
    @ResponseBody
    public String findEmail(@RequestParam("email") String email) {
 	   String findEmail = userService.findPasswordByEmail(email);

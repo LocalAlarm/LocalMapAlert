@@ -8,11 +8,11 @@ function chatFunction() {
 function connectChat() {
     chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
-    chatSocket.onopen = function (event) {
+	chatSocket.onopen = function(event) {
         console.log('Connected to ChatWebSocket'); // 연결 성공 시 콘솔에 메시지 출력
     };
 
-    chatSocket.onmessage = function (event) {
+    chatSocket.onmessage = function(event) {
         try {
             var chatJsonData = JSON.parse(event.data);
             console.log(chatJsonData);
@@ -27,11 +27,11 @@ function connectChat() {
             console.error("Error processing WebSocket message: ", e);
         }
     };
-
-    chatSocket.onclose = function (event) {
+    
+    chatSocket.onclose = function(event) {
         console.log('Disconnected from WebSocket'); // 연결 종료 시 콘솔에 메시지 출력
     };
-    chatSocket.onerror = function (error) {
+    chatSocket.onerror = function(error) {
         console.log("WebSocket error: " + error);
     };
 }
@@ -61,7 +61,7 @@ function sendMessage() {
             "content": content,
             "timestamp": Date.now()
         };
-        chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
+     	chatSocket.send(JSON.stringify(jsonMsg)); // JSON.stringify() 함수를 사용하여 JSON 객체를 문자열로 변환하여 전송
         messageInput.value = ''; // 입력창 비우기
     }
 }
@@ -140,7 +140,7 @@ function initializeChatToast() {
                 toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
                 scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 // 에러 시 처리
                 console.error('An error occurred while fetching chat info:', error);
             }
@@ -149,7 +149,7 @@ function initializeChatToast() {
 }
 
 function handleMessageEnterPress() {
-    document.getElementById('message').addEventListener('keypress', function (event) {
+    document.getElementById('message').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             sendMessage(); // 엔터 키 누를 시 메시지 전송
             event.preventDefault(); // 엔터 키의 기본 동작 막기

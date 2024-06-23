@@ -38,19 +38,20 @@
     	   console.log(email);
     	   $.ajax({
     		   type: "POST",
-    		   url:  "findEmail",
+    		   url:  "findEmailForPassword",
     		   data: {
     			   email: email
     		   },
     		   success: function(data) {
     			   console.log("data: " + data);
-    			   if (data == null) {
-    				   alert("가입된 이메일이 없습니다.");
+    			   if (data == "") {
+    				   showDangerAlert('오류', '가입된 이메일이 없습니다!', '');
     				   return false;
+    			   } else {
+    				   showSuccessAlert('성공', '이메일이 확인되었습니다.', '');
+        			   $("#button-addon2").attr("disabled", false);
+        			   findEamilCheck = true;
     			   }
-    			   alert("이메일 확인");
-    			   $("#button-addon2").attr("disabled", false);
-    			   findEamilCheck = true;
     		   },
     		   error: function (request, status,error) {
                    alert("ajax 실행 실패");
@@ -132,27 +133,27 @@
        function findPasswordValidate() {
     	   var email = $("#email").val().trim();
     	   if (email == "") {
-   			alert("이메일을 입력해주세요!");
+    		   showDangerAlert('오류', '이메일을 입력해주세요!', '');
    			$("#email").focus();
    			return false;
    		  } else if (!findEamilCheck) {
-   			alert("이메일 찾기 해주세요!");
+   			showDangerAlert('오류', '이메일 찾기 해주세요!', '');
 			$("#email").focus();
 			return false;
    		  } else if (!authenticCheck) {
-			alert("인증번호 받기 해주세요!");
+   			showDangerAlert('오류', '인증번호 받기 해주세요!', '');
 			$("#button-addon2").focus();
 			return false;
 		  } else if (password == "") {
-			alert("비밀번호를 입력해주세요!");
+			  showDangerAlert('오류', '비밀번호를 입력해주세요!', '');
 			$("#password").focus();
 			return false;
 		  } else if (passwordSurvey == false) {
-			alert("비밀번호 확인과 비교해주세요!");
+			  showDangerAlert('오류', '비밀번호 확인과 비교해주세요!', '');
 			$("#password").focus();
 			return false;
 		  }
-    	  alert("비밀번호가 변경되었습니다"); 
+    	   showSuccessAlert('성공', '비밀번호가 변경되었습니다.', '');
        }
        
 </script>
