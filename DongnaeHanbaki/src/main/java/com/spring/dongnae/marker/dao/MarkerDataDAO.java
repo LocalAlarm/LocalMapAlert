@@ -15,6 +15,7 @@ public interface MarkerDataDAO {
     List<MarkerDataVO> allEvents(MarkerDataVO vo);
     List<MarkerDataVO> nearEvents(MarkerDataVO vo);
     List<MarkerDataVO> realEvents(MarkerDataVO vo);
+    List<MarkerDataVO> searchMarkers(String keyword);
 
 	void insertMarker(MarkerDataVO vo);
 

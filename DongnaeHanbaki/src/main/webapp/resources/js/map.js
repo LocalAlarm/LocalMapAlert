@@ -136,6 +136,61 @@ function updateSidebar(data) {
     renderPage(currentPage);
 }
 
+$(document).ready(function() {
+    // 검색 버튼 클릭 이벤트
+    $('#searchButton').click(function() {
+        // 검색어 가져오기
+        var keyword = $('#searchInput').val().trim();
+        console.log(keyword);
+        
+        // AJAX 요청
+        $.ajax({
+            url: 'search',  
+            type: 'GET',  
+            dataType: 'json',  
+            data: { keyword: keyword }, 
+            success: function(response) {
+                // 성공적으로 데이터를 받았을 때 처리
+                resetMarkersAndIndex()
+                renderMarkerList(response);  
+            },
+            error: function(xhr, status, error) {
+                // 오류 처리
+                console.error('AJAX request error:', status, error);
+            }
+        });
+    });
+
+    // 마커 리스트 렌더링 함수
+    function renderMarkerList(data) {
+        var markerList = $('#markerList');
+        markerList.empty();  // 기존 리스트 비우기
+		resetMarkersAndIndex();
+        // 받은 데이터를 기반으로 마커 리스트 업데이트
+        if (data.length === 0) {
+            markerList.append('<p>검색 결과가 없습니다.</p>');
+        } else {
+            $.each(data, function(index, marker) {
+                if (marker.title && marker.content) {
+                    var formattedDate = new Date(marker.writeDate).toLocaleString(); // 날짜 형식 변환
+                    markerList.append(`
+                        <div class="card marker-item" id="markerItem_${index}">
+                            <div class="card-body">
+                                <p class="card-text"><strong style="font-size: 20px;">${marker.title}</strong></p>
+                                <p class="card-text">${marker.content}</p>
+                                <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    console.error('Invalid marker data:', marker);
+                }
+            });
+        }
+    }
+});
+
+
 function renderPage(page) {
     $('#markerList').empty();
     var startIndex = (page - 1) * markersPerPage;

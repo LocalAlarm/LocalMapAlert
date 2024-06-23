@@ -13,6 +13,7 @@ public interface MarkerDataService {
 		List<MarkerDataVO> allEvents(MarkerDataVO vo);
 		List<MarkerDataVO> nearEvents(MarkerDataVO vo);
 		List<MarkerDataVO> realEvents(MarkerDataVO vo);
+		List<MarkerDataVO> searchMarkers(String keyword);
 	
 		void saveMarker(MarkerDataVO vo);
 

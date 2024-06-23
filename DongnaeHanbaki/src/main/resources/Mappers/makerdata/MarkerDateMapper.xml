@@ -47,6 +47,11 @@
 	  ORDER BY WRITE_DATE DESC
     </select>  
    
+   <select id="searchMarkers" resultType="MarkerDataVO">
+       SELECT * FROM MARKERDATA
+       WHERE LOWER(title) LIKE '%' || #{keyword} || '%' OR LOWER(content) LIKE '%' || #{keyword} || '%'
+   </select>
+    
    <insert id="insertMarker" parameterType="MarkerDataVO">
        INSERT INTO MARKERDATA (markerdata_idx, marker_idx, title, content, latitude, longitude)
        VALUES (SEQ_MARKERDATA_IDX.NEXTVAL, #{markerIdx}, #{title}, #{content}, #{latitude}, #{longitude})
