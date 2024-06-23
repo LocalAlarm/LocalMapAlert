@@ -1,10 +1,14 @@
 package com.spring.dongnae.socket.dto;
 
+
 import com.spring.dongnae.socket.scheme.Message;
 import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
+import com.spring.dongnae.utils.auth.GetAuthenticInfo;
+
 
 public class MessageDto {
+	
 	private static final long serialVersionUID = 1L;
 	private String roomId;
 	private String senderEmail;
@@ -12,13 +16,6 @@ public class MessageDto {
 	private String senderProfileImage;
 	private String content;
 	
-	public MessageDto(CustomUserDetails cud, Message message) {
-		this.setSenderEmail(cud.getUsername());
-		this.setSenderNickName(cud.getNickname());
-		this.setSenderProfileImage(cud.getImage());
-		this.setRoomId(message.getRoomId());
-		this.setContent(message.getContent());
-	}
 	
 	public MessageDto(UserVO userVO, Message message) {
 		this.setSenderEmail(userVO.getEmail());
@@ -73,5 +70,7 @@ public class MessageDto {
 		return "MessageDto [roomId=" + roomId + ", senderEmail=" + senderEmail + ", senderNickName=" + senderNickName
 				+ ", senderProfileImage=" + senderProfileImage + ", content=" + content + "]";
 	}
+	
+	
 	
 }

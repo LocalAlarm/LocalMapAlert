@@ -41,7 +41,6 @@ public class ChatListWebSocketHandler extends TextWebSocketHandler {
 		}
 	}
 
-	// 메시지를 입력하고 보냈을 때를 처리하는 코드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");

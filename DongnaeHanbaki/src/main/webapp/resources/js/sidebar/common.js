@@ -30,6 +30,10 @@ function getNickname(token) {
     });
 }
 
+function isUserRooms(data) {
+    return data.requestIds !== undefined && data.friendIds !== undefined;
+}
+
 // 유저 메일로 유저를 검색하는 함수
 async function searchUserByEmail(email) {
     try {
@@ -129,6 +133,16 @@ function searchUserByToken(token, callback) {
             callback(err);
         }
     });
+}
+
+function getDataTokenByClass(className) {
+    var element = document.querySelector(`.${className}`);
+    if (element) {
+        return element.getAttribute('data-token');
+    } else {
+        console.error(`Element with class ${className} not found.`);
+        return null;
+    }
 }
 
 function initializeMenuActivation() {

@@ -16,6 +16,8 @@ function connectFriend() {
     };
 
     friendSocket.onmessage = function (event) {
+        var JsonData = JSON.parse(event.data);
+        console.log(JsonData);
         try {
             loadFriendList();
             loadFriendRequests();

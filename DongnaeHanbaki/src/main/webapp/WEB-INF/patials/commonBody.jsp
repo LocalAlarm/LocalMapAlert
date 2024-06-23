@@ -23,7 +23,7 @@ boolean isLogin = !authentication.getPrincipal().toString().equals("anonymousUse
 if (isLogin) {
 	userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 } else {
-	userDetails = new CustomUserDetails();	
+	userDetails = new CustomUserDetails();
 }
 request.setAttribute("isLogin", isLogin);
 request.setAttribute("userDetails", userDetails);
@@ -32,6 +32,7 @@ request.setAttribute("userDetails", userDetails);
 var chatSocket = null;
 var friendSocket = null;
 var token = null;
+var loginUserEmail = '<%=userDetails.getUsername()%>';
 var isLogin = <%= isLogin%>;
 const chatToast = document.getElementById('chatToast');
 </script>
@@ -143,7 +144,11 @@ const chatToast = document.getElementById('chatToast');
 		</div>
 
 		<div class="toast-body">
-			<div id="chatBox"></div>
+			<div id="chatBox">
+				<div id="chat-histroy-div"></div>
+				<div id="chat-new-div"></div>			
+			</div>
+			<!-- <div id="chatBox"></div> -->
 		</div>
 		<!-- 채팅 메시지 표시 영역 -->
 		<input type="text" id="message" placeholder="Enter your message" />
@@ -350,9 +355,7 @@ const chatToast = document.getElementById('chatToast');
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
 		if (isLogin) {
 			friendFunction();
-			/* 			connectChat(); // 페이지 로드 시 Chat WebSocket 연결
-			 initializeChatToast();
-			 handleMessageEnterPress(); */
+			chatFunction();
 			initializeSearchMoimsEvents();
 			connectMoim();
 			createMoimModalFunction();

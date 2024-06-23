@@ -1,4 +1,10 @@
 // 채팅창에 관련된 js 코드.
+function chatFunction() {
+    connectChat();
+    initializeChatToast();
+    handleMessageEnterPress();
+}
+
 function connectChat() {
     chatSocket = new WebSocket('ws://localhost:8088/dongnae/chatList'); // WebSocket 서버에 연결
 
@@ -9,9 +15,11 @@ function connectChat() {
     chatSocket.onmessage = function (event) {
         try {
             var chatJsonData = JSON.parse(event.data);
-
+            console.log(chatJsonData);
             if (isMessage(chatJsonData)) {
-                handleMessage(chatJsonData);
+                handleNewMessage(chatJsonData);
+            }else if(isChatHistory(chatJsonData)) {
+                console.log(chatJsonData);
             } else {
                 console.error("Unknown data type received:", chatJsonData);
             }
@@ -30,21 +38,18 @@ function connectChat() {
 
 // Message인지 판별하는 함수
 function isMessage(data) {
-    return data.senderToken !== undefined && data.content !== undefined;
+    return data.senderEmail !== undefined && data.content !== undefined;
+}
+
+function isChatHistory(data) {
+    return data.isArray;
 }
 
 
 // Message 데이터를 처리하는 함수
-async function handleMessage(message) {
+async function handleNewMessage(message) {
     // 닉네임 가져오기
-    const nickname = await getNickname(message.senderToken);
-    var token = '<%=userDetails.getToken()%>';
-    // 가져온 닉네임을 사용하여 메시지 표시
-    if (token === message.senderToken) {
-        displayMessage(nickname, message.content, 'sent');
-    } else {
-        displayMessage(nickname, message.content, 'received');
-    }
+    displayMessage(message, 'chat-new-div');
 }
 
 function sendMessage() {
@@ -52,7 +57,7 @@ function sendMessage() {
     var content = messageInput.value;
     if (content.trim() !== "") { // 메시지가 비어있지 않을 때만 전송
         var jsonMsg = {
-            "roomId": getIdByClass('chat-toast-container'),
+            "roomId": getDataTokenByClass('chat-toast-container'),
             "content": content,
             "timestamp": Date.now()
         };
@@ -61,11 +66,17 @@ function sendMessage() {
     }
 }
 
-function displayMessage(nickname, message, type, eleid) {
-    var chatBox = document.getElementById('chatBox');
+function displayMessage(message, divType) {
+    var chatBox = document.getElementById(divType);
     var messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', type); // 메시지 스타일 지정
-    messageDiv.textContent = nickname + ': ' + message; // 메시지 내용 설정
+
+    if (loginUserEmail === message.senderEmail) {
+        messageDiv.classList.add('message', 'sent'); // 메시지 스타일 지정
+        messageDiv.textContent = message.content; // 메시지 내용 설정
+    } else {
+        messageDiv.classList.add('message', 'received'); // 메시지 스타일 지정
+        messageDiv.textContent = message.senderNickName + ': ' + message.content; // 메시지 내용 설정
+    }
     chatBox.appendChild(messageDiv); // 메시지를 채팅 박스에 추가
     chatBox.scrollTop = chatBox.scrollHeight; // 새 메시지가 추가될 때 스크롤을 맨 아래로 이동
 }
@@ -106,36 +117,26 @@ function initializeChatToast() {
         const chatToast = document.getElementById('chatToast');
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
         toastBootstrap.hide();
-        var buttonId = $(this).attr('id');
+        var dataToken = $(this).attr('data-token');
         $.ajax({
             type: 'POST',
-            url: '/dongnae/api/getChatHistory',
+            url: '/dongnae/chat/getChatHistory',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({ id: buttonId }), // 버튼 ID 전송
+            data: JSON.stringify({ id: dataToken }), // 버튼 ID 전송
             success: async function (response) {
                 if (isEmpty(response.messages)) {
-                    var chatBox = document.getElementById('chatBox');
-                    chatBox.innerHTML = '';
+                    var chatHistoryBox = document.getElementById('chat-histroy-div');
+                    var chatNewBox = document.getElementById('chat-new-div');
+                    chatHistoryBox.innerHTML = '';
+                    chatNewBox.innerHTML = '';
                 } else if (Array.isArray(response.messages)) { // 메시지가 배열인지 확인
                     for (const element of response.messages) {
-                        getNickname(element.senderToken)
-                            .then(nickname => {
-                                console.log(nickname);
-                                var token = '<%=userDetails.getToken()%>';
-                                if (token === element.senderToken) {
-                                    displayMessage(nickname, element.content, 'sent');
-                                } else {
-                                    displayMessage(nickname, element.content, 'received');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error occurred:', error);
-                            });
+                        displayMessage(element, 'chat-histroy-div');
                     }
                 } else {
                     console.error("chatRoom.messages is not an array");
                 }
-                $('.toast-container').attr('id', buttonId);
+                $('.toast-container').attr('data-token', dataToken);
                 toastBootstrap.show(); // Toast 버튼 클릭 시 Toast 표시
                 scrollToBottom(); // 채팅창을 열었을 때 스크롤을 맨 아래로 이동
             },
