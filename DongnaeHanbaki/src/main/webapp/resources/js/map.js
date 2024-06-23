@@ -207,13 +207,11 @@ $('#markerList').on('click', '.marker-item', function() {
 $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
         currentPage = 1;
-    
 	});
 
 $('#eventAccidentsDropdown').click(function() {
     	resetMarkersAndIndex();
-    	    currentPage = 1;
-    	
+    	currentPage = 1;
     	AllAccidents();
 	});
 }
