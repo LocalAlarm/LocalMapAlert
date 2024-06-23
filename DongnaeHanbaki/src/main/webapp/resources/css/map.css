@@ -193,3 +193,24 @@ body {
 .nav-link.dropdown-toggle {
     text-align: center; /* 텍스트 중앙 정렬 */
 }
+
+/* 페이지네이션 버튼 스타일ㅇㅇ */
+.page-btn {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.page-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.page-btn:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
