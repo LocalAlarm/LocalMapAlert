@@ -127,7 +127,6 @@ function initializeMoimModal() {
         const moimId = this.id;
         // moimId를 모임 모달의 data 속성에 저장
         $('#moim-modal').attr('data-moim-id', moimId);
-        
         $.ajax({
             url: `/dongnae/moim/${moimId}`,
             method: 'GET',
@@ -139,7 +138,7 @@ function initializeMoimModal() {
                     <img src="${data.profilePic}" alt="Moim logo" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
                     ${data.name}
                 `);
-                loadBoardList(moimId, 0, 10); // 첫 번째 페이지를 로드
+                loadBoardList(1); // 첫 번째 페이지를 로드
                 createMoimModal.show();
             },
             error: function(err) {
@@ -162,7 +161,7 @@ function initializeMoimModal() {
         var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
         formData.append('moimId', moimId); // moimId 추가
 
-        // 작성된 게시물 데이터를 서버에 전송 (예: AJAX 사용)
+        // 작성된 게시물 데이터를 서버에 전송
         $.ajax({
             url: `/dongnae/moim/${moimId}/board`,
             method: 'POST',
@@ -181,14 +180,36 @@ function initializeMoimModal() {
     });
 }
 
-function loadBoardList(moimId, page, size) {
+async function moimPagenate(moimId, page, pageSize) {
+    // 페이징 처리 작업을 쉽게 하기 위해, 페이지에 1을 더한다...? 그
+    const moimPagenation = $('#moim-pagination');
+    moimPagenation.empty();
+    const totalCount = await $.ajax({
+        url: `/dongnae/moim/${moimId}/boards/count`,
+        method: 'GET'
+    });
+    
+    console.log(totalCount);
+
+    if (totalCount > (page * pageSize)) {
+        console.log("wkr");
+        moimPagenation.append('<li class="page-item"><a class="page-link" href="#">2</a></li>');
+    }
+
+}
+
+function loadBoardList(page) {
+    var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
+    const moimPageSize = 10;
+    moimPagenate(moimId, page, moimPageSize);
+
     $.ajax({
         url: `/dongnae/moim/${moimId}/boards`,
         method: 'GET',
         dataType: 'json',
         data: {
-            page: page,
-            size: size
+            page: page-1,
+            size: moimPageSize
         },
         success: function(data) {
             const boardList = $('#moim-board-list');
@@ -356,9 +377,9 @@ function resetMoimDetailModal() {
 
 function offDarkBackgroundOfMoimDetailModal() {
 	$('#moim-post-detail-modal').on('show.bs.modal', function (e) {
-	    var modal = new bootstrap.Modal(document.getElementById('moim-post-detail-modal'), {
-	        backdrop: false
-	    });
+        var modal = new bootstrap.Modal(document.getElementById('moim-post-detail-modal'), {
+            backdrop: false
+        });
 	});
 }
 
@@ -408,7 +429,6 @@ async function processRegistMoim() {
                     throw new Error('Failed to register for the moim');
                 }
                 const data = await response.json();
-                console.log(data);
                 showSuccessAlert("가입 성공", "모임에 가입되었습니다.", "");
             } catch (error) {
                 console.error(error);

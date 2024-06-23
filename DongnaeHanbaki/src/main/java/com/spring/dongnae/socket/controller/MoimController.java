@@ -29,6 +29,7 @@ import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Image;
 import com.spring.dongnae.socket.scheme.Moim;
+import com.spring.dongnae.socket.service.BoardService;
 import com.spring.dongnae.socket.service.MoimService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
@@ -37,6 +38,8 @@ import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 public class MoimController {
 	@Autowired
 	private MoimService moimService;
+	@Autowired
+	private BoardService boardService;
 	@Autowired
 	private GetAuthenticInfo getAuthenticInfo;
 	@Autowired
@@ -119,6 +122,11 @@ public class MoimController {
     @GetMapping("/{moimId}/all-boards")
     public List<Board> getBoardsByMoimId(@PathVariable String moimId) {
     	return moimService.getBoardByMoimId(moimId);
+    }
+    
+    @GetMapping("/{moimId}/boards/count")
+    public long getBoardCount(@PathVariable String moimId) {
+        return boardService.countBoardsByMoimId(moimId);
     }
     
     @GetMapping("/{moimId}/boards")

@@ -16,4 +16,6 @@ public interface MoimRepository extends MongoRepository<Moim, String> {
 	boolean existsByName(String name);
     @Query("{ 'name': { $regex: ?0, $options: 'i' }, '_id': { $nin: ?1 } }")
     Page<Moim> findByNameContainingIgnoreCaseAndIdNotIn(String name, List<String> excludeIds, Pageable pageable);
+    
+    long countById(String id);
 }

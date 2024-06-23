@@ -17,7 +17,6 @@ function connectFriend() {
 
     friendSocket.onmessage = function (event) {
         var JsonData = JSON.parse(event.data);
-        console.log(JsonData);
         try {
             loadFriendList();
             loadFriendRequests();
@@ -72,7 +71,6 @@ async function loadFriendList() {
         type: "POST",
         url: "/dongnae/friendData/friendIds",
         success: function(data) {
-            console.log(data);
             var friendList = $("#friendList");
             friendList.empty(); // 기존 목록을 비움
 
