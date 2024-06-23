@@ -134,14 +134,6 @@
 		});
 	}
 	
-	/* 로그인 여부 확인 */
-/* 	function isLogin(){
-		if("${user.email == null}" || "${user.email == ''}"){
-			return false;
-		} else {
-			return true;
-		}
-	} */
 	
 </script>
 </head>
@@ -341,23 +333,143 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6ba5718e3a47f0f8291a79529aae8d8e"></script>
 <script>
 
-/* 변수선언 *****************************/
-/* var customOverlay; // 마커 클릭하면 뜨는 글 커스텁오버레이
-var myModal = new bootstrap.Modal('#exampleModal');
- */
-/* 지도 표시하기 ************************/
+var markerInfoList = [];
+var lineList = [];
+var preMap;
+var level;
+var latitude;
+var longitude;
+
+var map;
 
 
-var centerLatitude = ${mapVO.centerLatitude};
-var centerLongitude = ${mapVO.centerLongitude};
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(centerLatitude,centerLongitude), // 지도의 중심좌표
-        level: ${mapVO.viewLevel} // 지도의 확대 레벨
-    };
+window.onload = function(){
+	var mapIdx = "${param.mapIdx}";
+	console.log(mapIdx);
+	$.ajax({
+		type: 'GET',
+		url: 'allMarker',
+		data: { mapIdx: mapIdx },
+	  success : function(customMarker) {
+          console.log('Data saved successfully:', customMarker);
+         
+          var title = customMarker.title;
+          level = customMarker.level;
+          console.log(title);
+          var content = customMarker.content;
+          var center = customMarker.center;
+          // 괄호 제거하고 쉼표로 분리	
+          var cleanedCoords = center.replace(/[()]/g, '');
+          var parts = cleanedCoords.split(', ');
 
-// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-var map = new kakao.maps.Map(mapContainer, mapOption); 
+          // 위도와 경도 추출
+          latitude = parseFloat(parts[0]);
+          longitude = parseFloat(parts[1]);
+
+          // 결과 출력
+          console.log("Latitude: " + latitude);
+          console.log("Longitude: " + longitude);
+          markerInfoList = customMarker.markers;
+          console.log(markerInfoList);
+          lineList = customMarker.lines;
+          console.log(lineList);
+          
+          initMap(level, latitude, longitude, markerInfoList, lineList);
+          
+      },
+      error : function(error) {
+         console.error('Error saving data:', error);
+      }
+	});
+};
+
+function initMap(level, latitude, longitude, markerInfoList, lineList) {
+	console.log("map 설정");
+ 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+ 	mapOption = { 
+ 	    center: new kakao.maps.LatLng(longitude, latitude), // 지도의 중심좌표
+ 	    level: level // 지도의 확대 레벨
+ 	};
+     map = new kakao.maps.Map(mapContainer, mapOption); 
+     displayMap(markerInfoList, lineList);
+ }
+
+function displayMap(markers, lines) {
+	markerInfoList = markers;
+	lineList = lines;
+	console.log("데이터 받음!");
+	console.log(markerInfoList);
+	console.log(lineList);
+	
+	//markers 배열의 각 요소에 접근
+	for (var i = 0; i < markerInfoList.length; i++) {
+	    console.log("Marker " + i + ":");
+	    console.log("ID: " + markerInfoList[i].id);
+	    console.log("Content: " + markerInfoList[i].content);
+	}
+	
+
+    // 마커 표시
+    for (var i = 0; i < markerInfoList.length; i++) {
+        var markerPosition  = new kakao.maps.LatLng(markerInfoList[i].path.Ma, markerInfoList[i].path.La); 
+
+        var marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+		console.log(markerPosition);
+		marker.setMap(map);
+        // 인포윈도우에 표시할 내용
+        var iwContent = '<div style="padding:5px;">' + markers[i].content + '</div>';
+		
+        // 인포윈도우를 생성합니다.
+        var infowindow = new kakao.maps.InfoWindow({
+            content: iwContent
+        });
+
+        // 인포윈도우를 표시합니다.
+        infowindow.open(map, marker);
+        
+        // 마커에 클릭 이벤트를 등록합니다.
+        (function(marker, content) {
+            kakao.maps.event.addListener(marker, 'click', function() {
+                // 인포윈도우에 표시할 내용
+                var iwContent = '<div style="padding:5px;">' + content + '</div>';
+
+                // 인포윈도우를 생성합니다.
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: iwContent
+                });
+
+                infowindow.open(map, marker); 
+            });
+        })(marker, markerInfoList[i].content);
+    }
+
+    // 라인 표시
+    for (var j = 0; j < lineList.length; j++) {
+        var linePath = lineList[j].path.map(function(coord) {
+            return new kakao.maps.LatLng(coord.Ma, coord.La);
+        });
+        var lineStyle = {
+                strokeWeight: lineList[j].style.strokeWeight,
+                strokeColor: lineList[j].style.strokeColor,
+                strokeOpacity: lineList[j].style.strokeOpacity,
+                strokeStyle: lineList[j].style.strokeStyle
+            };
+
+		console.log(linePath);
+		console.log(lineStyle);
+        var polyline = new kakao.maps.Polyline({
+            path: linePath,
+            strokeWeight: lineStyle.strokeWeight || 5, // 기본값 설정
+            strokeColor: lineStyle.strokeColor || '#FF0000', // 기본값 설정
+            strokeOpacity: lineStyle.strokeOpacity || 0.7, // 기본값 설정
+            strokeStyle: lineStyle.strokeStyle || 'solid' // 기본값 설정
+        });
+
+        polyline.setMap(map);
+    }
+}
 
 
 </script>

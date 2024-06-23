@@ -55,6 +55,8 @@ public class CustomController {
    @ResponseBody
    public boolean saveMap(HttpServletRequest request, HttpSession session) throws IOException {
       boolean check = false;
+      int insertCheck = 0;
+      int updateCheck = 0;
       String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 //      session.getAttribute("user");
       System.out.println("커스텀 맵 데이터 받기 성공!!" + jsonString);
@@ -85,7 +87,9 @@ public class CustomController {
             String level = jsonNode.get("level").asText();
             String title = jsonNode.get("title").asText();
             String content = jsonNode.get("content").asText();
-
+            String address = jsonNode.get("address").asText();
+            String openYn = jsonNode.has("openYn") ? jsonNode.get("openYn").asText() : "0";
+            int mapIdx = jsonNode.has("mapIdx") ? jsonNode.get("mapIdx").asInt() : -1;
             // 추출한 필드 값 출력
 //            System.out.println("centerLongitude: " + centerLongitude);
 //            System.out.println("centerLatitude: " + centerLatitude);
@@ -97,9 +101,18 @@ public class CustomController {
             vo.setViewLevel(level);
             vo.setTitle(title);
             vo.setContent(content);
+            vo.setOpenYn(openYn);
+            if (mapIdx != -1) {
+                // mapIdx가 존재하는 경우
+                vo.setMapIdx(mapIdx);
+                updateCheck = mapService.updateMap(vo);
+            } else {
+                // mapIdx가 존재하지 않는 경우
+            	insertCheck = mapService.insertMap(vo);
+                System.out.println("mapIdx 필드가 존재하지 않습니다.");
+            }
             System.out.println("삽입할 map : " + vo);
-            
-            if( mapService.insertMap(vo) > 0) {   
+            if(insertCheck > 0) {   
                System.out.println("map 입력 성공!!!");
                check = true;
                ObjectMapper mapper = new ObjectMapper();
@@ -109,7 +122,15 @@ public class CustomController {
                customMarker.setMapIdx(mapVO.getMapIdx());
                System.out.println("커스텀 스키마로 변경! : " + customMarker);
                customService.saveMarker(customMarker);
-               
+            } else if (updateCheck > 0) {
+            	System.out.println("map 입력 성공!!!");
+                check = true;
+                ObjectMapper mapper = new ObjectMapper();
+                CustomMarker customMarker = mapper.readValue(jsonString, CustomMarker.class);
+                //어차피 1개나옴
+                customMarker.setMapIdx(mapIdx);
+                System.out.println("커스텀 스키마로 변경! : " + customMarker);
+                customService.saveMarker(customMarker);
             }
             
             

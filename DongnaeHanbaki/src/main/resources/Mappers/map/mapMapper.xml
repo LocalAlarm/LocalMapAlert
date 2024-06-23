@@ -58,7 +58,7 @@
 	    INSERT INTO MAP (MAP_IDX, USER_EMAIL, TITLE, CONTENT,
 	        VIEW_LEVEL, CENTER_LATITUDE, CENTER_LONGITUDE, CREATE_DATE, OPEN_YN, DEL_YN)
 	    VALUES (SEQ_MAP_IDX.NEXTVAL, #{userEmail}, #{title}, #{content},
-	        #{viewLevel}, #{centerLatitude}, #{centerLongitude}, SYSTIMESTAMP, 0, 0)
+	        #{viewLevel}, #{centerLatitude}, #{centerLongitude}, SYSTIMESTAMP, #{openYn}, 0)
 	</insert>
 	
 	<!-- 맵 최근 조회 -->
@@ -69,20 +69,27 @@
 	</select>
 	
 	<update id="updateMap" parameterType="mapVO">
-		UPDATE MAKER
+		UPDATE MAP
 		SET 
 		<if test="title != null">
-			TITLE= #{title}
+			TITLE= #{title},
 		</if>
 		<if test="content != null">
-			CONTENT = #{content}
+			CONTENT = #{content},
 		</if>
 		<if test="centerLatitude != null">
-			CENTER_LATITUDE = #{centerLatitude}
+			CENTER_LATITUDE = #{centerLatitude},
 		</if>
-		<if test="centerLogitude != null">
-			CENTER_LOGITUDE = #{centerLogitude}
+		<if test="centerLongitude != null">
+			CENTER_LONGITUDE = #{centerLongitude},
 		</if>
+		<if test="openYn != null">
+			OPEN_YN = #{openYn},
+		</if>
+		<if test="viewLevel != null">
+			VIEW_LEVEL = #{viewLevel},
+		</if>
+		CREATE_DATE = SYSTIMESTAMP
 		WHERE DEL_YN = 0
 		AND MAP_IDX = #{mapIdx}
 	</update>
