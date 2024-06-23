@@ -56,6 +56,8 @@
 <!-- 마커 리스트 -->
 <div id="markerlist">
     <h2 class="p-3" id="markerListHeader">마커 목록</h2>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" onkeyup="filterMarkers()" />
+        <button id="searchButton">검색</button>
     <div id="markerList" class="p-3"></div>
     <div id="pagination" class="p-3"></div>
 </div>

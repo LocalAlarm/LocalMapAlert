@@ -60,6 +60,11 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 		return markerdataDAO.realEvents(vo);
 	}
 
+	@Override
+	public List<MarkerDataVO> searchMarkers(String keyword) {
+		return markerdataDAO.searchMarkers(keyword);
+	}
+
 
 
 
