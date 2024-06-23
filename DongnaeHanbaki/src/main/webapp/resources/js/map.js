@@ -129,26 +129,68 @@ function setMapCenter() {
         $('#markerListHeader').text(title);
 }
 
+var markersPerPage = 5;
+var currentPage = 1;
+var markerData = [];
+
 function updateSidebar(data) {
-        $('#markerList').empty();
+    markerData = data;
+    renderPage(currentPage);
+}
 
-        data.forEach(function (event, index) {
-            var writeDate = new Date(event.writeDate);
-            var formattedDate = writeDate.toLocaleString();
+function renderPage(page) {
+    $('#markerList').empty();
+    var startIndex = (page - 1) * markersPerPage;
+    var endIndex = startIndex + markersPerPage;
+    var pageData = markerData.slice(startIndex, endIndex);
 
-            $('#markerList').append(`
-                <div class="card marker-item" id="markerItem_${index}">
-                    <div class="card-body">
-                        <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
-                        <p class="card-text">${event.content}</p>
-                        <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
-                    </div>
+    pageData.forEach(function (event, index) {
+        var writeDate = new Date(event.writeDate);
+        var formattedDate = writeDate.toLocaleString();
+
+        $('#markerList').append(`
+            <div class="card marker-item" id="markerItem_${startIndex + index}">
+                <div class="card-body">
+                    <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
+                    <p class="card-text">${event.content}</p>
+                    <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
                 </div>
-                `);
-        });
+            </div>
+        `);
+    });
 
-// 전역 변수로 현재 선택된 인덱스 선언
-var currentSelectedIndex = null;
+    renderPagination();
+}
+
+function renderPagination() {
+    $('#pagination').empty();
+    var totalPages = Math.ceil(markerData.length / markersPerPage);
+
+    // Previous button
+    var prevDisabled = currentPage === 1 ? 'disabled' : '';
+    $('#pagination').append(`<button class="page-btn" id="prevPage" ${prevDisabled}>이전</button>`);
+
+    // Page numbers
+    for (var i = 1; i <= totalPages; i++) {
+        var activeClass = i === currentPage ? 'active' : '';
+        $('#pagination').append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+    }
+
+    // Next button
+    var nextDisabled = currentPage === totalPages ? 'disabled' : '';
+    $('#pagination').append(`<button class="page-btn" id="nextPage" ${nextDisabled}>다음</button>`);
+
+    // Event listeners
+    $('.page-btn').on('click', function() {
+        if ($(this).attr('id') === 'prevPage' && currentPage > 1) {
+            currentPage--;
+        } else if ($(this).attr('id') === 'nextPage' && currentPage < totalPages) {
+            currentPage++;
+        } else {
+            currentPage = $(this).data('page');
+        }
+        renderPage(currentPage);
+    });
 
 // 새로운 마커 리스트 아이템 클릭 이벤트 리스너 등록
 $('#markerList').on('click', '.marker-item', function() {
@@ -164,10 +206,14 @@ $('#markerList').on('click', '.marker-item', function() {
 // 네비게이션 버튼 클릭 시 초기화하고 데이터 갱신
 $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
+        currentPage = 1;
+    
 	});
 
 $('#eventAccidentsDropdown').click(function() {
     	resetMarkersAndIndex();
+    	    currentPage = 1;
+    	
     	AllAccidents();
 	});
 }
