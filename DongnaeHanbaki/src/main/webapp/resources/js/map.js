@@ -73,7 +73,6 @@ function toggleMarkers() {
         showMarkers();
         document.getElementById('toggleMarkersBtn').innerText = '마커 off'; 
     }
-    
     markersVisible = !markersVisible; 
 }
 
