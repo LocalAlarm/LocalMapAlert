@@ -448,6 +448,21 @@ function showMoimBoardDetail(boardId) {
                     showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!')
                 } else {
                     submitMoimComment(boardId, commentContent);
+                    $('#post-detail-comment-input').val(''); // 입력란 비우기
+                }
+            });
+
+            // 엔터 키를 누르면 댓글을 전송하는 이벤트 핸들러 추가
+            $('#post-detail-comment-input').keypress(function(e) {
+                if (e.which === 13) { // 엔터 키의 키 코드가 13
+                    e.preventDefault(); // 기본 엔터 키 동작 방지
+                    const commentContent = $('#post-detail-comment-input').val();
+                    if (commentContent.length < 5) {
+                        showDangerAlert('너무 적어요.', '댓글은 최소 5글자 이상이어야 합니다.', '조금 더 작성해보세요!');
+                    } else {
+                        submitMoimComment(boardId, commentContent);
+                        $('#post-detail-comment-input').val(''); // 입력란 비우기
+                    }
                 }
             });
 
@@ -500,6 +515,7 @@ async function MoimCommentList(moimCommentList, commentsList) {
         const commentPromises = moimCommentList.map(comment => 
             new Promise((resolve, reject) => {
                 searchUserByToken(comment.author, (err, userData) => {
+                    console.log(comment.content);
                     if (err) {
                         resolve(`
                             <div class="comment">

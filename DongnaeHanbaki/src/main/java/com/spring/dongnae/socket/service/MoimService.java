@@ -52,6 +52,7 @@ public class MoimService {
         moim.setLeader(userRoom);
         moim.setChatRoomId(chatRoomService.createChatRoom());
         moimRepository.save(moim);
+        chatRoomService.addUserToChatRoom(moim.getChatRoomId(), userRoom);
         userRoomsRepository.save(userRoom);
         
         return moim;
