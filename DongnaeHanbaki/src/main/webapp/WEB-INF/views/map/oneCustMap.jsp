@@ -28,6 +28,7 @@
 	/* 지도 삭제하기 */
 	function deleteMap(){
 		alert("지도를  삭제합니다");
+		location.href="deleteCustMap?mapIdx=${mapVO.mapIdx}";
 	}
 	
 	/*비동기 댓글작성하기 */

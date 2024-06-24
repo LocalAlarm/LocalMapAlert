@@ -257,6 +257,15 @@ public class CustomController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+   
+   @RequestMapping("/deleteCustMap")
+   public String deleteMap(MapVO mapVO) {
+	   mapVO = mapService.getMap(mapVO);
+	   if(mapVO.getUserEmail().equals(getAuthenticInfo.GetEmail())) {
+		   mapService.deleteMap(mapVO);
+	   }
+	   return "redirect:/customMap";
+   }
 
 }
 
