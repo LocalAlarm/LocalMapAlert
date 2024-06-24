@@ -459,10 +459,6 @@
          //마커 연결 선 긋기
          connectMarker();
       }
-
-
-//       saveMap();
-
    }
    
    //출발 추가
@@ -731,8 +727,8 @@
          path: linePath,
          style: lineStyle,
          depart: departMarker ? departMarker.id : null,
-           via: viaMarker ? viaMarker.id : null,
-           arrive: arriveMarker ? arriveMarker.id : null
+         via: viaMarker ? viaMarker.id : null,
+         arrive: arriveMarker ? arriveMarker.id : null
       })
       console.log(lineList);
       // 지도에 선을 표시합니다 
@@ -1102,6 +1098,7 @@
       //       markerList = markerInfoList; // 중복이긴함 두개가 일단 markerlist에 복사 추후 markerinfolist로 받을예쩡 (선, 원 등 다른것도 적용예정)
       console.log(markerList); // 예시로 콘솔에 출력
       console.log(lineList); // 예시로 콘솔에 출력
+      var address = document.getElementById("address");
       var center = document.getElementById("coords");
       rangeInput = document.getElementById('customRange3');
       var title = document.getElementById("title");
@@ -1119,6 +1116,7 @@
             data : JSON.stringify({
                markers : markerList,
                lines : lineList,
+               address : address.textContent,
                center : center.textContent,
                level : rangeInput.value,
                title : title.value,

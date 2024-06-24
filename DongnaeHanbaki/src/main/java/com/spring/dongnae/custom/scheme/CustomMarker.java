@@ -5,13 +5,17 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Document(collection = "customMarkers")
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"openYn"})
 public class CustomMarker {
 	
 	@Id
 	private int mapIdx;
     private List<Marker> markers;
     private List<Line> lines;
+    private String address;
     private String center;
     private String level;
     private String title;
@@ -50,6 +54,14 @@ public class CustomMarker {
 	}
 	
 	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getCenter() {
 		return center;
 	}
@@ -77,9 +89,10 @@ public class CustomMarker {
 
 	@Override
 	public String toString() {
-		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + ", lines=" + lines + ", center=" + center
-				+ ", level=" + level + ", title=" + title + ", content=" + content + "]";
+		return "CustomMarker [mapIdx=" + mapIdx + ", markers=" + markers + ", lines=" + lines + ", address=" + address
+				+ ", center=" + center + ", level=" + level + ", title=" + title + ", content=" + content + "]";
 	}
+
 
 
 

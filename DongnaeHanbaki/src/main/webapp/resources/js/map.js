@@ -261,12 +261,11 @@ $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
         currentPage = 1;
 	});
-
 $('#eventAccidentsDropdown').click(function() {
     	resetMarkersAndIndex();
     	currentPage = 1;
     	AllAccidents();
-	});
+   });
 }
 
 // 내 위치 버튼 클릭 시 호출되는 함수
@@ -293,20 +292,20 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
     var lat = document.getElementById('markerLat').value;
     var lng = document.getElementById('markerLng').value;
     var markerType; // markerType 변수 추가
-	console.log("marker : "+markerIdx);
-	
+   console.log("marker : "+markerIdx);
+   
     // 마커 등록을 갑자기 수정하다보니 정립이 안돼서 두개의 값중 비교함 (추후 값 정리해서 switch문 쓸예정) markerType 결정
-    if (markerIdx === '사건사고') {
+    if (markerContent === '사건사고' || markerIdx === '사건사고') {
         markerType = '1';
-    } else if (markerContent === '공연') {
+    } else if (markerContent === '공연' || markerIdx === '공연') {
         markerType = '2';
-    } else if (markerContent=== '팝업 스토어') {
+    } else if (markerContent === '팝업 스토어' || markerIdx === '팝업 스토어') {
         markerType = '3';
-    } else if (markerContent === '일일 장터') {
+    } else if (markerContent === '일일 장터' || markerIdx === '일일 장터') {
         markerType = '4';
-    } else if (markerContent === '강연') {
+    } else if (markerContent === '강연' || markerIdx === '강연') {
         markerType = '5';
-    } else if (markerContent === '버스킹') {
+    } else if (markerContent === '버스킹' || markerIdx === '버스킹') {
         markerType = '6';
     } else {
         console.error('Unknown marker type:', markerIdx);
@@ -322,7 +321,7 @@ document.getElementById('markerForm').addEventListener('submit', function(event)
         longitude: lng
 };
 
-	
+   
     $.ajax({
         url: 'saveM', 
         method: 'POST', 
@@ -364,22 +363,22 @@ function addMarker(position, markerType, title, content) {
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;
         case '3': // 팝업스토어
-        	imageSrc = 'resources/image/popup.png';
+           imageSrc = 'resources/image/popup.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;
         case '4': // 일일 장터
-       		imageSrc = 'resources/image/mart.png';
+             imageSrc = 'resources/image/mart.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;
         case '5': // 강연
-        	imageSrc = 'resources/image/lec.png';
+           imageSrc = 'resources/image/lec.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;
         case '6': // 버스킹       
-        	imageSrc = 'resources/image/busking.png';
+           imageSrc = 'resources/image/busking.png';
             imageSize = new kakao.maps.Size(50, 50);
             imageOption = {offset: new kakao.maps.Point(27, 69)};
             break;    
@@ -492,9 +491,9 @@ function All() {
             // 기존 마커 숨기기
             hideMarkers();
             toggleEventTab(false);
-    		toggleEventAccidentsTab(false); // 사건사고 메뉴 비활성화
-    		document.getElementById('v-pills-home-tab').classList.add('active');
-    		
+          toggleEventAccidentsTab(false); // 사건사고 메뉴 비활성화
+          document.getElementById('v-pills-home-tab').classList.add('active');
+          
             // 가져온 데이터로 마커 생성
             data.forEach(function(event) {
                 var position = new kakao.maps.LatLng(event.latitude, event.longitude);
@@ -504,18 +503,15 @@ function All() {
                 var sysDate = event.sysDate;
                 addMarker(position, markerType, title, content);
             });
-
             // 마커 보이기
             closePopup();
             showMarkers();
             updateSidebar(data);  
-
-	
-			   },
-			   error: function(xhr, status, error) {
-			   	console.error("데이터를 가져오는 중 오류 발생: " + error);
-			   }
-		});
+            },
+            error: function(xhr, status, error) {
+               console.error("데이터를 가져오는 중 오류 발생: " + error);
+            }
+      });
 }
 
 // 전체 사건사고 클릭
@@ -525,7 +521,7 @@ function AllAccidents() {
         method: "GET",
         dataType: "json",
         success: function (data) {
-        	resetMarkersAndIndex();
+           resetMarkersAndIndex();
             // 기존 마커 제거
             hideMarkers();
             markers = [];
@@ -572,12 +568,11 @@ function RealTimeAccidents() {
                 var markerType = event.markerIdx;
                 addMarker(position, markerType, title, content);
             });
-
             if (data.length > 0) {
                 // 데이터에서 가장 최근 사건사고 정보 가져오기 (리스트의 첫 번째 요소)
                 var latestEvent = data[0];
-				alert('실시간 사건사고가 ' + data.length + '건 있습니다.\n가장 최근 사건사고로 이동합니다.');
-				
+            alert('실시간 사건사고가 ' + data.length + '건 있습니다.\n가장 최근 사건사고로 이동합니다.');
+            
                 if (latestEvent) {
                     // 최근 사건사고의 좌표 가져오기
                     var latestPosition = new kakao.maps.LatLng(latestEvent.latitude, latestEvent.longitude);
@@ -628,7 +623,7 @@ function NearAccidents() {
 
                 if (distance <= radius) {
                     nearbyAccidents.push(accident);
-                    addMarker(position, '1', accident.title, accident.content);
+                    addMarker(position, '2', accident.title, accident.content);
 
                     // 가장 가까운 마커의 위치 업데이트
                     if (distance < minDistance) {
@@ -686,7 +681,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
 //사용자 주소 좌표로 변환하는 함수 -----------------------------------------------------------------------
 
 var coords = null;
-
 function getUserAddress() {
     $.ajax({
         url: 'userAddress', 
@@ -734,28 +728,28 @@ function initializeMap(centerCoords) {
     // 지도 중심을 설정합니다.
     setMapCenter(centerCoords);
     // 마우스 우클릭 이벤트 발생 시 마커 추가
-	kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
-		tempLatLng = mouseEvent.latLng;
-		var lat = tempLatLng.getLat();
-		var lng = tempLatLng.getLng();
-		console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
-			
-		// 지도의 중심을 클릭된 위치로 이동
-		map.setCenter(tempLatLng);
-			
-		document.getElementById('markerLat').value = lat;
-		document.getElementById('markerLng').value = lng;
-		document.getElementById('inputForm').style.display = 'block';
-			
-		// 임시 마커 생성
-		if (tempMarker) {
-			tempMarker.setMap(null);
-		}
-			tempMarker = new kakao.maps.Marker({
-				position: tempLatLng,
-			        map: map
-		});
-		});
+   kakao.maps.event.addListener(map, 'rightclick', function(mouseEvent) { 
+      tempLatLng = mouseEvent.latLng;
+      var lat = tempLatLng.getLat();
+      var lng = tempLatLng.getLng();
+      console.log('위도 :', lat, '경도 :', lng); // 콘솔에 좌표 출력
+         
+      // 지도의 중심을 클릭된 위치로 이동
+      map.setCenter(tempLatLng);
+         
+      document.getElementById('markerLat').value = lat;
+      document.getElementById('markerLng').value = lng;
+      document.getElementById('inputForm').style.display = 'block';
+         
+      // 임시 마커 생성
+      if (tempMarker) {
+         tempMarker.setMap(null);
+      }
+         tempMarker = new kakao.maps.Marker({
+            position: tempLatLng,
+                 map: map
+      });
+      });
 } 
 
 //레디 -----------------------------------------------------------------------
@@ -765,3 +759,4 @@ $(document).ready(function() {
         document.getElementById('v-pills-home-tab').classList.add('active');
         
 });
+

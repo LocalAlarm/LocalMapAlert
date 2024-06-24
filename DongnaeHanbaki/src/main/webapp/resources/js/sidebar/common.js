@@ -121,19 +121,19 @@ var isEmpty = function (value) {
 };
 
 function showDangerAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "error",
-		title: title,
-		text: text,
+   Swal.fire({
+      icon: "error",
+      title: title,
+      text: text,
         footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+   });
 }
 
 function showSuccessAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "success",
-		title: title,
-		text: text,
-		footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+   Swal.fire({
+      icon: "success",
+      title: title,
+      text: text,
+      footer: '<span style="color:indianred">' + footerText + '</span>'
+   });
 }

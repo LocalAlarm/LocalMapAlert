@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.spring.dongnae.user.vo.CustomUserDetails;
+import com.spring.dongnae.user.vo.UserVO;
 
 @Component
 public class GetAuthenticInfo {
@@ -12,12 +13,37 @@ public class GetAuthenticInfo {
 	private Authentication authentication = null;
 	
 	public String GetToken() {
-		authentication = SecurityContextHolder.getContext().getAuthentication();
-		return ((CustomUserDetails) authentication.getPrincipal()).getToken();
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal()).getToken();
+		} catch(NullPointerException e) {
+			return null;
+		}
 	}
 	
 	public String GetEmail() {
-		authentication = SecurityContextHolder.getContext().getAuthentication();
-		return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+//			 SecurityContextHolder.getContext().setAuthentication(authentication);
+			return ((CustomUserDetails) authentication.getPrincipal()).getUsername();
+		} catch(NullPointerException e) {
+			return null;
+		}
 	}
+	public CustomUserDetails GetLoginUser() {
+		try {			
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal());
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
+	
+	public CustomUserDetails GetUser() {
+		authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(authentication);
+		System.out.println((CustomUserDetails) authentication.getPrincipal());
+		return (CustomUserDetails) authentication.getPrincipal();
+	}
+	
 }
