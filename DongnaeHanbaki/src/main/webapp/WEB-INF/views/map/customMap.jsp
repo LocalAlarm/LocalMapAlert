@@ -170,6 +170,11 @@ crossorigin="anonymous"></script>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
 		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		    <a href="updateCustMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
+		    <a href="javascript:void(0);" class="card-link" onclick="deleteMap(${vo.mapIdx});">삭제하기</a> <!-- JavaScript 함수 호출로 변경 -->
+            <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="roleSwitch${vo.mapIdx}" ${vo.isPublic ? 'checked' : ''} onchange="updateVisibility(${vo.mapIdx}, this.checked);">
+                <label class="form-check-label" for="roleSwitch${vo.mapIdx}">공개/비공개</label>
+            </div>
 		  </div>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>

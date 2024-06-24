@@ -42,15 +42,30 @@ public class MarkerDataServiceImpl implements MarkerDataService{
 	}
 	
 	@Override
-	public List<MarkerDataVO> getEvents(MarkerDataVO vo) {
-		System.out.println("2");
-
-		return markerdataDAO.getEvents(vo);
+	public List<MarkerDataVO> allEvents(MarkerDataVO vo) {
+		return markerdataDAO.allEvents(vo);
+	}
+	
+	@Override
+	public List<MarkerDataVO> nearEvents(MarkerDataVO vo) {
+		return markerdataDAO.nearEvents(vo);
 	}
 	
 	public void saveMarker(MarkerDataVO vo) {
 	    markerdataDAO.insertMarker(vo);
 	}
+
+	@Override
+	public List<MarkerDataVO> realEvents(MarkerDataVO vo) {
+		return markerdataDAO.realEvents(vo);
+	}
+
+	@Override
+	public List<MarkerDataVO> searchMarkers(String keyword) {
+		return markerdataDAO.searchMarkers(keyword);
+	}
+
+
 
 
 	

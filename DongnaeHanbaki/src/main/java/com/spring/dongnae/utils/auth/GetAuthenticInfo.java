@@ -46,4 +46,22 @@ public class GetAuthenticInfo {
 		return (CustomUserDetails) authentication.getPrincipal();
 	}
 	
+	
+	public String GetImg() {
+		try {
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal()).getImage();
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
+	
+	public CustomUserDetails GetCUD() {
+		try {
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			return ((CustomUserDetails) authentication.getPrincipal());
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

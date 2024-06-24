@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.dongnae.marker.service.MarkerDataService;
@@ -25,6 +27,7 @@ public class MarkerDataController {
 	public List<MarkerDataVO> allMenu(MarkerDataVO vo) {
 		return markerdataService.allMenu(vo);
 	}
+	
 	@RequestMapping("/AllAccidents")
 	@ResponseBody
 	public List<MarkerDataVO> getAllAccidents() {
@@ -38,7 +41,6 @@ public class MarkerDataController {
 		int marker_idx = 1;
 		return markerdataService.getRealTimeEvents(marker_idx);
 	}
-
 	
 	@RequestMapping("/NearAccidents")
 	@ResponseBody 
@@ -47,11 +49,16 @@ public class MarkerDataController {
 		return markerdataService.getNearAccidents(marker_idx); 
 	}
 	
-	@RequestMapping("/Events")
+	@RequestMapping("/allevents")
 	@ResponseBody
-	public List<MarkerDataVO> getEvents(MarkerDataVO vo) {
-		System.out.println("1");
-	    return markerdataService.getEvents(vo);
+	public List<MarkerDataVO> allEvents(MarkerDataVO vo) {
+		return markerdataService.allEvents(vo);
+	}
+	
+	@RequestMapping("/nearEvents")
+	@ResponseBody
+	public List<MarkerDataVO> nearEvents(MarkerDataVO vo) {
+		return markerdataService.nearEvents(vo);
 	}
 	
 	@PostMapping("/saveM")
@@ -59,5 +66,18 @@ public class MarkerDataController {
 		markerdataService.saveMarker(vo);
 		return ResponseEntity.ok("마커 저장.");
 	}
+	
+	@GetMapping("/search")
+	@ResponseBody
+	public List<MarkerDataVO> searchMarkers(@RequestParam String keyword) {
+	    return markerdataService.searchMarkers(keyword);
+	}
 
+	@RequestMapping("/RealTimeEvents")
+	@ResponseBody
+	public List<MarkerDataVO> realEvents(MarkerDataVO vo) {
+		return markerdataService.realEvents(vo);
+	}
+
+	
 }

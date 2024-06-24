@@ -11,11 +11,42 @@ body {
     background-color: transparent; /* 사이드바 배경이 화면 하단까지 이어져서 배경투명하게함 */
     z-index: 1000; /* 지도가 사이드바 뒤쪽에 위치하도록했음 */
 }
+    #markerlist {
+        max-width: 600px; /* 최대 너비 설정 */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-/* .nav-pills {
-    border: 2px solid #007bff; 
-    padding: 10px;
-} */
+    /* 검색 입력창 스타일 */
+    #searchInput {
+        width: 60%; /* 너비 조정 */
+        margin-left: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    /* 검색 버튼 스타일 */
+    #searchButton {
+        padding: 10px 20px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* 마커 리스트 스타일 */
+    #markerList {
+        margin-top: 0; /* 위쪽 여백 제거 */
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+    }
+
 #sidebar .nav {
     background-color: rgba(248, 249, 250, 0.9); /* 버튼 배경 색과 투명도  */
 }

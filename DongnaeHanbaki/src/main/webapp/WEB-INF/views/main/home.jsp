@@ -116,7 +116,8 @@ const chatToast = document.getElementById('chatToast');
 			</div>
 
 			<div class="toast-body">
-				<div id="chatBox"></div>
+				<div id="chat-histroy-div"></div>
+				<div id="chat-new-div"></div>
 			</div>
 			<!-- 채팅 메시지 표시 영역 -->
 			<input type="text" id="message" placeholder="Enter your message" />

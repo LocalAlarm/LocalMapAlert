@@ -1,14 +1,12 @@
 package com.spring.dongnae.socket.scheme;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.user.vo.UserVO;
 
 @Document(collection = "userRooms")
@@ -69,7 +67,7 @@ public class UserRooms {
     // 자기가 Master인 모임
     public void addMasterMoims(Moim moim) throws Exception {
         if (this.masterMoims.size() >= 4) {
-            throw new Exception("모임은 3개까지 개설할 수 있어요!");
+            throw new Exception("모임은 4개까지 개설할 수 있어요!");
         }
         this.masterMoims.add(moim);
     }
@@ -91,8 +89,8 @@ public class UserRooms {
         this.requestIds.remove(email);
     }
 
-	public void addFriendRequest(String email) {
-		this.requestIds.remove(email);
+	public void addFriendRequest(String email) throws Exception {
+		if (requestIds.contains(email)) throw new Exception("already Request!");
 		this.requestIds.add(email);
 	}
 	
@@ -101,6 +99,8 @@ public class UserRooms {
 	}
 	
 	public void addFriendId(FriendInfo friendInfo) {
+		this.removeFriendRequest(friendInfo.getFriendToken());
+		
 		this.friendIds.add(friendInfo);
 	}
 	

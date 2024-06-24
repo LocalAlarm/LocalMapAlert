@@ -41,11 +41,13 @@
         이벤트
     </a>
     <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-        <li><a class="dropdown-item" href="#" onclick="Events()">전체 행사</a></li>
-        <li><a class="dropdown-item" href="#" onclick="LocalEvents()">우리동네 행사 </a></li>
-        <li><a class="dropdown-item" href="#" onclick="RealTimeEvent()">실시간 진행중인 행사</a></li>
+        <li><a class="dropdown-item" href="#" onclick="Events()">전체 행사 보기</a></li>
+        <li><a class="dropdown-item" href="#" onclick="NearEvents()">내 근처 행사 찾기</a></li>
+        <li><a class="dropdown-item" href="#" onclick="RealEvents()">진행중인 행사 찾기</a></li>
     </ul>
-</div><button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+</div>
+<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">재난 문자 확인하기</button>
+    <div id="disasterData" style="white-space: pre-wrap; margin-top: 20px;"></div>
 
             </div>
         </div>       
@@ -56,9 +58,12 @@
 <!-- 마커 리스트 -->
 <div id="markerlist">
     <h2 class="p-3" id="markerListHeader">마커 목록</h2>
+    <input type="text" id="searchInput" placeholder="검색어를 입력하세요" onkeyup="filterMarkers()" />
+        <button id="searchButton">검색</button>
     <div id="markerList" class="p-3"></div>
+    <div id="pagination" class="p-3"></div>
 </div>
-    
+ 
 <!-- 마커 보이기 감추기 버튼 -->
 <div class="overlay-button">
     <button id="toggleMarkersBtn" onclick="toggleMarkers()" class="btn btn-secondary btn-sm">마커 off</button>

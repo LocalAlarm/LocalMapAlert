@@ -28,6 +28,7 @@ import com.spring.dongnae.socket.scheme.Board;
 import com.spring.dongnae.socket.scheme.Comment;
 import com.spring.dongnae.socket.scheme.Image;
 import com.spring.dongnae.socket.scheme.Moim;
+import com.spring.dongnae.socket.service.BoardService;
 import com.spring.dongnae.socket.service.MoimService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
@@ -36,6 +37,8 @@ import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 public class MoimController {
 	@Autowired
 	private MoimService moimService;
+	@Autowired
+	private BoardService boardService;
 	@Autowired
 	private GetAuthenticInfo getAuthenticInfo;
 	@Autowired
@@ -61,10 +64,10 @@ public class MoimController {
         return moimService.getMoimDtoInfo(moimId);
     }
 	
-    @PostMapping("/{moimId}/add-participants/{token}")
-    public Moim addParticipantToMoim(@PathVariable String moimId, @PathVariable String token) {
-      return moimService.addParticipantToMoim(moimId, token);
-    }
+	@PostMapping("/{moimName}/add-participants")
+	public Moim addParticipantToMoim(@PathVariable String moimName) {
+		return moimService.addParticipantToMoim(moimName, getAuthenticInfo.GetToken());
+	}
 
     
     @PostMapping("/{moimId}/board")
@@ -77,6 +80,7 @@ public class MoimController {
         // 이미지 파일 처리 (예: 저장 경로 지정, 파일 저장 등)
         for (MultipartFile imageFile : images) {
         	if (!imageFile.isEmpty()) {
+        		System.out.println(imageFile.getSize());
         		Map<String, String> imageMap = imageUploadController.uploadImage(imageFile);
         		Image image = new Image();
         		image.setImage(imageMap.get("url"));
@@ -95,8 +99,12 @@ public class MoimController {
     }
     
     @DeleteMapping("/{boardId}")
-    public boolean deleteBoard(@PathVariable String boardId) {
-    	return moimService.deleteBoard(boardId);
+    public ResponseEntity<String> deleteBoard(@PathVariable String boardId) {
+    	if (moimService.deleteBoard(boardId)) {
+    		return ResponseEntity.ok("삭제에 성공했습니다.");
+    	} else {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("접근에 실패했습니다.");
+    	}
     }
     
     @PostMapping("/{boardId}/likes")
@@ -115,9 +123,20 @@ public class MoimController {
     	return moimService.deleteCommentFromBoard(boardId, commentId);
     }
     
+    @GetMapping("/get-comments/{boardId}")
+    public List<Comment> getCommetList(@PathVariable String boardId) {
+    	System.out.println("asdsa");
+    	return boardService.getCommentList(boardId);
+    }
+    
     @GetMapping("/{moimId}/all-boards")
     public List<Board> getBoardsByMoimId(@PathVariable String moimId) {
     	return moimService.getBoardByMoimId(moimId);
+    }
+    
+    @GetMapping("/{moimId}/boards/count")
+    public long getBoardCount(@PathVariable String moimId) {
+        return boardService.countBoardsByMoimId(moimId);
     }
     
     @GetMapping("/{moimId}/boards")

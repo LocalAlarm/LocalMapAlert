@@ -4,7 +4,8 @@
 :root {
     --nav--width: 92px;
     --first-color: #0c5df4;
-    --bg-color: #12192c;
+    --bg-color: #000000;
+/*     --bg-color: #12192c; */
     --sub-color: #b6cefc;
     --white-color: #fff;
     --body-font: 'Poppins', sans-serif;

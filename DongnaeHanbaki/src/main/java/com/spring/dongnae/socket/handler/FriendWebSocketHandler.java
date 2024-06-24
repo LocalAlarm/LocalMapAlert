@@ -1,7 +1,6 @@
 package com.spring.dongnae.socket.handler;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,27 +11,17 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.dongnae.socket.dto.UserRoomsDto;
 import com.spring.dongnae.socket.repo.ChatRoomRepository;
-import com.spring.dongnae.socket.repo.FriendRoomRepository;
 import com.spring.dongnae.socket.repo.UserRoomsRepository;
-import com.spring.dongnae.socket.scheme.FriendInfo;
-import com.spring.dongnae.socket.scheme.FriendRoom;
+import com.spring.dongnae.socket.service.UserRoomsService;
 import com.spring.dongnae.user.service.UserService;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
 @Component
 public class FriendWebSocketHandler extends TextWebSocketHandler {
-	
 	@Autowired
-	private UserService userService;
-	@Autowired
-	private FriendRoomRepository friendRoomRepository;
-	@Autowired
-	private ChatRoomRepository chatRoomRepository;
-	@Autowired
-	private UserRoomsRepository userRoomsRepository;
-	@Autowired
-	private GetAuthenticInfo getAutehnticInfo; 
+	private UserRoomsService userRoomsService;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -44,24 +33,12 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String token = (String) session.getAttributes().get("userToken");
-		if (token != null) {
-			sessions.put(token, session);
-//			// 사용자 ID로 기존 메시지 문서 검색
-//			Optional<FriendRoom> optionalFriendRoom = friendRoomRepository.findByUserRoomsId(token);
-//			FriendRoom friendRoom = new FriendRoom();
-//			// 기존 채팅방이 있으면 해당 데이터를 가져옴
-//			if (optionalFriendRoom.isPresent()) {
-//				friendRoom = optionalFriendRoom.get();
-//				String jsonFriendRoomId = objectMapper.writeValueAsString(friendRoom);
-//				session.sendMessage(new TextMessage(jsonFriendRoomId));
-//			} else {
-//				// 새로운 메시지 문서 생성
-//				friendRoom = new FriendRoom(userRoomsRepository.findById(getAutehnticInfo.GetToken()).get());
-//				friendRoomRepository.save(friendRoom);
-//			}
-		} else {
-			session.close(CloseStatus.NOT_ACCEPTABLE);
-		}
+		if (token == null) session.close(CloseStatus.NOT_ACCEPTABLE);
+		
+		sessions.put(token, session);
+		UserRoomsDto userRoomsDto = userRoomsService.getUserRoomsDtoById(token);
+		String jsonUserRoomsDto = objectMapper.writeValueAsString(userRoomsDto);
+		session.sendMessage(new TextMessage(jsonUserRoomsDto));
 	}
 	
 	// 친구 요청을 받는 부분의 처리 메서드

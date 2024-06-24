@@ -16,4 +16,6 @@ public interface BoardRepository extends MongoRepository<Board, String> {
 	Page<Board> findByMoimId(String moimId, Pageable pageable);
 	
 	Optional<Board> findById(String boardId);
+	
+	long countByMoimId(String moimId);
 }

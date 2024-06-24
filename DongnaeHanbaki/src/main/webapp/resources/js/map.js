@@ -73,7 +73,6 @@ function toggleMarkers() {
         showMarkers();
         document.getElementById('toggleMarkersBtn').innerText = '마커 off'; 
     }
-    
     markersVisible = !markersVisible; 
 }
 
@@ -84,7 +83,6 @@ function toggleEventAccidentsTab(activate) {
         document.querySelectorAll('.nav-link').forEach(function (el) {
             el.classList.remove('active');
         });
-
         // 사건 사고 메뉴 활성화
         document.getElementById('eventAccidentsDropdown').classList.add('active');
     } else {
@@ -129,26 +127,123 @@ function setMapCenter() {
         $('#markerListHeader').text(title);
 }
 
+var markersPerPage = 5;
+var currentPage = 1;
+var markerData = [];
+
 function updateSidebar(data) {
-        $('#markerList').empty();
+    markerData = data;
+    renderPage(currentPage);
+}
 
-        data.forEach(function (event, index) {
-            var writeDate = new Date(event.writeDate);
-            var formattedDate = writeDate.toLocaleString();
-
-            $('#markerList').append(`
-                <div class="card marker-item" id="markerItem_${index}">
-                    <div class="card-body">
-                        <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
-                        <p class="card-text">${event.content}</p>
-                        <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
-                    </div>
-                </div>
-                `);
+$(document).ready(function() {
+    // 검색 버튼 클릭 이벤트
+    $('#searchButton').click(function() {
+        // 검색어 가져오기
+        var keyword = $('#searchInput').val().trim();
+        console.log(keyword);
+        
+        // AJAX 요청
+        $.ajax({
+            url: 'search',  
+            type: 'GET',  
+            dataType: 'json',  
+            data: { keyword: keyword }, 
+            success: function(response) {
+                // 성공적으로 데이터를 받았을 때 처리
+                resetMarkersAndIndex()
+                renderMarkerList(response);  
+            },
+            error: function(xhr, status, error) {
+                // 오류 처리
+                console.error('AJAX request error:', status, error);
+            }
         });
+    });
 
-// 전역 변수로 현재 선택된 인덱스 선언
-var currentSelectedIndex = null;
+    // 마커 리스트 렌더링 함수
+    function renderMarkerList(data) {
+        var markerList = $('#markerList');
+        markerList.empty();  // 기존 리스트 비우기
+		resetMarkersAndIndex();
+        // 받은 데이터를 기반으로 마커 리스트 업데이트
+        if (data.length === 0) {
+            markerList.append('<p>검색 결과가 없습니다.</p>');
+        } else {
+            $.each(data, function(index, marker) {
+                if (marker.title && marker.content) {
+                    var formattedDate = new Date(marker.writeDate).toLocaleString(); // 날짜 형식 변환
+                    markerList.append(`
+                        <div class="card marker-item" id="markerItem_${index}">
+                            <div class="card-body">
+                                <p class="card-text"><strong style="font-size: 20px;">${marker.title}</strong></p>
+                                <p class="card-text">${marker.content}</p>
+                                <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
+                            </div>
+                        </div>
+                    `);
+                } else {
+                    console.error('Invalid marker data:', marker);
+                }
+            });
+        }
+    }
+});
+
+
+function renderPage(page) {
+    $('#markerList').empty();
+    var startIndex = (page - 1) * markersPerPage;
+    var endIndex = startIndex + markersPerPage;
+    var pageData = markerData.slice(startIndex, endIndex);
+
+    pageData.forEach(function (event, index) {
+        var writeDate = new Date(event.writeDate);
+        var formattedDate = writeDate.toLocaleString();
+
+        $('#markerList').append(`
+            <div class="card marker-item" id="markerItem_${startIndex + index}">
+                <div class="card-body">
+                    <p class="card-text"><strong style="font-size: 20px;">${event.title}</strong></p>
+                    <p class="card-text">${event.content}</p>
+                    <p class="card-text"><small class="text-muted">작성 시간: ${formattedDate}</small></p>
+                </div>
+            </div>
+        `);
+    });
+
+    renderPagination();
+}
+
+function renderPagination() {
+    $('#pagination').empty();
+    var totalPages = Math.ceil(markerData.length / markersPerPage);
+
+    // Previous button
+    var prevDisabled = currentPage === 1 ? 'disabled' : '';
+    $('#pagination').append(`<button class="page-btn" id="prevPage" ${prevDisabled}>이전</button>`);
+
+    // Page numbers
+    for (var i = 1; i <= totalPages; i++) {
+        var activeClass = i === currentPage ? 'active' : '';
+        $('#pagination').append(`<button class="page-btn ${activeClass}" data-page="${i}">${i}</button>`);
+    }
+
+    // Next button
+    var nextDisabled = currentPage === totalPages ? 'disabled' : '';
+    $('#pagination').append(`<button class="page-btn" id="nextPage" ${nextDisabled}>다음</button>`);
+
+    // Event listeners
+    $('.page-btn').on('click', function() {
+        if ($(this).attr('id') === 'prevPage' && currentPage > 1) {
+            currentPage--;
+        } else if ($(this).attr('id') === 'nextPage' && currentPage < totalPages) {
+            currentPage++;
+        } else {
+            currentPage = $(this).data('page');
+        }
+        renderPage(currentPage);
+    });
 
 // 새로운 마커 리스트 아이템 클릭 이벤트 리스너 등록
 $('#markerList').on('click', '.marker-item', function() {
@@ -164,11 +259,12 @@ $('#markerList').on('click', '.marker-item', function() {
 // 네비게이션 버튼 클릭 시 초기화하고 데이터 갱신
 $('#v-pills-home-tab').click(function() {
     resetMarkersAndIndex();
-   });
-
+        currentPage = 1;
+	});
 $('#eventAccidentsDropdown').click(function() {
-       resetMarkersAndIndex();
-       AllAccidents();
+    	resetMarkersAndIndex();
+    	currentPage = 1;
+    	AllAccidents();
    });
 }
 
@@ -305,29 +401,21 @@ var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
     // markerType에 따라 인포윈도우에 표시할 내용을 생성하는 함수
     function generateInfoContent(markerType, title) {
-        var type;
-        switch (markerType) {
-            case '1':
-                type = "사건사고";
-                break;
-            case '2':
-                type = "공연";
-                break;
-            case '3':
-                type = "팝업 스토어";
-                break;
-            case '4':
-                type = "일일 장터";
-                break;
-            case '5':
-                type = "강연";
-                break;
-            case '6':
-                type = "버스킹";
-                break;
-            default:
-                type = "알 수 없음";
-                break;
+    var type;
+    switch (markerType) {
+        case '1':
+            type = "사건사고";
+            break;
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+            type = "이벤트";
+            break;
+        default:
+            type = "알 수 없음";
+            break;
     }
     return `${type} : ${title}`;
 }
@@ -417,7 +505,6 @@ function All() {
             });
             // 마커 보이기
             closePopup();
-            map.setLevel(5);
             showMarkers();
             updateSidebar(data);  
             },
@@ -500,9 +587,12 @@ function RealTimeAccidents() {
                     toggleEventAccidentsTab(true);
                 } else {
                     alert("실시간 사건사고가 없습니다.");
+                    
                 }
             } else {
                 alert("실시간 사건사고가 없습니다.");
+                AllAccidents();
+                
             }
         },
         error: function (xhr, status, error) {
@@ -554,7 +644,8 @@ function NearAccidents() {
                 map.setCenter(nearestMarkerPosition);
             } else {
                 // 근처에 사건사고가 없는 경우
-                alert('근처에 사건사고가 없습니다.');
+                alert('근처에 사건사고가 없습니다. \n사용자 등록 위치로 이동합니다');
+                map.setCenter(coords);
                 AllAccidents();
             }
 
@@ -660,6 +751,40 @@ function initializeMap(centerCoords) {
       });
       });
 } 
+//api 호출-------------------------------------------------------------------
+$(document).ready(function() {
+    $("#v-pills-settings-tab").click(function() {
+        $.ajax({
+            url: "disaster",
+            method: "POST", // POST 방식으로 요청을 보냄
+            success: function(data) {
+                console.log("데이터 가져오기 성공");
+
+                // JSON 데이터를 문자열로 변환
+                let jsonData = JSON.stringify(data);
+
+                // result 페이지로 데이터를 포함하여 이동 (POST 방식)
+                $.ajax({
+                    url: "result",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: jsonData,
+                    success: function(response) {
+                        console.log("데이터 전송 성공");
+                        // 성공적으로 처리한 경우 추가적인 작업을 수행할 수 있습니다.
+                    },
+                    error: function() {
+                        alert("데이터 전송 실패");
+                    }
+                });
+            },
+            error: function() {
+                alert("데이터 가져오기 실패");
+            }
+        });
+    });
+});
+
 
 //레디 -----------------------------------------------------------------------
 

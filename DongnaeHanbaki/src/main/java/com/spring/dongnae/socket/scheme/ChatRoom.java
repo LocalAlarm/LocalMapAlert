@@ -43,6 +43,14 @@ public class ChatRoom {
 	public void addUser(String token) {
 		this.userTokens.add(token);
 	}
+	
+	public void banUser(String token) {
+		this.userTokens.remove(token);
+	}
+	
+	public void banUser(UserRooms userRoom) {
+		this.userTokens.remove(userRoom.getId());
+	}
 
 	// 메세지 관련 명령어
 	public List<Message> getMessages() {
