@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.spring.dongnae.cloudinary.ImageUploadController;
 import com.spring.dongnae.socket.dto.MoimDto;
 import com.spring.dongnae.socket.error.DuplicateTitleException;
@@ -98,6 +100,27 @@ public class MoimController {
                 .orElseThrow(() -> new ResourceNotFoundException("게시물을 찾을 수 없습니다."));
     }
     
+    @PutMapping("/{moimId}/{boardId}/update")
+    public ResponseEntity<String> updateBoard(
+            @PathVariable String moimId,
+            @PathVariable String boardId,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
+            @RequestParam(value = "imageOptions", required = false) List<String> imageOptions) {
+        try {
+
+            // 보드 업데이트 로직
+            Board board = boardService.updateBoard(moimId, boardId, title, content, images, imageOptions);
+            return ResponseEntity.ok("게시물이 성공적으로 수정되었습니다.");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시물 수정에 실패했습니다: " + e.getMessage());
+        }
+    }
+
+    
     @DeleteMapping("/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable String boardId) {
     	if (moimService.deleteBoard(boardId)) {
@@ -125,7 +148,6 @@ public class MoimController {
     
     @GetMapping("/get-comments/{boardId}")
     public List<Comment> getCommetList(@PathVariable String boardId) {
-    	System.out.println("asdsa");
     	return boardService.getCommentList(boardId);
     }
     
