@@ -85,10 +85,14 @@ public class UserRooms {
 		return requestIds;
 	}
 	
-    public void removeFriendRequest(String email) {
-        this.requestIds.remove(email);
+    public void removeFriendRequest(UserRooms userRoom) {
+        this.requestIds.remove(userRoom.getId());
     }
 
+    public void removeFriendRequest(String token) {
+    	this.requestIds.remove(token);
+    }
+    
 	public void addFriendRequest(String email) throws Exception {
 		if (requestIds.contains(email)) throw new Exception("already Request!");
 		this.requestIds.add(email);

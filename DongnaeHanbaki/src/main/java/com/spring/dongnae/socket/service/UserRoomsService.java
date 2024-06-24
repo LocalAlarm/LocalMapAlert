@@ -78,12 +78,12 @@ public class UserRoomsService {
     	} 	
     }
     
-    public boolean processRejectFriendReqeust(String rejcetEmail) throws Exception {
+    public boolean processRejectFriendReqeust(String rejectEmail) throws Exception {
     	try {
         	String myEmail = getAuthenticInfo.GetEmail();
         	UserRooms userRooms = userRoomsRepository.findByEmail(myEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
-        	UserRooms rejectRooms = userRoomsRepository.findByEmail(rejcetEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
-        	userRooms.removeFriendRequest(rejectRooms.getId());
+        	UserRooms rejectRooms = userRoomsRepository.findByEmail(rejectEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+        	userRooms.removeFriendRequest(rejectRooms);
         	userRoomsRepository.save(userRooms);
         	return true;
     	} catch (Exception e) {
