@@ -44,24 +44,13 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 	// 친구 요청을 받는 부분의 처리 메서드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-	    // 받은 메시지를 FriendInfo 객체로 변환
-//	    FriendInfo friendInfo = objectMapper.readValue(message.getPayload(), FriendInfo.class);
-//	    // 친구 요청을 보낸 사용자의 토큰 가져오기
-//	    String senderToken = friendInfo.getFriendToken();
-//	    // 토큰을 사용하여 해당 사용자의 WebSocket 세션을 가져옴
-//	    WebSocketSession senderSession= sessions.get(senderToken);
-//	    if (senderSession != null) {
-//	        // 알림 메시지 생성
-//	        String notificationMessage = "친구 요청이 도착했습니다.";
-//
-//	        // JSON 형식의 메시지 생성
-//	        String friendJsonMesaage = objectMapper.writeValueAsString(notificationMessage);
-//	        senderSession.sendMessage(new TextMessage(friendJsonMesaage));
-	        
-//	        for (FriendInfo friendRoomUser : friendJsonMesaage) {
-//	        	여기부터
-//	        }
-//	    }
+		String token = message.getPayload();
+		if (token != null) {
+			session = sessions.get(token);
+			if (session != null && session.isOpen()) {
+				session.sendMessage(new TextMessage("gogo"));
+			}
+		}
 	}
 
 

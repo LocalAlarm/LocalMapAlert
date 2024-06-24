@@ -46,7 +46,8 @@ function loadFriendRequests() {
                 container.empty();
                 var friendRequestHtml = '';
                 response.forEach(data => {
-                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" req-data-token="${data.email}">
+                    console.log(data);
+                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" req-data-token="${data.token}">
                                             <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
                                             <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
                                             ${data.email}
@@ -102,6 +103,7 @@ function approveFriendRequest() {
                 // 친구 요청 목록을 갱신하는 함수 호출
                 loadFriendRequests();
                 loadFriendList();
+                friendSocket.send(requestEmail);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error('Error:', textStatus, errorThrown);
@@ -123,6 +125,7 @@ function rejectFriendReqeust() {
             success: function (response) {
                 loadFriendRequests();
                 loadFriendList();
+                friendSocket.send(requestEmail);
             }, 
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error('Error:', textStatus, errorThrown);
@@ -197,7 +200,7 @@ async function initializeFriendRequest() {
             // 친구 요청 확인 메시지 표시
             if (confirm("친구 요청을 보내시겠습니까?")) {
                 // 확인 버튼을 눌렀을 때의 동작
-                const requestEmail = matchingResult.text();
+                const requestEmail = matchingResult.attr('search-data-token');
                 const requestData = {
                     request: "REQUEST",
                     requestEmail: requestEmail
@@ -215,10 +218,12 @@ async function initializeFriendRequest() {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
+                    friendSocket.send(requestEmail);
+                    showSuccessAlert("전송 성공", "친구요청을 보냈어요!", "");
                     alert("친구 요청이 성공적으로 전송되었습니다!");
                 } catch (error) {
                     console.error('Error:', error);
-                    alert("친구 요청 전송에 실패했습니다.");
+                    showDangerAlert("실패!", "친구 요청 전송에 실패했습니다.", "잠시후에 다시 시도해주세요.");
                 }
             } else {
                 // 취소 버튼을 눌렀을 때의 동작
@@ -238,7 +243,7 @@ function displaySearchUsersResults(results, searchString) {
     var matchFound = false;
     results.forEach(function (result) {
         // 각 결과를 리스트 아이템으로 표시합니다.
-        html += '<li class="list-group-item searchResultsElement">';
+        html += '<li class="list-group-item searchResultsElement" search-data-token="'+ result.token +'">';
         html += '<img src="' + result.image + '" alt="Profile Image" class="rounded-circle" style="width: 35px; height: 35px; margin-right: 10px;">';
         html += result.email;
         html += '</li>';

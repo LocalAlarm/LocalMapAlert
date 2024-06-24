@@ -35,8 +35,10 @@ public class UserRoomsService {
         return userRooms.orElse(null);
     }
     
-    public UserRooms addFriendRequest(String email, String token) throws Exception {
-    	UserRooms userRooms = userRoomsRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+    public UserRooms addFriendRequest(String requestToken, String token) throws Exception {
+    	System.out.println(requestToken);
+    	System.out.println(token);
+    	UserRooms userRooms = userRoomsRepository.findById(requestToken).orElseThrow(() -> new RuntimeException("UserRooms not found"));
     	userRooms.addFriendRequest(token);
     	userRoomsRepository.save(userRooms);
     	return userRooms;
@@ -59,7 +61,7 @@ public class UserRoomsService {
     	try {
         	String myToken = getAuthenticInfo.GetToken();
         	UserRooms userRooms = userRoomsRepository.findById(myToken).orElseThrow(() -> new RuntimeException("UserRooms not found"));
-        	UserRooms requestedUserRooms = userRoomsRepository.findByEmail(requestedEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+        	UserRooms requestedUserRooms = userRoomsRepository.findById(requestedEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
         	ChatRoom chatRoom = new ChatRoom();
         	chatRoom.addUser(requestedUserRooms);
         	chatRoom.addUser(userRooms);
@@ -82,7 +84,7 @@ public class UserRoomsService {
     	try {
         	String myEmail = getAuthenticInfo.GetEmail();
         	UserRooms userRooms = userRoomsRepository.findByEmail(myEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
-        	UserRooms rejectRooms = userRoomsRepository.findByEmail(rejectEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+        	UserRooms rejectRooms = userRoomsRepository.findById(rejectEmail).orElseThrow(() -> new RuntimeException("UserRooms not found"));
         	userRooms.removeFriendRequest(rejectRooms);
         	userRoomsRepository.save(userRooms);
         	return true;
