@@ -78,6 +78,7 @@ public class FriendRequestController {
     @PostMapping(value="/rejectFriendRequest", produces="text/plain;charset=UTF-8")
     public ResponseEntity<String> rejectFriendRequest(@RequestBody FriendRequest friendRequest) {
     	try {
+    		System.out.println(friendRequest.toString());
     		if (userRoomsService.processRejectFriendReqeust(friendRequest.getRequestEmail())) {
     			return ResponseEntity.ok("친구 요청을 거절하였습니다.");  
     		} else {

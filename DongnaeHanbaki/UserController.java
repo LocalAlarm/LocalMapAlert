@@ -72,27 +72,14 @@ public class UserController {
       System.out.println(">> 로그인 화면이동 - loginView()");
       return "user/login";
    }
-   
-   @GetMapping("/auth/login")
-   public String login(@RequestParam(value = "error", required = false) String error,
-                       @RequestParam(value = "exception", required = false) String exception,
-                       Model model) {
-       model.addAttribute("error", error);
-       model.addAttribute("exception", exception);
-       return "user/login"; // user-login.html과 같은 로그인 페이지로 이동
-   }
 
    @RequestMapping("/logout")
-   public String logout(HttpServletRequest request) {
-       // 로그아웃 처리
-       System.out.println(">> 로그아웃 처리");
-       // 클라이언트에게 알림을 주기 위한 JavaScript 코드
-       String alertScript = "<script>alert('로그아웃 되었습니다.');</script>";
-       request.setAttribute("alert", alertScript);
-       // 로그인 페이지로 리다이렉트
-       return "user/login";
-   }
+   public String logout(HttpSession session) {
+      System.out.println(">> 로그아웃 처리");
+      session.invalidate();
 
+      return "user/login";
+   }
 
    @RequestMapping("/loginerror")
    public String loginError(@ModelAttribute("user") UserVO vo) {
@@ -153,21 +140,20 @@ public class UserController {
    }
    
    // 로그인후
-
-//   @GetMapping("/main")
-//   public String main(HttpSession session) {
-//	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//      if (authentication != null && authentication.isAuthenticated()) {
-//          String email = authentication.getName();
-//          System.out.println(">> 로그인 성공 사용자 : " + email);
-//          UserVO userVO = userService.getIdUser(email);
-//          System.out.println(userVO);
-//          userVO.setPassword("");
-//          System.out.println(">> 로그인 성공 사용자정보 : " + userVO);
-//          session.setAttribute("user", userVO);
-//      }
-//      return "user/profile";
-//   }
+   @GetMapping("/main")
+   public String main(HttpSession session) {
+     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.isAuthenticated()) {
+          String email = getAuthenticInfo.GetEmail();
+          System.out.println(">> 로그인 성공 사용자 : " + email);
+          CustomUserDetails cud = getAuthenticInfo.GetUser();
+          System.out.println("userVO : " + cud);
+          cud.setPassword("");
+          System.out.println(">> 로그인 성공 사용자정보 : " + cud);
+          session.setAttribute("user", cud);
+      }
+      return "user/profile";
+   }
 
    // 회원가입 페이지로 이동
 //   @GetMapping("/joinform")
@@ -313,10 +299,9 @@ public class UserController {
    }
    
    @GetMapping("/profile")
-   public String profile(Model model) {
-      CustomUserDetails cud = getAuthenticInfo.GetLoginUser();
-      System.out.println("프로필vo : " + cud);
-      model.addAttribute("user", cud);
+   public String profile(HttpSession session) {
+      UserVO userVO = (UserVO) session.getAttribute("user");
+      System.out.println("프로필vo : " + userVO);
       return "user/profile";
    }
    

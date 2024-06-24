@@ -266,5 +266,26 @@ public class CustomController {
 	   }
 	   return "redirect:/customMap";
    }
+   
+   @RequestMapping("/updateOpenYn")
+   public String updateOpenYn(@RequestParam("mapIdx") String mapIdx, @RequestParam("openYn") String openYn) {
+       System.out.println("mapIdx: " + mapIdx);
+       System.out.println("openYn: " + openYn);
+       MapVO mapVO = new MapVO();
+	   int idx = Integer.parseInt(mapIdx);
+	   mapVO.setMapIdx(idx);
+	   mapVO.setOpenYn(openYn);
+	   System.out.println("mapvo : " + mapVO);
+	   mapVO = mapService.getMap(mapVO);
+       
+       // 사용자 인증 정보에 따라 업데이트를 수행합니다.
+	   if(mapVO.getUserEmail().equals(getAuthenticInfo.GetEmail())) {
+		   mapService.updateMap(mapVO);
+	   } else {
+           System.out.println("사용자 인증 정보와 일치하지 않습니다.");
+       }
+
+       return "redirect:/customMap";
+   }
 
 }

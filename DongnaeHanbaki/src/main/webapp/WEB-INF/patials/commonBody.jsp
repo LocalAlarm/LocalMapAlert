@@ -226,7 +226,7 @@ const chatToast = document.getElementById('chatToast');
    </div>
 </div>
 
-
+<!-- 모임 창 보드 리스트 -->
 <div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
@@ -291,14 +291,14 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="postForm" enctype="multipart/form-data">
+                <form id="postMoimForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
                         <input type="text" class="form-control" id="postMoimTitle" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="postContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="postMoimContent" rows="3" name="content" required></textarea>
+                        <textarea class="form-control" id="postMoimContent" rows="5" name="content" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="postImages" class="form-label">이미지 파일</label>
@@ -320,39 +320,25 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit-form">
+                <form id="editMoimForm">
                     <div class="mb-3">
                         <label for="edit-title" class="form-label">Title</label>
                         <input type="text" class="form-control" id="edit-moim-board-title" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit-body" class="form-label">Content</label>
-                        <textarea class="form-control" id="edit-moim-board-content" name="body" rows="5" required></textarea>
+                        <textarea class="form-control" id="edit-moim-board-content" name="content" rows="5" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Images</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option1" id="option1">
-                            <label class="form-check-label" for="option1">
-                                Option 1
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option2" id="option2">
-                            <label class="form-check-label" for="option2">
-                                Option 2
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option3" id="option3">
-                            <label class="form-check-label" for="option3">
-                                Option 3
-                            </label>
-                        </div>
+                        <label class="form-label" id="images-delete-check">삭제 이미지 파일 체크</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImages" class="form-label">이미지 파일</label>
+                        <input type="file" class="form-control" id="edit-board-images" accept="image/*" name="images" multiple>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary">수정</button>
                     </div>
                 </form>
             </div>
@@ -386,10 +372,25 @@ const chatToast = document.getElementById('chatToast');
                         </button>
                     </div>
                 </div>
+                <div id="post-detail-comments-section">
+                	<button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
+                		댓글 목록
+                	</button>
+                	<div class="collapse" id="collapseComments">
+                		<div class="card" id="post-detail-comments-list" style="max-height: 200px; overflow-y: auto; padding: 10px; margin-bottom: 15px;">
+                			<!-- 댓글을이 여기에 동적으로 삼입된다. -->
+                		</div>
+                	</div>
+                	<div class="input-group mb-3">
+                		<input type="text" id="post-detail-comment-input" class="form-control" placeholder="댓글을 작성해보세요!">
+                		<button class="btn btn-primary" id="post-detail-comment-submit" type="button">작성</button>
+                	</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script>
 	$(document).ready(function() {
 		// 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
