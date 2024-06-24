@@ -291,6 +291,7 @@ const chatToast = document.getElementById('chatToast');
         </div>
     </div>
 </div>
+
 <script>
    $(document).ready(function() {
       // 로그인 상테에서만 소켓을 연결하고 채팅을 활성화하기 위한 코드.
