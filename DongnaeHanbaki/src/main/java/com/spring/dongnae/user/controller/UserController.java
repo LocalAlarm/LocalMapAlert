@@ -299,9 +299,10 @@ public class UserController {
    }
    
    @GetMapping("/profile")
-   public String profile(HttpSession session) {
-      UserVO userVO = (UserVO) session.getAttribute("user");
-      System.out.println("프로필vo : " + userVO);
+   public String profile(Model model) {
+      CustomUserDetails cud = getAuthenticInfo.GetLoginUser();
+      System.out.println("프로필vo : " + cud);
+      model.addAttribute("user", cud);
       return "user/profile";
    }
    
