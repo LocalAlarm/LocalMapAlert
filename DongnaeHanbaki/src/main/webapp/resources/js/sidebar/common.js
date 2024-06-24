@@ -30,9 +30,8 @@ function getNickname(token) {
     });
 }
 
-// 알람창을 띄워주는 함수
-function showAlert(message) {
-    alert(message);
+function isUserRooms(data) {
+    return data.requestIds !== undefined && data.friendIds !== undefined;
 }
 
 // 유저 메일로 유저를 검색하는 함수
@@ -51,10 +50,41 @@ async function searchUserByEmail(email) {
         const data = await response.json();
         const searchString = $('#searchFriend').val();
         if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
-            displaySearchResults(data, searchString); // 검색 결과를 화면에 표시
+            displaySearchUsersResults(data, searchString); // 검색 결과를 화면에 표시
         } else {
             hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
             disableFriendRequestButton(); // 버튼 비활성화
+        }
+    } catch (error) {
+        console.error(error);
+        // 에러 처리
+        disableFriendRequestButton(); // 버튼 비활성화
+    }
+}
+
+// 모임을 모임 이름으로 검색하는 함수
+async function searchMoimByName(searchData) {
+    console.log(searchData);
+    try {
+        const response = await fetch('/dongnae/moim-search/name', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body:searchData
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        console.log(data);
+        console.log(data.content && data.content.length > 0)
+        const searchString = $('#search-moim').val();
+        if (data.content && data.content.length > 0) { // 검색 결과가 있을 경우에만 표시
+            displaySearchMoimsResults(data.content, searchString); // 검색 결과를 화면에 표시
+        } else {
+            hideSearchResults(); // 검색 결과가 없을 때는 결과 창을 숨깁니다.
+            disableMoimRegisterButton(); // 버튼 비활성화
         }
     } catch (error) {
         console.error(error);
@@ -91,7 +121,7 @@ function initializeSidebarToggle() {
 
 function searchUserByToken(token, callback) {
     $.ajax({
-        url: `/dongnae/api/getUserVOByToken`,
+        url: '/dongnae/api/getUserVOByToken',
         method: 'POST',
         contentType: 'text/plain',
         data: token, // 단순 문자열 토큰 값
@@ -103,6 +133,25 @@ function searchUserByToken(token, callback) {
             callback(err);
         }
     });
+}
+
+function getDataTokenByClass(className) {
+    var element = document.querySelector(`.${className}`);
+    if (element) {
+        return element.getAttribute('data-token');
+    } else {
+        console.error(`Element with class ${className} not found.`);
+        return null;
+    }
+}
+
+function getChatTokenById(Id) {
+    var element = document.getElementById(Id); // #를 제거합니다
+    if (element) { 
+        return element.getAttribute('chat-token');
+    } else {
+        return null;
+    }
 }
 
 function initializeMenuActivation() {

@@ -1,5 +1,14 @@
-// 친구 추가, 제거, 요청 기능과 관련된 js파일
+function friendFunction() {
+    connectFriend();
+    approveFriendRequest();
+    rejectFriendReqeust();
+    initializeSearchUsersEvents();
+    initializeFriendRequest();
+    friendRequestModal();
+    deleteFriend();
+}
 
+// 친구 추가, 제거, 요청 기능과 관련된 js파일
 function connectFriend() {
     friendSocket = new WebSocket('ws://localhost:8088/dongnae/friend'); // WebSocket 서버에 연결
 
@@ -8,11 +17,10 @@ function connectFriend() {
     };
 
     friendSocket.onmessage = function (event) {
+        var JsonData = JSON.parse(event.data);
         try {
-            var friendJsonData = JSON.parse(event.data);
-            // 추후 if문으로 json데이터의 형태를 구별해야 한다.
-            console.log(friendJsonData);
-            handleFriendRoom(friendJsonData);
+            loadFriendList();
+            loadFriendRequests();
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
@@ -26,32 +34,102 @@ function connectFriend() {
     };
 }
 
-async function handleFriendRoom(friendRoom) {
-    var friendListHtml = '';
-
-    if (Array.isArray(friendRoom.friendIds)) {
-        for (const element of friendRoom.friendIds) {
-            console.log(element);
-            const nickname = await getNickname(element.token);
-            console.log(nickname);
-            friendListHtml += '<li class="mb-1 mt-1 chatToastBtn collapse__sublink" id="' + element.roomId + '">' + nickname + '</li>';
+// 친구 요청 받은 데이터를 불러오기 함수
+function loadFriendRequests() {
+    $.ajax({
+        url: '/dongnae/friendData/friendRequest',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            try {
+                const container = $('#friend-requests');
+                container.empty();
+                var friendRequestHtml = '';
+                response.forEach(data => {
+                    friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" req-data-token="${data.email}">
+                                            <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
+                                            <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
+                                            ${data.email}
+                                        </li>`;
+                })
+                $('#friend-requests').html(friendRequestHtml);
+            } catch (error) {
+                console.error('Error parsing response JSON:', error);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching friend requests:', errorThrown);
+            console.error('Status:', textStatus);
+            console.error('Response:', jqXHR.responseText);
+            // 추가 로그
+            console.error('Full error details:', jqXHR);
         }
-        $('#friendList').html(friendListHtml);
-    }
+    });
 }
 
-// 친구 요청 버튼을 비활성화하는 함수
-function disableFriendRequestButton() {
-    $('#request-friend-button').prop('disabled', true);
-    $('#request-friend-button').addClass('btn-secondary');
-    $('#request-friend-button').removeClass('btn-outline-success');
+async function loadFriendList() {
+    $.ajax({
+        type: "POST",
+        url: "/dongnae/friendData/friendIds",
+        success: function(data) {
+            var friendList = $("#friendList");
+            friendList.empty(); // 기존 목록을 비움
+
+            if (data && data.length > 0) {
+                $.each(data, function(index, user) {
+                    console.log(data);
+                    var listItem = $(`<li class="mb-1 mt-1 chatToastBtn collapse__sublink side-friendlist" data-token="${user.chatRoomId}">${user.roomName}</li>`);
+                    friendList.append(listItem);
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            showDangerAlert("오류 발생", "친구 요청을 가져오는 데 실패했습니다.", "");
+        }
+    });
 }
 
-// 친구 요청 버튼을 활성화하는 함수
-function enableFriendRequestButton() {
-    $('#request-friend-button').prop('disabled', false);
-    $('#request-friend-button').removeClass('btn-secondary');
-    $('#request-friend-button').addClass('btn-outline-success');
+function approveFriendRequest() {
+    $(document).on('click', '.friendApprove', function () {
+        var requestEmail = $(this).parent().attr('req-data-token');
+        $.ajax({
+            url: '/dongnae/friendData/approveFriendRequest', // 요청을 처리할 서버의 URL 경로
+            type: 'POST', // POST 방식으로 요청
+            contentType: 'application/json', // 요청의 Content-Type 설정
+            data: JSON.stringify({ requestEmail: requestEmail }), // 요청 본문에 요청 ID를 포함하여 전송
+            success: function (response) {
+                console.log('Success:', response);
+                // 친구 요청 목록을 갱신하는 함수 호출
+                loadFriendRequests();
+                loadFriendList();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                showDangerAlert('오류 발생!', '친구 요청 수락 중 오류가 발생하였습니다.', '다시 시도해주세요.');
+            }
+        });
+    });
+}
+
+function rejectFriendReqeust() {
+    $(document).on('click', '.friendReject', function() {
+        console.log("거절버튼");
+        var requestEmail = $(this).parent().attr('id');
+        $.ajax({
+            url: '/dongnae/friendData/rejectFriendRequest',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ requestEmail: requestEmail }),
+            success: function (response) {
+                loadFriendRequests();
+                loadFriendList();
+            }, 
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                showDangerAlert('오류 발생!', '친구 데이터 처리 중 오류가 발생하였습니다.', '다시 시도해주세요.');
+            }
+        })
+    })
 }
 
 //친구 요청이 도착했을 때 웹 페이지에서 알림을 표시하는 함수
@@ -78,7 +156,7 @@ function showFriendRequestNotification(senderName) {
     }
 }
 
-function initializeSearchEvents() {
+function initializeSearchUsersEvents() {
     // searchResultsElement 클래스를 가진 요소에 대한 마우스 오버 이벤트 처리
     $(document).on('mouseenter', '.searchResultsElement', function () {
         $(this).addClass('active');
@@ -126,7 +204,7 @@ async function initializeFriendRequest() {
                 };
 
                 try {
-                    const response = await fetch('/dongnae/api/sendFriendRequest', {
+                    const response = await fetch('/dongnae/friendData/sendFriendRequest', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -154,7 +232,7 @@ async function initializeFriendRequest() {
 }
 
 // 검색한 유저에 대한 정보를 보여주는 함수
-function displaySearchResults(results, searchString) {
+function displaySearchUsersResults(results, searchString) {
     // 검색 결과를 표시할 HTML 문자열을 생성합니다.
     var html = '';
     var matchFound = false;
@@ -183,85 +261,6 @@ function displaySearchResults(results, searchString) {
     }
 }
 
-// 검색 결과 창을 숨기는 함수
-function hideSearchResults() {
-    // 검색 결과 창을 숨깁니다.
-    $('#searchResults').hide();
-}
-
-// 친구 요청 받은 데이터를 불러오기 함수
-function receiveFriendRequests() {
-    $.ajax({
-        url: '/dongnae/api/receiveFriendRequest', // 서버의 URL 경로가 정확한지 확인하세요.
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            console.log('Received data:', response);
-            try {
-                displayFriendRequests(response);
-            } catch (error) {
-                console.error('Error parsing response JSON:', error);
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error('Error fetching friend requests:', errorThrown);
-            console.error('Status:', textStatus);
-            console.error('Response:', jqXHR.responseText);
-            // 추가 로그
-            console.error('Full error details:', jqXHR);
-        }
-    });
-}
-
-
-// 친구 요청 목록 표시 함수
-function displayFriendRequests(friendRequests) {
-    // 응답 데이터 검증
-    console.log(friendRequests);
-    if (!Array.isArray(friendRequests)) {
-        console.error('Invalid data format:', friendRequests);
-        return;
-    }
-
-    const container = $('#friend-requests');
-    container.empty();
-    var friendRequestListHtml = '';
-    friendRequests.forEach(request => {
-        friendRequestListHtml += `<li class="mb-1 mt-1 collapse__sublink" id="${request}">
-                                    <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
-                                    <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
-                                    ${request}
-                                </li>`;
-    });
-    $('#friend-requests').html(friendRequestListHtml);
-
-    $(document).on('click', '.friendApprove', function () {
-        var requestId = $(this).parent().attr('id');
-        approveFriendRequest(requestId);
-    });
-
-    // 요청을 수락하는 함수
-    function approveFriendRequest(requestId) {
-        $.ajax({
-            url: '/dongnae/api/approveFriendRequest', // 요청을 처리할 서버의 URL 경로
-            type: 'POST', // POST 방식으로 요청
-            contentType: 'application/json', // 요청의 Content-Type 설정
-            data: JSON.stringify({ requestId: requestId }), // 요청 본문에 요청 ID를 포함하여 전송
-            success: function (response) {
-                console.log('Success:', response);
-                // 성공적으로 요청을 수락한 경우, 화면 갱신 또는 사용자에게 알림 처리 등을 수행할 수 있습니다.
-                // 예를 들어, 요청을 수락한 목록을 새로고침하는 등의 작업을 수행할 수 있습니다.
-                receiveFriendRequests(); // 친구 요청 목록을 갱신하는 함수 호출
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error('Error:', textStatus, errorThrown);
-                // 요청 처리 중 에러가 발생한 경우, 적절한 에러 처리 로직을 구현할 수 있습니다.
-                alert('친구 요청 수락 중 오류가 발생하였습니다. 다시 시도해주세요.');
-            }
-        });
-    }
-}
-
 // 친구 요청 모달을 띄우는 코드
 function friendRequestModal(){
     var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
@@ -269,3 +268,31 @@ function friendRequestModal(){
         friendRequestModal.show();
     });
 };
+
+// 검색 결과 창을 숨기는 함수
+function hideSearchResults() {
+    // 검색 결과 창을 숨깁니다.
+    $('#searchResults').hide();
+}
+
+// 친구 요청 버튼을 비활성화하는 함수
+function disableFriendRequestButton() {
+    $('#request-friend-button').prop('disabled', true);
+    $('#request-friend-button').addClass('btn-secondary');
+    $('#request-friend-button').removeClass('btn-outline-success');
+}
+
+// 친구 요청 버튼을 활성화하는 함수
+function enableFriendRequestButton() {
+    $('#request-friend-button').prop('disabled', false);
+    $('#request-friend-button').removeClass('btn-secondary');
+    $('#request-friend-button').addClass('btn-outline-success');
+}
+
+
+function deleteFriend() {
+    $('.side-friendlist').on('contextmenu', function(event) {
+        event.preventDefault(); // 기본 오른쪽 클릭 메뉴를 막음
+        alert('오른쪽 마우스 버튼 클릭됨!');
+    });
+}
