@@ -751,6 +751,40 @@ function initializeMap(centerCoords) {
       });
       });
 } 
+//api 호출-------------------------------------------------------------------
+$(document).ready(function() {
+    $("#v-pills-settings-tab").click(function() {
+        $.ajax({
+            url: "disaster",
+            method: "POST", // POST 방식으로 요청을 보냄
+            success: function(data) {
+                console.log("데이터 가져오기 성공");
+
+                // JSON 데이터를 문자열로 변환
+                let jsonData = JSON.stringify(data);
+
+                // result 페이지로 데이터를 포함하여 이동 (POST 방식)
+                $.ajax({
+                    url: "result",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: jsonData,
+                    success: function(response) {
+                        console.log("데이터 전송 성공");
+                        // 성공적으로 처리한 경우 추가적인 작업을 수행할 수 있습니다.
+                    },
+                    error: function() {
+                        alert("데이터 전송 실패");
+                    }
+                });
+            },
+            error: function() {
+                alert("데이터 가져오기 실패");
+            }
+        });
+    });
+});
+
 
 //레디 -----------------------------------------------------------------------
 
