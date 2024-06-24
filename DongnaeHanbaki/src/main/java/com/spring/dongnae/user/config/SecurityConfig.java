@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import com.spring.dongnae.user.service.CustomAuthenticationProvider;
 
+import com.spring.dongnae.user.service.CustomAuthFailureHandler;
 import com.spring.dongnae.user.service.CustomAuthenticationSuccessHandler;
 import com.spring.dongnae.user.service.CustomUserDetailsService;
 
@@ -25,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	
+	@Autowired
+	private CustomAuthFailureHandler customFailureHandler;
 	 
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/authenticate")
 //                .defaultSuccessUrl("/", true)
                 .successHandler(customAuthenticationSuccessHandler) // 커스텀 성공 핸들러 설정
-                .failureUrl("/loginerror")
+                .failureHandler(customFailureHandler)
+//                .failureUrl("/loginerror")
                 .and()
             .logout()
 //            	.logoutSuccessUrl("/login")

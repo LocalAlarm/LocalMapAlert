@@ -6,9 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>동네한바퀴</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
-    crossorigin="anonymous">
+<jsp:include page="/WEB-INF/patials/commonHead.jsp"></jsp:include>
 <script>
 	function goCreateCustomMap(){
 		alert("새 커스텀맵 생성 페이지로 이동합니다");
@@ -39,6 +37,49 @@
 		/* location.href="searchCustomMap?title=" + frm.title + "&content=" + frm.content; */
 
 	}
+	
+	function Confirm() { 
+		Swal.fire({
+            title: '정말로 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '승인',
+            cancelButtonText: '취소',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 사용자가 확인을 눌렀을 때 deleteCustMap 링크로 이동
+                window.location.href = `deleteCustMap?mapIdx=${mapIdx}`;
+            }
+        });
+
+     }
+	
+	function confirmOpenYn(mapIdx, checked) {
+		console.log("공개비공개 바꾸기");
+	    let newOpenYn = checked ? '1' : '0'; // 현재 상태와 반대로 설정
+        let confirmationMessage = newOpenYn === '1' ? "정말로 공개로 변경하시겠습니까?" : "정말로 비공개로 변경하시겠습니까?";
+        console.log(checked);
+        console.log(newOpenYn);
+        Swal.fire({
+            title: confirmationMessage,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '승인',
+            cancelButtonText: '취소',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+            	console.log("ddd");
+                // 사용자가 확인을 눌렀을 때 updateOpenYn 링크로 이동
+                window.location.href = `updateOpenYn?mapIdx=${mapIdx}&openYn=${newOpenYn}`;
+            }
+        });
+    }
 </script>
 <style>
 .mapTitle {
@@ -72,6 +113,9 @@
   margin-top: 0.2em;
   background: white;
 }
+ .active {
+   background-color: white !important;
+ }
 </style>
 </head>
 <!-- 
@@ -79,9 +123,7 @@
 내 커스텀맵 목록 : myCustomMapLIst
  -->
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
-crossorigin="anonymous"></script>
+<jsp:include page="/WEB-INF/patials/commonBody.jsp"></jsp:include>
 
 <hr>
 <!-- 페이지 위 -->
@@ -170,10 +212,14 @@ crossorigin="anonymous"></script>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
 		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		    <a href="updateCustMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
-		    <a href="javascript:void(0);" class="card-link" onclick="deleteMap(${vo.mapIdx});">삭제하기</a> <!-- JavaScript 함수 호출로 변경 -->
-            <div class="form-check form-switch mt-2">
-                <input class="form-check-input" type="checkbox" id="roleSwitch${vo.mapIdx}" ${vo.isPublic ? 'checked' : ''} onchange="updateVisibility(${vo.mapIdx}, this.checked);">
-                <label class="form-check-label" for="roleSwitch${vo.mapIdx}">공개/비공개</label>
+		    <a href="#" class="card-link" onclick="Confirm(${vo.mapIdx});">삭제하기</a>
+		    <div class="form-check form-switch">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="openYn_${vo.mapIdx}"
+                       ${vo.openYn == '1' ? 'checked' : ''}
+                       onclick="confirmOpenYn(${vo.mapIdx}, this.checked)">
+                <label class="form-check-label" for="openYn_${vo.mapIdx}">공개여부</label>
             </div>
 		  </div>
 		  <div class="col-8">
