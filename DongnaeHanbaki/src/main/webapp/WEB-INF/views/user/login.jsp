@@ -26,6 +26,12 @@
 				<label for="password" class="form-label">비밀번호</label> <input
 					type="password" class="form-control" id="password" name="password">
 			</div>
+			
+			<c:if test="${not empty error}">
+			    <div class="alert alert-danger">
+			        <p id="valid">${exception}</p>
+			    </div>
+			</c:if>
 
 			<div class="d-flex justify-content-center mb-2 px-3">
 				<button type="submit" class="btn btn-primary me-2"

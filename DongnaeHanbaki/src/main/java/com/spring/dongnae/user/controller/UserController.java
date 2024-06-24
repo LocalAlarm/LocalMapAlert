@@ -72,14 +72,27 @@ public class UserController {
       System.out.println(">> 로그인 화면이동 - loginView()");
       return "user/login";
    }
+   
+   @GetMapping("/auth/login")
+   public String login(@RequestParam(value = "error", required = false) String error,
+                       @RequestParam(value = "exception", required = false) String exception,
+                       Model model) {
+       model.addAttribute("error", error);
+       model.addAttribute("exception", exception);
+       return "user/login"; // user-login.html과 같은 로그인 페이지로 이동
+   }
 
    @RequestMapping("/logout")
-   public String logout(HttpSession session) {
-      System.out.println(">> 로그아웃 처리");
-      session.invalidate();
-
-      return "user/login";
+   public String logout(HttpServletRequest request) {
+       // 로그아웃 처리
+       System.out.println(">> 로그아웃 처리");
+       // 클라이언트에게 알림을 주기 위한 JavaScript 코드
+       String alertScript = "<script>alert('로그아웃 되었습니다.');</script>";
+       request.setAttribute("alert", alertScript);
+       // 로그인 페이지로 리다이렉트
+       return "user/login";
    }
+
 
    @RequestMapping("/loginerror")
    public String loginError(@ModelAttribute("user") UserVO vo) {
