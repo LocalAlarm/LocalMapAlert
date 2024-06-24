@@ -170,6 +170,7 @@ crossorigin="anonymous"></script>
 		    <h6 class="text-body-secondary">${vo.userEmail }</h6>
 		    <a href="oneCustMap?mapIdx=${vo.mapIdx }" class="card-link">자세히보기</a>
 		    <a href="updateCustMap?mapIdx=${vo.mapIdx }" class="card-link">편집하기</a>
+		    <a href="deleteCustMap?mapIdx=${vo.mapIdx }" class="card-link">삭제하기</a>
 		  </div>
 		  <div class="col-8">
 		  	<p class="px-2 mapContent">${vo.content }</p>

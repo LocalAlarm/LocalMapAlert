@@ -28,6 +28,7 @@ import com.spring.dongnae.custom.scheme.CustomMarker;
 import com.spring.dongnae.custom.service.CustomService;
 import com.spring.dongnae.map.service.MapService;
 import com.spring.dongnae.map.vo.MapVO;
+import com.spring.dongnae.user.vo.CustomUserDetails;
 import com.spring.dongnae.user.vo.UserVO;
 import com.spring.dongnae.utils.auth.GetAuthenticInfo;
 
@@ -153,12 +154,15 @@ public class CustomController {
       model.addAttribute("openCustomMapList", openCustomMapList);
       //濡쒓렇�씤 �뿬遺� �솗�씤-> true : �궡 而ㅼ뒪�� 留� 遺덈윭�샂
       String email = getAuthenticInfo.GetEmail();
+//      CustomUserDetails cud = getAuthenticInfo.GetUser();
+//      System.out.println(">>> uservo값 : " + cud);
       if(email != null) {
          mapVO.setOpenYn(null);
          mapVO.setUserEmail(email);
          List<MapVO> myCustomMapList = mapService.getMapList(mapVO);
          System.out.println("myCustomMapList : " + myCustomMapList.toString());//-------------------test code-----------------
          model.addAttribute("myCustomMapList", myCustomMapList);
+         model.addAttribute("user", email);
       }
       System.out.println("mapVO : " + mapVO);//----------------test code---------------------------
       return "map/customMap"; 
