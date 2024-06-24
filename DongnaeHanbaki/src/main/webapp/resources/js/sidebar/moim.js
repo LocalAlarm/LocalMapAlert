@@ -18,14 +18,7 @@ function connectMoim() {
     moimSocket.onmessage = function (event) {
         try {
             var moimJsonData = JSON.parse(event.data);
-            if (isMessage(moimJsonData)) {
-                handleMoimMessage(moimJsonData);
-            } else if (isUserRooms(moimJsonData)) {
-                handleMoimUserRooms(moimJsonData);
-            } else {
-                console.error("Unknown data type received:", moimJsonData);
-            }
-
+            handleMoimUserRooms(moimJsonData);
         } catch (e) {
             console.error("Error processing WebSocket message: ", e);
         }
@@ -43,7 +36,11 @@ async function handleMoimUserRooms(userRooms) {
     var buttonHtml = '';
     if (Array.isArray(userRooms.masterMoims)) {
         for (const element of userRooms.masterMoims) {
-            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">' + element.name + '</li>';
+            buttonHtml += '<li class="mb-1 mt-1 moim-list collapse__sublink" id="' + element.id + '">';
+            buttonHtml += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-fill-plus" viewBox="0 0 16 16">';
+            buttonHtml += '<path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.5 5a.5.5 0 0 1 1 0v1.5H10a.5.5 0 0 1 0 1H8.5V9a.5.5 0 0 1-1 0V7.5H6a.5.5 0 0 1 0-1h1.5z"/>';
+            buttonHtml += '</svg>';
+            buttonHtml += element.name + '</li>';
         }
     } else {
         console.error("userRooms.masterMoims is not an array");
@@ -146,7 +143,6 @@ function initializeMoimModal() {
                     <img src="${data.profilePic}" alt="Moim logo" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px;">
                     ${data.name}
                 `);
-                console.log(data);
                 $('#moim-modal').attr('chat-token', data.chatId);
                 loadBoardList(1); // 첫 번째 페이지를 로드
                 createMoimModal.show();
@@ -246,6 +242,7 @@ function loadBoardList(page) {
             size: moimPageSize
         },
         success: function(data) {
+            console.log(data);
             const boardList = $('#moim-board-list');
             boardList.empty();
 
@@ -253,10 +250,14 @@ function loadBoardList(page) {
                 data.content.forEach(function(board) {
                     // Add the board item with a placeholder for the author
                     const boardItem = $(`
-                        <tr class="moim-board-item" data-id="${board.id}">
-                            <td>${board.title}</td>
-                            <td id="author-${board.id}">Loading...</td>
-                        </tr>
+                    <tr class="moim-board-item" data-id="${board.id}">
+                        <td>${board.title}</td>
+                        <td id="author-${board.id}">Loading...</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm moim-board-edit" onclick="editMoimBoard('${board.id}')">수정</button>
+                            <button class="btn btn-danger btn-sm moim-board-delete" onclick="deleteMoimBoard('${board.id}')">삭제</button>
+                        </td>
+                    </tr>
                     `);
                     boardList.append(boardItem);
 
@@ -274,7 +275,12 @@ function loadBoardList(page) {
                 });
 
                 // 게시글 클릭 이벤트 추가
-                $('.moim-board-item').on('click', function() {
+                $(document).on('click', '.moim-board-item', function(event) {
+                    // 클릭한 요소가 삭제 또는 수정 버튼일 경우 이벤트를 중지합니다.
+                    if ($(event.target).closest('.moim-board-edit, .moim-board-delete').length > 0) {
+                        return;
+                    }
+
                     const boardId = $(this).data('id');
                     showMoimBoardDetail(boardId);
                 });
@@ -284,6 +290,50 @@ function loadBoardList(page) {
         },
         error: function(err) {
             console.error('Error fetching boards:', err);
+        }
+    });
+}
+
+function deleteMoimBoard(boardId) {
+    // Send the DELETE request using fetch API
+    fetch(`/dongnae/moim/${boardId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        var page = $('#moim-modal').attr('data-moim-page');
+        loadBoardList(page);
+        return response.json(); // Assuming the response is JSON
+    })
+    .then(data => {
+        console.log('Board deleted successfully:', data);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function editMoimBoard(boardId) {
+    $.ajax({
+        url: `/dongnae/moim/board/${boardId}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // 게시글 상세 정보를 모달에 채워넣기
+            $('#edit-moim-board-title').val(data.title);
+            $('#edit-moim-board-content').val(data.content);
+
+            // 모달을 보여주기
+            var postDetailModal = new bootstrap.Modal($('#moim-edit-detail-modal')[0]);
+            postDetailModal.show();
+        },
+        error: function(err) {
+            console.error('Error fetching post details:', err);
         }
     });
 }
@@ -318,12 +368,12 @@ function showMoimBoardDetail(boardId) {
             const postDetailCarouselContainer = $('#post-detail-carousel-container');
             const postDetailCarouselInner = $('#post-detail-carousel-inner');
             postDetailCarouselInner.empty();
-
+            console.log(data);
             if (data.images && data.images.length > 0) {
                 data.images.forEach(function(image, index) {
                     postDetailCarouselInner.append(`
-                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                            <img src="${image.url}" alt="Post Image ${index + 1}" class="d-block w-100">
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}" style="background-color: white;">
+                            <img src="${image.image}" alt="Post Image ${index + 1}" class="d-block" style="height: 450px;">
                         </div>
                     `);
                 });
@@ -387,7 +437,6 @@ async function fetchComments(boardId, commentsList) {
 }
 
 async function MoimCommentList(moimCommentList, commentsList) {
-    console.log(moimCommentList);
     if (moimCommentList.length > 0) {
         // 모든 댓글에 대해 searchUserByToken을 호출하고 결과를 Promise 배열로 반환
         const commentPromises = moimCommentList.map(comment => 

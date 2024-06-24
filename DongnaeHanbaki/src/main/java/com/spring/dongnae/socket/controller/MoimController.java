@@ -80,6 +80,7 @@ public class MoimController {
         // 이미지 파일 처리 (예: 저장 경로 지정, 파일 저장 등)
         for (MultipartFile imageFile : images) {
         	if (!imageFile.isEmpty()) {
+        		System.out.println(imageFile.getSize());
         		Map<String, String> imageMap = imageUploadController.uploadImage(imageFile);
         		Image image = new Image();
         		image.setImage(imageMap.get("url"));
@@ -98,8 +99,12 @@ public class MoimController {
     }
     
     @DeleteMapping("/{boardId}")
-    public boolean deleteBoard(@PathVariable String boardId) {
-    	return moimService.deleteBoard(boardId);
+    public ResponseEntity<String> deleteBoard(@PathVariable String boardId) {
+    	if (moimService.deleteBoard(boardId)) {
+    		return ResponseEntity.ok("삭제에 성공했습니다.");
+    	} else {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("접근에 실패했습니다.");
+    	}
     }
     
     @PostMapping("/{boardId}/likes")

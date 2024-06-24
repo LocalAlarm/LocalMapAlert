@@ -102,8 +102,12 @@ public class MoimService {
     	Optional<Board> boardOptional = boardRepository.findById(boardId);
     	if (boardOptional.isPresent()) {
     		Board board = boardOptional.get();
-    		boardRepository.delete(board);
-    		return true;
+    		if (board.getAuthor().equals(getAuthenticInfo.GetToken()) || board.getMoim().getLeader().equals(getAuthenticInfo.GetToken()) || board.getMoim().getSubLeader().contains(getAuthenticInfo.GetToken())) {    			
+    			boardRepository.delete(board);
+    			return true;
+    		} else {
+    			return false;
+    		}
     	}
     	return false;
     }

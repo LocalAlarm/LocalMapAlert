@@ -140,7 +140,6 @@ function initializeChatToast() {
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(chatToast);
         toastBootstrap.hide();
         var dataToken = $(this).attr('data-token');
-        console.log(dataToken);
         $.ajax({
             type: 'POST',
             url: '/dongnae/chat/getChatHistory',

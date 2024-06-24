@@ -5,6 +5,7 @@ function friendFunction() {
     initializeSearchUsersEvents();
     initializeFriendRequest();
     friendRequestModal();
+    deleteFriend();
 }
 
 // 친구 추가, 제거, 요청 기능과 관련된 js파일
@@ -76,7 +77,8 @@ async function loadFriendList() {
 
             if (data && data.length > 0) {
                 $.each(data, function(index, user) {
-                    var listItem = $(`<li class="mb-1 mt-1 chatToastBtn collapse__sublink" data-token="${user.chatRoomId}">${user.roomName}</li>`);
+                    console.log(data);
+                    var listItem = $(`<li class="mb-1 mt-1 chatToastBtn collapse__sublink side-friendlist" data-token="${user.chatRoomId}">${user.roomName}</li>`);
                     friendList.append(listItem);
                 });
             }
@@ -287,3 +289,10 @@ function enableFriendRequestButton() {
     $('#request-friend-button').addClass('btn-outline-success');
 }
 
+
+function deleteFriend() {
+    $('.side-friendlist').on('contextmenu', function(event) {
+        event.preventDefault(); // 기본 오른쪽 클릭 메뉴를 막음
+        alert('오른쪽 마우스 버튼 클릭됨!');
+    });
+}
