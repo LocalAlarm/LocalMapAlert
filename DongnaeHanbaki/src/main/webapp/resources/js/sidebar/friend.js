@@ -115,10 +115,11 @@ function rejectFriendReqeust() {
     $(document).on('click', '.friendReject', function() {
         console.log("거절버튼");
         var requestEmail = $(this).parent().attr('id');
+        
         $.ajax({
             url: '/dongnae/friendData/rejectFriendRequest',
             type: 'POST',
-            contentType: 'application/json',
+            contentType: 'application/json; charset=utf-8',
             data: JSON.stringify({ requestEmail: requestEmail }),
             success: function (response) {
                 loadFriendRequests();
