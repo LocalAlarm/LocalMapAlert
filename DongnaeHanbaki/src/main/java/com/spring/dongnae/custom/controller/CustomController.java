@@ -220,13 +220,13 @@ public class CustomController {
    }
    
    @RequestMapping("/updateCustMap")
-   public String updateCustMap(HttpServletRequest request, Model model){
+   public String updateCustMap(MapVO mapVO, Model model){
       //커스텀맵 편집페이지 이동
       System.out.println("편집하기!");
       //로그인여부 확인 필요 , false : 로그인 페이지로 이동
       //mapIdx로 불러온 customMapVO 필요
-      int MapIdx = Integer.parseInt(request.getParameter("mapIdx"));
-      System.out.println(MapIdx);
+      mapVO = mapService.getMap(mapVO);
+      model.addAttribute("mapVO", mapVO);
       //커스텀맵에서 사용한 마커종류 리스트 필요
       //표시한 마커목록 리스트 필요
       return "map/updateCustMap"; 
