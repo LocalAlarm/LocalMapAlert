@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private Collection<? extends GrantedAuthority> authorities ;
-   
+    private UserVO userVO;
     public CustomUserDetails() {
     }
     
@@ -28,6 +28,7 @@ public class CustomUserDetails implements UserDetails {
        this.setToken(userVO.getToken());
        this.setImage(userVO.getImage());
        this.setNickname(userVO.getNickname());
+       this.userVO = userVO;
     }
     
    @Override
@@ -115,8 +116,16 @@ public class CustomUserDetails implements UserDetails {
    public void setNickname(String nickname) {
       this.nickname = nickname;
    }
+   
+   public UserVO getUserVO() {
+	return userVO;
+}
 
-   @Override
+public void setUserVO(UserVO userVO) {
+	this.userVO = userVO;
+}
+
+@Override
    public String toString() {
       return "CustomUserDetails [username=" + username + ", password=" + password + ", token=" + token
             + ", isEnabled=" + isEnabled + ", isAccountNonExpired=" + isAccountNonExpired + ", isAccountNonLocked="

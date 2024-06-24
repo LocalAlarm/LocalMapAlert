@@ -32,6 +32,7 @@ public class CustomController {
    private final MapService mapService;
    private final CustomService customService;
    private UserVO loginUserVO;
+   
    private final MapCommentsService mapCommentsService;
 //   private final ObjectMapper objectMapper;
 
@@ -40,7 +41,6 @@ public class CustomController {
 	  this.mapCommentsService = mapCommentsService;
       this.mapService = mapService;
       this.customService = customService;
-      this.loginUserVO = new UserVO();
       System.out.println("========= customController() 객체생성");
    }
 	

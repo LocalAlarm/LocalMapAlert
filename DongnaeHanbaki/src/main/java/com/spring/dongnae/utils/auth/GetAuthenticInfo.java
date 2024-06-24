@@ -28,4 +28,5 @@ public class GetAuthenticInfo {
 			return null;
 		}
 	}
+	
 }
