@@ -220,7 +220,7 @@ public class CustomController {
    }
    
    @RequestMapping("/updateCustMap")
-   public String updateCustMap(HttpServletRequest request, Model model) throws JsonProcessingException {
+   public String updateCustMap(HttpServletRequest request, Model model){
       //커스텀맵 편집페이지 이동
       System.out.println("편집하기!");
       //로그인여부 확인 필요 , false : 로그인 페이지로 이동
@@ -257,4 +257,14 @@ public class CustomController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+   
+   @RequestMapping("/deleteCustMap")
+   public String deleteMap(MapVO mapVO) {
+	   mapVO = mapService.getMap(mapVO);
+	   if(mapVO.getUserEmail().equals(getAuthenticInfo.GetEmail())) {
+		   mapService.deleteMap(mapVO);
+	   }
+	   return "redirect:/customMap";
+   }
+
 }

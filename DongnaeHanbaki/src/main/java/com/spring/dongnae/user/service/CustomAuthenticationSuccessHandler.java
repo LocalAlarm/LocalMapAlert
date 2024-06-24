@@ -51,7 +51,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             System.out.println("관리자!!!!!");
             response.sendRedirect("/dongnae/admin/main");
         } else {
-            response.sendRedirect("/dongnae/main");
+            response.sendRedirect("/dongnae/profile");
         }
 
     }
