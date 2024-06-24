@@ -45,7 +45,9 @@
         <li><a class="dropdown-item" href="#" onclick="NearEvents()">내 근처 행사 찾기</a></li>
         <li><a class="dropdown-item" href="#" onclick="RealEvents()">진행중인 행사 찾기</a></li>
     </ul>
-</div><button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">나만의 지도</button>
+</div>
+<button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">재난 문자 확인하기</button>
+    <div id="disasterData" style="white-space: pre-wrap; margin-top: 20px;"></div>
 
             </div>
         </div>       
