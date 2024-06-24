@@ -6,6 +6,7 @@ function moimFunction() {
     registerMoimModal();
 	processRegistMoim();
     initializeSearchMoimsEvents();
+    resetEditMoimBoardForm();
 }
 
 function connectMoim() {
@@ -126,6 +127,7 @@ async function submitCreateMoimForm() {
 function initializeMoimModal() {
     var createMoimModal = new bootstrap.Modal($('#moim-modal')[0]);
     var createPostModal = new bootstrap.Modal($('#moim-post-modal')[0]);
+    var createEditModal = new bootstrap.Modal($('#moim-edit-detail-modal')[0]);
     
     $('#moimList').on('click', '.moim-list', function() {
         // 클릭된 li 요소의 id 가져오기
@@ -201,6 +203,40 @@ function initializeMoimModal() {
             }
         });
     });
+
+    $('#editMoimForm').on('submit', function(e) {
+        e.preventDefault();
+        var page = $('#moim-modal').attr('data-moim-page');
+        // FormData 객체 생성
+        var formData = new FormData(this);
+        var moimId = $('#moim-modal').attr('data-moim-id'); // moimId 가져오기
+        var boardId = $('#moim-edit-detail-modal').attr('data-token'); // boardId 가져오기
+
+        // 체크박스 상태 추가 (edit-board-checkbox 클래스를 가진 체크박스만 선택)
+        var imageOptions = $('.edit-board-checkbox:checked').map(function() {
+            return this.value;
+        }).get();
+        imageOptions.forEach(function(option) {
+            formData.append('imageOptions', option);
+        });
+
+        // 편집할 게시물 전송
+        $.ajax({
+            url: `/dongnae/moim/${moimId}/${boardId}/update`,
+            method: 'PUT',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('게시물 편집 성공:', response);
+                createEditModal.hide();
+                loadBoardList(page);
+            },
+            error: function(err) {
+                console.error('게시물 작성 실패:', err);
+            }
+        });
+    })
 }
 
 async function moimPagenate(moimId, page, pageSize) {
@@ -324,9 +360,31 @@ function editMoimBoard(boardId) {
         method: 'GET',
         dataType: 'json',
         success: function(data) {
+            console.log(data);
             // 게시글 상세 정보를 모달에 채워넣기
             $('#edit-moim-board-title').val(data.title);
             $('#edit-moim-board-content').val(data.content);
+
+            // 이미지 체크박스 컨테이너를 비우기
+            $('#images-delete-check').nextAll('.form-check').remove();
+
+            // data.images가 배열이고 길이가 0보다 큰 경우
+            if (data.images && data.images.length > 0) {
+                data.images.forEach(function(image, index) {
+                    const checkboxHtml = `
+                        <div class="form-check mb-1">
+                            <input class="form-check-input edit-board-checkbox" type="checkbox" value="${image.image}" id="${image.image}">
+                            <label class="form-check-label" for="${image.image}">
+                                ${image.image}
+                            </label>
+                        </div>
+                    `;
+                    $('#images-delete-check').after(checkboxHtml);
+                });
+            }
+
+            // 모달의 data-token 속성에 boardId를 설정
+            $('#moim-edit-detail-modal').attr('data-token', boardId);
 
             // 모달을 보여주기
             var postDetailModal = new bootstrap.Modal($('#moim-edit-detail-modal')[0]);
@@ -623,5 +681,22 @@ function resetMoimModal() {
         
         // chat-token 초기화 (필요 시)
         $('#moim-modal').removeAttr('chat-token');
+    });
+}
+
+function resetEditMoimBoardForm() {
+    $('#moim-edit-detail-modal').on('hidden.bs.modal', function () {
+        // 제목과 내용 입력 필드를 초기화
+        $('#edit-moim-board-title').val('');
+        $('#edit-moim-board-content').val('');
+
+        // 이미지 체크박스 컨테이너를 비우기
+        $('#images-delete-check').nextAll('.form-check').remove();
+
+        // 파일 입력 필드를 초기화
+        $('#edit-board-images').val('');
+
+        // 모달의 data-token 속성을 초기화
+        $('#moim-edit-detail-modal').removeAttr('data-token');
     });
 }

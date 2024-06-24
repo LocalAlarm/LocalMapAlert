@@ -88,6 +88,11 @@ public class Board {
     public void addImage(Image image) {
     	this.images.add(image);
     }
+    
+    public boolean deleteImage(String image) {
+        return this.images.removeIf(img -> img.getImage().equals(image));
+    }
+
 
     public List<Comment> getComments() {
         return comments;

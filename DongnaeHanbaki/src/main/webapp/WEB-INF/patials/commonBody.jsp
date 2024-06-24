@@ -291,14 +291,14 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="postForm" enctype="multipart/form-data">
+                <form id="postMoimForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="postTitle" class="form-label">제목</label>
                         <input type="text" class="form-control" id="postMoimTitle" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="postContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="postMoimContent" rows="3" name="content" required></textarea>
+                        <textarea class="form-control" id="postMoimContent" rows="5" name="content" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="postImages" class="form-label">이미지 파일</label>
@@ -320,39 +320,25 @@ const chatToast = document.getElementById('chatToast');
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="edit-form">
+                <form id="editMoimForm">
                     <div class="mb-3">
                         <label for="edit-title" class="form-label">Title</label>
                         <input type="text" class="form-control" id="edit-moim-board-title" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="edit-body" class="form-label">Content</label>
-                        <textarea class="form-control" id="edit-moim-board-content" name="body" rows="5" required></textarea>
+                        <textarea class="form-control" id="edit-moim-board-content" name="content" rows="5" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Images</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option1" id="option1">
-                            <label class="form-check-label" for="option1">
-                                Option 1
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option2" id="option2">
-                            <label class="form-check-label" for="option2">
-                                Option 2
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="option3" id="option3">
-                            <label class="form-check-label" for="option3">
-                                Option 3
-                            </label>
-                        </div>
+                        <label class="form-label" id="images-delete-check">삭제 이미지 파일 체크</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImages" class="form-label">이미지 파일</label>
+                        <input type="file" class="form-control" id="edit-board-images" accept="image/*" name="images" multiple>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary">수정</button>
                     </div>
                 </form>
             </div>
