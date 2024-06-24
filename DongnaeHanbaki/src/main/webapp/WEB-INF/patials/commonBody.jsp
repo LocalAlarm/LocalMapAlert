@@ -226,7 +226,7 @@ const chatToast = document.getElementById('chatToast');
    </div>
 </div>
 
-
+<!-- 모임 창 보드 리스트 -->
 <div class="modal fade" id="moim-modal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
@@ -371,6 +371,20 @@ const chatToast = document.getElementById('chatToast');
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
+                </div>
+                <div id="post-detail-comments-section">
+                	<button class="btn btn-secondary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
+                		댓글 목록
+                	</button>
+                	<div class="collapse" id="collapseComments">
+                		<div class="card" id="post-detail-comments-list" style="max-height: 200px; overflow-y: auto; padding: 10px; margin-bottom: 15px;">
+                			<!-- 댓글을이 여기에 동적으로 삼입된다. -->
+                		</div>
+                	</div>
+                	<div class="input-group mb-3">
+                		<input type="text" id="post-detail-comment-input" class="form-control" placeholder="댓글을 작성해보세요!">
+                		<button class="btn btn-primary" id="post-detail-comment-submit" type="button">작성</button>
+                	</div>
                 </div>
             </div>
         </div>
