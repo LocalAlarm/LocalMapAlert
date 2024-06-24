@@ -73,7 +73,7 @@ const chatToast = document.getElementById('chatToast');
 							<ion-icon name="people-circle-outline" class="nav__icon"></ion-icon>
 							<span class="nav_name">친구목록</span>
 							<ion-icon name="chevron-down-outline" class="collapse__link"></ion-icon>
-							<ul class="collapse__menu" id="friendList" style="overflow: visible;">
+							<ul class="collapse__menu mb-2" id="friendList" style="overflow: visible;">
 								<!-- 친구 목록이 들어올 자리 -->
 							</ul>
 						</div>
@@ -121,8 +121,24 @@ const chatToast = document.getElementById('chatToast');
 			</c:when>
 			<c:otherwise>
 				<!-- 로그인 상태가 아닐 때 표시할 사이드바 -->
-				<a href="/dongnae/login">Login</a>
-				<a href="/register">Register</a>
+				<div>
+					<div class="nav__brand">
+						<ion-icon name="apps-outline" class="nav__toggle" id="nav-toggle" alt="menu-icon"></ion-icon>
+					</div>
+					<a href="/dongnae/login" class="nav__link">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+							<path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+						</svg>
+						<span class="nav_name">로그인</span>
+					</a>
+					<a href="/dongnae/joinform" class="nav__link">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-r-square-fill" viewBox="0 0 16 16">
+							<path d="M6.835 5.092v2.777h1.549c.995 0 1.573-.463 1.573-1.36 0-.913-.596-1.417-1.537-1.417z"/>
+							<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm3.5 4.002h3.11c1.71 0 2.741.973 2.741 2.46 0 1.138-.667 1.94-1.495 2.24L11.5 12H9.98L8.52 8.924H6.836V12H5.5z"/>
+						</svg>
+						<span class="nav_name">회원가입</span>
+					</a>
+					
 			</c:otherwise>
 		</c:choose>
 	</nav>
