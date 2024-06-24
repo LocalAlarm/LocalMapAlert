@@ -700,8 +700,8 @@ function displayMap(markers, lines) {
     }
 
     // 라인 표시
-    for (var j = 0; j < lineList.length; j++) {
-        var linePath = lineList[j].path.map(function(coord) {
+    for (let j = 0; j < lineList.length; j++) {
+        let linePath = lineList[j].path.map(function(coord) {
             return new kakao.maps.LatLng(coord.Ma, coord.La);
         });
         var lineStyle = {
@@ -713,7 +713,7 @@ function displayMap(markers, lines) {
 
 		console.log(linePath);
 		console.log(lineStyle);
-        var polyline = new kakao.maps.Polyline({
+        let polyline = new kakao.maps.Polyline({
             path: linePath,
             strokeWeight: lineStyle.strokeWeight || 5, // 기본값 설정
             strokeColor: lineStyle.strokeColor || '#FF0000', // 기본값 설정
@@ -724,15 +724,17 @@ function displayMap(markers, lines) {
         polyline.setMap(map);
         
         lineList[j].line = polyline;
-        
+        console.log(lineList[j]);
+        console.log(lineList[j].line);
         // 라인에 클릭 이벤트를 등록합니다.
 	    kakao.maps.event.addListener(polyline, 'click', function() {
 	        // 클릭된 polyline을 삭제합니다.
-	        console.log("임건희삭제");
+	        console.log("임건희삭제, id: " + j);
 	        this.setMap(null);
 	        
 	        // lineList에서 해당 polyline 객체를 찾아 삭제합니다.
 	        lineList = lineList.filter(function(item) {
+	        	console.log(item);
 	            return item.line !== polyline;
 	        });
 	        console.log(lineList);
