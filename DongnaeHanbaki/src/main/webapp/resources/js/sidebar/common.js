@@ -50,6 +50,8 @@ async function searchUserByEmail(email) {
         }
         const data = await response.json();
         const searchString = $('#searchFriend').val();
+        console.log(data);
+        console.log(searchString);
         if (data.length > 0) { // 검색 결과가 있을 경우에만 표시
             displaySearchResults(data, searchString); // 검색 결과를 화면에 표시
         } else {
@@ -105,19 +107,19 @@ var isEmpty = function (value) {
 };
 
 function showDangerAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "error",
-		title: title,
-		text: text,
+    Swal.fire({
+        icon: "error",
+        title: title,
+        text: text,
         footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+    });
 }
 
 function showSuccessAlert(title, text, footerText) {
-	Swal.fire({
-		icon: "success",
-		title: title,
-		text: text,
-		footer: '<span style="color:indianred">' + footerText + '</span>'
-	});
+    Swal.fire({
+        icon: "success",
+        title: title,
+        text: text,
+        footer: '<span style="color:indianred">' + footerText + '</span>'
+    });
 }

@@ -23,6 +23,38 @@ public class UserRoomsService {
         return userRooms.orElse(null);
     }
     
+    public UserRoomsDto getUserRoomsDtoByEmail(String email) {
+    	UserRooms userRooms = userRoomsRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("UserRooms not found"));
+    	
+        List<MoimDto> moims = userRooms.getMoims().stream().map(moim -> {
+            MoimDto moimDto = new MoimDto();
+            moimDto.setId(moim.getId());
+            moimDto.setChatId(moim.getChatRoomId());
+            moimDto.setName(moim.getName());
+            moimDto.setProfilePic(moim.getProfilePic());
+            return moimDto;
+        }).collect(Collectors.toList());
+
+        List<MoimDto> masterMoims = userRooms.getMasterMoims().stream().map(moim -> {
+            MoimDto moimDto = new MoimDto();
+            moimDto.setId(moim.getId());
+            moimDto.setChatId(moim.getChatRoomId());
+            moimDto.setName(moim.getName());
+            moimDto.setProfilePic(moim.getProfilePic());
+            return moimDto;
+        }).collect(Collectors.toList());
+
+        UserRoomsDto userRoomsDto = new UserRoomsDto();
+        userRoomsDto.setId(userRooms.getId());
+        userRoomsDto.setEmail(userRooms.getEmail());
+        userRoomsDto.setMoims(moims);
+        userRoomsDto.setMasterMoims(masterMoims);
+        userRoomsDto.setRequestIds(userRooms.getRequestIds());
+        userRoomsDto.setFriendIds(userRooms.getFriendIds());
+
+        return userRoomsDto;
+    }
+    
     public UserRoomsDto getUserRoomsDtoById(String id) {
         UserRooms userRooms = userRoomsRepository.findById(id).orElseThrow(() -> new RuntimeException("UserRooms not found"));
 

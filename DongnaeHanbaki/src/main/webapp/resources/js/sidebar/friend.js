@@ -165,7 +165,7 @@ function displaySearchResults(results, searchString) {
         html += result.email;
         html += '</li>';
         if (result.email === searchString) {
-        	// 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
+            // 자기자신이거나 이미 친구에 있으면 제외하는 코드가 필요함! searchString외에!
             matchFound = true;
         }
     });
@@ -226,18 +226,25 @@ function displayFriendRequests(friendRequests) {
     const container = $('#friend-requests');
     container.empty();
     var friendRequestListHtml = '';
-    friendRequests.forEach(request => {
-        friendRequestListHtml += `<li class="mb-1 mt-1 collapse__sublink" id="${request}">
-                                    <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
-                                    <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
-                                    ${request}
+    friendRequests.forEach(email => {
+        friendRequestListHtml += `<li class="mb-1 mt-1 collapse__sublink" id="${email}">
+                                    <span>${email}</span>
+                                    <button class="friendApprove">Approve</button>
+                                    <button class="friendReject">Reject</button>
                                 </li>`;
     });
     $('#friend-requests').html(friendRequestListHtml);
 
+    // 친구 요청 수락 버튼 클릭 이벤트 처리
     $(document).on('click', '.friendApprove', function () {
         var requestId = $(this).parent().attr('id');
         approveFriendRequest(requestId);
+    });
+
+    // 친구 요청 거절 버튼 클릭 이벤트 처리 (구현 필요)
+    $(document).on('click', '.friendReject', function () {
+        var requestId = $(this).parent().attr('id');
+        rejectFriendRequest(requestId);
     });
 
     // 요청을 수락하는 함수
@@ -250,7 +257,6 @@ function displayFriendRequests(friendRequests) {
             success: function (response) {
                 console.log('Success:', response);
                 // 성공적으로 요청을 수락한 경우, 화면 갱신 또는 사용자에게 알림 처리 등을 수행할 수 있습니다.
-                // 예를 들어, 요청을 수락한 목록을 새로고침하는 등의 작업을 수행할 수 있습니다.
                 receiveFriendRequests(); // 친구 요청 목록을 갱신하는 함수 호출
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -263,9 +269,9 @@ function displayFriendRequests(friendRequests) {
 }
 
 // 친구 요청 모달을 띄우는 코드
-function friendRequestModal(){
+function friendRequestModal() {
     var friendRequestModal = new bootstrap.Modal($('#friendRequestModal')[0]);
-    $('#nav__friend-request').on('click', function() {
+    $('#nav__friend-request').on('click', function () {
         friendRequestModal.show();
     });
 };

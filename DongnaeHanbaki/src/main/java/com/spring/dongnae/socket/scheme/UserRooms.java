@@ -87,13 +87,17 @@ public class UserRooms {
 		return requestIds;
 	}
 	
+	public void addRequestIds(String email) {
+		requestIds.add(email);
+	}
+	
     public void removeFriendRequest(String email) {
         this.requestIds.remove(email);
     }
 
-	public void addFriendRequest(String email) {
-		this.requestIds.remove(email);
-		this.requestIds.add(email);
+	public void addFriendRequest(FriendInfo friendInfo) {
+		this.requestIds.remove(friendInfo.getEmail());
+		this.friendIds.add(friendInfo);
 	}
 	
 	public List<FriendInfo> getFriendIds() {
