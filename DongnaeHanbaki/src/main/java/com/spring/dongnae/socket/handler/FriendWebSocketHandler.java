@@ -45,6 +45,7 @@ public class FriendWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String token = message.getPayload();
+		System.out.println(token);
 		if (token != null) {
 			session = sessions.get(token);
 			if (session != null && session.isOpen()) {

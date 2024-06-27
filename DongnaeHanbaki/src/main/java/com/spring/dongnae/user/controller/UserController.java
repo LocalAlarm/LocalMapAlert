@@ -69,29 +69,23 @@ public class UserController {
 
    @GetMapping("/login")
    public String loginView(@ModelAttribute("user") UserVO vo) {
-      System.out.println(">> 로그인 화면이동 - loginView()");
       return "user/login";
    }
 
    @RequestMapping("/logout")
    public String logout(HttpSession session) {
-      System.out.println(">> 로그아웃 처리");
       session.invalidate();
-
       return "user/login";
    }
 
    @RequestMapping("/loginerror")
    public String loginError(@ModelAttribute("user") UserVO vo) {
-      System.out.println(vo);
-      System.out.println(">> 로그인 에러");
       return "user/loginerror";
    }
 
    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
    public String kakaoRedirect(@RequestParam("code") String code, @RequestParam("state") String state,
          HttpSession session) {
-      System.out.println(">> 카카오 로그인 리디렉션 처리 - code: " + code + ", state: " + state);
       return "user/redirect";
    }
 
@@ -104,11 +98,9 @@ public class UserController {
       try {
          // 클라이언트가 보낸 JSON 데이터를 문자열로 받음
          String jsonString = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-         System.out.println("받는거 성공!!!!!!!!!!!!!!!!!!!! " + jsonString);
          // jsonString kakaoDTO로 변형
          ObjectMapper mapper = new ObjectMapper();
          KakaoDTO kakaoDTO = mapper.readValue(jsonString, KakaoDTO.class);
-         System.out.println("dto변형성공!!!!!!!!!!!!!!!!!!!!!! " + kakaoDTO);
 
          // vo에맞게 세팅
          UserVO userVO = new UserVO();
@@ -120,10 +112,8 @@ public class UserController {
 
          // 데이터베이스에서 조회후 없으면 데이터베이스에 insert
          UserVO checkVO = userService.getUser(userVO);
-         System.out.println("있는지체크!!!!!!!!!!!! " + checkVO);
          if (checkVO == null) {
             userService.insertKakaoUser(userVO);
-            System.out.println("데이터베이스insert!!!!!!!!!!!!!!!");
          }
          check = true; // 처리 성공 시 true 반환
       } catch (Exception e) {

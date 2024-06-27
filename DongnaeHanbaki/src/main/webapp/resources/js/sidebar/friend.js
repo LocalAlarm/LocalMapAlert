@@ -17,7 +17,6 @@ function connectFriend() {
     };
 
     friendSocket.onmessage = function (event) {
-        var JsonData = JSON.parse(event.data);
         try {
             loadFriendList();
             loadFriendRequests();
@@ -48,8 +47,9 @@ function loadFriendRequests() {
                 response.forEach(data => {
                     console.log(data);
                     friendRequestHtml += `<li class "mb-1 mt-1 collapse__sublink" req-data-token="${data.token}">
-                                            <ion-icon name="add" class="friendApprove collapse__sublink"></ion-icon>
-                                            <ion-icon name="trash-outline" class="friendReject collapse__sublink"></ion-icon>
+                                            <ion-icon name="add" class="friendApprove collapse__sublink" style="float: left;"></ion-icon>
+                                            <ion-icon name="trash-outline" class="friendReject collapse__sublink" style="float: left;"></ion-icon>
+                                            <br>
                                             ${data.email}
                                         </li>`;
                 })
